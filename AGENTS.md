@@ -13,6 +13,13 @@
 - /data2/tianang/projects/discrete-diffusion-guidance 里面是所有我们使用的generate peptide用的代码和仓库
 - /data2/tianang/projects/evo2 里面是我们使用的embedding genome的代码
 
+## Git 与发布状态
+
+- 当前 Codex 工作区的 `.git` 是只读保护挂载，本地可用 Git metadata 位于被忽略的 `.git-state/`；操作命令需要使用 `git --git-dir=.git-state --work-tree=.`。
+- 本地 `main` 和 tag `legacy-code-snapshot-2026-07-17` 指向脱敏 legacy 快照 `a68707c`；重构分支为 `agent/paper-release-refactor`。
+- `DragonDescentZerotsu/Synergy` 已通过 GitHub App 同步：远程 `main` 是 legacy 快照，`agent/paper-release-refactor` 是重构分支，`archive/legacy-code-snapshot-2026-07-17` 是远程恢复点。237 个去重 blob 和五个版本 tree 已与本地 Git SHA 逐一校验一致。
+- GitHub App 没有 tag 创建接口，本机又没有普通 Git 凭据，所以远程 tag 尚未创建；后续获得 Git 凭据后应补推本地 tag。远程 commit SHA 因初始化 parent 与本地不同，判断内容一致性应比较 tree SHA。
+
 ## 论文及审稿回复路径
 
 - 本项目对应论文：`/data2/tianang/projects/ApexOracle_cleaned/docs/ApexOracle_Nat_Biotech/sn-article.tex`
