@@ -1,0 +1,40 @@
+{
+  "inputs": {
+    "query_csv": "/data2/tianang/projects/Synergy/DataPrepare/get_similarity/query_peptides.csv",
+    "linear_cache": "/data2/tianang/projects/Synergy/DataPrepare/get_similarity/train_linear_peptides.csv",
+    "cyclic_cache": "/data2/tianang/projects/Synergy/DataPrepare/get_similarity/train_cyclic_peptides.csv"
+  },
+  "outputs": {
+    "linear_output": "/data2/tianang/projects/Synergy/DataPrepare/get_similarity/linear_similarity_results.csv",
+    "cyclic_rotation_output": "/data2/tianang/projects/Synergy/DataPrepare/get_similarity/cyclic_rotation_similarity_results.csv",
+    "cyclic_best_pid_output": "/data2/tianang/projects/Synergy/DataPrepare/get_similarity/cyclic_best_by_pid.csv",
+    "cyclic_best_maxlen_output": "/data2/tianang/projects/Synergy/DataPrepare/get_similarity/cyclic_best_by_max_len_identity.csv"
+  },
+  "runtime": {
+    "processes": 8,
+    "linear_chunk_size": 500,
+    "cyclic_chunk_size": 40
+  },
+  "counts": {
+    "linear_queries": 1,
+    "cyclic_queries": 1,
+    "linear_training_records": 13077,
+    "cyclic_training_records": 1039,
+    "linear_rows_written": 26154,
+    "cyclic_rotation_rows_written": 383800,
+    "cyclic_best_pid_rows": 2078,
+    "cyclic_best_max_len_rows": 2078,
+    "linear_expected_rows": 26154,
+    "cyclic_expected_rows": 383800,
+    "cyclic_summary_expected_rows": 2078
+  },
+  "scoring_schemes": [
+    "blosum62_needle",
+    "exact_match_needle"
+  ],
+  "blosum62_normalization": {
+    "replacement": {
+      "O": "X"
+    }
+  }
+}
