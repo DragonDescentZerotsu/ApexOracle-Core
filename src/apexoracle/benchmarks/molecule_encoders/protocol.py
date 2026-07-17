@@ -22,7 +22,7 @@ import pandas as pd
 from sklearn.model_selection import KFold
 
 
-PROTOCOL_VERSION = "fig2b-shared-molecules-v1"
+PROTOCOL_VERSION = "fig2b-shared-native-intersection-v2"
 CANONICAL_AMINO_ACIDS = frozenset("ACDEFGHIKLMNPQRSTVWY")
 CHAIN_SEPARATORS = frozenset("-/;,.|:")
 
@@ -112,9 +112,9 @@ def project_apex_sequence(
     - the projected sequence is truncated to the 50 content positions available
       in the historical APEX length-52 input (start and end occupy two slots).
 
-    The historical APEX vocabulary has no X token.  The revised adapter assigns
-    X its own index and uses the mean canonical AAindex vector, so unknown
-    residues remain distinct from padding.
+    The historical APEX vocabulary has no X token. The sequence audit retains X
+    explicitly, while the unchanged APEX encoder maps it to index 0 in the same
+    way as every other unknown symbol in the published implementation.
     """
 
     if not isinstance(sequence, str) or not sequence.strip():
@@ -248,9 +248,31 @@ def _validate_mic_table(frame: pd.DataFrame) -> None:
         raise ValueError(f"MIC table contains duplicate DBAASP IDs: {duplicates}")
 
 
+def _load_eligibility(path: Path) -> pd.DataFrame:
+    frame = pd.read_csv(path, dtype={"dbaasp_id": "string"})
+    required = {"dbaasp_id", *EXPECTED_ENCODERS, "eligible_all"}
+    missing = required - set(frame.columns)
+    if missing:
+        raise ValueError(f"eligibility table is missing columns: {sorted(missing)}")
+    frame["dbaasp_id"] = frame["dbaasp_id"].str.strip()
+    if frame["dbaasp_id"].isna().any() or frame["dbaasp_id"].duplicated().any():
+        raise ValueError("eligibility table IDs must be present and unique")
+    for column in (*EXPECTED_ENCODERS, "eligible_all"):
+        if frame[column].dtype != bool:
+            normalised = frame[column].astype(str).str.strip().str.lower()
+            if not normalised.isin(("true", "false")).all():
+                raise ValueError(f"eligibility column {column} must contain booleans")
+            frame[column] = normalised == "true"
+    calculated = frame.loc[:, EXPECTED_ENCODERS].all(axis=1)
+    if not calculated.equals(frame["eligible_all"]):
+        raise ValueError("eligible_all does not equal the intersection of encoder flags")
+    return frame.set_index("dbaasp_id")
+
+
 def build_shared_dataset(
     mic_csv: Path,
     dbaasp_records_json: Path,
+    eligibility_csv: Path,
     output_dir: Path,
     *,
     n_splits: int = 5,
@@ -261,6 +283,7 @@ def build_shared_dataset(
 
     mic_csv = mic_csv.resolve()
     dbaasp_records_json = dbaasp_records_json.resolve()
+    eligibility_csv = eligibility_csv.resolve()
     output_dir = output_dir.resolve()
     output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -268,6 +291,10 @@ def build_shared_dataset(
     frame["DBAASP_id"] = frame["DBAASP_id"].str.strip()
     _validate_mic_table(frame)
     records = _load_dbaasp_records(dbaasp_records_json)
+    eligibility = _load_eligibility(eligibility_csv)
+    source_ids = set(frame["DBAASP_id"].astype(str))
+    if set(eligibility.index) != source_ids:
+        raise ValueError("eligibility table IDs must exactly match the MIC source IDs")
 
     shared_rows: list[dict[str, Any]] = []
     projection_rows: list[dict[str, Any]] = []
@@ -275,6 +302,17 @@ def build_shared_dataset(
 
     for _, row in frame.iterrows():
         molecule_id = str(row["DBAASP_id"])
+        eligibility_row = eligibility.loc[molecule_id]
+        if not bool(eligibility_row["eligible_all"]):
+            failed = [name for name in EXPECTED_ENCODERS if not bool(eligibility_row[name])]
+            exclusions.append(
+                {
+                    "dbaasp_id": molecule_id,
+                    "stage": "native_encoder_intersection",
+                    "reason": ";".join(failed),
+                }
+            )
+            continue
         record = records.get(molecule_id)
         if record is None:
             exclusions.append(
@@ -347,9 +385,11 @@ def build_shared_dataset(
             "mic_csv_sha256": sha256_file(mic_csv),
             "dbaasp_records_json": _portable_path(dbaasp_records_json),
             "dbaasp_records_json_sha256": sha256_file(dbaasp_records_json),
+            "eligibility_csv": _portable_path(eligibility_csv),
+            "eligibility_csv_sha256": sha256_file(eligibility_csv),
         },
         "expected_encoders": list(EXPECTED_ENCODERS),
-        "sample_policy": "same molecule IDs and folds; encoder adapters may truncate but may not drop IDs",
+        "sample_policy": "native-processable ID intersection and one shared molecule-level 5-fold split",
         "label_policy": {
             "columns": list(DEFAULT_TARGET_COLUMNS),
             "missing_sentinel_in_source": -1,
@@ -368,8 +408,8 @@ def build_shared_dataset(
             "d_residue": "uppercase residue identity",
             "cyclic_or_multichain": "remove topology/chain markers and use deterministic linear residue order",
             "max_content_residues": apex_max_residues,
-            "x_encoder_index": 23,
-            "x_embedding": "mean of the 20 frozen canonical AAindex vectors",
+            "x_encoder_index": 0,
+            "x_encoder_note": "unmodified APEX maps X/unknown symbols to index 0",
             "records_with_noncanonical": int(projections["contained_noncanonical"].sum()),
             "records_with_d_residue": int(projections["contained_d_residue"].sum()),
             "records_with_linearized_topology_or_chain_marker": int(
@@ -410,6 +450,11 @@ def build_parser() -> argparse.ArgumentParser:
         default=Path("DataPrepare/Data/all_peptides_data.json"),
     )
     parser.add_argument(
+        "--eligibility-csv",
+        type=Path,
+        default=Path("DataPrepare/Data/fig2b_encoder_eligibility.csv"),
+    )
+    parser.add_argument(
         "--output-dir",
         type=Path,
         default=Path("DataPrepare/Data/fig2b_shared_v1"),
@@ -425,6 +470,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     manifest = build_shared_dataset(
         mic_csv=args.mic_csv,
         dbaasp_records_json=args.dbaasp_records_json,
+        eligibility_csv=args.eligibility_csv,
         output_dir=args.output_dir,
         n_splits=args.n_splits,
         seed=args.seed,

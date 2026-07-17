@@ -3,7 +3,6 @@
 from .apex_adapter import (
     build_apex_vocabulary,
     encode_apex_sequences,
-    extend_aaindex_with_unknown,
 )
 from .data import SharedBenchmarkData, load_shared_benchmark, transform_mic_labels
 from .feature_cache import FeatureCache, load_feature_cache, save_feature_cache
@@ -27,7 +26,6 @@ __all__ = [
     "build_apex_vocabulary",
     "build_shared_dataset",
     "encode_apex_sequences",
-    "extend_aaindex_with_unknown",
     "finite_macro_mean",
     "load_shared_benchmark",
     "load_feature_cache",

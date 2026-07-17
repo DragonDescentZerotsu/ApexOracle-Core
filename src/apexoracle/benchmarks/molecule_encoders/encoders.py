@@ -13,7 +13,6 @@ import numpy as np
 from .apex_adapter import (
     build_apex_vocabulary,
     encode_apex_sequences,
-    extend_aaindex_with_unknown,
 )
 from .data import SharedBenchmarkData
 from .feature_cache import FeatureCache
@@ -51,7 +50,7 @@ HF_ENCODERS = {
 }
 
 
-def _load_hf_tokenizer(spec: HFEncoderSpec, repo_root: Path):
+def load_hf_tokenizer(spec: HFEncoderSpec, repo_root: Path):
     if spec.tokenizer_kind == "vendored_peptideclm":
         peptideclm_root = repo_root / "PeptideCLM"
         if str(repo_root) not in sys.path:
@@ -112,7 +111,7 @@ def extract_hf_features(
     import torch
     from transformers import AutoModel
 
-    tokenizer = _load_hf_tokenizer(spec, Path(repo_root))
+    tokenizer = load_hf_tokenizer(spec, Path(repo_root))
     token_ids, truncated_count, unknown_count = _tokenize_without_dropping(
         tokenizer,
         benchmark.smiles,
@@ -185,7 +184,7 @@ def extract_apex_features(
     device: str,
     batch_size: int,
 ) -> FeatureCache:
-    """Extract frozen APEX features with an explicit mean-AAindex X token."""
+    """Extract features from the published, unmodified APEX encoder."""
 
     import torch
 
@@ -198,7 +197,7 @@ def extract_apex_features(
 
     legacy_vocabulary, _ = make_vocab()
     legacy_embedding, _ = AAindex(str(apex_root / "aaindex1.csv"), legacy_vocabulary)
-    embedding = extend_aaindex_with_unknown(legacy_embedding)
+    embedding = np.asarray(legacy_embedding)
     vocabulary, _ = build_apex_vocabulary()
     token_ids, _ = encode_apex_sequences(
         benchmark.apex_sequences,
@@ -207,17 +206,7 @@ def extract_apex_features(
 
     model = AMP_model_fix(embedding, embedding.shape[1], num_rnn_layers=3, dim_h=128)
     state_dict = _torch_load(checkpoint_path)
-    embedding_key = "peptideEmb.aa_embedding.weight"
-    if embedding_key not in state_dict or tuple(state_dict[embedding_key].shape) != (23, embedding.shape[1]):
-        raise ValueError("APEX checkpoint does not contain the expected legacy 23-token embedding")
-    state_dict = dict(state_dict)
-    state_dict.pop(embedding_key)
-    incompatible = model.load_state_dict(state_dict, strict=False)
-    if list(incompatible.missing_keys) != [embedding_key] or incompatible.unexpected_keys:
-        raise ValueError(
-            "unexpected APEX checkpoint mismatch: "
-            f"missing={incompatible.missing_keys}, unexpected={incompatible.unexpected_keys}"
-        )
+    model.load_state_dict(state_dict, strict=True)
     torch_device = torch.device(device)
     model.to(torch_device)
     model.eval()
@@ -244,7 +233,7 @@ def extract_apex_features(
             "encoder_mode": "eval",
             "max_length": 52,
             "max_content_residues": 50,
-            "x_token_index": 23,
-            "x_embedding": "mean_canonical_aaindex",
+            "x_token_index": 0,
+            "x_behavior": "original APEX unknown symbol behavior; encoded as index 0",
         },
     )
