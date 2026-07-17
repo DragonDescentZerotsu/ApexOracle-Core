@@ -6,6 +6,7 @@ from .apex_adapter import (
     extend_aaindex_with_unknown,
 )
 from .data import SharedBenchmarkData, load_shared_benchmark, transform_mic_labels
+from .feature_cache import FeatureCache, load_feature_cache, save_feature_cache
 from .metrics import finite_macro_mean, masked_r2_per_task
 from .protocol import (
     DEFAULT_TARGET_COLUMNS,
@@ -20,6 +21,7 @@ __all__ = [
     "DEFAULT_TARGET_COLUMNS",
     "EXPECTED_ENCODERS",
     "ApexProjection",
+    "FeatureCache",
     "SharedBenchmarkData",
     "assign_folds",
     "build_apex_vocabulary",
@@ -28,7 +30,9 @@ __all__ = [
     "extend_aaindex_with_unknown",
     "finite_macro_mean",
     "load_shared_benchmark",
+    "load_feature_cache",
     "masked_r2_per_task",
     "project_apex_sequence",
+    "save_feature_cache",
     "transform_mic_labels",
 ]
