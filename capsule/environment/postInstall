@@ -1,0 +1,99 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+CONDA_DIR=${CONDA_DIR:-/opt/conda}
+MINICONDA_INSTALLER=Miniconda3-py312_24.11.1-0-Linux-x86_64.sh
+
+export PATH="${CONDA_DIR}/bin:${PATH}"
+
+apt-get update
+apt-get install -y --no-install-recommends \
+    bzip2 \
+    ca-certificates \
+    curl \
+    git \
+    build-essential
+rm -rf /var/lib/apt/lists/*
+
+curl -fsSL "https://repo.anaconda.com/miniconda/${MINICONDA_INSTALLER}" -o /tmp/miniconda.sh
+bash /tmp/miniconda.sh -b -p "${CONDA_DIR}"
+rm /tmp/miniconda.sh
+
+conda install -n base -y python=3.12.7 pip=24.2
+
+python -m pip install --no-cache-dir \
+    --index-url https://download.pytorch.org/whl/cu118 \
+    torch==2.5.1 \
+    torchvision==0.20.1 \
+    torchaudio==2.5.1
+
+python -m pip install --no-cache-dir \
+    accelerate==1.3.0 \
+    biopython==1.85 \
+    datasets==4.0.0 \
+    google-genai==1.20.0 \
+    GPUtil==1.4.0 \
+    huggingface-hub==0.27.1 \
+    hydra-core==1.3.2 \
+    matplotlib==3.9.2 \
+    numpy==1.26.4 \
+    openai==1.99.9 \
+    pandas==2.2.2 \
+    peft==0.14.0 \
+    plotly==5.24.1 \
+    pydantic==2.8.2 \
+    rdkit==2023.9.6 \
+    requests==2.32.3 \
+    safetensors==0.5.2 \
+    scikit-learn==1.5.1 \
+    scikit-bio==0.6.3 \
+    scipy==1.13.1 \
+    seaborn==0.13.2 \
+    selfies==2.2.0 \
+    SmilesPE==0.0.3 \
+    tokenizers==0.21.0 \
+    tqdm==4.66.5 \
+    transformers==4.48.0 \
+    wandb==0.19.4
+
+python - <<'PY'
+import importlib
+
+modules = [
+    "Bio",
+    "GPUtil",
+    "SmilesPE",
+    "datasets",
+    "google.genai",
+    "huggingface_hub",
+    "hydra",
+    "matplotlib",
+    "numpy",
+    "openai",
+    "pandas",
+    "peft",
+    "plotly",
+    "pydantic",
+    "rdkit",
+    "requests",
+    "scipy",
+    "seaborn",
+    "selfies",
+    "skbio",
+    "sklearn",
+    "torch",
+    "torchvision",
+    "tqdm",
+    "transformers",
+    "triton",
+    "wandb",
+]
+
+for module in modules:
+    importlib.import_module(module)
+
+print("Capsule Python import sanity check passed.")
+PY
+
+conda clean -afy
+python -m pip cache purge || true

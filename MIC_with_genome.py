@@ -1,0 +1,430 @@
+from pathlib import Path
+import json
+import numpy as np
+import pandas as pd
+from tqdm import tqdm
+import torch
+import torch.nn as nn
+import torch.optim as optim
+from torch.utils.data import Dataset, DataLoader
+from transformers import AutoModel, AutoTokenizer
+from sklearn.model_selection import KFold
+from sklearn.metrics import average_precision_score
+from torch.nn.utils.rnn import pad_sequence
+from triton.language import bfloat16
+import json
+
+current_directory = Path(__file__).parent
+
+def get_embedded_genome_IDs(folder_path):
+    """
+    检查哪些 genome ID 的genome已经被转成 Evo2 的 embedding 了
+    :param folder_path:
+    :return: 不带 ATCC 的纯 ID list
+    """
+    stored_genome_IDs = []
+    files = [f.name for f in folder_path.iterdir() if f.is_file()]
+    for file_name in files:
+        file_name = file_name.split('.')[0]
+        file_name = file_name.split('ATCC')[-1]
+        components = file_name.split('_')[1:]
+        if len(components) == 2:
+            stored_genome_IDs.append('-'.join(components))
+        else:
+            stored_genome_IDs.append(components[0])
+
+    return stored_genome_IDs
+
+def get_original_strain_name_with_genome_embedding(Evo_MIC_count_file_path, embedded_genome_IDs):
+    with open(Evo_MIC_count_file_path, 'r', encoding='utf-8') as f:
+        strain_count_data = json.load(f)  # 解析 JSON 文件
+
+    origin_to_standard_name_map_list = []
+    for name, count in strain_count_data.items():
+        if '*' in name:
+            original_name, standard_name = name.split('*')
+            if 'ATCC' in standard_name:
+                standard_name = standard_name.split('ATCC')[-1].strip()
+            else:
+                # 包含那些没有 ATCC 但是单独下载了 Genome 数据的
+                standard_name = standard_name.strip()
+            origin_to_standard_name_map_list.append((original_name.strip(), standard_name))
+
+        else:
+            if 'ATCC' in name:
+                original_name = name
+                ATCC_id = name.split('ATCC')[-1].strip()
+                if 'BAA' in name:
+                    ATCC_id = ATCC_id.replace(" ", "-")
+                if 'MY' in name:
+                    ATCC_id = ATCC_id.replace(" ", "")
+                if 'MAY' in name:
+                    ATCC_id = ATCC_id.replace("MAY", "MYA")
+                if 'D' in name:
+                    ATCC_id = ATCC_id.split("D")[0]
+                if 'T' in name:
+                    ATCC_id = ATCC_id.split("T")[0]
+                if 's' in name:
+                    ATCC_id = ATCC_id.split("s")[0]
+                if " " in name:
+                    ATCC_id = ATCC_id.split(" ")[0]
+
+                origin_to_standard_name_map_list.append((original_name.strip(), ATCC_id))
+
+    origin_to_standard_name_map_list = np.array(origin_to_standard_name_map_list)
+    original_names_with_genome_embedding = []
+    for line_idx, (original_name, standard_name) in enumerate(origin_to_standard_name_map_list):
+        if standard_name in embedded_genome_IDs:
+            original_names_with_genome_embedding.append(original_name)
+
+    return original_names_with_genome_embedding, dict(origin_to_standard_name_map_list)
+
+def load_all_genome_embeddings(embeddings_folder_path):
+    """
+    返回一个 ID 到 权重的字典
+    :param embeddings_folder_path:
+    :return: dict
+    """
+    file_paths = [embeddings_folder_path / f.name for f in embeddings_folder_path.iterdir() if f.is_file()]
+    embeddings_dict = {}
+    for file_path in tqdm(file_paths, desc=' loading embeddings ... '):
+        embedding = torch.load(file_path)
+        file_name = file_path.name.split('.')[0]
+        if 'ATCC' in file_name:
+            file_name = file_name.split('ATCC')[-1]
+            components = file_name.split('_')[1:]
+            if len(components) == 2:
+                ID = '-'.join(components)
+            else:
+                ID = components[0]
+        else:
+            # 自己下载的情况
+            ID = file_name
+        embeddings_dict[ID] = embedding
+
+    return embeddings_dict
+
+class SMILESDataset_with_genome(Dataset):
+    def __init__(self, dataframe, tokenizer, embeddings_dict, set_desc:str, max_length=512):
+        self.dataframe = dataframe
+        self.original_length = len(self.dataframe)
+        self.tokenizer = tokenizer
+        self.embeddings_dict = embeddings_dict
+        self.max_length = max_length
+        self.target_columns = 'MIC'
+        self.remove_long_smiles()
+        print(f'\n {set_desc}:\n original length: {self.original_length}\n after SMILES length limitation length: {len(self.dataframe)}')
+
+    def remove_long_smiles(self):
+        self.dataframe = self.dataframe[self.dataframe['SMILES'].apply(lambda x: len(self.tokenizer(x, return_tensors='pt', padding=False, truncation=False)['input_ids'].squeeze(0)) <= self.max_length)]
+        self.dataframe = self.dataframe.reset_index(drop=True)  # 重置索引
+        # self.dataframe.to_csv('/home/tianang/Projects/Synergy/DataPrepare/Data/DBAASP_id_SMILES_bact_MICs_512_limit.csv', index=False)
+        # print(f'new data file saved to /home/tianang/Projects/Synergy/DataPrepare/Data/DBAASP_id_SMILES_bact_MICs_512_limit.csv')
+
+    def __len__(self):
+        return len(self.dataframe)
+
+    def __getitem__(self, idx):
+        smiles = self.dataframe.iloc[idx]['SMILES']
+        # DBAASP_id = self.dataframe.iloc[idx]['DBAASP_id']
+        # target_columns = self.dataframe.columns.tolist()[2:]
+        strain_name = self.dataframe.iloc[idx]['strain_name']
+        target = self.dataframe.iloc[idx][self.target_columns]
+        inputs = self.tokenizer(smiles, return_tensors='pt', padding=False, truncation=False)  #, max_length=self.max_length)
+        inputs = {key: val.squeeze(0) for key, val in inputs.items()}  # 去掉 batch 维度
+        return {
+            'input_ids': inputs['input_ids'],
+            'attention_mask': inputs['attention_mask'],
+            'label': torch.tensor(target, dtype=torch.float),
+            'genome_embedding': self.embeddings_dict[strain_name],
+            'strain_name': strain_name
+        }
+
+def collate_fn(batch):
+    """
+    这里把一个batch中所有的label都转换成 log 计算之后的
+    """
+    input_ids = [item['input_ids'] for item in batch]
+    attention_mask = [item['attention_mask'] for item in batch]
+    labels = [item['label'] for item in batch]
+    genome_embeddings = [item['genome_embedding'] for item in batch]
+    strain_names = [item['strain_name'] for item in batch]
+
+    max_genome_length = 0
+    for genome_embedding in genome_embeddings:
+        if len(genome_embedding) > max_genome_length:
+            max_genome_length = len(genome_embedding)
+
+    padded_genome_embeddings = []
+    genome_attn_masks = []
+    for genome_embedding in genome_embeddings:
+        L,D = genome_embedding.shape
+        genome_attn_mask = torch.zeros(max_genome_length)
+        genome_padding = torch.zeros((max_genome_length, D), dtype=torch.bfloat16)
+        genome_padding[:L] = genome_embedding
+        genome_attn_mask[:L] = 1
+        padded_genome_embeddings.append(genome_padding)
+        genome_attn_masks.append(genome_attn_mask)
+
+    padded_genome_embeddings = torch.stack(padded_genome_embeddings)
+    genome_attn_masks = torch.stack(genome_attn_masks)
+
+    # 使用 pad_sequence 填充输入
+    input_ids = pad_sequence(input_ids, batch_first=True, padding_value=tokenizer.pad_token_id)
+    attention_mask = pad_sequence(attention_mask, batch_first=True, padding_value=0)
+    labels = torch.from_numpy(np.array(labels))
+    # mask = labels >= -0.5  # 生成多任务回归使用的 label mask
+    # labels_processed = labels.clone()  # 复制原张量以保留未满足条件的值
+
+    # 计算实际的用来回归的值
+    labels = -torch.log10(labels / 10)
+
+    return {
+        'input_ids': input_ids,
+        'attention_mask': attention_mask,
+        'label': labels,
+        'padded_genome_embeddings': padded_genome_embeddings,
+        'genome_attn_masks': genome_attn_masks,
+        'strain_names': strain_names
+    }
+
+class RegressionHead(nn.Module):
+    """Head for sentence-level classification tasks."""
+
+    def __init__(
+        self,
+        input_dim,
+        hidden_dim_1 = 384,
+        hidden_dim_2 = 128,
+        num_targets = 19,
+        pooler_dropout: float=0.2,
+    ):
+        """
+        Initialize the classification head.
+
+        :param input_dim: Dimension of input features.
+        :param inner_dim: Dimension of the inner layer.
+        :param num_classes: Number of classes for classification.
+        :param activation_fn: Activation function name.
+        :param pooler_dropout: Dropout rate for the pooling layer.
+        """
+        super().__init__()
+        self.dense_1 = nn.Linear(input_dim, hidden_dim_1)
+        self.dense_2 = nn.Linear(hidden_dim_1, hidden_dim_2)
+        self.activation_fn = nn.GELU()
+        self.dropout = nn.Dropout(p=pooler_dropout)
+        self.out_proj = nn.Linear(hidden_dim_2, num_targets)
+
+    def forward(self, features, **kwargs):
+        """
+        Forward pass for the classification head.
+
+        :param features: Input features for classification.
+
+        :return: Output from the classification head.
+        """
+        x = self.dense_1(features)
+        x = self.activation_fn(x)
+        x = self.dropout(x)
+
+        x = self.dense_2(x)
+        x = self.activation_fn(x)
+        x = self.dropout(x)
+
+        x = self.out_proj(x)
+        return x
+
+class FirstTokenAttention_genome(nn.Module):
+    def __init__(self, mol_cls_embed_dim, genome_embed_dim, num_heads, dropout=0.1):
+        super(FirstTokenAttention_genome, self).__init__()
+        self.mol_to_genome_dim = nn.Linear(mol_cls_embed_dim, genome_embed_dim)
+        # self.genome_to_mol_dim = nn.Linear(genome_embed_dim, mol_cls_embed_dim)
+        # 多头注意力层
+        self.key_value_projection = nn.Linear(genome_embed_dim, genome_embed_dim * 2)
+        self.mha = nn.MultiheadAttention(genome_embed_dim, num_heads, dropout=dropout)
+        # 残差和归一化（LayerNorm）
+        self.norm1 = nn.LayerNorm(genome_embed_dim)
+        # 前馈网络
+        self.ffn = nn.Sequential(
+            nn.Linear(genome_embed_dim, genome_embed_dim),
+            nn.ReLU(),
+            nn.Linear(genome_embed_dim, genome_embed_dim)
+        )
+        self.norm2 = nn.LayerNorm(genome_embed_dim)
+
+    def forward(self, mol_cls_emb, genome_embs, key_padding_mask):
+        """
+        x: Tensor, shape = (batch_size, seq_len, embed_dim)
+        """
+        # 提取序列的第一个 token，作为 query，形状: (batch_size, 1, embed_dim)
+        genome_embs_dim = genome_embs.shape[-1]
+        query = self.mol_to_genome_dim(mol_cls_emb)[:, None, :]
+        # nn.MultiheadAttention 要求输入 shape 为 (seq_len, batch_size, embed_dim)
+        query = query.transpose(0, 1)  # (1, batch_size, embed_dim)
+        key_value = self.key_value_projection(genome_embs.reshape(-1, genome_embs.shape[-1])).reshape([genome_embs.shape[0], genome_embs.shape[1], -1])
+        key_value = key_value.transpose(0, 1)  # (seq_len, batch_size, embed_dim)
+        # value = key
+
+        # 计算多头注意力：只计算第一个 token 对整个序列的注意力
+        attn_output, attn_weights = self.mha(query, key_value[:, :, :genome_embs_dim], key_value[:, :, genome_embs_dim:], key_padding_mask = key_padding_mask.to(torch.bool))  # (1, batch_size, embed_dim)
+        # 残差连接与归一化
+        # attn_output = self.genome_to_mol_dim(attn_output.squeeze())
+        query = self.norm1(query.squeeze() + attn_output.squeeze())
+
+        # 前馈网络 + 残差连接和归一化
+        ffn_output = self.ffn(query)
+        query = self.norm2(query + ffn_output)
+
+        # 最终只输出更新后的第一个 token embedding，返回形状 (batch_size, embed_dim)
+        return query
+
+
+embeddings_folder_path = current_directory / 'DataPrepare' / 'Data' / 'Genome_embs'
+
+embedded_genome_IDs = get_embedded_genome_IDs(embeddings_folder_path)
+Evo_MIC_count_file_path = current_directory / 'DataPrepare' / 'Data' / 'Evo_edition_2_MIC_data_handcrafted.json'
+
+original_names_with_genome_embedding, origin_to_standard_name_map_dict = get_original_strain_name_with_genome_embedding(Evo_MIC_count_file_path, embedded_genome_IDs)
+
+Evo_strain_MIC_data_path = current_directory / 'DataPrepare' / 'Data' / 'DBAASP_id_bact_name_SMILES_MIC_Evo.csv'
+all_Evo_MIC_data = pd.read_csv(Evo_strain_MIC_data_path)
+columns_names = all_Evo_MIC_data.columns
+all_Evo_MIC_data = all_Evo_MIC_data.values
+Evo_MIC_data_with_genome_embedding = []
+for MIC_data_line in tqdm(all_Evo_MIC_data, desc=' retriving MIC data with genome embeddings '):
+    if MIC_data_line[1] in original_names_with_genome_embedding:
+        Evo_MIC_data_with_genome_embedding.append(MIC_data_line)
+
+Evo_MIC_data_with_genome_embedding = pd.DataFrame(np.array(Evo_MIC_data_with_genome_embedding), columns=columns_names)
+Evo_MIC_data_with_genome_embedding.to_csv(current_directory / 'DataPrepare' / 'Data' / 'DBAASP_id_bact_name_SMILES_MIC_Evo_with_genome.csv', index=False)
+
+Evo_MIC_data_with_genome_embedding = Evo_MIC_data_with_genome_embedding.values
+Evo_MIC_data_with_genome_embedding_standard_name = []
+
+for line in Evo_MIC_data_with_genome_embedding:
+    # 替换原始的 strain name 到 ATCC 或者是下载的genome 的 name，方便embedding载入
+    line[1] = origin_to_standard_name_map_dict[line[1]]
+    Evo_MIC_data_with_genome_embedding_standard_name.append(line)
+Evo_MIC_data_with_genome_embedding_standard_name = np.array(Evo_MIC_data_with_genome_embedding_standard_name)
+
+# 格式为 strain_ID: Evo2 genome embeddings
+embeddings_dict = load_all_genome_embeddings(embeddings_folder_path)
+
+all_standard_name_set = set(Evo_MIC_data_with_genome_embedding_standard_name[:, 1])
+standard_strain_line_group_dict = {}
+for standard_strain_ID in tqdm(all_standard_name_set, desc=' Getting strain MIC groups '):
+    indices = np.where(Evo_MIC_data_with_genome_embedding_standard_name[:, 1] == standard_strain_ID)[0]
+    standard_strain_line_group_dict[standard_strain_ID] = Evo_MIC_data_with_genome_embedding_standard_name[indices]
+
+strain_for_test = ['BAA-3051', '19417']
+strain_for_train = all_standard_name_set - set(strain_for_test)
+
+train_data = []
+test_data = []
+
+for strain_ID in strain_for_train:
+    train_data.append(standard_strain_line_group_dict[strain_ID])
+for strain_ID in strain_for_test:
+    test_data.append(standard_strain_line_group_dict[strain_ID])
+
+train_data = pd.DataFrame(np.concatenate(train_data), columns=columns_names)
+test_data = pd.DataFrame(np.concatenate(test_data), columns=columns_names)
+
+model_name = "DeepChem/ChemBERTa-77M-MTR"
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+
+train_dataset = SMILESDataset_with_genome(train_data, tokenizer, embeddings_dict, 'training set')
+test_dataset = SMILESDataset_with_genome(test_data, tokenizer, embeddings_dict, 'test set')
+
+print(f'\n training data 1 data type: {train_dataset[0]['genome_embedding'].dtype}\n')
+
+device = torch.device("cuda:6" if torch.cuda.is_available() else "cpu")
+num_epochs = 1000
+min_lr = 1e-8
+batch_size = 50
+freeze_epochs = 20
+
+
+ChemBERTa_model = AutoModel.from_pretrained(model_name)
+ChemBERTa_model.to(device)
+
+# 冻结预训练模型参数
+for param in ChemBERTa_model.parameters():
+    param.requires_grad = False
+
+co_cross_attn_genome = FirstTokenAttention_genome(ChemBERTa_model.config.hidden_size, train_dataset[0]['genome_embedding'].shape[1], 4, 0.1)
+co_cross_attn_genome.to(device)
+reg_head = RegressionHead(8192, 8192//2, 128, 1, 0.2)
+reg_head.to(device)
+
+criterion = nn.MSELoss()
+scaler = torch.amp.GradScaler('cuda')
+optimizer = optim.Adam(co_cross_attn_genome.parameters(), lr=1e-4)
+optimizer.add_param_group({'params': reg_head.parameters(), 'lr': 1e-4})
+optimizer.add_param_group({'params': ChemBERTa_model.parameters(), 'lr': 1e-4})
+
+scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=num_epochs, eta_min=min_lr)
+
+train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, collate_fn=collate_fn)
+test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False, collate_fn=collate_fn)
+
+for epoch in tqdm(range(num_epochs), desc=' Training'):
+
+    if epoch + 1 == freeze_epochs:
+        # 解冻预训练模型
+        for param in ChemBERTa_model.parameters():
+            param.requires_grad = True
+        # optimizer.add_param_group({'params': ChemBERTa_model.parameters(), 'lr': 1e-4})
+
+    train_batch_losses = []
+
+    for batch in tqdm(train_loader, desc=f"Epoch {epoch + 1}/{num_epochs} | training", leave=False):
+        input_ids = batch['input_ids'].to(device)
+        attention_mask = batch['attention_mask'].to(device)
+        labels = batch['label'].to(device)
+        padded_genome_embeddings = batch['padded_genome_embeddings'].to(device).to(torch.float)
+        genome_attn_masks = batch['genome_attn_masks'].to(device)
+        strain_names = batch['strain_names']
+
+        optimizer.zero_grad()
+
+        with torch.amp.autocast('cuda', enabled=False):
+            outputs = ChemBERTa_model(input_ids=input_ids, attention_mask=attention_mask)
+
+            mol_cls_embedding = outputs.last_hidden_state[:, 0, :]
+            mol_cls_embedding = co_cross_attn_genome(mol_cls_embedding, padded_genome_embeddings, genome_attn_masks)
+            logits = reg_head(mol_cls_embedding).squeeze()
+            loss = criterion(logits, labels)
+
+        scaler.scale(loss).backward()
+        scaler.step(optimizer)
+        scaler.update()
+
+        train_batch_losses.append(loss.item())
+
+    scheduler.step()
+    # print(f"Epoch {epoch + 1}/{num_epochs}, Training Loss: {np.array(batch_losses).mean()}")
+
+    with torch.no_grad():
+
+        test_batch_losses = []
+
+        for batch in tqdm(test_loader, desc=f"Epoch {epoch + 1}/{num_epochs} | evaluating"):
+            input_ids = batch['input_ids'].to(device)
+            attention_mask = batch['attention_mask'].to(device)
+            labels = batch['label'].to(device)
+            padded_genome_embeddings = batch['padded_genome_embeddings'].to(device).to(torch.float)
+            genome_attn_masks = batch['genome_attn_masks'].to(device)
+            strain_names = batch['strain_names']
+
+            with torch.amp.autocast('cuda', enabled=False):
+                outputs = ChemBERTa_model(input_ids=input_ids, attention_mask=attention_mask)
+
+                mol_cls_embedding = outputs.last_hidden_state[:, 0, :]
+                mol_cls_embedding = co_cross_attn_genome(mol_cls_embedding, padded_genome_embeddings, genome_attn_masks)
+                logits = reg_head(mol_cls_embedding)
+                loss = criterion(logits, labels)
+
+            test_batch_losses.append(loss.item())
+
+        print(f"  Epoch {epoch + 1}/{num_epochs}, Training Loss: {np.array(train_batch_losses).mean()}, Test Loss: {np.array(test_batch_losses).mean()}")

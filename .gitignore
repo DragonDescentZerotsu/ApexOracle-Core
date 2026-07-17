@@ -1,0 +1,85 @@
+# Python、notebook 和编辑器缓存
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+.vscode/
+.idea/
+.codex
+.codex
+.codex/
+.agents/
+.DS_Store
+.git-state/
+
+# 本地环境与凭据
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# 训练数据和派生数据
+DataPrepare/Data/*
+!DataPrepare/Data/inhouse_synergy/
+DataPrepare/Data/inhouse_synergy/*
+!DataPrepare/Data/inhouse_synergy/*.py
+DataPrepare/MDLM/Data/
+
+# Capsule 只保留源码快照；资源由发布流程单独管理
+capsule/data/*
+!capsule/data/source/
+capsule_fig2/data/*
+!capsule_fig2/data/source/
+capsule/results/
+capsule_fig2/results/
+
+# 模型、特征缓存和大型二进制产物
+Checkpoints/
+compare_APEX/APEX_ckpt/
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.bin
+*.npy
+*.npz
+*.arrow
+*.pkl
+*.pickle
+
+# 运行日志、跟踪缓存和结果
+wandb/
+**/wandb/
+logs/
+**/logs/
+results/
+**/results/
+paper_figs/
+*.log
+slurm-*.out
+
+# 原始文档、压缩包和非源码媒体
+*.csv
+*.tsv
+*.xlsx
+*.xls
+*.docx
+*.pdf
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+
+# 临时文件
+*.tmp
+*.temp
+*.swp
+*~
