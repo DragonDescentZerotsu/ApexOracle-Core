@@ -153,7 +153,7 @@ APEX 输入转换规则：
 - 每个 fold 保存预测和指标；汇总报告 mean ± SD。
 - 输出逐模型处理成功率和任何异常，但正式指标必须基于完全相同的 test IDs。
 
-状态：共享数据 loader、outer fold 校验、训练折内 10% validation、MIC label transform 和统一 macro-task R2 已实现并通过测试；统一 torch regression head、feature cache 契约、encoder adapters 和训练 runner 待迁移。旧 capsule 在 outer test fold 上逐 epoch 选择 best checkpoint 的行为不会进入新协议。
+状态：共享数据 loader、outer fold 校验、训练折内 10% validation、MIC label transform、统一 macro-task R2、严格 ID 对齐的 `.npz` feature-cache 契约和统一 torch regression-head runner 已实现并通过测试；各 encoder feature adapter 待迁移。旧 capsule 在 outer test fold 上逐 epoch 选择 best checkpoint 的行为不会进入新协议。
 
 #### 3.3 capsule 迁移
 

@@ -37,5 +37,18 @@ python scripts/prepare_data/build_fig2b_shared_dataset.py
 
 - 共享 molecule IDs、APEX 投影、五折划分和审计 manifest：已实现；
 - 共享数据 loader、训练折内 validation 划分、label transform 和 R2 实现：已实现；
-- 各 encoder adapter 和统一 regression head：待迁移；
+- 严格校验 ID 的 `.npz` feature-cache 契约和统一 regression-head runner：已实现；
+- 各 encoder 的 feature adapter：待迁移；
 - 正式五折训练、mean ± SD、论文图和 reviewer response 更新：尚未运行。
+
+统一 head runner 的入口为：
+
+```bash
+python scripts/reproduce/run_fig2b_shared_heads.py \
+  --feature-cache /path/to/encoder_features.npz \
+  --output-dir /path/to/results \
+  --encoder-name chemberta_mtr \
+  --device cuda:0
+```
+
+旧 `.pt` cache 没有共享协议版本和完整 ID 契约，不能直接传入；必须由对应 adapter 在公共 ID 上重新生成 `.npz` cache。

@@ -98,6 +98,7 @@
 - **已实现的协议选择：** noncanonical residue 显式映射为 `X`；重构版 APEX adapter 为 `X` 分配独立 index 23，冻结 AAindex 向量使用 20 种 canonical residue 向量的均值。旧 `compare_APEX/utils.py` 会把未知字符静默留在 padding index 0，新 benchmark 不复用该行为。
 - **已由代码审计验证的事实：** 旧 `scripts/reproduce_fig2b_baselines_online_5fold.py` 和 capsule 资源不满足新版公平协议：各 encoder 在自己的过滤结果上重新 KFold，训练时每个 epoch 都在 outer test fold 上评估并用它选择 best checkpoint；APEX 使用 `512→256` head，而其他 comparator 使用 `384→128` head。`scripts/reproduce_fig2b_apex_original_5fold.py` 还在 validation 时保持 regression head 为 train mode，使 dropout 参与 checkpoint 选择。因此旧 capsule 数值只能作为历史派生结果，不能作为 reviewer 要求的新正式结果。
 - **已实现的新版协议：** outer 五折由唯一 `folds.csv` 冻结；每个 outer training fold 内再以 `seed=42+outer_fold` 固定划出 10% molecule 作 validation；所有 frozen encoder 在 eval mode 产生 feature；所有 comparator 使用相同 `384→128→19` head；checkpoint 只由 validation macro-task R2 选择，outer test 最后只评估一次。
+- **已实现并由测试验证的基础设施：** `feature_cache.py` 定义不使用 pickle 的 `.npz` feature-cache 契约，并要求 cache 与 11,398 个公共 ID 完全相等后才按 canonical ID 顺序重排；`training.py` 是所有 encoder 共用的 head trainer；`scripts/reproduce/run_fig2b_shared_heads.py` 是统一入口。旧 capsule `.pt` cache 缺少这一协议版本和完整 ID 契约，不能直接冒充新版公平结果。
 - `compare_APEX/APEX_fix_train_DBAASP_MIC_5_fold_mean.py` 是最终 APEX benchmark 版本。`APEX_train_DBAASP_MIC.py`、`APEX_train_DBAASP_MIC_5_fold_mean.py`、`APEX_train_inhouse_MIC.py`、`fine_tune_on_DBAASP_SMILES.py` 和 `deubg.py` 是早期或 debug driver。`APEX_models.py`、`APEX_trainer_CV.py` 和 `utils.py` 是复制过来的 APEX 支持代码。`APEX_all_data.sh` 是历史集群启动脚本，其中包含必须撤销和删除的明文 W&B 凭据。
 
 #### 小分子抗生素分类
