@@ -154,7 +154,7 @@ APEX 输入转换规则：
 - 每个 fold 保存预测和指标；汇总报告 mean ± SD。
 - 输出逐模型处理成功率和任何异常，但正式指标必须基于完全相同的 test IDs。
 
-状态：共享 native-processability 审计、公共 ID 交集、outer fold 校验、MIC label transform、指标实现和严格 ID 对齐的 `.npz` feature-cache 契约已实现并通过测试。曾新增的 10% validation、统一 prediction head 和统一 head runner 超出了 reviewer 要求，已经撤回。APEX adapter 已严格加载完整原 checkpoint，并为 10,886 个公共 molecule 生成及回读 `(10886, 128)` 审计 cache。宿主机 GPU 和 driver 正常；此前的报错来自 Codex 文件沙箱隐藏 `/dev/nvidia*`。下一步是给各原始训练实现增加只负责读取公共 IDs/folds 的薄 wrapper，并接入两个 DLM checkpoint；正式五折尚未运行。
+状态：共享 native-processability 审计、公共 ID 交集、outer fold 校验、MIC label transform、指标实现和严格 ID 对齐的 `.npz` feature-cache 契约已实现并通过测试。曾新增的 10% validation、统一 prediction head 和统一 head runner 超出了 reviewer 要求，已经撤回。APEX adapter 已严格加载完整原 checkpoint，并为 10,886 个公共 molecule 生成及回读 `(10886, 128)` 审计 cache。各原始训练实现的共享 IDs/folds 薄入口和两个 DLM checkpoint 接入已经完成；正式 7-model × 5-fold 训练于 2026-07-17 在四张 H100 上开始运行。训练保持原 200 epochs、batch size 200、Adam、`1e-4`、模型特有 head 和 train/eval mode；只缓存 held-out fold 上确定性的 frozen-backbone eval feature，以避免每个 epoch 重复相同计算。
 
 #### 3.3 capsule 迁移
 
