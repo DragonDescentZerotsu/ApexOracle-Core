@@ -32,7 +32,15 @@ from transformers import AutoModel, AutoTokenizer
 
 
 REPO_ROOT = Path("/data2/tianang/projects/Synergy")
+SRC_ROOT = REPO_ROOT / "src"
+if str(SRC_ROOT) not in sys.path:
+    sys.path.insert(0, str(SRC_ROOT))
+
+from apexoracle.benchmarks.molecule_encoders.protocol import DEFAULT_TARGET_COLUMNS
+
+
 DEFAULT_OUTPUT_DIR = REPO_ROOT / "Checkpoints" / "fig2b_baselines_online_5fold"
+DEFAULT_SHARED_DIR = REPO_ROOT / "DataPrepare" / "Data" / "fig2b_shared_v1"
 SMILES_DATA = REPO_ROOT / "DataPrepare" / "Data" / "DBAASP_id_SMILES_bact_MICs.csv"
 APEX_DATA = REPO_ROOT / "DataPrepare" / "Data" / "DBAASP_id_same_as_SMILES_AAseqs_bact_MICs_512_limit.csv"
 
@@ -161,6 +169,33 @@ class ApexDataset(Dataset):
         }
 
 
+def load_shared_frame_and_folds(shared_dir: Path) -> tuple[pd.DataFrame, np.ndarray]:
+    """Load the reviewer-requested common IDs and their frozen folds."""
+
+    shared = pd.read_csv(shared_dir / "shared_molecules.csv", dtype={"dbaasp_id": "string"})
+    folds = pd.read_csv(shared_dir / "folds.csv", dtype={"dbaasp_id": "string"})
+    shared["dbaasp_id"] = shared["dbaasp_id"].str.strip()
+    folds["dbaasp_id"] = folds["dbaasp_id"].str.strip()
+    if shared["dbaasp_id"].duplicated().any() or folds["dbaasp_id"].duplicated().any():
+        raise ValueError("shared benchmark IDs must be unique")
+    fold_by_id = folds.set_index("dbaasp_id")["fold"]
+    if set(shared["dbaasp_id"]) != set(fold_by_id.index):
+        raise ValueError("shared_molecules.csv and folds.csv contain different ID sets")
+    fold_ids = shared["dbaasp_id"].map(fold_by_id).to_numpy(dtype=np.int64)
+    if set(fold_ids.tolist()) != set(range(5)):
+        raise ValueError("shared benchmark must contain folds 0 through 4")
+    return shared, fold_ids
+
+
+def explicit_fold_indices(fold_ids: np.ndarray):
+    for fold in range(5):
+        test_idx = np.flatnonzero(fold_ids == fold)
+        train_idx = np.flatnonzero(fold_ids != fold)
+        if len(test_idx) == 0 or len(train_idx) == 0:
+            raise ValueError(f"fold {fold} is empty")
+        yield train_idx, test_idx
+
+
 class RegressionHead(nn.Module):
     def __init__(
         self,
@@ -200,7 +235,7 @@ class HFRegressionModel(nn.Module):
             pooler_dropout=0.2,
         )
 
-    def forward(self, input_ids, attention_mask):
+    def encode(self, input_ids, attention_mask):
         outputs = self.bert(input_ids=input_ids, attention_mask=attention_mask)
         if self.spec.pooling == "mean":
             expanded = attention_mask.unsqueeze(-1).expand(outputs.last_hidden_state.size()).float()
@@ -208,7 +243,10 @@ class HFRegressionModel(nn.Module):
             features = summed / torch.clamp(expanded.sum(dim=1), min=1e-9)
         else:
             features = outputs.last_hidden_state[:, 0, :]
-        return self.classifier(features)
+        return features
+
+    def forward(self, input_ids, attention_mask):
+        return self.classifier(self.encode(input_ids, attention_mask))
 
 
 class MultiTaskLoss(nn.Module):
@@ -285,26 +323,41 @@ def finite_mean(values: Iterable[float | None]) -> float:
     return float(np.mean(vals)) if vals else float("nan")
 
 
-def build_hf_dataset(spec: ModelSpec, limit_rows: int | None):
+def build_hf_dataset(spec: ModelSpec, limit_rows: int | None, shared_dir: Path | None = None):
     tokenizer = get_peptideclm_tokenizer() if spec.kind == "peptideclm" else AutoTokenizer.from_pretrained(
         spec.hf_model,
         trust_remote_code=spec.trust_remote_code,
     )
-    data = pd.read_csv(spec.data_path)
+    if shared_dir is None:
+        data = pd.read_csv(spec.data_path)
+    else:
+        shared, _ = load_shared_frame_and_folds(shared_dir)
+        data = shared.rename(columns={"dbaasp_id": "DBAASP_id", "smiles": "SMILES"})
+        data = data[["DBAASP_id", "SMILES", *DEFAULT_TARGET_COLUMNS]]
     if limit_rows is not None:
         data = data.head(limit_rows)
     dataset = TokenizedSmilesDataset(data, tokenizer)
     return dataset, tokenizer
 
 
-def build_apex_components(spec: ModelSpec, device: torch.device, limit_rows: int | None):
+def build_apex_components(
+    spec: ModelSpec,
+    device: torch.device,
+    limit_rows: int | None,
+    shared_dir: Path | None = None,
+):
     sys.path.insert(0, str(REPO_ROOT / "compare_APEX"))
     from APEX_models import AMP_model_fix
     from utils import AAindex, make_vocab, onehot_encoding
 
     word2idx, _ = make_vocab()
     emb, _ = AAindex(str(REPO_ROOT / "compare_APEX" / "aaindex1.csv"), word2idx)
-    data = pd.read_csv(spec.data_path)
+    if shared_dir is None:
+        data = pd.read_csv(spec.data_path)
+    else:
+        shared, _ = load_shared_frame_and_folds(shared_dir)
+        data = shared.rename(columns={"dbaasp_id": "DBAASP_id", "apex_sequence": "AAseqs"})
+        data = data[["DBAASP_id", "AAseqs", *DEFAULT_TARGET_COLUMNS]]
     if limit_rows is not None:
         data = data.head(limit_rows)
     dataset = ApexDataset(data, max_length=52, word2idx=word2idx, onehot_encoding=onehot_encoding)
@@ -331,9 +384,15 @@ def evaluate_hf(model: HFRegressionModel, loader: DataLoader, device: torch.devi
     return r2_per_task, finite_mean(r2_per_task)
 
 
-def evaluate_apex(backbone, head, loader: DataLoader, device: torch.device):
+def evaluate_apex(backbone, head, loader: DataLoader, device: torch.device, *, original_head_mode: bool):
     backbone.eval()
-    head.eval()
+    # The published APEX driver never calls cls_head.eval(); its dropout remains
+    # active during held-out-fold checkpoint selection. Preserve that behavior
+    # for the paper-compatible shared-data run.
+    if original_head_mode:
+        head.train()
+    else:
+        head.eval()
     all_labels, all_preds, all_masks = [], [], []
     with torch.no_grad():
         for batch in loader:
@@ -344,6 +403,42 @@ def evaluate_apex(backbone, head, loader: DataLoader, device: torch.device):
             all_masks.extend(batch["label_mask"].numpy())
     r2_per_task = calculate_r2_per_task(all_labels, all_preds, all_masks)
     return r2_per_task, finite_mean(r2_per_task)
+
+
+def cache_hf_held_out_features(model: HFRegressionModel, loader: DataLoader, device: torch.device):
+    """Cache the deterministic frozen-backbone eval pass once per fold."""
+
+    model.eval()
+    features, labels, masks = [], [], []
+    with torch.no_grad():
+        for batch in loader:
+            encoded = model.encode(batch["input_ids"].to(device), batch["attention_mask"].to(device))
+            features.append(encoded.float().cpu())
+            labels.append(batch["label"].float().cpu())
+            masks.append(batch["label_mask"].float().cpu())
+    return torch.cat(features), torch.cat(labels), torch.cat(masks)
+
+
+def cache_apex_held_out_features(backbone, loader: DataLoader, device: torch.device):
+    backbone.eval()
+    features, labels, masks = [], [], []
+    with torch.no_grad():
+        for batch in loader:
+            features.append(backbone(batch["input_ids"].to(device)).float().cpu())
+            labels.append(batch["label"].float().cpu())
+            masks.append(batch["label_mask"].float().cpu())
+    return torch.cat(features), torch.cat(labels), torch.cat(masks)
+
+
+def evaluate_cached_head(head, cache, device: torch.device, batch_size: int, *, train_mode: bool):
+    features, labels, masks = cache
+    head.train(mode=train_mode)
+    predictions = []
+    with torch.no_grad():
+        for start in range(0, len(features), batch_size):
+            predictions.append(head(features[start : start + batch_size].to(device)).float().cpu())
+    task_r2 = calculate_r2_per_task(labels.numpy(), torch.cat(predictions).numpy(), masks.numpy())
+    return task_r2, finite_mean(task_r2)
 
 
 def save_head_checkpoint(path: Path, spec: ModelSpec, fold: int, epoch: int, best_r2: float, r2_per_task, head, train_size: int, test_size: int, args):
@@ -375,11 +470,21 @@ def save_head_checkpoint(path: Path, spec: ModelSpec, fold: int, epoch: int, bes
 
 
 def train_hf_model(spec: ModelSpec, output_dir: Path, device: torch.device, args):
-    dataset, tokenizer = build_hf_dataset(spec, args.limit_rows)
-    kf = KFold(n_splits=5, shuffle=True, random_state=42)
+    shared_dir = Path(args.shared_dir) if args.shared_dir is not None else None
+    dataset, tokenizer = build_hf_dataset(spec, args.limit_rows, shared_dir)
+    if shared_dir is None:
+        split_iterator = KFold(n_splits=5, shuffle=True, random_state=42).split(dataset)
+    else:
+        _, fold_ids = load_shared_frame_and_folds(shared_dir)
+        if len(fold_ids) != len(dataset):
+            raise ValueError(f"{spec.name} dropped IDs after the shared intersection was frozen")
+        split_iterator = explicit_fold_indices(fold_ids)
     fold_results = []
     pad_id = get_pad_token_id(tokenizer)
-    for fold, (train_idx, test_idx) in enumerate(kf.split(dataset)):
+    selected_folds = set(args.folds if args.folds is not None else range(5))
+    for fold, (train_idx, test_idx) in enumerate(split_iterator):
+        if fold not in selected_folds:
+            continue
         model = HFRegressionModel(spec).to(device)
         for param in model.bert.parameters():
             param.requires_grad = False
@@ -397,10 +502,11 @@ def train_hf_model(spec: ModelSpec, output_dir: Path, device: torch.device, args
             shuffle=False,
             collate_fn=lambda batch: collate_hf(batch, pad_id),
         )
-        best_r2 = -float("inf")
+        best_r2 = 0.0 if shared_dir is not None else -float("inf")
         best_epoch = None
         best_task_r2 = None
         fold_dir = output_dir / f"fold_{fold + 1}"
+        held_out_cache = cache_hf_held_out_features(model, test_loader, device)
 
         for epoch in range(args.num_epochs):
             model.train()
@@ -413,7 +519,13 @@ def train_hf_model(spec: ModelSpec, output_dir: Path, device: torch.device, args
                 optimizer.step()
                 last_loss = float(loss.detach().cpu())
 
-            r2_per_task, r2_mean = evaluate_hf(model, test_loader, device)
+            r2_per_task, r2_mean = evaluate_cached_head(
+                model.classifier,
+                held_out_cache,
+                device,
+                args.batch_size,
+                train_mode=False,
+            )
             if r2_mean > best_r2:
                 best_r2 = r2_mean
                 best_epoch = epoch
@@ -461,19 +573,30 @@ def train_hf_model(spec: ModelSpec, output_dir: Path, device: torch.device, args
 
 
 def train_apex_model(spec: ModelSpec, output_dir: Path, device: torch.device, args):
-    dataset, backbone, _ = build_apex_components(spec, device, args.limit_rows)
-    kf = KFold(n_splits=5, shuffle=True, random_state=42)
+    shared_dir = Path(args.shared_dir) if args.shared_dir is not None else None
+    dataset, backbone, _ = build_apex_components(spec, device, args.limit_rows, shared_dir)
+    if shared_dir is None:
+        split_iterator = KFold(n_splits=5, shuffle=True, random_state=42).split(dataset)
+    else:
+        _, fold_ids = load_shared_frame_and_folds(shared_dir)
+        if len(fold_ids) != len(dataset):
+            raise ValueError("APEX dropped IDs after the shared intersection was frozen")
+        split_iterator = explicit_fold_indices(fold_ids)
     fold_results = []
-    for fold, (train_idx, test_idx) in enumerate(kf.split(dataset)):
-        _, backbone, head = build_apex_components(spec, device, args.limit_rows)
+    selected_folds = set(args.folds if args.folds is not None else range(5))
+    for fold, (train_idx, test_idx) in enumerate(split_iterator):
+        if fold not in selected_folds:
+            continue
+        _, backbone, head = build_apex_components(spec, device, args.limit_rows, shared_dir)
         optimizer = optim.Adam(filter(lambda p: p.requires_grad, head.parameters()), lr=args.learning_rate)
         criterion = MultiTaskLoss()
         train_loader = DataLoader(torch.utils.data.Subset(dataset, train_idx), batch_size=args.batch_size, shuffle=True, collate_fn=collate_apex)
         test_loader = DataLoader(torch.utils.data.Subset(dataset, test_idx), batch_size=args.batch_size, shuffle=False, collate_fn=collate_apex)
-        best_r2 = -float("inf")
+        best_r2 = 0.0 if shared_dir is not None else -float("inf")
         best_epoch = None
         best_task_r2 = None
         fold_dir = output_dir / f"fold_{fold + 1}"
+        held_out_cache = cache_apex_held_out_features(backbone, test_loader, device)
 
         for epoch in range(args.num_epochs):
             backbone.train()
@@ -486,7 +609,13 @@ def train_apex_model(spec: ModelSpec, output_dir: Path, device: torch.device, ar
                 loss.backward()
                 optimizer.step()
 
-            r2_per_task, r2_mean = evaluate_apex(backbone, head, test_loader, device)
+            r2_per_task, r2_mean = evaluate_cached_head(
+                head,
+                held_out_cache,
+                device,
+                args.batch_size,
+                train_mode=shared_dir is not None,
+            )
             if r2_mean > best_r2:
                 best_r2 = r2_mean
                 best_epoch = epoch
@@ -522,6 +651,7 @@ def run_model(task: dict):
     if args.seed is not None:
         torch.manual_seed(args.seed)
         np.random.seed(args.seed)
+    initial_torch_seed = int(torch.initial_seed())
 
     if spec.kind == "apex":
         dataset, fold_results = train_apex_model(spec, output_dir, device, args)
@@ -536,7 +666,14 @@ def run_model(task: dict):
         "best_mean_R2_across_folds": float(np.mean([item["best_r2_mean"] for item in fold_results])),
         "folds": fold_results,
         "target_columns": list(dataset.target_columns),
-        "training_semantics": "online frozen backbone; train uses model.train(); validation uses model.eval()",
+        "training_semantics": (
+            "online frozen backbone; train uses model.train(); held-out fold uses model.eval(); "
+            "published APEX head dropout remains active during held-out-fold selection"
+            if spec.kind == "apex" and args.shared_dir is not None
+            else "online frozen backbone; train uses model.train(); validation uses model.eval()"
+        ),
+        "shared_protocol_dir": str(args.shared_dir) if args.shared_dir is not None else None,
+        "initial_torch_seed": initial_torch_seed,
         "hyperparameters": {
             "num_epochs": args.num_epochs,
             "batch_size": args.batch_size,
@@ -545,6 +682,8 @@ def run_model(task: dict):
             "kfold_shuffle": True,
             "kfold_random_state": 42,
             "seed": args.seed,
+            "selected_folds_zero_based": args.folds,
+            "held_out_frozen_backbone_eval_cached_once": args.shared_dir is not None,
         },
     }
     (output_dir / "metrics.json").write_text(json.dumps(metrics, indent=2) + "\n")
@@ -581,6 +720,20 @@ def parse_args():
     parser.add_argument("--log-every", type=int, default=10)
     parser.add_argument("--limit-rows", type=int, default=None)
     parser.add_argument("--seed", type=int, default=None)
+    parser.add_argument(
+        "--folds",
+        nargs="+",
+        type=int,
+        choices=range(5),
+        default=None,
+        help="Optional zero-based folds to run; defaults to all five.",
+    )
+    parser.add_argument(
+        "--shared-dir",
+        type=Path,
+        default=DEFAULT_SHARED_DIR,
+        help="Common-ID/fold directory. Pass an empty value only for historical native-filter runs.",
+    )
     return parser.parse_args()
 
 
