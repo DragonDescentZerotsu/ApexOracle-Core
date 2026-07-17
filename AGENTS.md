@@ -93,6 +93,9 @@
 - **已由 checkpoint 验证的事实：** `best_1.ckpt`、`best_2.ckpt`、`best_3.ckpt`、`1-314000.ckpt`、`2-471000.ckpt` 和 `4-750000.ckpt` 均为 12-layer、hidden size 768 的纯 DLM checkpoint，不含 `backbone.regression.*`。DLM-only 的基础训练实现位于外部仓库的 `diffusion.py`、`models/dit.py` 和相关配置；`DBAASP_MLM_MDLM.py` 是其下游五折 MIC head 代码家族。
 - **根据现有证据作出的推断：** `wandb/run-20250421_231424-s58d1559/files/output.log` 的五个 fold 最佳 mean R2 为 0.4132、0.3529、0.4400、0.4134、0.4222，均值约 0.4083，与论文 DLM MLM bar 对应。结合运行时间，最可能使用的是当时已存在的 `best_2.ckpt`；旧日志没有保存实际 checkpoint 路径，因此仍需用新 benchmark 在共享数据协议下核验，不能把 `best_2.ckpt` 记为已完全确认的论文终版。
 - 新公平 benchmark 必须分别加载 12-layer DLM-only 和 24-layer MTR+DLM 配置，不能仅通过同一个 `best.ckpt` 生成两个不同标签的结果。
+- **已由新代码和真实数据验证的事实：** `src/apexoracle/benchmarks/molecule_encoders/protocol.py` 已实现 reviewer 要求的共享样本和共享五折协议。源表 11,401 个 molecule 中有 11,398 个进入公共集合，3 个 DBAASP ID（20480、20527、20979）因原始 sequence 缺失而在划分前显式排除；fold 大小依次为 2,280、2,280、2,280、2,279、2,279。原始数据和生成的 CSV 不进入 Git。
+- **已由新代码和真实数据验证的事实：** APEX 投影中有 1,689 条记录含 noncanonical residue、1,460 条含 D-residue、2,335 条含被线性化的 bond/multichain topology，92 条超过 50 residues 并被截断。DBAASP 的正确字段名是 `intrachainBonds`、`interchainBonds` 和 `coordinationBonds`；早先按 `intraChainBonds`/`interChainBonds` 检查得到的“字段为空”结论无效，后续不得沿用。
+- **已实现的协议选择：** noncanonical residue 显式映射为 `X`；重构版 APEX adapter 为 `X` 分配独立 index 23，冻结 AAindex 向量使用 20 种 canonical residue 向量的均值。旧 `compare_APEX/utils.py` 会把未知字符静默留在 padding index 0，新 benchmark 不复用该行为。
 - `compare_APEX/APEX_fix_train_DBAASP_MIC_5_fold_mean.py` 是最终 APEX benchmark 版本。`APEX_train_DBAASP_MIC.py`、`APEX_train_DBAASP_MIC_5_fold_mean.py`、`APEX_train_inhouse_MIC.py`、`fine_tune_on_DBAASP_SMILES.py` 和 `deubg.py` 是早期或 debug driver。`APEX_models.py`、`APEX_trainer_CV.py` 和 `utils.py` 是复制过来的 APEX 支持代码。`APEX_all_data.sh` 是历史集群启动脚本，其中包含必须撤销和删除的明文 W&B 凭据。
 
 #### 小分子抗生素分类
