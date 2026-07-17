@@ -38,7 +38,9 @@ python scripts/prepare_data/build_fig2b_shared_dataset.py
 - 共享 molecule IDs、APEX 投影、五折划分和审计 manifest：已实现；
 - 共享数据 loader、训练折内 validation 划分、label transform 和 R2 实现：已实现；
 - 严格校验 ID 的 `.npz` feature-cache 契约和统一 regression-head runner：已实现；
-- 各 encoder 的 feature adapter：待迁移；
+- APEX feature adapter：已实现，并用真实 pretrained checkpoint 为全部 11,398 个公共 molecule 生成和严格回读 `(11398, 128)` cache；
+- ChemBERTa-MTR、ChemBERTa-MLM、MolFormer 和 PeptideCLM frozen/eval feature adapter：已实现并完成小样本 backbone smoke test，待在可用 GPU 上生成全量 feature；
+- DLM MTR+DLM 与 DLM-only adapter：待从外部 `mdlm` 实现迁移；
 - 正式五折训练、mean ± SD、论文图和 reviewer response 更新：尚未运行。
 
 统一 head runner 的入口为：
@@ -52,3 +54,14 @@ python scripts/reproduce/run_fig2b_shared_heads.py \
 ```
 
 旧 `.pt` cache 没有共享协议版本和完整 ID 契约，不能直接传入；必须由对应 adapter 在公共 ID 上重新生成 `.npz` cache。
+
+全量 tokenizer 审计没有丢弃任何 ID：ChemBERTa-MTR、ChemBERTa-MLM 和 MolFormer 各有 512 条输入超过 512 tokens 并被截断，且没有 UNK；PeptideCLM 有 24 条被截断、8,150 条含 `[UNK]`。PeptideCLM 的高 UNK 比例必须随最终结果报告，不能通过过滤这些分子来改善指标。
+
+APEX 或 Hugging Face comparator 的 cache 入口为：
+
+```bash
+python scripts/reproduce/cache_fig2b_shared_features.py \
+  --encoder apex \
+  --output /path/to/apex_features.npz \
+  --device cuda:0
+```

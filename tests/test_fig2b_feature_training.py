@@ -4,6 +4,7 @@ import numpy as np
 import pytest
 
 from apexoracle.benchmarks.molecule_encoders.data import SharedBenchmarkData
+from apexoracle.benchmarks.molecule_encoders.encoders import _tokenize_without_dropping
 from apexoracle.benchmarks.molecule_encoders.feature_cache import (
     FeatureCache,
     load_feature_cache,
@@ -41,6 +42,30 @@ def _benchmark(number_of_rows=25):
         target_columns=tuple(DEFAULT_TARGET_COLUMNS),
     )
     return benchmark, features
+
+
+class _FakeTokenizer:
+    unk_token_id = 99
+
+    def __call__(self, text, *, truncation, max_length=None, **_kwargs):
+        content = [99 if symbol == "?" else 7 for symbol in text]
+        tokens = [1, *content, 2]
+        if truncation:
+            tokens = tokens[:max_length]
+        return {"input_ids": tokens}
+
+
+def test_hf_tokenization_truncates_and_records_but_never_drops():
+    token_ids, truncated, with_unknown = _tokenize_without_dropping(
+        _FakeTokenizer(),
+        ("AAAA", "A?"),
+        max_length=4,
+    )
+
+    assert len(token_ids) == 2
+    assert [len(values) for values in token_ids] == [4, 4]
+    assert truncated == 1
+    assert with_unknown == 1
 
 
 def test_feature_cache_reorders_to_shared_ids_and_rejects_missing_ids(tmp_path):
