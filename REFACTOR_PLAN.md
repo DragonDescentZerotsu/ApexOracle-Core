@@ -84,7 +84,7 @@ ChemBERTa MLM mean-pooling 作为可选消融，不与论文主 comparator 混�
 
 ### 阶段 0：建立审计基线
 
-状态：已完成静态审计，执行中补充 Git 和 MDLM 调查。
+状态：已完成。
 
 - [x] 在 `AGENTS.md` 中记录论文、代码、数据与 checkpoint 血缘。
 - [x] 区分最终版、可能最终版、历史版本、论文后代码和缺失代码。
@@ -103,17 +103,19 @@ ChemBERTa MLM mean-pooling 作为可选消融，不与论文主 comparator 混�
 - [x] 检查 GitHub 单文件 100 MB 限制以及总体提交体积。
 - [x] 显式检查 staged 文件，确保只包含源码、文档、配置和清空输出后的 notebook。
 - [x] 扫描 staged 内容中的疑似密钥和大型文件；旧绝对路径保留在 legacy tag 中，重构分支再统一迁移为配置。
-- [ ] 创建初始提交和 `legacy-code-snapshot-2026-07-17` tag，并同步到 `DragonDescentZerotsu/Synergy.git`。
-- [ ] 从该 tag 创建重构分支，后续清理不直接破坏历史快照。
+- [x] 创建本地初始提交和 `legacy-code-snapshot-2026-07-17` tag。
+- [x] 将 legacy `main` 和重构分支同步到 `DragonDescentZerotsu/Synergy.git`。
+- [ ] 在具备普通 Git 凭据后补推远程 tag `legacy-code-snapshot-2026-07-17`；当前远程以 `archive/legacy-code-snapshot-2026-07-17` branch 暂代。
+- [x] 从该 tag 创建 `agent/paper-release-refactor` 重构分支，后续清理不直接破坏历史快照。
 
 验收标准：从 tag 可以查看原始源码血缘，但仓库中不存在数据、checkpoint、结果或可用密钥。
 
-执行记录：当前 Codex 工作区将 `.git` 作为只读保护挂载，因此本次 Git metadata 暂存在被忽略的 `.git-state/` 中，并通过 `--git-dir=.git-state --work-tree=.` 操作同一工作树。远程仓库已由 GitHub App 验证为空、默认分支为 `main`，当前账号具有 push/admin 权限。
+执行记录：当前 Codex 工作区将 `.git` 作为只读保护挂载，因此本次 Git metadata 暂存在被忽略的 `.git-state/` 中，并通过 `--git-dir=.git-state --work-tree=.` 操作同一工作树。本地脱敏快照提交为 `a68707c`。本机 `gh`、SSH public key 和 HTTPS credential 均不可用，因此改用已授权的 GitHub App Git object API 重建远程提交链；上传的 237 个去重 blob 和五个版本 tree 均逐一与本地 SHA 校验一致。远程提交因额外的仓库初始化 parent 而拥有不同 commit SHA，但每个科学代码版本的 tree 与本地完全一致。连接器不提供 tag API，因此本地 tag 已保留，远程暂用 archive branch 作为恢复点。
 
 ### 阶段 2：建立共享核心模块
 
-- [ ] 建立可安装的 `src/` package 和最小依赖定义。
-- [ ] 抽取统一的数据 schema、label transform、mask、strain mapping 和 filtering。
+- [x] 建立可安装的 `src/` package 和最小依赖定义。
+- [ ] 抽取统一的数据 schema、label transform、mask、strain mapping 和 filtering；Fig. 2b 的 19-task schema、共享过滤和 fold 已先行完成。
 - [ ] 抽取 genome/text/molecule feature 接口。
 - [ ] 抽取 cross-attention/fusion、LoRA、regression/classification head。
 - [ ] 抽取指标、ensemble、checkpoint loading、seed 和设备选择逻辑。
@@ -142,13 +144,17 @@ APEX 输入转换规则：
 3. cyclic peptide：去除环连接语义，使用线性化 residue 序列；
 4. 转换失败必须在构建公共集合前显式报错或记录，不允许训练/评估时静默跳过。
 
+状态：**已实现并通过真实数据验证。** 当前源表 11,401 个 molecule。按各论文脚本的原生输入限制审计后，ChemBERTa-MTR、ChemBERTa-MLM 和 MolFormer 各可处理 10,889 个，PeptideCLM 可处理 11,377 个，两个 DLM 版本各可处理 11,082 个，APEX 可处理 11,321 个；最终公共交集为 10,886 个，五折大小为 2,178、2,177、2,177、2,177、2,177。APEX 输入中的 noncanonical residue 写为 `X`，但继续使用原始 23-token vocabulary；按原 `onehot_encoding` 行为，`X` 留在 index 0。不得修改 APEX 的 AAindex embedding、encoder、checkpoint 或 regression head。
+
 #### 3.2 统一训练与评估协议
 
 - 所有模型严格读取同一 `folds.csv`。
-- 统一 prediction head、训练 epoch/early stopping、优化器、随机种子和指标实现；只有 encoder 特有的必要输入处理不同。
+- 保留每个模型原论文实现中的 encoder、prediction head、训练参数和 checkpoint-selection 行为；本轮只统一 molecule IDs 和 folds。
 - frozen encoder 与 fine-tuned encoder 必须明确分组，不能在同一表中无说明混比。
 - 每个 fold 保存预测和指标；汇总报告 mean ± SD。
 - 输出逐模型处理成功率和任何异常，但正式指标必须基于完全相同的 test IDs。
+
+状态：共享 native-processability 审计、公共 ID 交集、outer fold 校验、MIC label transform、指标实现和严格 ID 对齐的 `.npz` feature-cache 契约已实现并通过测试。曾新增的 10% validation、统一 prediction head 和统一 head runner 超出了 reviewer 要求，已经撤回。APEX adapter 已严格加载完整原 checkpoint，并为 10,886 个公共 molecule 生成及回读 `(10886, 128)` 审计 cache。宿主机 GPU 和 driver 正常；此前的报错来自 Codex 文件沙箱隐藏 `/dev/nvidia*`。下一步是给各原始训练实现增加只负责读取公共 IDs/folds 的薄 wrapper，并接入两个 DLM checkpoint；正式五折尚未运行。
 
 #### 3.3 capsule 迁移
 

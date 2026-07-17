@@ -13,6 +13,13 @@
 - /data2/tianang/projects/discrete-diffusion-guidance 里面是所有我们使用的generate peptide用的代码和仓库
 - /data2/tianang/projects/evo2 里面是我们使用的embedding genome的代码
 
+## Git 与发布状态
+
+- 当前 Codex 工作区的 `.git` 是只读保护挂载，本地可用 Git metadata 位于被忽略的 `.git-state/`；操作命令需要使用 `git --git-dir=.git-state --work-tree=.`。
+- 本地 `main` 和 tag `legacy-code-snapshot-2026-07-17` 指向脱敏 legacy 快照 `a68707c`；重构分支为 `agent/paper-release-refactor`。
+- `DragonDescentZerotsu/Synergy` 已通过 GitHub App 同步：远程 `main` 是 legacy 快照，`agent/paper-release-refactor` 是重构分支，`archive/legacy-code-snapshot-2026-07-17` 是远程恢复点。237 个去重 blob 和五个版本 tree 已与本地 Git SHA 逐一校验一致。
+- GitHub App 没有 tag 创建接口，本机又没有普通 Git 凭据，所以远程 tag 尚未创建；后续获得 Git 凭据后应补推本地 tag。远程 commit SHA 因初始化 parent 与本地不同，判断内容一致性应比较 tree SHA。
+
 ## 论文及审稿回复路径
 
 - 本项目对应论文：`/data2/tianang/projects/ApexOracle_cleaned/docs/ApexOracle_Nat_Biotech/sn-article.tex`
@@ -93,6 +100,15 @@
 - **已由 checkpoint 验证的事实：** `best_1.ckpt`、`best_2.ckpt`、`best_3.ckpt`、`1-314000.ckpt`、`2-471000.ckpt` 和 `4-750000.ckpt` 均为 12-layer、hidden size 768 的纯 DLM checkpoint，不含 `backbone.regression.*`。DLM-only 的基础训练实现位于外部仓库的 `diffusion.py`、`models/dit.py` 和相关配置；`DBAASP_MLM_MDLM.py` 是其下游五折 MIC head 代码家族。
 - **根据现有证据作出的推断：** `wandb/run-20250421_231424-s58d1559/files/output.log` 的五个 fold 最佳 mean R2 为 0.4132、0.3529、0.4400、0.4134、0.4222，均值约 0.4083，与论文 DLM MLM bar 对应。结合运行时间，最可能使用的是当时已存在的 `best_2.ckpt`；旧日志没有保存实际 checkpoint 路径，因此仍需用新 benchmark 在共享数据协议下核验，不能把 `best_2.ckpt` 记为已完全确认的论文终版。
 - 新公平 benchmark 必须分别加载 12-layer DLM-only 和 24-layer MTR+DLM 配置，不能仅通过同一个 `best.ckpt` 生成两个不同标签的结果。
+- **已由 reviewer 回复原文验证的事实：** reviewer 对 molecular-representation benchmark 的具体问题是各 encoder 是否使用了相同的 train/test 数据。回复承诺取“所有 encoder 都能处理的 molecule ID 交集”，再按 molecule ID 生成唯一一份固定随机种子的五折划分，并让所有模型使用完全相同的 partitions。回复没有承诺为这个 benchmark 改用 scaffold split，也没有承诺新增 validation split。
+- **已由新代码和真实数据验证的事实：** 原始 11,401 个 molecule 按论文各脚本自身的 native preprocessing 规则后，ChemBERTa-MTR、ChemBERTa-MLM 和 MolFormer 各保留 10,889 个，PeptideCLM 保留 11,377 个，DLM MTR+DLM 与 DLM-only 各保留 11,082 个，按已确认输入投影并保留原实现的 APEX 保留 11,321 个；全部 encoder 的共同交集为 10,886 个。共享五折大小依次为 2,178、2,177、2,177、2,177、2,177。`eligibility.py` 和 `protocol.py` 分别负责原生可处理性审计与交集/划分；原始数据和生成 CSV 不进入 Git。
+- **已由新代码和真实数据验证的事实：** APEX 输入投影中有 1,689 条记录含 noncanonical residue、1,460 条含 D-residue、2,335 条含被线性化的 bond/multichain topology。DBAASP 的正确字段名是 `intrachainBonds`、`interchainBonds` 和 `coordinationBonds`；早先按 `intraChainBonds`/`interChainBonds` 检查得到的“字段为空”结论无效，后续不得沿用。
+- **已确认的 APEX 兼容规则：** noncanonical residue 在输入字符串中写为 `X`，cyclic peptide 使用线性 residue 顺序；但 APEX 原始 23-token vocabulary、AAindex embedding、encoder、checkpoint 和 `512→256` regression head 均不得修改。原 APEX 没有 `X` token，因此 `X` 必须按 `compare_APEX/utils.py::onehot_encoding` 的原行为保留在 index 0，不能新增 index 23 或平均 AAindex embedding。
+- **已由代码审计验证的事实：** 原始各模型脚本先按各自规则过滤数据，再分别运行 KFold，因此旧结果的 retained molecule set 和具体 fold membership 并不完全相同。旧脚本还会逐 epoch 在 held-out fold 上评估并据此选择 best checkpoint；APEX 的验证路径会保持 regression head 为 train mode，使 dropout 参与选择。这是原论文实现应披露的局限，但 reviewer 本轮没有要求修改模型、head 或 checkpoint-selection 行为。
+- **已撤回的错误方案：** 曾计划新增训练折内 10% validation、把所有 comparator 改为统一 `384→128→19` head，并为 APEX 新增 `X` embedding；这些改变超出 reviewer 要求，也会破坏与原模型的公平比较，现已删除。正式修订版只统一 10,886 个 molecule ID 和五个 folds；如以后做严格 train/validation/test 或 scaffold-split sensitivity analysis，必须单独标注，不能替代 paper-compatible benchmark。
+- **已实现并由测试验证的基础设施：** `feature_cache.py` 提供带完整 ID 契约的 `.npz` cache，仅用于输入/encoder 审计，不代表统一训练协议。正式训练仍需为各原始训练脚本增加读取共同 IDs/folds 的薄 wrapper，并保留各自模型与 head。
+- **已由真实 checkpoint 和全量 cache 验证的事实：** APEX adapter 使用原 23-token embedding 并对完整原 checkpoint 执行 `strict=True` 加载；10,886 条共同样本在 CPU 上成功产生并严格回读 `(10886, 128)` feature。cache 位于被 Git 忽略的 `Checkpoints/fig2b_shared_v1/apex/features.npz`，只作为 adapter 审计产物，不应提交或冒充正式五折结果。
+- **已由宿主机诊断验证的事实：** GPU driver 正常，宿主机可见 4 张 NVIDIA H100 PCIe、driver 580.159.03 和 CUDA 13.0。Codex 文件沙箱用隔离的 `/dev` 隐藏了 `/dev/nvidia*`，所以沙箱内的 `nvidia-smi`/PyTorch 会误报 CUDA 不可用；需要 GPU 的命令应按项目约定在沙箱外执行。此前“GPU driver 不可用”的结论错误，不得沿用。
 - `compare_APEX/APEX_fix_train_DBAASP_MIC_5_fold_mean.py` 是最终 APEX benchmark 版本。`APEX_train_DBAASP_MIC.py`、`APEX_train_DBAASP_MIC_5_fold_mean.py`、`APEX_train_inhouse_MIC.py`、`fine_tune_on_DBAASP_SMILES.py` 和 `deubg.py` 是早期或 debug driver。`APEX_models.py`、`APEX_trainer_CV.py` 和 `utils.py` 是复制过来的 APEX 支持代码。`APEX_all_data.sh` 是历史集群启动脚本，其中包含必须撤销和删除的明文 W&B 凭据。
 
 #### 小分子抗生素分类

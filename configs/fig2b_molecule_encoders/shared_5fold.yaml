@@ -1,0 +1,61 @@
+protocol_version: fig2b-shared-native-intersection-v2
+
+data:
+  mic_csv: DataPrepare/Data/DBAASP_id_SMILES_bact_MICs.csv
+  selfies_csv: DataPrepare/Data/DBAASP_id_SELFIES_bact_MICs.csv
+  dbaasp_records_json: DataPrepare/Data/all_peptides_data.json
+  eligibility_csv: DataPrepare/Data/fig2b_encoder_eligibility.csv
+  output_dir: DataPrepare/Data/fig2b_shared_v1
+  target_count: 19
+
+split:
+  kind: molecule_kfold
+  n_splits: 5
+  shuffle: true
+  random_state: 42
+  sort_ids_before_split: true
+  additional_inner_validation: false
+
+sample_policy:
+  shared_ids: true
+  shared_folds: true
+  allow_post_split_drop: false
+  intersection_rule: accepted_by_every_original_native_preprocessing_path
+  encoder_overflow_policy: exclude_before_intersection_as_in_original_scripts
+
+apex_projection:
+  preserve_original_model: true
+  noncanonical_residue_in_sequence: X
+  x_encoder_index: 0
+  x_behavior: original_unknown_symbol_behavior
+  d_residue: uppercase_identity
+  cyclic_peptide: linear_residue_order
+  multichain_peptide: concatenate_residue_order
+  original_max_sequence_length: 52
+
+encoders:
+  - dlm_mtr_dlm
+  - dlm_only
+  - chemberta_mtr
+  - chemberta_mlm
+  - molformer
+  - peptideclm
+  - apex
+
+training:
+  preserve_original_encoder_implementation: true
+  preserve_original_model_specific_head: true
+  add_new_validation_split: false
+  only_protocol_changes:
+    - common_molecule_ids
+    - common_folds
+  original_head_hidden_dims:
+    apex: [512, 256]
+    default_language_model_head: [384, 128]
+  checkpoint_selection: preserve_and_document_original_script_behavior
+
+reporting:
+  metric: macro_task_r2
+  fold_summary: mean_and_sample_standard_deviation
+  write_per_sample_predictions: true
+  disclose_original_checkpoint_selection_behavior: true
