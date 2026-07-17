@@ -36,16 +36,14 @@ def test_transform_mic_labels_masks_missing_values():
     assert mask.tolist() == [[True, False], [True, True]]
 
 
-def test_shared_loader_aligns_ids_and_keeps_test_out_of_validation(tmp_path):
+def test_shared_loader_aligns_ids_and_returns_frozen_outer_fold(tmp_path):
     _write_shared_fixture(tmp_path)
     data = load_shared_benchmark(tmp_path)
 
     assert data.molecule_ids == tuple(sorted(data.molecule_ids))
     outer_train, outer_test = data.outer_fold_indices(2)
-    inner_train, validation = data.train_validation_indices(2, seed=17)
-    assert set(inner_train).isdisjoint(validation)
-    assert set(inner_train) | set(validation) == set(outer_train)
-    assert (set(inner_train) | set(validation)).isdisjoint(outer_test)
+    assert set(outer_train).isdisjoint(outer_test)
+    assert set(outer_train) | set(outer_test) == set(range(len(data)))
 
 
 def test_shared_loader_rejects_fold_id_drift(tmp_path):

@@ -1,39 +1,31 @@
 import json
 
-import numpy as np
 import pandas as pd
 import pytest
 
 from apexoracle.benchmarks.molecule_encoders.apex_adapter import (
     build_apex_vocabulary,
     encode_apex_sequences,
-    extend_aaindex_with_unknown,
 )
 from apexoracle.benchmarks.molecule_encoders.protocol import (
     DEFAULT_TARGET_COLUMNS,
+    EXPECTED_ENCODERS,
     assign_folds,
     build_shared_dataset,
     project_apex_sequence,
 )
 
 
-def test_apex_adapter_uses_explicit_x_token_and_keeps_end_token():
+def test_apex_adapter_preserves_original_unknown_symbol_behavior():
     vocabulary, _ = build_apex_vocabulary()
     token_ids, attention_mask = encode_apex_sequences(["AXD", "A" * 60])
 
-    assert vocabulary["X"] == 23
-    assert token_ids[0, :5].tolist() == [1, 3, 23, 5, 2]
+    assert "X" not in vocabulary
+    assert len(vocabulary) == 23
+    assert token_ids[0, :5].tolist() == [1, 3, 0, 5, 2]
     assert attention_mask[0, :5].tolist() == [1, 1, 1, 1, 1]
     assert token_ids[1, -1] == 2
     assert attention_mask[1].sum() == 52
-
-
-def test_apex_unknown_embedding_is_mean_canonical_vector():
-    legacy = np.arange(23 * 4, dtype=np.float32).reshape(23, 4)
-    extended = extend_aaindex_with_unknown(legacy)
-
-    assert extended.shape == (24, 4)
-    np.testing.assert_allclose(extended[-1], legacy[3:23].mean(axis=0))
 
 
 def test_apex_projection_records_every_lossy_rule():
@@ -72,6 +64,7 @@ def test_fold_assignment_is_order_independent_and_balanced():
 def test_shared_dataset_writes_ids_folds_exclusions_and_manifest(tmp_path):
     mic_path = tmp_path / "mic.csv"
     records_path = tmp_path / "records.json"
+    eligibility_path = tmp_path / "eligibility.csv"
     output_dir = tmp_path / "output"
 
     rows = []
@@ -90,10 +83,18 @@ def test_shared_dataset_writes_ids_folds_exclusions_and_manifest(tmp_path):
         {"id": 5, "sequence": None, "unusualAminoAcids": []},
     ]
     records_path.write_text(json.dumps(records), encoding="utf-8")
+    eligibility_rows = []
+    for index in range(6):
+        row = {"dbaasp_id": str(index)}
+        row.update({encoder: index < 5 for encoder in EXPECTED_ENCODERS})
+        row["eligible_all"] = index < 5
+        eligibility_rows.append(row)
+    pd.DataFrame(eligibility_rows).to_csv(eligibility_path, index=False)
 
     manifest = build_shared_dataset(
         mic_csv=mic_path,
         dbaasp_records_json=records_path,
+        eligibility_csv=eligibility_path,
         output_dir=output_dir,
         n_splits=5,
         seed=42,
@@ -109,5 +110,9 @@ def test_shared_dataset_writes_ids_folds_exclusions_and_manifest(tmp_path):
     assert len(pd.read_csv(output_dir / "folds.csv")) == 5
     exclusions = pd.read_csv(output_dir / "exclusions.csv", dtype={"dbaasp_id": str})
     assert exclusions.to_dict("records") == [
-        {"dbaasp_id": "5", "stage": "apex_projection", "reason": "missing_sequence"}
+        {
+            "dbaasp_id": "5",
+            "stage": "native_encoder_intersection",
+            "reason": ";".join(EXPECTED_ENCODERS),
+        }
     ]

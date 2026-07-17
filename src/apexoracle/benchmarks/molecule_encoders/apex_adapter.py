@@ -17,31 +17,12 @@ APEX_MAX_CONTENT_LENGTH = APEX_MAX_LENGTH - 2
 
 
 def build_apex_vocabulary() -> tuple[dict[str, int], dict[int, str]]:
-    """Return the legacy APEX vocabulary extended by an explicit X token."""
+    """Return the original, unchanged 23-token APEX vocabulary."""
 
-    tokens = (PAD_TOKEN, START_TOKEN, END_TOKEN, *CANONICAL_RESIDUES, UNKNOWN_RESIDUE)
+    tokens = (PAD_TOKEN, START_TOKEN, END_TOKEN, *CANONICAL_RESIDUES)
     word_to_index = {token: index for index, token in enumerate(tokens)}
     index_to_word = {index: token for token, index in word_to_index.items()}
     return word_to_index, index_to_word
-
-
-def extend_aaindex_with_unknown(legacy_embedding: np.ndarray) -> np.ndarray:
-    """Append an X vector equal to the mean of canonical AAindex vectors.
-
-    The historical matrix has rows 0--2 for pad/start/end followed by the 20
-    canonical residues. It is kept frozen by APEX, so an explicit deterministic
-    X vector is required before training.
-    """
-
-    embedding = np.asarray(legacy_embedding)
-    expected_rows = 3 + len(CANONICAL_RESIDUES)
-    if embedding.ndim != 2 or embedding.shape[0] != expected_rows:
-        raise ValueError(
-            f"legacy APEX embedding must have shape ({expected_rows}, feature_dim); "
-            f"received {embedding.shape}"
-        )
-    unknown = embedding[3:expected_rows].mean(axis=0, keepdims=True)
-    return np.concatenate((embedding, unknown), axis=0)
 
 
 def encode_apex_sequences(
@@ -50,17 +31,19 @@ def encode_apex_sequences(
     word_to_index: Optional[Mapping[str, int]] = None,
     max_length: int = APEX_MAX_LENGTH,
 ) -> tuple[np.ndarray, np.ndarray]:
-    """Encode projected sequences without silently dropping or padding X.
+    """Encode projected sequences with the original APEX behavior.
 
     Returns token IDs and an attention mask. Content is deterministically
     truncated to ``max_length - 2`` so start and end tokens are always present.
-    Any symbol outside the canonical vocabulary is treated as X.
+    APEX has no X token: X and every other unknown symbol remain index 0, exactly
+    as in ``compare_APEX/utils.py::onehot_encoding``.  Keeping this behavior is
+    necessary for comparison with the published, unmodified APEX model.
     """
 
     if max_length < 3:
         raise ValueError("max_length must leave room for start, content and end tokens")
     vocabulary = dict(word_to_index or build_apex_vocabulary()[0])
-    required_tokens = (PAD_TOKEN, START_TOKEN, END_TOKEN, UNKNOWN_RESIDUE)
+    required_tokens = (PAD_TOKEN, START_TOKEN, END_TOKEN)
     missing = [token for token in required_tokens if token not in vocabulary]
     if missing:
         raise ValueError(f"APEX vocabulary is missing required tokens: {missing}")
@@ -81,7 +64,7 @@ def encode_apex_sequences(
             if symbol in CANONICAL_RESIDUES:
                 content.append(vocabulary[symbol])
             else:
-                content.append(vocabulary[UNKNOWN_RESIDUE])
+                content.append(vocabulary[PAD_TOKEN])
         encoded = [vocabulary[START_TOKEN], *content, vocabulary[END_TOKEN]]
         token_ids[row_index, : len(encoded)] = encoded
         attention_mask[row_index, : len(encoded)] = 1

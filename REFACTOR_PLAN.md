@@ -144,17 +144,17 @@ APEX 输入转换规则：
 3. cyclic peptide：去除环连接语义，使用线性化 residue 序列；
 4. 转换失败必须在构建公共集合前显式报错或记录，不允许训练/评估时静默跳过。
 
-状态：**已实现并通过真实数据验证。** 当前源表 11,401 个 molecule，公共集合 11,398 个，3 个因原始 DBAASP sequence 缺失而排除；五折大小为 2,280、2,280、2,280、2,279、2,279。APEX 投影中 1,689 条含 noncanonical residue，1,460 条含 D-residue，2,335 条丢弃了 bond/multichain topology，92 条超过 50 residues 并被确定性截断。重构版 APEX 为 `X` 使用独立 token 23，AAindex 向量取 20 种 canonical residue 向量均值，不再沿用旧代码将未知字符静默当作 padding 的行为。
+状态：**已实现并通过真实数据验证。** 当前源表 11,401 个 molecule。按各论文脚本的原生输入限制审计后，ChemBERTa-MTR、ChemBERTa-MLM 和 MolFormer 各可处理 10,889 个，PeptideCLM 可处理 11,377 个，两个 DLM 版本各可处理 11,082 个，APEX 可处理 11,321 个；最终公共交集为 10,886 个，五折大小为 2,178、2,177、2,177、2,177、2,177。APEX 输入中的 noncanonical residue 写为 `X`，但继续使用原始 23-token vocabulary；按原 `onehot_encoding` 行为，`X` 留在 index 0。不得修改 APEX 的 AAindex embedding、encoder、checkpoint 或 regression head。
 
 #### 3.2 统一训练与评估协议
 
 - 所有模型严格读取同一 `folds.csv`。
-- 统一 prediction head、训练 epoch/early stopping、优化器、随机种子和指标实现；只有 encoder 特有的必要输入处理不同。
+- 保留每个模型原论文实现中的 encoder、prediction head、训练参数和 checkpoint-selection 行为；本轮只统一 molecule IDs 和 folds。
 - frozen encoder 与 fine-tuned encoder 必须明确分组，不能在同一表中无说明混比。
 - 每个 fold 保存预测和指标；汇总报告 mean ± SD。
 - 输出逐模型处理成功率和任何异常，但正式指标必须基于完全相同的 test IDs。
 
-状态：共享数据 loader、outer fold 校验、训练折内 10% validation、MIC label transform、统一 macro-task R2、严格 ID 对齐的 `.npz` feature-cache 契约和统一 torch regression-head runner 已实现并通过测试。APEX adapter 已用真实 pretrained checkpoint 为全部 11,398 个公共 molecule 生成并严格回读 `(11398, 128)` cache。ChemBERTa、MolFormer 和 PeptideCLM adapter 已完成小样本 backbone smoke test和全量 tokenizer 审计，但因当前 GPU driver 不可用尚未生成全量 feature；两个 DLM adapter 待迁移。旧 capsule 在 outer test fold 上逐 epoch 选择 best checkpoint 的行为不会进入新协议。
+状态：共享 native-processability 审计、公共 ID 交集、outer fold 校验、MIC label transform、指标实现和严格 ID 对齐的 `.npz` feature-cache 契约已实现并通过测试。曾新增的 10% validation、统一 prediction head 和统一 head runner 超出了 reviewer 要求，已经撤回。APEX adapter 已严格加载完整原 checkpoint，并为 10,886 个公共 molecule 生成及回读 `(10886, 128)` 审计 cache。宿主机 GPU 和 driver 正常；此前的报错来自 Codex 文件沙箱隐藏 `/dev/nvidia*`。下一步是给各原始训练实现增加只负责读取公共 IDs/folds 的薄 wrapper，并接入两个 DLM checkpoint；正式五折尚未运行。
 
 #### 3.3 capsule 迁移
 

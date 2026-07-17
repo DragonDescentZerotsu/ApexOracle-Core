@@ -1,20 +1,10 @@
-import csv
-
 import numpy as np
 import pytest
 
 from apexoracle.benchmarks.molecule_encoders.data import SharedBenchmarkData
 from apexoracle.benchmarks.molecule_encoders.encoders import _tokenize_without_dropping
-from apexoracle.benchmarks.molecule_encoders.feature_cache import (
-    FeatureCache,
-    load_feature_cache,
-    save_feature_cache,
-)
+from apexoracle.benchmarks.molecule_encoders.feature_cache import load_feature_cache, save_feature_cache
 from apexoracle.benchmarks.molecule_encoders.protocol import DEFAULT_TARGET_COLUMNS
-from apexoracle.benchmarks.molecule_encoders.training import (
-    HeadTrainingConfig,
-    train_shared_heads,
-)
 
 
 def _benchmark(number_of_rows=25):
@@ -55,7 +45,7 @@ class _FakeTokenizer:
         return {"input_ids": tokens}
 
 
-def test_hf_tokenization_truncates_and_records_but_never_drops():
+def test_hf_tokenization_can_audit_truncation_and_unknown_tokens():
     token_ids, truncated, with_unknown = _tokenize_without_dropping(
         _FakeTokenizer(),
         ("AAAA", "A?"),
@@ -92,38 +82,3 @@ def test_feature_cache_reorders_to_shared_ids_and_rejects_missing_ids(tmp_path):
     )
     with pytest.raises(ValueError, match="exactly the shared molecule IDs"):
         load_feature_cache(bad_path, benchmark)
-
-
-def test_shared_head_runner_writes_one_outer_test_prediction_per_label(tmp_path):
-    benchmark, features = _benchmark()
-    cache = FeatureCache(
-        encoder_name="test_encoder",
-        features=features,
-        molecule_ids=benchmark.molecule_ids,
-        metadata={"cache_version": "unit-test"},
-    )
-    config = HeadTrainingConfig(
-        hidden_dim_1=8,
-        hidden_dim_2=4,
-        dropout=0.0,
-        learning_rate=1e-3,
-        batch_size=32,
-        max_epochs=2,
-        patience=1,
-        validation_fraction=0.25,
-        seed=7,
-    )
-    metrics = train_shared_heads(
-        benchmark,
-        cache,
-        tmp_path / "results",
-        config=config,
-        device="cpu",
-    )
-
-    assert len(metrics["folds"]) == 5
-    assert sum(fold["test_size"] for fold in metrics["folds"]) == len(benchmark)
-    with (tmp_path / "results" / "predictions.csv").open(newline="") as handle:
-        predictions = list(csv.DictReader(handle))
-    assert len(predictions) == len(benchmark) * len(DEFAULT_TARGET_COLUMNS)
-    assert len({(row["dbaasp_id"], row["task"]) for row in predictions}) == len(predictions)

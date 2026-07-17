@@ -1,67 +1,69 @@
-# Fig. 2b：共享数据的 molecule encoder benchmark
+# Fig. 2b：相同数据与相同 fold 的 molecule encoder benchmark
 
-本目录用于 reviewer 要求的新版正式 benchmark。它不沿用旧脚本中“每个模型先各自过滤、再各自 KFold”的做法。
+本目录对应 reviewer 对 molecular-representation benchmark 的具体要求：所有 encoder 使用原生实现能够处理的 DBAASP ID 交集，并共享一份按 molecule ID 预定义的五折划分。
 
-## 已冻结的数据规则
+Reviewer 在一般性的 split 评论中提到 random split 不如 scaffold split 严格，但没有明确要求把这个 molecular-representation benchmark 改为 scaffold split；针对该 benchmark 的具体问题和回复承诺是共同 ID 交集加共享五折，也没有新增 validation split。新版正式 benchmark 只改变两件事：公共 molecule IDs 和公共 folds；APEX、各语言模型、模型特有 prediction head 以及原训练/选择行为均应保持原论文实现并如实记录。
 
-所有 encoder 必须读取同一份：
+## 公共数据
 
-- `common_molecule_ids.csv`；
-- `folds.csv`；
-- `shared_molecules.csv`；
-- `dataset_manifest.json`。
+原始表包含 11,401 个 molecule。按原脚本的 native preprocessing 规则：
 
-APEX 使用有损序列投影：noncanonical residue 为 `X`，D-residue 仅保留 residue identity，DBAASP 的 `intrachainBonds`、`interchainBonds`、`coordinationBonds` 和 multimer topology 被线性化，超过 50 residues 的内容被截断。重构版 adapter 为 `X` 分配独立的 index 23，其冻结 AAindex 向量取 20 种 canonical residue 向量的均值，避免与 padding 混淆。所有这些情况逐条写入 `apex_projection_audit.csv`。
+- ChemBERTa-MTR：10,889；
+- ChemBERTa-MLM：10,889；
+- MolFormer：10,889；
+- PeptideCLM：11,377；
+- DLM MTR+DLM / DLM-only：11,082；
+- 按用户确认规则投影、但使用原模型的 APEX：11,321；
+- 全部 encoder 的最终共同交集：**10,886**。
 
-其他 encoder 遇到输入长度上限时同样只能确定性截断并记录，不能从 fold 中删除样本。任何无法产生 prediction 的 ID 都应使该 fold 明确失败，而不是静默缩小测试集。
+五个共享 fold 的大小是 2,178、2,177、2,177、2,177、2,177。进入 fold 后任何 encoder 都不得再删除 ID。
 
-## 统一训练协议
+## APEX 保持原样
 
-- encoder 全部 frozen，并在 `eval` mode 中生成 feature；
-- 所有模型使用同一个 `384 → 128 → 19` regression head；
-- 每个 outer training fold 内固定划出 10% molecule 作为 validation；
-- best checkpoint 只根据 validation macro-task R2 选择，outer test fold 最后只评估一次；
-- 最终报告五个 outer fold 的 mean ± sample SD，并保存逐 molecule、task 的预测。
+APEX 输入序列中，noncanonical residue 写成 `X`，D-residue 只保留 residue identity，cyclic、bond 和 multichain topology 使用确定性线性 residue 顺序。这只是在原模型可接受的 residue string 层面构造输入。
 
-这与旧 capsule 的派生结果不是同一协议。旧脚本会在各 encoder 自己过滤后的数组上重新 KFold，并在每个 epoch 用 outer test fold 选择 best checkpoint；APEX 还使用不同大小的 head。旧结果只保留作历史审计，不作为 reviewer 要求的新版公平结果。
+APEX 模型、23-token vocabulary 和 AAindex embedding 不做修改。原 APEX 没有 `X` token，因此 `X` 按 `compare_APEX/utils.py::onehot_encoding` 的原行为留在 index 0。不得增加 index 23、平均 AAindex embedding 或更换原 `512→256` regression head。
 
-## 构建共享数据
+## 数据准备
+
+先审计各原生 tokenizer/输入路径的可处理 ID：
+
+```bash
+python scripts/prepare_data/audit_fig2b_encoder_eligibility.py
+```
+
+再构建 10,886 个共同 ID 和唯一五折划分：
 
 ```bash
 python scripts/prepare_data/build_fig2b_shared_dataset.py
 ```
 
-默认产物写入被 Git 忽略的 `DataPrepare/Data/fig2b_shared_v1/`。最终发布时只提交不含原始数据的 manifest 模板或校验和；数据能否再分发需另行核对许可。
+默认产物位于被 Git 忽略的 `DataPrepare/Data/fig2b_shared_v1/`：
+
+- `common_molecule_ids.csv`；
+- `folds.csv`；
+- `shared_molecules.csv`；
+- `exclusions.csv`；
+- `apex_projection_audit.csv`；
+- `dataset_manifest.json`。
+
+## 训练协议边界
+
+- 不新增 10% inner validation；
+- 不把所有 comparator 强制改成相同 head；
+- 不把原在线 backbone 行为替换成统一 eval-mode feature cache；
+- 不改变 APEX vocabulary、embedding、encoder 或 head；
+- 唯一强制共享的是 10,886 个 molecule ID 和五个 fold。
+
+旧脚本确实会在 held-out fold 上逐 epoch 评估并选择 best checkpoint，APEX validation 时还保持 head dropout。这个做法存在 test-set reuse 的局限，但 reviewer 本轮并未要求改变它。正式复现应保持并披露该行为；如果以后增加严格 train/validation/test 版本，必须单独标为 sensitivity analysis，不能替代 paper-compatible benchmark。
 
 ## 当前状态
 
-- 共享 molecule IDs、APEX 投影、五折划分和审计 manifest：已实现；
-- 共享数据 loader、训练折内 validation 划分、label transform 和 R2 实现：已实现；
-- 严格校验 ID 的 `.npz` feature-cache 契约和统一 regression-head runner：已实现；
-- APEX feature adapter：已实现，并用真实 pretrained checkpoint 为全部 11,398 个公共 molecule 生成和严格回读 `(11398, 128)` cache；
-- ChemBERTa-MTR、ChemBERTa-MLM、MolFormer 和 PeptideCLM frozen/eval feature adapter：已实现并完成小样本 backbone smoke test，待在可用 GPU 上生成全量 feature；
-- DLM MTR+DLM 与 DLM-only adapter：待从外部 `mdlm` 实现迁移；
-- 正式五折训练、mean ± SD、论文图和 reviewer response 更新：尚未运行。
+- native-processability audit、10,886-ID intersection、共享五折和 manifest：已实现并验证；
+- APEX adapter：已恢复原 23-token 模型并严格加载完整原 checkpoint；
+- feature cache 代码只用于输入/encoder 审计，不作为 paper-compatible 正式训练入口；
+- 各原始训练脚本读取共同 IDs/folds 的薄 wrapper：待迁移；
+- DLM-only 与 MTR+DLM 的精确 checkpoint 接入：待完成；
+- 正式五折结果、Fig. 2b 和 reviewer response 更新：尚未运行。
 
-统一 head runner 的入口为：
-
-```bash
-python scripts/reproduce/run_fig2b_shared_heads.py \
-  --feature-cache /path/to/encoder_features.npz \
-  --output-dir /path/to/results \
-  --encoder-name chemberta_mtr \
-  --device cuda:0
-```
-
-旧 `.pt` cache 没有共享协议版本和完整 ID 契约，不能直接传入；必须由对应 adapter 在公共 ID 上重新生成 `.npz` cache。
-
-全量 tokenizer 审计没有丢弃任何 ID：ChemBERTa-MTR、ChemBERTa-MLM 和 MolFormer 各有 512 条输入超过 512 tokens 并被截断，且没有 UNK；PeptideCLM 有 24 条被截断、8,150 条含 `[UNK]`。PeptideCLM 的高 UNK 比例必须随最终结果报告，不能通过过滤这些分子来改善指标。
-
-APEX 或 Hugging Face comparator 的 cache 入口为：
-
-```bash
-python scripts/reproduce/cache_fig2b_shared_features.py \
-  --encoder apex \
-  --output /path/to/apex_features.npz \
-  --device cuda:0
-```
+GPU 在宿主机上正常：4 张 NVIDIA H100、driver 580.159.03。Codex 文件沙箱隐藏 `/dev/nvidia*`，所以在沙箱内运行 `nvidia-smi` 会误报无法连接；GPU 命令需要按项目约定在沙箱外执行。

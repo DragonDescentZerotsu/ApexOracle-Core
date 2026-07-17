@@ -8,7 +8,6 @@ from typing import Sequence
 
 import numpy as np
 import pandas as pd
-from sklearn.model_selection import train_test_split
 
 from .protocol import DEFAULT_TARGET_COLUMNS
 
@@ -37,31 +36,6 @@ class SharedBenchmarkData:
         test_indices = np.flatnonzero(self.folds == fold)
         train_indices = np.flatnonzero(self.folds != fold)
         return train_indices, test_indices
-
-    def train_validation_indices(
-        self,
-        outer_fold: int,
-        *,
-        validation_fraction: float = 0.1,
-        seed: int = 42,
-    ) -> tuple[np.ndarray, np.ndarray]:
-        """Split an outer training fold without inspecting its test samples."""
-
-        if not 0 < validation_fraction < 1:
-            raise ValueError("validation_fraction must be between 0 and 1")
-        outer_train, _ = self.outer_fold_indices(outer_fold)
-        ordered = np.asarray(
-            sorted(outer_train, key=lambda index: self.molecule_ids[int(index)]),
-            dtype=np.int64,
-        )
-        train_indices, validation_indices = train_test_split(
-            ordered,
-            test_size=validation_fraction,
-            random_state=seed + outer_fold,
-            shuffle=True,
-        )
-        return np.sort(train_indices), np.sort(validation_indices)
-
 
 def transform_mic_labels(
     raw_labels: np.ndarray,
