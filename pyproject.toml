@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "apexoracle"
+version = "0.1.0"
+description = "Reusable code for the ApexOracle antibiotic prediction benchmarks"
+readme = "Readme.md"
+requires-python = ">=3.9"
+license = {file = "LICENSE"}
+dependencies = [
+  "numpy>=1.23",
+  "pandas>=1.5",
+  "scikit-learn>=1.2",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=7"]
+
+[project.scripts]
+apexoracle-build-fig2b-data = "apexoracle.benchmarks.molecule_encoders.protocol:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
