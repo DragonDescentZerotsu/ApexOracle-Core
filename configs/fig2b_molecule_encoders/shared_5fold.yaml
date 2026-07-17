@@ -12,6 +12,9 @@ split:
   shuffle: true
   random_state: 42
   sort_ids_before_split: true
+  inner_validation_fraction: 0.1
+  inner_validation_seed: 42
+  inner_validation_seed_rule: base_seed_plus_outer_fold
 
 sample_policy:
   shared_ids: true
@@ -36,3 +39,21 @@ encoders:
   - molformer
   - peptideclm
   - apex
+
+training:
+  encoder_frozen: true
+  encoder_feature_mode: eval
+  prediction_head_hidden_dims: [384, 128]
+  prediction_head_dropout: 0.2
+  optimizer: Adam
+  learning_rate: 1.0e-4
+  max_epochs: 200
+  early_stopping_metric: validation_macro_task_r2
+  early_stopping_patience: 20
+  select_checkpoint_on_outer_test: false
+  evaluate_outer_test_once: true
+
+reporting:
+  metric: macro_task_r2
+  fold_summary: mean_and_sample_standard_deviation
+  write_per_sample_predictions: true
