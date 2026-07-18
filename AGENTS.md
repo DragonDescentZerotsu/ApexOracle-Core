@@ -20,12 +20,12 @@
 ## Git 与发布状态
 
 - 当前 Codex 工作区的 `.git` 是只读保护挂载，本地可用 Git metadata 位于被忽略的 `.git-state/`；操作命令需要使用 `git --git-dir=.git-state --work-tree=.`。
-- 本地 `main` 和 tag `legacy-code-snapshot-2026-07-17` 指向脱敏 legacy 快照 `a68707c`；重构分支为 `agent/paper-release-refactor`。
-- `DragonDescentZerotsu/Synergy` 已通过 GitHub App 同步。初始 PR #1 已合并到远程 `main`（merge commit `9427374`）；legacy 恢复点继续保存在 `archive/legacy-code-snapshot-2026-07-17`。
-- Fig. 2b paper-compatible wrappers、MolFormer revision 固定和正式 35-fold 结果位于 `agent/paper-release-refactor`，并已创建 draft PR #2：`https://github.com/DragonDescentZerotsu/Synergy/pull/2`。本地最终提交和远程提交 SHA 因 parent 历史不同，但同步时均逐层比较 tree SHA 和 changed-blob SHA；判断内容一致性应比较 tree SHA。
-- **2026-07-18 GitHub 状态核验：** 本机已经安装 `gh` 2.96.0，但 `gh auth status` 显示 `DragonDescentZerotsu` 的已保存 token 无效，非交互 SSH 也返回 `Permission denied (publickey)`；因此普通 `gh`/Git push 目前仍不可用，GitHub App 仍是可用的同步通道。需要作者执行 `gh auth login -h github.com` 重新认证；如果继续保留 SSH remote，还需配置 GitHub SSH key，或者在认证后改用 HTTPS remote。
-- **已由 GitHub PR API 验证的事实：** PR #2 当前为 open、draft、mergeable；截至本次核验没有评论、review thread、commit status 或 GitHub Actions run。本次论文/发布状态文档已经通过 GitHub App 同步到该分支，PR 描述中的验证记录也已更新；合并时应以 PR 页面显示的最新 head 为准。
-- GitHub App 没有 tag 创建接口，普通 Git 凭据尚未恢复，所以远程 tag 仍未创建；重新认证后应补推本地 `legacy-code-snapshot-2026-07-17` tag。
+- 本地 `main` 已对齐并跟踪远程 `origin/main`；annotated tag `legacy-code-snapshot-2026-07-17` 指向脱敏 legacy 快照血缘，已完成的 Fig. 2b 重构分支为 `agent/paper-release-refactor`。
+- `DragonDescentZerotsu/Synergy` 已完成前两批发布：初始 PR #1 已合并到远程 `main`（merge commit `9427374`）；Fig. 2b paper-compatible wrappers、MolFormer revision 固定、正式 35-fold 结果和对应审计文档通过 PR #2 合并（merge commit `24d975c`）。
+- `agent/paper-release-refactor` 远程分支保留 PR #2 的提交历史；本地历史曾因 GitHub App 重建 parent 而拥有不同 commit SHA，但最终 tree 已在合并前逐层核验一致。判断早期同步内容一致性时应比较 tree SHA。
+- **2026-07-18 GitHub 状态核验：** 本机已安装 `gh` 2.96.0，并以 `DragonDescentZerotsu` 成功认证；Git operations protocol 为 HTTPS，token scopes 包含 `repo` 和 `workflow`。仓库 `origin` 已切换为 `https://github.com/DragonDescentZerotsu/Synergy.git`，后续可使用普通 `git fetch/push` 和 `gh` 工作流。
+- **已由 GitHub PR API 验证的事实：** PR #2 已合并；合并前没有评论、review thread、commit status 或 GitHub Actions run。仓库当前仍未配置针对该 PR 的自动 CI，合并依据是本地 11 项测试、脚本检查、结果审计和论文编译核验。
+- 本地 annotated tag `legacy-code-snapshot-2026-07-17` 已成功推送到 GitHub；`archive/legacy-code-snapshot-2026-07-17` branch 继续作为额外恢复点，不再代替正式 tag。
 
 ## 模型权重统一登记
 
