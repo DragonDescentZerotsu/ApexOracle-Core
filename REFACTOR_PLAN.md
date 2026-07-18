@@ -119,6 +119,7 @@ ChemBERTa MLM mean-pooling 作为可选消融，不与论文主 comparator 混�
 - [ ] 抽取 genome/text/molecule feature 接口。
 - [ ] 抽取 cross-attention/fusion、LoRA、regression/classification head。
 - [ ] 抽取指标、ensemble、checkpoint loading、seed 和设备选择逻辑。
+- [x] 建立 `configs/model_weights.yaml` 统一登记权重当前位置、SHA-256、消费实验和计划迁移路径；实际权重解析器与集中搬迁仍待实现。
 - [ ] 将硬编码路径迁移到 CLI 参数或 YAML 配置。
 - [ ] 统一预测输出格式，至少包含 sample ID、fold、label、prediction 和模型元数据。
 
