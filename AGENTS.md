@@ -23,7 +23,9 @@
 - 本地 `main` 和 tag `legacy-code-snapshot-2026-07-17` 指向脱敏 legacy 快照 `a68707c`；重构分支为 `agent/paper-release-refactor`。
 - `DragonDescentZerotsu/Synergy` 已通过 GitHub App 同步。初始 PR #1 已合并到远程 `main`（merge commit `9427374`）；legacy 恢复点继续保存在 `archive/legacy-code-snapshot-2026-07-17`。
 - Fig. 2b paper-compatible wrappers、MolFormer revision 固定和正式 35-fold 结果位于 `agent/paper-release-refactor`，并已创建 draft PR #2：`https://github.com/DragonDescentZerotsu/Synergy/pull/2`。本地最终提交和远程提交 SHA 因 parent 历史不同，但同步时均逐层比较 tree SHA 和 changed-blob SHA；判断内容一致性应比较 tree SHA。
-- GitHub App 没有 tag 创建接口，本机又没有普通 Git 凭据，所以远程 tag 尚未创建；后续获得 Git 凭据后应补推本地 tag。
+- **2026-07-18 GitHub 状态核验：** 本机已经安装 `gh` 2.96.0，但 `gh auth status` 显示 `DragonDescentZerotsu` 的已保存 token 无效，非交互 SSH 也返回 `Permission denied (publickey)`；因此普通 `gh`/Git push 目前仍不可用，GitHub App 仍是可用的同步通道。需要作者执行 `gh auth login -h github.com` 重新认证；如果继续保留 SSH remote，还需配置 GitHub SSH key，或者在认证后改用 HTTPS remote。
+- **已由 GitHub PR API 验证的事实：** PR #2 当前为 open、draft、mergeable；截至本次核验没有评论、review thread、commit status 或 GitHub Actions run。远程 head 为 `bb66114912e2a1c1278366df37057833365c2612`，其内容 tree 与本地 `9c4f65309c98f50f8d76dafaa39fc65fc0353f84` 一致。PR 描述中较早记录的 final tree SHA 已过期，合并前应更新描述并推送本次文档状态修订。
+- GitHub App 没有 tag 创建接口，普通 Git 凭据尚未恢复，所以远程 tag 仍未创建；重新认证后应补推本地 `legacy-code-snapshot-2026-07-17` tag。
 
 ## 模型权重统一登记
 
@@ -39,9 +41,9 @@
 
 - 本项目对应论文：`/data2/tianang/projects/ApexOracle_cleaned/docs/ApexOracle_Nat_Biotech/sn-article.tex`
 - 审稿意见及回复草稿：`/data2/tianang/projects/ApexOracle_cleaned/docs/ApexOracle_Nat_Biotech/Response to reviewers letter.docx`
-- **2026-07-18 已完成的 Fig. 2b 文字修订：** 回复信中关于各 encoder 是否使用相同数据、五折不确定性和原 27.1\% 表述的五处回答已经改为已完成实验及正式数值；论文 Fig. 2b 图注、Results 和 Methods 已同步修改，所有论文新增或替换文字均使用 `\rev{}`。当前 TeX 已完整编译为 28 页且 DOCX 压缩包与段落格式检查通过。
-- **仍待替换的论文图片：** 论文目录当前 `Fig2_2.pdf` 的 panel b 仍是旧数值且没有 error bars。新 panel 已在 Mac 上生成：`/Users/kirianozan/Documents/Study/Penn/projects/local_figs/fig2b_rebuttal_shared_5fold.{png,pdf}`；将其合入完整 `Fig2_2.pdf` 的跨机器同步请求未获批准，因此不得声称论文实际图片已经更新。
-- 当前文稿使用已经完成的正式共享 benchmark：24-layer joint DLM `0.5386 ± 0.0250`、12-layer DLM-only `0.3765 ± 0.0239`，并明确说明二者不是容量受控的 objective ablation。如果后续将 12-layer joint 候选纳入主图，必须再次同步更新 Fig. 2b、Results、回复信结果段和 29.1\% 相对提升表述。
+- **2026-07-18 已完成的 Fig. 2b 修订：** 回复信中关于各 encoder 是否使用相同数据、五折不确定性和原 27.1\% 表述的回答已经改为已完成实验及正式数值；论文 Fig. 2b 图注、Results 和 Methods 已同步修改。作者随后更新了完整 `Fig2_2.pdf`；经实际渲染核验，panel b 现为 10,886 个共享分子的七模型结果，显示五折 sample s.d. error bars，柱上三位小数与正式结果一致。最新 TeX 已再次完整编译为 28 页。
+- **当前正式结果：** 文稿、回复信和图片使用 24-layer joint DLM `0.5386 ± 0.0250` 与 12-layer DLM-only `0.3765 ± 0.0239`，相对第二名提升表述为 29.1\%。正文当前仍把优势解释为 joint DLM+MTR objective，但没有明确写出两个 DLM checkpoint 的容量不同；因此“objective 导致提升”仍应视为尚未完成容量控制核验的解释，而不是现有 benchmark 已证明的事实。
+- **仍待实验核验的事项：** 如果后续采用 12-layer joint 候选作为主比较，必须再次同步 Fig. 2b、Results、回复信结果段和 29.1\% 相对提升；在该实验完成前，当前 24-layer joint 正式结果和图片保持不变。
 
 ## 审稿回复辅助脚本
 

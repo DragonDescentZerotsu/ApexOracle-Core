@@ -110,7 +110,7 @@ ChemBERTa MLM mean-pooling 作为可选消融，不与论文主 comparator 混�
 
 验收标准：从 tag 可以查看原始源码血缘，但仓库中不存在数据、checkpoint、结果或可用密钥。
 
-执行记录：当前 Codex 工作区将 `.git` 作为只读保护挂载，因此本次 Git metadata 暂存在被忽略的 `.git-state/` 中，并通过 `--git-dir=.git-state --work-tree=.` 操作同一工作树。本地脱敏快照提交为 `a68707c`。本机 `gh`、SSH public key 和 HTTPS credential 均不可用，因此改用已授权的 GitHub App Git object API 重建远程提交链；上传的 237 个去重 blob 和五个版本 tree 均逐一与本地 SHA 校验一致。远程提交因额外的仓库初始化 parent 而拥有不同 commit SHA，但每个科学代码版本的 tree 与本地完全一致。连接器不提供 tag API，因此本地 tag 已保留，远程暂用 archive branch 作为恢复点。
+执行记录：当前 Codex 工作区将 `.git` 作为只读保护挂载，因此本次 Git metadata 暂存在被忽略的 `.git-state/` 中，并通过 `--git-dir=.git-state --work-tree=.` 操作同一工作树。本地脱敏快照提交为 `a68707c`。最初本机没有可用 `gh`、SSH public key 或 HTTPS credential，因此使用已授权的 GitHub App Git object API 重建远程提交链；上传的 237 个去重 blob 和五个版本 tree 均逐一与本地 SHA 校验一致。远程提交因额外的仓库初始化 parent 而拥有不同 commit SHA，但每个科学代码版本的 tree 与本地完全一致。2026-07-18 已安装 `gh` 2.96.0，但保存的 token 无效且 SSH public-key 认证仍失败；重新执行 `gh auth login -h github.com` 前仍需使用 GitHub App。连接器不提供 tag API，因此本地 tag 已保留，远程暂用 archive branch 作为恢复点。
 
 ### 阶段 2：建立共享核心模块
 
@@ -229,7 +229,7 @@ APEX 输入转换规则：
 - [ ] 标注 `fully supported`、`partially supported` 和 `missing/external`。
 - [ ] 为 MIC prediction 提供最小 quickstart。
 - [ ] generation 在外部 sampler 整合完成前明确标注不可端到端复现。
-- [ ] Fig. 2b 文字修订已完成：正文、图注和 reviewer response 已更新公平 benchmark 数值，论文修改均使用 `\rev{}`，TeX 已完整编译。实际 `Fig2_2.pdf` 的 panel b 仍是旧图；Mac 上已有带 error bars 的新 panel，待获得跨机器同步许可后合入总图。当前文字数值对应 24-layer joint 正式结果；若后续采用 12-layer joint 候选，还需再次同步图和四处数值与相对提升。
+- [x] Fig. 2b 当前正式修订已完成：正文、图注和 reviewer response 已更新公平 benchmark 数值；完整 `Fig2_2.pdf` 已换入 10,886 个共享分子的七模型结果和五折 sample s.d. error bars，并经渲染核对；最新 TeX 已完整编译为 28 页。当前图文对应 24-layer joint 正式结果。12-layer joint 容量匹配实验属于后续核验；若采用其结果，仍须同步更新图、正文、回复信和相对提升。
 - [ ] 确认 license、第三方模型许可、数据再分发条件和 citation。
 - [ ] 持续用中文维护 `AGENTS.md`，记录新的审计结论和迁移关系。
 
