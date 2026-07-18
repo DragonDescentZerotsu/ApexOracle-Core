@@ -64,7 +64,7 @@ python scripts/prepare_data/build_fig2b_shared_dataset.py
 - feature cache 代码只用于输入/encoder 审计，不作为 paper-compatible 正式训练入口；
 - 各原始训练脚本读取共同 IDs/folds 的薄 wrapper：已实现并通过全量单 epoch smoke test；
 - DLM-only 与 MTR+DLM 的精确 checkpoint 接入：已实现并验证 checkpoint 结构；
-- 正式五折结果：正在四张 H100 上运行；Fig. 2b 和 reviewer response 等结果完成后更新。
+- 正式五折结果：7 个模型 × 5 folds 已于 2026-07-18 全部完成并通过完整性校验；结果见 [`results_shared_5fold.md`](results_shared_5fold.md)。
 
 ## Paper-compatible 正式训练入口
 
@@ -76,5 +76,7 @@ python scripts/prepare_data/build_fig2b_shared_dataset.py
 两者都读取 `fig2b_shared_v1/folds.csv`，保持 200 epochs、batch size 200、Adam、`1e-4` learning rate、原 prediction head、frozen backbone 的 train/eval mode 和 held-out-fold checkpoint selection。为了减少不改变结果的重复计算，held-out fold 上 frozen backbone 的 `eval()` feature 每个 fold 只计算一次；每个 epoch 仍重新运行 head，APEX head dropout 在 held-out selection 时仍按原脚本保持开启。
 
 正式四卡任务由 `scripts/reproduce/run_fig2b_gpu_queue.py` 调度，完成后由 `scripts/reproduce/summarize_fig2b_shared_results.py` 生成逐 fold 指标和新旧结果差异。当前运行输出位于被 Git 忽略的 `results/fig2b_shared_original_protocol/`。
+
+MolFormer 明确固定为本地已有权重对应的历史 revision `7b12d946c181a37f6012b9dc3b002275de070314`。当前 Hugging Face `main` revision 引入了本环境 `transformers` 版本不存在的 `masking_utils`，而该历史 revision 可离线严格加载原 `MolformerModel` 权重；这个兼容性固定没有改变模型结构、权重或训练超参数。
 
 GPU 在宿主机上正常：4 张 NVIDIA H100、driver 580.159.03。Codex 文件沙箱隐藏 `/dev/nvidia*`，所以在沙箱内运行 `nvidia-smi` 会误报无法连接；GPU 命令需要按项目约定在沙箱外执行。

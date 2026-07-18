@@ -154,7 +154,7 @@ APEX 输入转换规则：
 - 每个 fold 保存预测和指标；汇总报告 mean ± SD。
 - 输出逐模型处理成功率和任何异常，但正式指标必须基于完全相同的 test IDs。
 
-状态：共享 native-processability 审计、公共 ID 交集、outer fold 校验、MIC label transform、指标实现和严格 ID 对齐的 `.npz` feature-cache 契约已实现并通过测试。曾新增的 10% validation、统一 prediction head 和统一 head runner 超出了 reviewer 要求，已经撤回。APEX adapter 已严格加载完整原 checkpoint，并为 10,886 个公共 molecule 生成及回读 `(10886, 128)` 审计 cache。各原始训练实现的共享 IDs/folds 薄入口和两个 DLM checkpoint 接入已经完成；正式 7-model × 5-fold 训练于 2026-07-17 在四张 H100 上开始运行。训练保持原 200 epochs、batch size 200、Adam、`1e-4`、模型特有 head 和 train/eval mode；只缓存 held-out fold 上确定性的 frozen-backbone eval feature，以避免每个 epoch 重复相同计算。
+状态：**已完成。** 共享 native-processability 审计、公共 ID 交集、outer fold 校验、MIC label transform、指标实现和严格 ID 对齐的 `.npz` feature-cache 契约已实现并通过测试。曾新增的 10% validation、统一 prediction head 和统一 head runner 超出了 reviewer 要求，已经撤回。APEX adapter 已严格加载完整原 checkpoint，并为 10,886 个公共 molecule 生成及回读 `(10886, 128)` 审计 cache。各原始训练实现的共享 IDs/folds 薄入口和两个 DLM checkpoint 接入已经完成；正式 7-model × 5-fold 训练于 2026-07-18 全部完成，35 个 fold 无缺失且每个模型的 test IDs 均完整覆盖公共集合。训练保持原 200 epochs、batch size 200、Adam、`1e-4`、模型特有 head 和 train/eval mode；只缓存 held-out fold 上确定性的 frozen-backbone eval feature，以避免每个 epoch 重复相同计算。正式结果记录在 `experiments/fig2b_molecule_encoders/results_shared_5fold.md`。
 
 #### 3.3 capsule 迁移
 
@@ -162,7 +162,7 @@ APEX 输入转换规则：
 - 将 Code Ocean 专用入口整理到 `reproducibility/code_ocean/fig2b/`。
 - 删除 capsule 内重复源码和历史结果，不保留第二套 canonical 实现。
 
-验收标准：一条数据准备命令生成共享 manifest/folds；同一 benchmark runner 能选择各 encoder；最终汇总含各 fold 指标和 mean ± SD。
+验收标准：**已满足。** 一条数据准备命令生成共享 manifest/folds；benchmark runner 能选择各 encoder；最终汇总包含全部 35 个 fold 指标和 mean ± SD。
 
 ### 阶段 4：迁移论文其余最终实验
 
