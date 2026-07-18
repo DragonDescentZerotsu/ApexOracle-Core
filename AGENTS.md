@@ -21,6 +21,13 @@
 - Fig. 2b paper-compatible wrappers、MolFormer revision 固定和正式 35-fold 结果位于 `agent/paper-release-refactor`，并已创建 draft PR #2：`https://github.com/DragonDescentZerotsu/Synergy/pull/2`。本地最终提交和远程提交 SHA 因 parent 历史不同，但同步时均逐层比较 tree SHA 和 changed-blob SHA；判断内容一致性应比较 tree SHA。
 - GitHub App 没有 tag 创建接口，本机又没有普通 Git 凭据，所以远程 tag 尚未创建；后续获得 Git 凭据后应补推本地 tag。
 
+## 模型权重统一登记
+
+- `configs/model_weights.yaml` 是权重当前位置、文件身份、消费实验和未来迁移路径的 canonical manifest；面向维护者的说明位于 `MODEL_WEIGHTS.md`。
+- 权重二进制不进入 Git。未来统一本地根目录约定为 `${APEXORACLE_WEIGHTS_DIR:-weights}`；实际移动前必须先核验 SHA-256、下载 URI 和再分发许可，并让加载代码通过 manifest ID 解析。
+- **作者于 2026-07-18 确认的决定：** 修订后的 Fig. 2b DLM-only benchmark 使用 `/data2/tianang/projects/mdlm/Checkpoints_fangping/best_2.ckpt`，SHA-256 为 `fbbcc65f85013297212342e7d3286fc9b3ab6fbf0d9b28a0407e11d63b875e59`。这是新 benchmark 的已确认权重；它是否是旧论文运行的精确 checkpoint 仍应标为高置信度推断。
+- Fig. 2b 的两个 DLM 本地 checkpoint、APEX checkpoint 和四个 Hugging Face 模型均已进入 manifest。ChemBERTa-MTR、ChemBERTa-MLM 和 PeptideCLM 的上游 revision 尚待固定；MolFormer revision 已固定。
+
 ## 论文及审稿回复路径
 
 - 本项目对应论文：`/data2/tianang/projects/ApexOracle_cleaned/docs/ApexOracle_Nat_Biotech/sn-article.tex`

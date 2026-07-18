@@ -37,6 +37,7 @@ capsule/results/
 capsule_fig2/results/
 
 # 模型、特征缓存和大型二进制产物
+weights/
 Checkpoints/
 compare_APEX/APEX_ckpt/
 *.pt

@@ -2,6 +2,8 @@
 
 本目录对应 reviewer 对 molecular-representation benchmark 的具体要求：所有 encoder 使用原生实现能够处理的 DBAASP ID 交集，并共享一份按 molecule ID 预定义的五折划分。
 
+本实验使用的权重身份、当前位置、SHA-256 和计划迁移路径统一登记在 [`configs/model_weights.yaml`](../../configs/model_weights.yaml)；维护说明见 [`MODEL_WEIGHTS.md`](../../MODEL_WEIGHTS.md)。
+
 Reviewer 在一般性的 split 评论中提到 random split 不如 scaffold split 严格，但没有明确要求把这个 molecular-representation benchmark 改为 scaffold split；针对该 benchmark 的具体问题和回复承诺是共同 ID 交集加共享五折，也没有新增 validation split。新版正式 benchmark 只改变两件事：公共 molecule IDs 和公共 folds；APEX、各语言模型、模型特有 prediction head 以及原训练/选择行为均应保持原论文实现并如实记录。
 
 ## 公共数据
