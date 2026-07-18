@@ -30,6 +30,10 @@ weights:
       hidden_size: 768
       weight_source: ema.shadow_params
       contains_mtr_regression_branch: false
+      capacity_matched_to_joint_checkpoint: false
+    interpretation:
+      comparison_role: available_dlm_only_model_variant
+      objective_ablation_status: not_capacity_controlled
     loader: scripts/reproduce/run_fig2b_shared_mdlm_online.py
     future_storage:
       relative_path: molecule_encoders/dlm_only/best_2.ckpt
@@ -45,6 +49,7 @@ weights:
       kind: local_external_repository
       repository: /data2/tianang/projects/mdlm
       current_path: /data2/tianang/projects/mdlm/Checkpoints_fangping/best.ckpt
+      original_training_path: node002:/data1/fangping/mdlm/outputs/openwebtext-train/2025.05.06/112126/checkpoints/best.ckpt
       sha256: f8df1fb5cf2500e3dd64852598f19eafbc3dd98790f04652fd7964175776d8ca
       size_bytes: 5268558165
     model:
@@ -53,6 +58,11 @@ weights:
       hidden_size: 1024
       weight_source: ema.shadow_params
       contains_mtr_regression_branch: true
+      pretraining_objective: dlm_plus_0.1_mtr_regression_mse
+    interpretation:
+      capacity_matched_dlm_only_checkpoint_found: false
+      search_completed: 2026-07-18
+      objective_ablation_status: not_capacity_controlled
     loader: scripts/reproduce/run_fig2b_shared_mdlm_online.py
     future_storage:
       relative_path: molecule_encoders/dlm_mtr_dlm/best.ckpt
