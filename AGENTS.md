@@ -24,7 +24,7 @@
 - `DragonDescentZerotsu/Synergy` 已通过 GitHub App 同步。初始 PR #1 已合并到远程 `main`（merge commit `9427374`）；legacy 恢复点继续保存在 `archive/legacy-code-snapshot-2026-07-17`。
 - Fig. 2b paper-compatible wrappers、MolFormer revision 固定和正式 35-fold 结果位于 `agent/paper-release-refactor`，并已创建 draft PR #2：`https://github.com/DragonDescentZerotsu/Synergy/pull/2`。本地最终提交和远程提交 SHA 因 parent 历史不同，但同步时均逐层比较 tree SHA 和 changed-blob SHA；判断内容一致性应比较 tree SHA。
 - **2026-07-18 GitHub 状态核验：** 本机已经安装 `gh` 2.96.0，但 `gh auth status` 显示 `DragonDescentZerotsu` 的已保存 token 无效，非交互 SSH 也返回 `Permission denied (publickey)`；因此普通 `gh`/Git push 目前仍不可用，GitHub App 仍是可用的同步通道。需要作者执行 `gh auth login -h github.com` 重新认证；如果继续保留 SSH remote，还需配置 GitHub SSH key，或者在认证后改用 HTTPS remote。
-- **已由 GitHub PR API 验证的事实：** PR #2 当前为 open、draft、mergeable；截至本次核验没有评论、review thread、commit status 或 GitHub Actions run。远程 head 为 `bb66114912e2a1c1278366df37057833365c2612`，其内容 tree 与本地 `9c4f65309c98f50f8d76dafaa39fc65fc0353f84` 一致。PR 描述中较早记录的 final tree SHA 已过期，合并前应更新描述并推送本次文档状态修订。
+- **已由 GitHub PR API 验证的事实：** PR #2 当前为 open、draft、mergeable；截至本次核验没有评论、review thread、commit status 或 GitHub Actions run。本次论文/发布状态文档已经通过 GitHub App 同步到该分支，PR 描述中的验证记录也已更新；合并时应以 PR 页面显示的最新 head 为准。
 - GitHub App 没有 tag 创建接口，普通 Git 凭据尚未恢复，所以远程 tag 仍未创建；重新认证后应补推本地 `legacy-code-snapshot-2026-07-17` tag。
 
 ## 模型权重统一登记
