@@ -157,6 +157,8 @@ APEX 输入转换规则：
 
 状态：**已完成。** 共享 native-processability 审计、公共 ID 交集、outer fold 校验、MIC label transform、指标实现和严格 ID 对齐的 `.npz` feature-cache 契约已实现并通过测试。曾新增的 10% validation、统一 prediction head 和统一 head runner 超出了 reviewer 要求，已经撤回。APEX adapter 已严格加载完整原 checkpoint，并为 10,886 个公共 molecule 生成及回读 `(10886, 128)` 审计 cache。各原始训练实现的共享 IDs/folds 薄入口和两个 DLM checkpoint 接入已经完成；正式 7-model × 5-fold 训练于 2026-07-18 全部完成，35 个 fold 无缺失且每个模型的 test IDs 均完整覆盖公共集合。训练保持原 200 epochs、batch size 200、Adam、`1e-4`、模型特有 head 和 train/eval mode；只缓存 held-out fold 上确定性的 frozen-backbone eval feature，以避免每个 epoch 重复相同计算。正式结果记录在 `experiments/fig2b_molecule_encoders/results_shared_5fold.md`。
 
+权重审计补充：**已完成 node002 核验，但未找到同容量 DLM-only。** 24-layer/1024 `best.ckpt` 的原始 Fangping 训练目录和源码证明其从训练开始即使用联合 DLM+MTR objective；本机、node002、W&B 和公开 Hugging Face 权重中均未发现 24-layer/1024 纯 DLM checkpoint。当前 Fig. 2b 两个 DLM bar 应表述为模型版本 benchmark，不得写成容量受控的 MTR objective ablation。若修订稿需要后者，应另行恢复旧备份或重新预训练。
+
 #### 3.3 capsule 迁移
 
 - 将 `capsule_fig2/` 的可复用源码迁移到 `src/apexoracle/benchmarks/molecule_encoders/` 和 `experiments/fig2b_molecule_encoders/`。
@@ -227,7 +229,7 @@ APEX 输入转换规则：
 - [ ] 标注 `fully supported`、`partially supported` 和 `missing/external`。
 - [ ] 为 MIC prediction 提供最小 quickstart。
 - [ ] generation 在外部 sampler 整合完成前明确标注不可端到端复现。
-- [ ] 更新论文 Fig. 2b、正文和 reviewer response 中的公平 benchmark 数值。
+- [ ] 更新论文 Fig. 2b、正文和 reviewer response 中的公平 benchmark 数值；图注只需在原文中补充 error bar 是五折 `mean ± s.d.`，共享 10,886 IDs/folds 的细节放在 Methods 和回复信，不把冗长协议塞进图注。
 - [ ] 确认 license、第三方模型许可、数据再分发条件和 citation。
 - [ ] 持续用中文维护 `AGENTS.md`，记录新的审计结论和迁移关系。
 

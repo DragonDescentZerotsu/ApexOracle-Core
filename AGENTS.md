@@ -10,6 +10,7 @@
 - 默认使用 conda 的 `base` 环境。在机器 `sn4622119311` 上，conda 位于 `/home/tianang/anaconda3/bin/conda`。
 - 不需要在沙箱中运行代码，因为沙箱可能阻止 GPU 访问。
 - `/data2/tianang/projects/mdlm` 中的所有代码都必须在 `mdlm` conda 环境中运行。需要直接mdlm训练推理的代码可能都在那里面
+- 之前还有很多实验是在node002上面做的，你可以找到对应的代码在node002的 /data1/tianang/Projects/Synergy。在node002上我们同样是使用的conda的base环境完成的Synergy的实验。node002的conda路径是：/data1/tianang/anaconda3/bin/conda
 - /data2/tianang/projects/discrete-diffusion-guidance 里面是所有我们使用的generate peptide用的代码和仓库
 - /data2/tianang/projects/evo2 里面是我们使用的embedding genome的代码
 - 论文最终绘图在 SSH host alias `Mac` 上维护；主 notebook 为 `/Users/kirianozan/Documents/Study/Penn/projects/local_figs/figs.ipynb`。
@@ -29,6 +30,8 @@
 - `configs/model_weights.yaml` 是权重当前位置、文件身份、消费实验和未来迁移路径的 canonical manifest；面向维护者的说明位于 `MODEL_WEIGHTS.md`。
 - 权重二进制不进入 Git。未来统一本地根目录约定为 `${APEXORACLE_WEIGHTS_DIR:-weights}`；实际移动前必须先核验 SHA-256、下载 URI 和再分发许可，并让加载代码通过 manifest ID 解析。
 - **作者于 2026-07-18 确认的决定：** 修订后的 Fig. 2b DLM-only benchmark 使用 `/data2/tianang/projects/mdlm/Checkpoints_fangping/best_2.ckpt`，SHA-256 为 `fbbcc65f85013297212342e7d3286fc9b3ab6fbf0d9b28a0407e11d63b875e59`。这是新 benchmark 的已确认权重；它是否是旧论文运行的精确 checkpoint 仍应标为高置信度推断。
+- **已由 node002 原始目录和源码验证的事实：** 24-layer、hidden size 1024 的 `best.ckpt` 原始训练目录为 `node002:/data1/fangping/mdlm/outputs/openwebtext-train/2025.05.06/112126/checkpoints`；该目录现存 `best.ckpt`、`last.ckpt` 和 step 960000–1000000 的 checkpoint，均为 5,268,558,165 bytes。原始 `diffusion.py` 从训练目标中直接返回 `loss + 0.1*reg_mse`，`models/dit.py` 构建 209-descriptor regression head，因此这是从训练开始就使用联合 DLM+MTR 目标的模型。
+- **仍待作者确认或外部恢复的事项：** 在当前机器、node002 的 Tianang/Fangping 项目目录、归档 W&B run 和公开 Hugging Face 权重中均未找到 24-layer、hidden size 1024 的纯 DLM checkpoint。现有 12-layer DLM-only 与 24-layer MTR+DLM 结果可作为两个预训练模型版本的 benchmark，但不能解释为严格控制模型容量后的 MTR objective ablation。若论文需要该因果结论，必须恢复旧备份或重新预训练同容量的纯 DLM。
 - Fig. 2b 的两个 DLM 本地 checkpoint、APEX checkpoint 和四个 Hugging Face 模型均已进入 manifest。ChemBERTa-MTR、ChemBERTa-MLM 和 PeptideCLM 的上游 revision 尚待固定；MolFormer revision 已固定。
 
 ## 论文及审稿回复路径
@@ -111,6 +114,9 @@
 - **已由 checkpoint 验证的事实：** `best_1.ckpt`、`best_2.ckpt`、`best_3.ckpt`、`1-314000.ckpt`、`2-471000.ckpt` 和 `4-750000.ckpt` 均为 12-layer、hidden size 768 的纯 DLM checkpoint，不含 `backbone.regression.*`。DLM-only 的基础训练实现位于外部仓库的 `diffusion.py`、`models/dit.py` 和相关配置；`DBAASP_MLM_MDLM.py` 是其下游五折 MIC head 代码家族。
 - **根据现有证据作出的推断：** `wandb/run-20250421_231424-s58d1559/files/output.log` 的五个 fold 最佳 mean R2 为 0.4132、0.3529、0.4400、0.4134、0.4222，均值约 0.4083，与论文 DLM MLM bar 对应。结合运行时间，最可能使用的是当时已存在的 `best_2.ckpt`；旧日志没有保存实际 checkpoint 路径，因此仍需用新 benchmark 在共享数据协议下核验，不能把 `best_2.ckpt` 记为已完全确认的论文终版。
 - 新公平 benchmark 必须分别加载 12-layer DLM-only 和 24-layer MTR+DLM 配置，不能仅通过同一个 `best.ckpt` 生成两个不同标签的结果。
+- **已由 node002 原始训练资源验证的事实：** 联合模型的原始目录是 `node002:/data1/fangping/mdlm/outputs/openwebtext-train/2025.05.06/112126/checkpoints`。现存七个 5,268,558,165-byte checkpoint 仅覆盖 `best`、`last` 和 step 960000–1000000；早期 checkpoint 已不在该目录。原始 `/data1/fangping/mdlm/diffusion.py` 第 424 行使用 `loss + 0.1*reg_mse`，`models/dit.py` 为 24-layer backbone 构建 209-descriptor regression head，证明该 run 从一开始就是联合 DLM+MTR 训练，而不是先完成纯 DLM 再加入 MTR。
+- **已完成但未找到目标权重的搜索：** 已检查本机和 node002 的 `Checkpoints_fangping`、`/data1/tianang/Projects/Synergy`、`/data1/tianang/Projects/mdlm`、Fangping 原始 output、相关 W&B projects 和公开 Hugging Face repository；没有发现 24-layer、hidden size 1024 且不含 MTR 的纯 DLM checkpoint 或代码路径记录。不得通过删除 `best.ckpt` 的四个 regression 参数把它重新标注为 DLM-only，因为其 backbone 参数也已受联合目标优化。
+- **解释边界：** 正式共同数据 benchmark 的 `0.3765 ± 0.0239` 与 `0.5386 ± 0.0250` 分别对应 12-layer DLM-only 和 24-layer MTR+DLM。它们可支持“修订实验中的联合目标 DLM checkpoint 优于现有 DLM-only checkpoint”，但不能单独支持“性能差异由 MTR objective 导致”的容量受控消融结论。
 - **已由 reviewer 回复原文验证的事实：** reviewer 对 molecular-representation benchmark 的具体问题是各 encoder 是否使用了相同的 train/test 数据。回复承诺取“所有 encoder 都能处理的 molecule ID 交集”，再按 molecule ID 生成唯一一份固定随机种子的五折划分，并让所有模型使用完全相同的 partitions。回复没有承诺为这个 benchmark 改用 scaffold split，也没有承诺新增 validation split。
 - **已由新代码和真实数据验证的事实：** 原始 11,401 个 molecule 按论文各脚本自身的 native preprocessing 规则后，ChemBERTa-MTR、ChemBERTa-MLM 和 MolFormer 各保留 10,889 个，PeptideCLM 保留 11,377 个，DLM MTR+DLM 与 DLM-only 各保留 11,082 个，按已确认输入投影并保留原实现的 APEX 保留 11,321 个；全部 encoder 的共同交集为 10,886 个。共享五折大小依次为 2,178、2,177、2,177、2,177、2,177。`eligibility.py` 和 `protocol.py` 分别负责原生可处理性审计与交集/划分；原始数据和生成 CSV 不进入 Git。
 - **已由新代码和真实数据验证的事实：** APEX 输入投影中有 1,689 条记录含 noncanonical residue、1,460 条含 D-residue、2,335 条含被线性化的 bond/multichain topology。DBAASP 的正确字段名是 `intrachainBonds`、`interchainBonds` 和 `coordinationBonds`；早先按 `intraChainBonds`/`interChainBonds` 检查得到的“字段为空”结论无效，后续不得沿用。

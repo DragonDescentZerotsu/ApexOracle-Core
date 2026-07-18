@@ -31,6 +31,18 @@
 1. **已确认事实：** 修订后的共同数据 benchmark 使用 manifest 中 SHA-256 为 `fbbcc65f85013297212342e7d3286fc9b3ab6fbf0d9b28a0407e11d63b875e59` 的 `best_2.ckpt`。
 2. **高置信度推断：** `best_2.ckpt` 最可能是旧论文 DLM MLM bar 对应的 checkpoint，但旧 W&B 日志没有保存 checkpoint 路径，因此不能声称已绝对证明旧论文使用了这个文件。
 
+## 同容量 DLM-only 搜索结论
+
+已核验联合模型的原始 checkpoint 目录：
+
+`node002:/data1/fangping/mdlm/outputs/openwebtext-train/2025.05.06/112126/checkpoints`
+
+该目录现存 `best.ckpt`、`last.ckpt` 以及 step 960000、970000、980000、990000、1000000 的 checkpoint；每个文件均为 5,268,558,165 bytes。原始训练源码 `/data1/fangping/mdlm/diffusion.py` 使用 `loss + 0.1*reg_mse`，`/data1/fangping/mdlm/models/dit.py` 为该模型构建 209-descriptor regression head。因此这些文件都是从训练开始就采用联合 DLM+MTR objective 的 24-layer、hidden size 1024 checkpoint。
+
+截至 2026-07-18，已搜索本机与 node002 的 Tianang/Fangping checkpoint 和项目目录、对应 W&B projects，以及公开 Hugging Face repository，**没有找到同为 24-layer、hidden size 1024 的纯 DLM checkpoint**。现有 `best_2.ckpt` 与 `best.ckpt` 的比较是两个预训练模型版本的比较，不是严格控制容量后的 MTR objective ablation。不能通过从 `best.ckpt` 删除 regression head 来构造 DLM-only，因为 backbone 参数在预训练中也受到联合目标更新。
+
+若后续论文必须将差异归因于 MTR objective，需要恢复尚未发现的旧备份，或使用相同训练数据、步数和 24-layer/1024 配置重新训练纯 DLM。找到新权重后必须先补录 SHA-256、大小、来源和加载验证，再替换当前解释。
+
 ## 后续迁移验收
 
 迁移某个权重时，应依次完成：复制到统一根目录、复核 SHA-256、填写稳定下载 URI、记录许可、让加载代码改用 manifest ID、运行等价性 smoke test，最后才删除或归档旧路径。不得先移动文件再依靠全仓库搜索修复路径。
