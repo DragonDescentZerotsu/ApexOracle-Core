@@ -10,20 +10,40 @@
 - 默认使用 conda 的 `base` 环境。在机器 `sn4622119311` 上，conda 位于 `/home/tianang/anaconda3/bin/conda`。
 - 不需要在沙箱中运行代码，因为沙箱可能阻止 GPU 访问。
 - `/data2/tianang/projects/mdlm` 中的所有代码都必须在 `mdlm` conda 环境中运行。需要直接mdlm训练推理的代码可能都在那里面
+- 之前还有很多实验是在node002上面做的，你可以找到对应的代码在node002的 /data1/tianang/Projects/Synergy。在node002上我们同样是使用的conda的base环境完成的Synergy的实验。node002的conda路径是：/data1/tianang/anaconda3/bin/conda
 - /data2/tianang/projects/discrete-diffusion-guidance 里面是所有我们使用的generate peptide用的代码和仓库
 - /data2/tianang/projects/evo2 里面是我们使用的embedding genome的代码
+- 论文最终绘图在 SSH host alias `Mac` 上维护；主 notebook 为 `/Users/kirianozan/Documents/Study/Penn/projects/local_figs/figs.ipynb`。
+- Mac 的 conda 位于 `/Users/kirianozan/Documents/anaconda/anaconda3/bin/conda`。后续论文绘图统一使用其 `base` 环境；已验证包含 Matplotlib 3.7.1、Seaborn 0.12.2、NumPy 1.24.3 和 nbformat 5.7.0。
+- 通过非交互 SSH 生成图片时可使用 `MPLBACKEND=Agg .../conda run --no-capture-output -n base python ...`；在 notebook 中交互运行时继续使用 base kernel 即可。
 
 ## Git 与发布状态
 
 - 当前 Codex 工作区的 `.git` 是只读保护挂载，本地可用 Git metadata 位于被忽略的 `.git-state/`；操作命令需要使用 `git --git-dir=.git-state --work-tree=.`。
 - 本地 `main` 和 tag `legacy-code-snapshot-2026-07-17` 指向脱敏 legacy 快照 `a68707c`；重构分支为 `agent/paper-release-refactor`。
-- `DragonDescentZerotsu/Synergy` 已通过 GitHub App 同步：远程 `main` 是 legacy 快照，`agent/paper-release-refactor` 是重构分支，`archive/legacy-code-snapshot-2026-07-17` 是远程恢复点。237 个去重 blob 和五个版本 tree 已与本地 Git SHA 逐一校验一致。
-- GitHub App 没有 tag 创建接口，本机又没有普通 Git 凭据，所以远程 tag 尚未创建；后续获得 Git 凭据后应补推本地 tag。远程 commit SHA 因初始化 parent 与本地不同，判断内容一致性应比较 tree SHA。
+- `DragonDescentZerotsu/Synergy` 已通过 GitHub App 同步。初始 PR #1 已合并到远程 `main`（merge commit `9427374`）；legacy 恢复点继续保存在 `archive/legacy-code-snapshot-2026-07-17`。
+- Fig. 2b paper-compatible wrappers、MolFormer revision 固定和正式 35-fold 结果位于 `agent/paper-release-refactor`，并已创建 draft PR #2：`https://github.com/DragonDescentZerotsu/Synergy/pull/2`。本地最终提交和远程提交 SHA 因 parent 历史不同，但同步时均逐层比较 tree SHA 和 changed-blob SHA；判断内容一致性应比较 tree SHA。
+- **2026-07-18 GitHub 状态核验：** 本机已经安装 `gh` 2.96.0，但 `gh auth status` 显示 `DragonDescentZerotsu` 的已保存 token 无效，非交互 SSH 也返回 `Permission denied (publickey)`；因此普通 `gh`/Git push 目前仍不可用，GitHub App 仍是可用的同步通道。需要作者执行 `gh auth login -h github.com` 重新认证；如果继续保留 SSH remote，还需配置 GitHub SSH key，或者在认证后改用 HTTPS remote。
+- **已由 GitHub PR API 验证的事实：** PR #2 当前为 open、draft、mergeable；截至本次核验没有评论、review thread、commit status 或 GitHub Actions run。本次论文/发布状态文档已经通过 GitHub App 同步到该分支，PR 描述中的验证记录也已更新；合并时应以 PR 页面显示的最新 head 为准。
+- GitHub App 没有 tag 创建接口，普通 Git 凭据尚未恢复，所以远程 tag 仍未创建；重新认证后应补推本地 `legacy-code-snapshot-2026-07-17` tag。
+
+## 模型权重统一登记
+
+- `configs/model_weights.yaml` 是权重当前位置、文件身份、消费实验和未来迁移路径的 canonical manifest；面向维护者的说明位于 `MODEL_WEIGHTS.md`。
+- 权重二进制不进入 Git。未来统一本地根目录约定为 `${APEXORACLE_WEIGHTS_DIR:-weights}`；实际移动前必须先核验 SHA-256、下载 URI 和再分发许可，并让加载代码通过 manifest ID 解析。
+- **作者于 2026-07-18 确认的决定：** 修订后的 Fig. 2b DLM-only benchmark 使用 `/data2/tianang/projects/mdlm/Checkpoints_fangping/best_2.ckpt`，SHA-256 为 `fbbcc65f85013297212342e7d3286fc9b3ab6fbf0d9b28a0407e11d63b875e59`。这是新 benchmark 的已确认权重；它是否是旧论文运行的精确 checkpoint 仍应标为高置信度推断。
+- **已由 node002 原始目录和源码验证的事实：** 24-layer、hidden size 1024 的 `best.ckpt` 原始训练目录为 `node002:/data1/fangping/mdlm/outputs/openwebtext-train/2025.05.06/112126/checkpoints`；该目录现存 `best.ckpt`、`last.ckpt` 和 step 960000–1000000 的 checkpoint，均为 5,268,558,165 bytes。原始 `diffusion.py` 从训练目标中直接返回 `loss + 0.1*reg_mse`，`models/dit.py` 构建 209-descriptor regression head，因此这是从训练开始就使用联合 DLM+MTR 目标的模型。
+- **已由 node002 checkpoint 验证的事实：** 存在 12-layer、hidden size 768 的 joint DLM+MTR checkpoint：`node002:/data1/fangping/mdlm/outputs/openwebtext-train/2025.04.29/165523/checkpoints/best.ckpt`，global step 650032，SHA-256 `3c612c9c68b9ee72c077dc1492153fa30d5c9fa4cb1753355bf146cff616c9d6`，包含四个 `backbone.regression.*` 参数。这与 12-layer/768 的 DLM-only `best_2.ckpt` 构成容量匹配候选对。
+- **仍待实验核验的事项：** 上述 12-layer 配对尚未运行共同数据五折 benchmark，而且两次预训练的 learning rate、global batch size 和最佳 step 不同，因此只能称为容量匹配比较，不能称为除 objective 外所有条件完全相同的单变量消融。在当前机器、node002、W&B 和公开 Hugging Face 权重中仍未找到 24-layer/1024 的纯 DLM checkpoint。
+- Fig. 2b 的两个 DLM 本地 checkpoint、APEX checkpoint 和四个 Hugging Face 模型均已进入 manifest。ChemBERTa-MTR、ChemBERTa-MLM 和 PeptideCLM 的上游 revision 尚待固定；MolFormer revision 已固定。
 
 ## 论文及审稿回复路径
 
 - 本项目对应论文：`/data2/tianang/projects/ApexOracle_cleaned/docs/ApexOracle_Nat_Biotech/sn-article.tex`
 - 审稿意见及回复草稿：`/data2/tianang/projects/ApexOracle_cleaned/docs/ApexOracle_Nat_Biotech/Response to reviewers letter.docx`
+- **2026-07-18 已完成的 Fig. 2b 修订：** 回复信中关于各 encoder 是否使用相同数据、五折不确定性和原 27.1\% 表述的回答已经改为已完成实验及正式数值；论文 Fig. 2b 图注、Results 和 Methods 已同步修改。作者随后更新了完整 `Fig2_2.pdf`；经实际渲染核验，panel b 现为 10,886 个共享分子的七模型结果，显示五折 sample s.d. error bars，柱上三位小数与正式结果一致。最新 TeX 已再次完整编译为 28 页。
+- **当前正式结果：** 文稿、回复信和图片使用 24-layer joint DLM `0.5386 ± 0.0250` 与 12-layer DLM-only `0.3765 ± 0.0239`，相对第二名提升表述为 29.1\%。正文当前仍把优势解释为 joint DLM+MTR objective，但没有明确写出两个 DLM checkpoint 的容量不同；因此“objective 导致提升”仍应视为尚未完成容量控制核验的解释，而不是现有 benchmark 已证明的事实。
+- **仍待实验核验的事项：** 如果后续采用 12-layer joint 候选作为主比较，必须再次同步 Fig. 2b、Results、回复信结果段和 29.1\% 相对提升；在该实验完成前，当前 24-layer joint 正式结果和图片保持不变。
 
 ## 审稿回复辅助脚本
 
@@ -100,6 +120,10 @@
 - **已由 checkpoint 验证的事实：** `best_1.ckpt`、`best_2.ckpt`、`best_3.ckpt`、`1-314000.ckpt`、`2-471000.ckpt` 和 `4-750000.ckpt` 均为 12-layer、hidden size 768 的纯 DLM checkpoint，不含 `backbone.regression.*`。DLM-only 的基础训练实现位于外部仓库的 `diffusion.py`、`models/dit.py` 和相关配置；`DBAASP_MLM_MDLM.py` 是其下游五折 MIC head 代码家族。
 - **根据现有证据作出的推断：** `wandb/run-20250421_231424-s58d1559/files/output.log` 的五个 fold 最佳 mean R2 为 0.4132、0.3529、0.4400、0.4134、0.4222，均值约 0.4083，与论文 DLM MLM bar 对应。结合运行时间，最可能使用的是当时已存在的 `best_2.ckpt`；旧日志没有保存实际 checkpoint 路径，因此仍需用新 benchmark 在共享数据协议下核验，不能把 `best_2.ckpt` 记为已完全确认的论文终版。
 - 新公平 benchmark 必须分别加载 12-layer DLM-only 和 24-layer MTR+DLM 配置，不能仅通过同一个 `best.ckpt` 生成两个不同标签的结果。
+- **已由 node002 原始训练资源验证的事实：** 联合模型的原始目录是 `node002:/data1/fangping/mdlm/outputs/openwebtext-train/2025.05.06/112126/checkpoints`。现存七个 5,268,558,165-byte checkpoint 仅覆盖 `best`、`last` 和 step 960000–1000000；早期 checkpoint 已不在该目录。原始 `/data1/fangping/mdlm/diffusion.py` 第 424 行使用 `loss + 0.1*reg_mse`，`models/dit.py` 为 24-layer backbone 构建 209-descriptor regression head，证明该 run 从一开始就是联合 DLM+MTR 训练，而不是先完成纯 DLM 再加入 MTR。
+- **已完成的 24-layer 搜索：** 已检查本机和 node002 的 `Checkpoints_fangping`、`/data1/tianang/Projects/Synergy`、`/data1/tianang/Projects/mdlm`、Fangping 原始 output、相关 W&B projects 和公开 Hugging Face repository；没有发现 24-layer、hidden size 1024 且不含 MTR 的纯 DLM checkpoint 或代码路径记录。不得通过删除 `best.ckpt` 的四个 regression 参数把它重新标注为 DLM-only，因为其 backbone 参数也已受联合目标优化。
+- **后续发现的 12-layer 容量匹配候选：** `node002:/data1/fangping/mdlm/outputs/openwebtext-train/2025.04.29/165523/checkpoints/best.ckpt` 是 12-layer、hidden size 768、step 650032 的 joint DLM+MTR checkpoint，包含 `768→768→209` regression head。它与 DLM-only `best_2.ckpt` 使用相同 small architecture、相同数据配置和长度 1024；但 joint run 使用 learning rate `1e-4`、global batch size 480，而 DLM-only 使用 `3e-4`、768，最佳 step 也分别为 650032 与 621036。
+- **解释边界：** 正式共同数据 benchmark 的 `0.3765 ± 0.0239` 与 `0.5386 ± 0.0250` 分别对应 12-layer DLM-only 和 24-layer MTR+DLM。它们可支持“修订实验中的联合目标 DLM checkpoint 优于现有 DLM-only checkpoint”，但不能单独支持“性能差异由 MTR objective 导致”的容量受控消融结论。
 - **已由 reviewer 回复原文验证的事实：** reviewer 对 molecular-representation benchmark 的具体问题是各 encoder 是否使用了相同的 train/test 数据。回复承诺取“所有 encoder 都能处理的 molecule ID 交集”，再按 molecule ID 生成唯一一份固定随机种子的五折划分，并让所有模型使用完全相同的 partitions。回复没有承诺为这个 benchmark 改用 scaffold split，也没有承诺新增 validation split。
 - **已由新代码和真实数据验证的事实：** 原始 11,401 个 molecule 按论文各脚本自身的 native preprocessing 规则后，ChemBERTa-MTR、ChemBERTa-MLM 和 MolFormer 各保留 10,889 个，PeptideCLM 保留 11,377 个，DLM MTR+DLM 与 DLM-only 各保留 11,082 个，按已确认输入投影并保留原实现的 APEX 保留 11,321 个；全部 encoder 的共同交集为 10,886 个。共享五折大小依次为 2,178、2,177、2,177、2,177、2,177。`eligibility.py` 和 `protocol.py` 分别负责原生可处理性审计与交集/划分；原始数据和生成 CSV 不进入 Git。
 - **已由新代码和真实数据验证的事实：** APEX 输入投影中有 1,689 条记录含 noncanonical residue、1,460 条含 D-residue、2,335 条含被线性化的 bond/multichain topology。DBAASP 的正确字段名是 `intrachainBonds`、`interchainBonds` 和 `coordinationBonds`；早先按 `intraChainBonds`/`interChainBonds` 检查得到的“字段为空”结论无效，后续不得沿用。
@@ -109,6 +133,13 @@
 - **已实现并由测试验证的基础设施：** `feature_cache.py` 提供带完整 ID 契约的 `.npz` cache，仅用于输入/encoder 审计，不代表统一训练协议。正式训练仍需为各原始训练脚本增加读取共同 IDs/folds 的薄 wrapper，并保留各自模型与 head。
 - **已由真实 checkpoint 和全量 cache 验证的事实：** APEX adapter 使用原 23-token embedding 并对完整原 checkpoint 执行 `strict=True` 加载；10,886 条共同样本在 CPU 上成功产生并严格回读 `(10886, 128)` feature。cache 位于被 Git 忽略的 `Checkpoints/fig2b_shared_v1/apex/features.npz`，只作为 adapter 审计产物，不应提交或冒充正式五折结果。
 - **已由宿主机诊断验证的事实：** GPU driver 正常，宿主机可见 4 张 NVIDIA H100 PCIe、driver 580.159.03 和 CUDA 13.0。Codex 文件沙箱用隔离的 `/dev` 隐藏了 `/dev/nvidia*`，所以沙箱内的 `nvidia-smi`/PyTorch 会误报 CUDA 不可用；需要 GPU 的命令应按项目约定在沙箱外执行。此前“GPU driver 不可用”的结论错误，不得沿用。
+- **已由全量单 epoch smoke test 验证的事实：** `scripts/reproduce_fig2b_baselines_online_5fold.py` 已能让 ChemBERTa、MolFormer、PeptideCLM 和未修改的 APEX 读取共同 10,886 IDs/folds；`scripts/reproduce/run_fig2b_shared_mdlm_online.py` 已分别接入 12-layer `best_2.ckpt` 和 24-layer `best.ckpt`。24-layer checkpoint 的 backbone 参数全部匹配，只有预训练 209-descriptor regression branch 的四个参数作为预期 unexpected keys 被旧协议的 `strict=False` 忽略。
+- **已由正式 35-fold 运行验证的事实：** 7-model × 5-fold 共享数据实验已于 2026-07-18 全部完成，35 个模型-fold 组合无缺失、无重复；每个模型的五个 test fold 合计恰好覆盖 10,886 个 molecule。完整输出位于被 Git 忽略的 `results/fig2b_shared_original_protocol/`，小型正式报告位于 `experiments/fig2b_molecule_encoders/results_shared_5fold.md`。
+- **正式共同数据结果（五折 mean R² ± sample SD）：** DLM MTR+DLM `0.5386 ± 0.0250`、ChemBERTa MTR `0.4172 ± 0.0275`、APEX `0.4014 ± 0.0146`、PeptideCLM `0.3836 ± 0.0244`、DLM-only `0.3765 ± 0.0239`、MolFormer `0.3678 ± 0.0198`、ChemBERTa MLM `0.2247 ± 0.0131`。相对各自原 retained-set rerun 的绝对变化依次为 `+0.0179`、`-0.0025`、`-0.0036`、`+0.0069`、`-0.0318`、`-0.0048`、`-0.0055`。DLM-only 是唯一变化超过 0.02 的模型，后续论文图和 reviewer response 应使用新值。
+- **正式运行保持的原协议：** 每个 fold 使用 200 epochs、batch size 200、Adam、learning rate `1e-4`、模型特有 head、frozen backbone 的训练模式以及 held-out-fold checkpoint selection。加速只包括 fold/GPU 并行和一次性缓存 held-out fold 上确定性的 frozen-backbone `eval()` feature；训练阶段的 backbone dropout 仍逐 batch 开启，APEX held-out head dropout 也保持原行为。
+- **随机性边界：** 原训练脚本没有显式设置 PyTorch seed，本次没有额外添加 seed；每个任务在 `metrics.json` 中记录了 `initial_torch_seed`。因此正式表是一轮忠实的 stochastic rerun，不应声称跨硬件逐 bit 可复现。固定 `random_state=42` 的是共同 molecule-level 五折 membership。
+- **MolFormer 兼容性固定：** 正式运行使用本地完整缓存的 `ibm/MoLFormer-XL-both-10pct` revision `7b12d946c181a37f6012b9dc3b002275de070314`。Hugging Face 当前 `main` revision 依赖本环境不存在的 `transformers.masking_utils`；固定历史 revision 只恢复原兼容代码和已有权重，没有改变模型结构、checkpoint 或训练超参数。
+- **运行环境事实：** 正式任务中 GPU 1 曾达到 88°C 并触发 software thermal slowdown，因此未完成的任务被重新分配到其他健康 GPU；GPU driver 本身正常。最终纳入汇总的所有 fold 都是完整从 epoch 1 跑到 200 且退出码为 0 的任务。
 - `compare_APEX/APEX_fix_train_DBAASP_MIC_5_fold_mean.py` 是最终 APEX benchmark 版本。`APEX_train_DBAASP_MIC.py`、`APEX_train_DBAASP_MIC_5_fold_mean.py`、`APEX_train_inhouse_MIC.py`、`fine_tune_on_DBAASP_SMILES.py` 和 `deubg.py` 是早期或 debug driver。`APEX_models.py`、`APEX_trainer_CV.py` 和 `utils.py` 是复制过来的 APEX 支持代码。`APEX_all_data.sh` 是历史集群启动脚本，其中包含必须撤销和删除的明文 W&B 凭据。
 
 #### 小分子抗生素分类

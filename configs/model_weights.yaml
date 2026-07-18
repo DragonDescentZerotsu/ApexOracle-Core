@@ -1,0 +1,181 @@
+schema_version: 1
+last_updated: 2026-07-18
+
+storage_policy:
+  manifest_role: canonical_weight_registry
+  binaries_tracked_in_git: false
+  local_root_env: APEXORACLE_WEIGHTS_DIR
+  default_local_root: weights
+  migration_status: planned_not_moved
+  release_requirement: every_local_file_requires_sha256_size_and_download_uri
+
+weights:
+  fig2b_dlm_only:
+    paper_label: DLM MLM
+    tasks:
+      - fig2b_shared_molecule_encoder_benchmark
+    decision_status: author_confirmed_for_revised_benchmark_2026_07_18
+    original_paper_identity:
+      status: high_confidence_inference_not_proven
+      evidence: checkpoint structure, creation time, and archived five-fold log
+    source:
+      kind: local_external_repository
+      repository: /data2/tianang/projects/mdlm
+      current_path: /data2/tianang/projects/mdlm/Checkpoints_fangping/best_2.ckpt
+      sha256: fbbcc65f85013297212342e7d3286fc9b3ab6fbf0d9b28a0407e11d63b875e59
+      size_bytes: 1556376152
+    model:
+      config: small
+      layers: 12
+      hidden_size: 768
+      weight_source: ema.shadow_params
+      contains_mtr_regression_branch: false
+      capacity_matched_to_selected_joint_checkpoint: false
+    interpretation:
+      comparison_role: available_dlm_only_model_variant
+      objective_ablation_status: not_capacity_controlled
+      capacity_matched_joint_candidate: fig2b_dlm_mtr_dlm_small_candidate
+    loader: scripts/reproduce/run_fig2b_shared_mdlm_online.py
+    future_storage:
+      relative_path: molecule_encoders/dlm_only/best_2.ckpt
+      download_uri: null
+      redistribution_status: to_review
+
+  fig2b_dlm_mtr_dlm:
+    paper_label: DLM MTR+DLM
+    tasks:
+      - fig2b_shared_molecule_encoder_benchmark
+    decision_status: checkpoint_verified_for_revised_benchmark
+    source:
+      kind: local_external_repository
+      repository: /data2/tianang/projects/mdlm
+      current_path: /data2/tianang/projects/mdlm/Checkpoints_fangping/best.ckpt
+      original_training_path: node002:/data1/fangping/mdlm/outputs/openwebtext-train/2025.05.06/112126/checkpoints/best.ckpt
+      sha256: f8df1fb5cf2500e3dd64852598f19eafbc3dd98790f04652fd7964175776d8ca
+      size_bytes: 5268558165
+    model:
+      config: medium
+      layers: 24
+      hidden_size: 1024
+      weight_source: ema.shadow_params
+      contains_mtr_regression_branch: true
+      pretraining_objective: dlm_plus_0.1_mtr_regression_mse
+    interpretation:
+      capacity_matched_dlm_only_checkpoint_found: false
+      search_completed: 2026-07-18
+      objective_ablation_status: not_capacity_controlled
+    loader: scripts/reproduce/run_fig2b_shared_mdlm_online.py
+    future_storage:
+      relative_path: molecule_encoders/dlm_mtr_dlm/best.ckpt
+      download_uri: null
+      redistribution_status: to_review
+
+  fig2b_dlm_mtr_dlm_small_candidate:
+    paper_label: DLM MTR+DLM capacity-matched candidate
+    tasks:
+      - fig2b_shared_molecule_encoder_benchmark_pending
+    decision_status: checkpoint_verified_not_yet_benchmarked
+    source:
+      kind: remote_local_repository
+      repository: node002:/data1/fangping/mdlm
+      current_path: node002:/data1/fangping/mdlm/outputs/openwebtext-train/2025.04.29/165523/checkpoints/best.ckpt
+      sha256: 3c612c9c68b9ee72c077dc1492153fa30d5c9fa4cb1753355bf146cff616c9d6
+      size_bytes: 1568403312
+    model:
+      config: small
+      layers: 12
+      hidden_size: 768
+      weight_source: ema.shadow_params
+      contains_mtr_regression_branch: true
+      regression_head: [768, 768, 209]
+      pretraining_objective: dlm_plus_0.1_mtr_regression_mse
+    pretraining:
+      global_step: 650032
+      learning_rate: 0.0001
+      global_batch_size: 480
+      sequence_length: 1024
+      data_config: openwebtext-train
+    interpretation:
+      capacity_matched_to_fig2b_dlm_only: true
+      all_other_pretraining_conditions_matched: false
+      benchmark_status: pending
+    loader: scripts/reproduce/run_fig2b_shared_mdlm_online.py
+    future_storage:
+      relative_path: molecule_encoders/dlm_mtr_dlm_small/best.ckpt
+      download_uri: null
+      redistribution_status: to_review
+
+  fig2b_apex_encoder:
+    paper_label: APEX
+    tasks:
+      - fig2b_shared_molecule_encoder_benchmark
+    decision_status: original_implementation_and_checkpoint_preserved
+    source:
+      kind: local_repo_ignored_binary
+      current_path: compare_APEX/APEX_ckpt/APEX_pretrained_encoder_state_dict_best.ckpt
+      sha256: a4b37338b1a26aff64c97b9aa3bbabf6874edf5805415e082f2e3bdf28d1b2b9
+      size_bytes: 4873912
+    model:
+      vocabulary_size: 23
+      regression_head: [512, 256]
+    loader: scripts/reproduce_fig2b_baselines_online_5fold.py
+    future_storage:
+      relative_path: molecule_encoders/apex/APEX_pretrained_encoder_state_dict_best.ckpt
+      download_uri: null
+      redistribution_status: to_review_upstream_license
+
+  fig2b_chemberta_mtr:
+    paper_label: ChemBERTa MTR
+    tasks:
+      - fig2b_shared_molecule_encoder_benchmark
+    decision_status: upstream_model_confirmed_revision_not_yet_pinned
+    source:
+      kind: huggingface_hub
+      model_id: DeepChem/ChemBERTa-77M-MTR
+      revision: null
+    loader: scripts/reproduce_fig2b_baselines_online_5fold.py
+    future_storage:
+      relative_path: molecule_encoders/chemberta_mtr
+      distribution_strategy: pinned_upstream_or_mirror_after_license_review
+
+  fig2b_chemberta_mlm:
+    paper_label: ChemBERTa MLM
+    tasks:
+      - fig2b_shared_molecule_encoder_benchmark
+    decision_status: upstream_model_confirmed_revision_not_yet_pinned
+    source:
+      kind: huggingface_hub
+      model_id: DeepChem/ChemBERTa-77M-MLM
+      revision: null
+    loader: scripts/reproduce_fig2b_baselines_online_5fold.py
+    future_storage:
+      relative_path: molecule_encoders/chemberta_mlm
+      distribution_strategy: pinned_upstream_or_mirror_after_license_review
+
+  fig2b_molformer:
+    paper_label: MolFormer
+    tasks:
+      - fig2b_shared_molecule_encoder_benchmark
+    decision_status: upstream_model_and_revision_confirmed
+    source:
+      kind: huggingface_hub
+      model_id: ibm/MoLFormer-XL-both-10pct
+      revision: 7b12d946c181a37f6012b9dc3b002275de070314
+    loader: scripts/reproduce_fig2b_baselines_online_5fold.py
+    future_storage:
+      relative_path: molecule_encoders/molformer
+      distribution_strategy: pinned_upstream_or_mirror_after_license_review
+
+  fig2b_peptideclm:
+    paper_label: PeptideCLM
+    tasks:
+      - fig2b_shared_molecule_encoder_benchmark
+    decision_status: upstream_model_confirmed_revision_not_yet_pinned
+    source:
+      kind: huggingface_hub
+      model_id: aaronfeller/PeptideCLM-23M-all
+      revision: null
+    loader: scripts/reproduce_fig2b_baselines_online_5fold.py
+    future_storage:
+      relative_path: molecule_encoders/peptideclm
+      distribution_strategy: pinned_upstream_or_mirror_after_license_review

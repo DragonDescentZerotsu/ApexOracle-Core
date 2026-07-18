@@ -110,7 +110,7 @@ ChemBERTa MLM mean-pooling 作为可选消融，不与论文主 comparator 混�
 
 验收标准：从 tag 可以查看原始源码血缘，但仓库中不存在数据、checkpoint、结果或可用密钥。
 
-执行记录：当前 Codex 工作区将 `.git` 作为只读保护挂载，因此本次 Git metadata 暂存在被忽略的 `.git-state/` 中，并通过 `--git-dir=.git-state --work-tree=.` 操作同一工作树。本地脱敏快照提交为 `a68707c`。本机 `gh`、SSH public key 和 HTTPS credential 均不可用，因此改用已授权的 GitHub App Git object API 重建远程提交链；上传的 237 个去重 blob 和五个版本 tree 均逐一与本地 SHA 校验一致。远程提交因额外的仓库初始化 parent 而拥有不同 commit SHA，但每个科学代码版本的 tree 与本地完全一致。连接器不提供 tag API，因此本地 tag 已保留，远程暂用 archive branch 作为恢复点。
+执行记录：当前 Codex 工作区将 `.git` 作为只读保护挂载，因此本次 Git metadata 暂存在被忽略的 `.git-state/` 中，并通过 `--git-dir=.git-state --work-tree=.` 操作同一工作树。本地脱敏快照提交为 `a68707c`。最初本机没有可用 `gh`、SSH public key 或 HTTPS credential，因此使用已授权的 GitHub App Git object API 重建远程提交链；上传的 237 个去重 blob 和五个版本 tree 均逐一与本地 SHA 校验一致。远程提交因额外的仓库初始化 parent 而拥有不同 commit SHA，但每个科学代码版本的 tree 与本地完全一致。2026-07-18 已安装 `gh` 2.96.0，但保存的 token 无效且 SSH public-key 认证仍失败；重新执行 `gh auth login -h github.com` 前仍需使用 GitHub App。连接器不提供 tag API，因此本地 tag 已保留，远程暂用 archive branch 作为恢复点。
 
 ### 阶段 2：建立共享核心模块
 
@@ -119,6 +119,7 @@ ChemBERTa MLM mean-pooling 作为可选消融，不与论文主 comparator 混�
 - [ ] 抽取 genome/text/molecule feature 接口。
 - [ ] 抽取 cross-attention/fusion、LoRA、regression/classification head。
 - [ ] 抽取指标、ensemble、checkpoint loading、seed 和设备选择逻辑。
+- [x] 建立 `configs/model_weights.yaml` 统一登记权重当前位置、SHA-256、消费实验和计划迁移路径；实际权重解析器与集中搬迁仍待实现。
 - [ ] 将硬编码路径迁移到 CLI 参数或 YAML 配置。
 - [ ] 统一预测输出格式，至少包含 sample ID、fold、label、prediction 和模型元数据。
 
@@ -154,7 +155,9 @@ APEX 输入转换规则：
 - 每个 fold 保存预测和指标；汇总报告 mean ± SD。
 - 输出逐模型处理成功率和任何异常，但正式指标必须基于完全相同的 test IDs。
 
-状态：共享 native-processability 审计、公共 ID 交集、outer fold 校验、MIC label transform、指标实现和严格 ID 对齐的 `.npz` feature-cache 契约已实现并通过测试。曾新增的 10% validation、统一 prediction head 和统一 head runner 超出了 reviewer 要求，已经撤回。APEX adapter 已严格加载完整原 checkpoint，并为 10,886 个公共 molecule 生成及回读 `(10886, 128)` 审计 cache。宿主机 GPU 和 driver 正常；此前的报错来自 Codex 文件沙箱隐藏 `/dev/nvidia*`。下一步是给各原始训练实现增加只负责读取公共 IDs/folds 的薄 wrapper，并接入两个 DLM checkpoint；正式五折尚未运行。
+状态：**已完成。** 共享 native-processability 审计、公共 ID 交集、outer fold 校验、MIC label transform、指标实现和严格 ID 对齐的 `.npz` feature-cache 契约已实现并通过测试。曾新增的 10% validation、统一 prediction head 和统一 head runner 超出了 reviewer 要求，已经撤回。APEX adapter 已严格加载完整原 checkpoint，并为 10,886 个公共 molecule 生成及回读 `(10886, 128)` 审计 cache。各原始训练实现的共享 IDs/folds 薄入口和两个 DLM checkpoint 接入已经完成；正式 7-model × 5-fold 训练于 2026-07-18 全部完成，35 个 fold 无缺失且每个模型的 test IDs 均完整覆盖公共集合。训练保持原 200 epochs、batch size 200、Adam、`1e-4`、模型特有 head 和 train/eval mode；只缓存 held-out fold 上确定性的 frozen-backbone eval feature，以避免每个 epoch 重复相同计算。正式结果记录在 `experiments/fig2b_molecule_encoders/results_shared_5fold.md`。
+
+权重审计补充：**已完成 node002 核验。** 本机、node002、W&B 和公开 Hugging Face 权重中均未发现 24-layer/1024 纯 DLM checkpoint，因此当前正式表中的 12-layer DLM-only 与 24-layer joint 只能表述为模型版本 benchmark。随后在 node002 原始 Fangping run 中确认了 12-layer/768 joint `best.ckpt`（step 650032），可与 `best_2.ckpt` 做容量匹配的新五折比较；但二者预训练 learning rate、global batch size 和最佳 step 不完全一致，不能称为严格单变量 objective ablation。该候选尚未运行，不能提前替换正式结果。
 
 #### 3.3 capsule 迁移
 
@@ -162,7 +165,7 @@ APEX 输入转换规则：
 - 将 Code Ocean 专用入口整理到 `reproducibility/code_ocean/fig2b/`。
 - 删除 capsule 内重复源码和历史结果，不保留第二套 canonical 实现。
 
-验收标准：一条数据准备命令生成共享 manifest/folds；同一 benchmark runner 能选择各 encoder；最终汇总含各 fold 指标和 mean ± SD。
+验收标准：**已满足。** 一条数据准备命令生成共享 manifest/folds；benchmark runner 能选择各 encoder；最终汇总包含全部 35 个 fold 指标和 mean ± SD。
 
 ### 阶段 4：迁移论文其余最终实验
 
@@ -226,7 +229,7 @@ APEX 输入转换规则：
 - [ ] 标注 `fully supported`、`partially supported` 和 `missing/external`。
 - [ ] 为 MIC prediction 提供最小 quickstart。
 - [ ] generation 在外部 sampler 整合完成前明确标注不可端到端复现。
-- [ ] 更新论文 Fig. 2b、正文和 reviewer response 中的公平 benchmark 数值。
+- [x] Fig. 2b 当前正式修订已完成：正文、图注和 reviewer response 已更新公平 benchmark 数值；完整 `Fig2_2.pdf` 已换入 10,886 个共享分子的七模型结果和五折 sample s.d. error bars，并经渲染核对；最新 TeX 已完整编译为 28 页。当前图文对应 24-layer joint 正式结果。12-layer joint 容量匹配实验属于后续核验；若采用其结果，仍须同步更新图、正文、回复信和相对提升。
 - [ ] 确认 license、第三方模型许可、数据再分发条件和 citation。
 - [ ] 持续用中文维护 `AGENTS.md`，记录新的审计结论和迁移关系。
 
