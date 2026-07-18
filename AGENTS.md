@@ -12,6 +12,9 @@
 - `/data2/tianang/projects/mdlm` 中的所有代码都必须在 `mdlm` conda 环境中运行。需要直接mdlm训练推理的代码可能都在那里面
 - /data2/tianang/projects/discrete-diffusion-guidance 里面是所有我们使用的generate peptide用的代码和仓库
 - /data2/tianang/projects/evo2 里面是我们使用的embedding genome的代码
+- 论文最终绘图在 SSH host alias `Mac` 上维护；主 notebook 为 `/Users/kirianozan/Documents/Study/Penn/projects/local_figs/figs.ipynb`。
+- Mac 的 conda 位于 `/Users/kirianozan/Documents/anaconda/anaconda3/bin/conda`。后续论文绘图统一使用其 `base` 环境；已验证包含 Matplotlib 3.7.1、Seaborn 0.12.2、NumPy 1.24.3 和 nbformat 5.7.0。
+- 通过非交互 SSH 生成图片时可使用 `MPLBACKEND=Agg .../conda run --no-capture-output -n base python ...`；在 notebook 中交互运行时继续使用 base kernel 即可。
 
 ## Git 与发布状态
 
