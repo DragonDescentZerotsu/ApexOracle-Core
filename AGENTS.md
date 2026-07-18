@@ -39,7 +39,8 @@
 
 - 本项目对应论文：`/data2/tianang/projects/ApexOracle_cleaned/docs/ApexOracle_Nat_Biotech/sn-article.tex`
 - 审稿意见及回复草稿：`/data2/tianang/projects/ApexOracle_cleaned/docs/ApexOracle_Nat_Biotech/Response to reviewers letter.docx`
-- **2026-07-18 已完成的 Fig. 2b 文稿修订：** 回复信中关于各 encoder 是否使用相同数据、五折不确定性和原 27.1\% 表述的五处回答已经改为已完成实验及正式数值；论文 Fig. 2b 图注、Results 和 Methods 已同步修改，所有论文新增或替换文字均使用 `\rev{}`。当前 TeX 已完整编译为 28 页且 DOCX 压缩包与段落格式检查通过。
+- **2026-07-18 已完成的 Fig. 2b 文字修订：** 回复信中关于各 encoder 是否使用相同数据、五折不确定性和原 27.1\% 表述的五处回答已经改为已完成实验及正式数值；论文 Fig. 2b 图注、Results 和 Methods 已同步修改，所有论文新增或替换文字均使用 `\rev{}`。当前 TeX 已完整编译为 28 页且 DOCX 压缩包与段落格式检查通过。
+- **仍待替换的论文图片：** 论文目录当前 `Fig2_2.pdf` 的 panel b 仍是旧数值且没有 error bars。新 panel 已在 Mac 上生成：`/Users/kirianozan/Documents/Study/Penn/projects/local_figs/fig2b_rebuttal_shared_5fold.{png,pdf}`；将其合入完整 `Fig2_2.pdf` 的跨机器同步请求未获批准，因此不得声称论文实际图片已经更新。
 - 当前文稿使用已经完成的正式共享 benchmark：24-layer joint DLM `0.5386 ± 0.0250`、12-layer DLM-only `0.3765 ± 0.0239`，并明确说明二者不是容量受控的 objective ablation。如果后续将 12-layer joint 候选纳入主图，必须再次同步更新 Fig. 2b、Results、回复信结果段和 29.1\% 相对提升表述。
 
 ## 审稿回复辅助脚本
