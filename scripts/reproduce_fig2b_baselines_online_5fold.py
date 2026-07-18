@@ -51,6 +51,7 @@ class ModelSpec:
     kind: str
     source_script: str
     hf_model: str | None = None
+    hf_revision: str | None = None
     trust_remote_code: bool = False
     pooling: str = "cls"
     hidden_dim_1: int = 384
@@ -82,6 +83,9 @@ MODEL_SPECS = {
         name="molformer",
         kind="hf_smiles",
         hf_model="ibm/MoLFormer-XL-both-10pct",
+        # This is the locally cached implementation used by the original code.
+        # Newer main revisions require a newer Transformers masking API.
+        hf_revision="7b12d946c181a37f6012b9dc3b002275de070314",
         trust_remote_code=True,
         source_script="fix_MolFormer_on_DBAASP_SMILES_5_fold_mean_MIC.py",
     ),
@@ -226,7 +230,11 @@ class HFRegressionModel(nn.Module):
     def __init__(self, spec: ModelSpec):
         super().__init__()
         self.spec = spec
-        self.bert = AutoModel.from_pretrained(spec.hf_model, trust_remote_code=spec.trust_remote_code)
+        self.bert = AutoModel.from_pretrained(
+            spec.hf_model,
+            revision=spec.hf_revision,
+            trust_remote_code=spec.trust_remote_code,
+        )
         self.classifier = RegressionHead(
             input_dim=self.bert.config.hidden_size,
             hidden_dim_1=spec.hidden_dim_1,
@@ -326,6 +334,7 @@ def finite_mean(values: Iterable[float | None]) -> float:
 def build_hf_dataset(spec: ModelSpec, limit_rows: int | None, shared_dir: Path | None = None):
     tokenizer = get_peptideclm_tokenizer() if spec.kind == "peptideclm" else AutoTokenizer.from_pretrained(
         spec.hf_model,
+        revision=spec.hf_revision,
         trust_remote_code=spec.trust_remote_code,
     )
     if shared_dir is None:
@@ -661,6 +670,8 @@ def run_model(task: dict):
     metrics = {
         "model": spec.name,
         "source_script": spec.source_script,
+        "hf_model": spec.hf_model,
+        "hf_revision": spec.hf_revision,
         "num_examples": int(len(dataset)),
         "original_length": int(dataset.original_length),
         "best_mean_R2_across_folds": float(np.mean([item["best_r2_mean"] for item in fold_results])),

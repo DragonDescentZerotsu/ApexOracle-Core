@@ -16,6 +16,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--gpu", type=int, required=True)
     parser.add_argument("--queue", type=Path, required=True)
     parser.add_argument("--wait-for", type=Path, nargs="+", default=None)
+    parser.add_argument(
+        "--only",
+        nargs="+",
+        default=None,
+        help="Run only the named tasks from the queue, preserving queue order.",
+    )
     parser.add_argument("--poll-seconds", type=int, default=30)
     return parser.parse_args()
 
@@ -26,6 +32,13 @@ def main() -> int:
     tasks = json.loads(queue_path.read_text(encoding="utf-8"))
     if not isinstance(tasks, list) or not all(isinstance(task, dict) for task in tasks):
         raise ValueError("queue JSON must be a list of task objects")
+    if args.only is not None:
+        requested = set(args.only)
+        available = {str(task["name"]) for task in tasks}
+        unknown = requested - available
+        if unknown:
+            raise ValueError(f"unknown queue task names: {sorted(unknown)}")
+        tasks = [task for task in tasks if str(task["name"]) in requested]
 
     if args.wait_for is not None:
         sentinels = [path.resolve() for path in args.wait_for]
