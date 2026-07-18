@@ -229,7 +229,7 @@ APEX 输入转换规则：
 - [ ] 标注 `fully supported`、`partially supported` 和 `missing/external`。
 - [ ] 为 MIC prediction 提供最小 quickstart。
 - [ ] generation 在外部 sampler 整合完成前明确标注不可端到端复现。
-- [x] 已更新论文 Fig. 2b、正文和 reviewer response 中的公平 benchmark 数值；图注只在原文中补充 error bar 是五折 `mean ± s.d.`，共享 10,886 IDs/folds 的细节放在 Methods 和回复信。论文修改均使用 `\rev{}`，TeX 已完整编译。当前数值对应 24-layer joint 正式结果；若后续采用 12-layer joint 候选，需要再次同步四处数值与相对提升。
+- [ ] Fig. 2b 文字修订已完成：正文、图注和 reviewer response 已更新公平 benchmark 数值，论文修改均使用 `\rev{}`，TeX 已完整编译。实际 `Fig2_2.pdf` 的 panel b 仍是旧图；Mac 上已有带 error bars 的新 panel，待获得跨机器同步许可后合入总图。当前文字数值对应 24-layer joint 正式结果；若后续采用 12-layer joint 候选，还需再次同步图和四处数值与相对提升。
 - [ ] 确认 license、第三方模型许可、数据再分发条件和 citation。
 - [ ] 持续用中文维护 `AGENTS.md`，记录新的审计结论和迁移关系。
 
