@@ -157,7 +157,7 @@ APEX 输入转换规则：
 
 状态：**已完成。** 共享 native-processability 审计、公共 ID 交集、outer fold 校验、MIC label transform、指标实现和严格 ID 对齐的 `.npz` feature-cache 契约已实现并通过测试。曾新增的 10% validation、统一 prediction head 和统一 head runner 超出了 reviewer 要求，已经撤回。APEX adapter 已严格加载完整原 checkpoint，并为 10,886 个公共 molecule 生成及回读 `(10886, 128)` 审计 cache。各原始训练实现的共享 IDs/folds 薄入口和两个 DLM checkpoint 接入已经完成；正式 7-model × 5-fold 训练于 2026-07-18 全部完成，35 个 fold 无缺失且每个模型的 test IDs 均完整覆盖公共集合。训练保持原 200 epochs、batch size 200、Adam、`1e-4`、模型特有 head 和 train/eval mode；只缓存 held-out fold 上确定性的 frozen-backbone eval feature，以避免每个 epoch 重复相同计算。正式结果记录在 `experiments/fig2b_molecule_encoders/results_shared_5fold.md`。
 
-权重审计补充：**已完成 node002 核验，但未找到同容量 DLM-only。** 24-layer/1024 `best.ckpt` 的原始 Fangping 训练目录和源码证明其从训练开始即使用联合 DLM+MTR objective；本机、node002、W&B 和公开 Hugging Face 权重中均未发现 24-layer/1024 纯 DLM checkpoint。当前 Fig. 2b 两个 DLM bar 应表述为模型版本 benchmark，不得写成容量受控的 MTR objective ablation。若修订稿需要后者，应另行恢复旧备份或重新预训练。
+权重审计补充：**已完成 node002 核验。** 本机、node002、W&B 和公开 Hugging Face 权重中均未发现 24-layer/1024 纯 DLM checkpoint，因此当前正式表中的 12-layer DLM-only 与 24-layer joint 只能表述为模型版本 benchmark。随后在 node002 原始 Fangping run 中确认了 12-layer/768 joint `best.ckpt`（step 650032），可与 `best_2.ckpt` 做容量匹配的新五折比较；但二者预训练 learning rate、global batch size 和最佳 step 不完全一致，不能称为严格单变量 objective ablation。该候选尚未运行，不能提前替换正式结果。
 
 #### 3.3 capsule 迁移
 

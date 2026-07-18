@@ -30,10 +30,11 @@ weights:
       hidden_size: 768
       weight_source: ema.shadow_params
       contains_mtr_regression_branch: false
-      capacity_matched_to_joint_checkpoint: false
+      capacity_matched_to_selected_joint_checkpoint: false
     interpretation:
       comparison_role: available_dlm_only_model_variant
       objective_ablation_status: not_capacity_controlled
+      capacity_matched_joint_candidate: fig2b_dlm_mtr_dlm_small_candidate
     loader: scripts/reproduce/run_fig2b_shared_mdlm_online.py
     future_storage:
       relative_path: molecule_encoders/dlm_only/best_2.ckpt
@@ -66,6 +67,41 @@ weights:
     loader: scripts/reproduce/run_fig2b_shared_mdlm_online.py
     future_storage:
       relative_path: molecule_encoders/dlm_mtr_dlm/best.ckpt
+      download_uri: null
+      redistribution_status: to_review
+
+  fig2b_dlm_mtr_dlm_small_candidate:
+    paper_label: DLM MTR+DLM capacity-matched candidate
+    tasks:
+      - fig2b_shared_molecule_encoder_benchmark_pending
+    decision_status: checkpoint_verified_not_yet_benchmarked
+    source:
+      kind: remote_local_repository
+      repository: node002:/data1/fangping/mdlm
+      current_path: node002:/data1/fangping/mdlm/outputs/openwebtext-train/2025.04.29/165523/checkpoints/best.ckpt
+      sha256: 3c612c9c68b9ee72c077dc1492153fa30d5c9fa4cb1753355bf146cff616c9d6
+      size_bytes: 1568403312
+    model:
+      config: small
+      layers: 12
+      hidden_size: 768
+      weight_source: ema.shadow_params
+      contains_mtr_regression_branch: true
+      regression_head: [768, 768, 209]
+      pretraining_objective: dlm_plus_0.1_mtr_regression_mse
+    pretraining:
+      global_step: 650032
+      learning_rate: 0.0001
+      global_batch_size: 480
+      sequence_length: 1024
+      data_config: openwebtext-train
+    interpretation:
+      capacity_matched_to_fig2b_dlm_only: true
+      all_other_pretraining_conditions_matched: false
+      benchmark_status: pending
+    loader: scripts/reproduce/run_fig2b_shared_mdlm_online.py
+    future_storage:
+      relative_path: molecule_encoders/dlm_mtr_dlm_small/best.ckpt
       download_uri: null
       redistribution_status: to_review
 
