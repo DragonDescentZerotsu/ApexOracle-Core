@@ -38,7 +38,7 @@ R² 的标准差是五个 fold 最佳 mean R² 的 sample SD。
 
 - DLM MTR+DLM 在共同数据上比原 retained-set rerun 高 0.0179，仍是性能最高的模型。
 - DLM-only 降低 0.0318，是唯一出现较大变化的模型；这说明旧实验中各模型样本和 fold 不一致对该 bar 的影响不可忽略。新论文图和 reviewer response 应使用 0.3765，而不是沿用约 0.408 的旧值。
-- 两个 DLM checkpoint 的容量不同：DLM-only 是 12-layer/768，MTR+DLM 是 24-layer/1024。node002 原始训练目录和源码确认 24-layer checkpoint 从一开始就采用联合 `DLM + 0.1 × MTR MSE` 目标；当前未找到同容量的纯 DLM 权重。因此二者是模型版本比较，不是容量受控的 MTR objective ablation，正文和 reviewer response 不应把 0.1621 的差异完全归因于 MTR。
+- 正式表中的两个 DLM checkpoint 容量不同：DLM-only 是 12-layer/768，MTR+DLM 是 24-layer/1024。因此当前二者是模型版本比较，不是容量受控的 MTR objective ablation，正文和 reviewer response 不应把 0.1621 的差异完全归因于 MTR。node002 后续定位到一份尚未纳入本表的 12-layer/768 joint checkpoint；它可用于新增容量匹配比较，但预训练 learning rate、global batch size 和最佳 step 仍与 DLM-only 不完全相同。
 - ChemBERTa-MTR、ChemBERTa-MLM、MolFormer 和 APEX 相对原 rerun 的绝对变化都小于 0.006；PeptideCLM 上升 0.0069。
 - APEX 没有被重构或改变：仍使用原 23-token vocabulary、AAindex embedding、encoder、checkpoint 和 `512→256` regression head；noncanonical residue 的 `X` 按原 `onehot_encoding` 行为留在 index 0。
 - 原代码没有显式固定 PyTorch 训练 seed。本次保留了这一原始行为，并在每个 fold 的 `metrics.json` 中记录 `initial_torch_seed`；因此这里是一次忠实的 stochastic rerun，而不是跨硬件逐 bit 确定的结果。
@@ -51,5 +51,6 @@ R² 的标准差是五个 fold 最佳 mean R² 的 sample SD。
 - `folds.csv` SHA-256：`500bcc58f0d28976394fa7e7000dfb8c70caa1a38f675745fdc2a6dd9cf299c4`。
 - DLM-only 使用 12-layer `best_2.ckpt`；DLM MTR+DLM 使用 24-layer `best.ckpt`。
 - 24-layer checkpoint 的原始训练文件位于 `node002:/data1/fangping/mdlm/outputs/openwebtext-train/2025.05.06/112126/checkpoints/`；搜索范围与解释边界详见 `MODEL_WEIGHTS.md`。
+- 12-layer joint 候选位于 `node002:/data1/fangping/mdlm/outputs/openwebtext-train/2025.04.29/165523/checkpoints/best.ckpt`，step 650032，SHA-256 `3c612c9c…616c9d6`；它尚未运行本协议，当前结果表不包含该 checkpoint。
 - MolFormer 使用 `ibm/MoLFormer-XL-both-10pct` revision `7b12d946c181a37f6012b9dc3b002275de070314`。这是本地已有权重对应、且与当前环境兼容的历史 revision；没有改变模型结构、权重或训练超参数。
 - 完整 checkpoint、prediction 和逐任务指标位于被 Git 忽略的 `results/fig2b_shared_original_protocol/`；其中 `REPORT.md`、`comparison_summary.json`、`comparison_summary.csv` 和 `fold_metrics.csv` 可用于后续更新图表。
