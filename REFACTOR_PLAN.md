@@ -105,12 +105,12 @@ ChemBERTa MLM mean-pooling 作为可选消融，不与论文主 comparator 混�
 - [x] 扫描 staged 内容中的疑似密钥和大型文件；旧绝对路径保留在 legacy tag 中，重构分支再统一迁移为配置。
 - [x] 创建本地初始提交和 `legacy-code-snapshot-2026-07-17` tag。
 - [x] 将 legacy `main` 和重构分支同步到 `DragonDescentZerotsu/Synergy.git`。
-- [ ] 在具备普通 Git 凭据后补推远程 tag `legacy-code-snapshot-2026-07-17`；当前远程以 `archive/legacy-code-snapshot-2026-07-17` branch 暂代。
+- [x] 远程 tag `legacy-code-snapshot-2026-07-17` 已通过恢复后的 GitHub HTTPS 凭据推送；`archive/legacy-code-snapshot-2026-07-17` branch 继续作为额外恢复点。
 - [x] 从该 tag 创建 `agent/paper-release-refactor` 重构分支，后续清理不直接破坏历史快照。
 
 验收标准：从 tag 可以查看原始源码血缘，但仓库中不存在数据、checkpoint、结果或可用密钥。
 
-执行记录：当前 Codex 工作区将 `.git` 作为只读保护挂载，因此本次 Git metadata 暂存在被忽略的 `.git-state/` 中，并通过 `--git-dir=.git-state --work-tree=.` 操作同一工作树。本地脱敏快照提交为 `a68707c`。最初本机没有可用 `gh`、SSH public key 或 HTTPS credential，因此使用已授权的 GitHub App Git object API 重建远程提交链；上传的 237 个去重 blob 和五个版本 tree 均逐一与本地 SHA 校验一致。远程提交因额外的仓库初始化 parent 而拥有不同 commit SHA，但每个科学代码版本的 tree 与本地完全一致。2026-07-18 已安装 `gh` 2.96.0，但保存的 token 无效且 SSH public-key 认证仍失败；重新执行 `gh auth login -h github.com` 前仍需使用 GitHub App。连接器不提供 tag API，因此本地 tag 已保留，远程暂用 archive branch 作为恢复点。
+执行记录：当前 Codex 工作区将 `.git` 作为只读保护挂载，因此 Git metadata 位于被忽略的 `.git-state/`，并通过 `--git-dir=.git-state --work-tree=.` 操作同一工作树。本地脱敏快照提交为 `a68707c`。最初本机没有可用 `gh`、SSH public key 或 HTTPS credential，因此使用已授权的 GitHub App Git object API 重建远程提交链；上传的 237 个去重 blob 和五个版本 tree 均逐一与本地 SHA 校验一致。远程提交因额外的仓库初始化 parent 而拥有不同 commit SHA，但每个科学代码版本的 tree 与本地完全一致。2026-07-18 已完成 `gh` 2.96.0 网页认证，Git protocol 和 `origin` 均切换为 HTTPS；随后成功 fetch 合并后的 `main` 并推送 annotated tag `legacy-code-snapshot-2026-07-17`。PR #2 已通过 merge commit `24d975c` 合入远程 `main`。
 
 ### 阶段 2：建立共享核心模块
 
