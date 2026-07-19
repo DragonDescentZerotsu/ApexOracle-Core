@@ -23,6 +23,13 @@ similarity = [
   "tqdm>=4.64",
 ]
 peplink = ["PepLink==0.1.1"]
+data-preparation = [
+  "rdkit>=2023.9",
+  "selfies>=2.1",
+  "transformers>=4.40",
+  "pyyaml>=6",
+  "tqdm>=4.64",
+]
 benchmark = [
   "torch>=2.1",
   "transformers>=4.40",

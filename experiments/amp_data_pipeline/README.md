@@ -46,8 +46,8 @@ PepLink 已经具备独立的 PyPI 发布、MIT license、公开 API、版本 ta
   paper data。
 - **新数据构建：** 使用 PepLink 0.1.1 的规范化输出。两个游离 fragment 清理属于明确的
   versioned data change。
-- **不能声称的事项：** 177/179 exact 不等于论文完整 121,265 行数据已经从零重建；MIC
-  parsing、in-house merge 和 SELFIES/token filtering 仍需分别迁移和验证。
+- **完整数据处理现状：** MIC parsing、in-house merge 和 SELFIES/token filtering 已迁移并
+  完成真实数据验证，结果见 `paper_data_reconstruction_audit.json`。
 
 审计命令：
 
@@ -58,3 +58,56 @@ python scripts/audit/audit_peplink_compatibility.py \
 ```
 
 安装 PyPI 包后可省略 `--peplink-source`。
+
+## MIC、in-house merge 与 token filtering
+
+canonical 实现位于：
+
+- `src/apexoracle/data/amp_mic.py`：MIC/inhibition 选择、浓度解析和 µg/ml→µM；
+- `src/apexoracle/data/amp_training_data.py`：in-house wide→long、表合并、SELFIES/token filter；
+- `scripts/prepare_data/build_amp_mic_dataset.py` 和
+  `scripts/prepare_data/build_amp_training_dataset.py`：只读 CLI。
+
+所有 CLI 都拒绝输入输出同路径，也拒绝覆盖已经存在的输出。建议始终使用新的 `results/`
+子目录，例如：
+
+```bash
+python scripts/prepare_data/build_amp_mic_dataset.py \
+  --dbaasp-json DataPrepare/Data/all_peptides_data.json \
+  --smiles-csv DataPrepare/Data/DBAASP_id_SMILES_merged.csv \
+  --molecular-weight-smiles-overrides \
+    DataPrepare/Data/DBAASP_id_wo_PubChem_SMILES_w_DBAASP_smiles.csv \
+  --output-dir results/amp_data_rebuild/mic
+
+python scripts/prepare_data/build_amp_training_dataset.py merge \
+  --dbaasp-mic DataPrepare/Data/DBAASP_id_bact_name_SMILES_MIC_Evo.csv \
+  --inhouse-mic DataPrepare/Data/inhouse_Evo_style_SMILES_MIC.csv \
+  --output results/amp_data_rebuild/DBAASP_inhouse_AMP_SMILES_MIC_Evo.csv
+
+python scripts/prepare_data/build_amp_training_dataset.py tokenize \
+  --input DataPrepare/Data/DBAASP_inhouse_AMP_SMILES_MIC_Evo.csv \
+  --output results/amp_data_rebuild/DBAASP_inhouse_AMP_SELFIES_token_MIC_Evo.csv \
+  --revision 55e83392264cb998f7aa5014847df29868aefeb8 \
+  --local-files-only
+```
+
+### 已由代码和真实数据验证的事实
+
+- DBAASP MIC 重建得到相同的 105,547 行；ID、行顺序、strain 和 corrected SMILES 全部精确
+  一致。MIC 最大绝对误差为 `4.55e-13`，621 个文本差异来自历史 pandas float CSV
+  序列化，不是标签含义变化。
+- structure correction 的历史顺序已经显式复现：179 条 correction 之前的 SMILES 只用于
+  分子量换算，最终表展示 correction 之后的 SMILES。它消除了 5 个 DBAASP ID、21 行 MIC
+  的实质差异。
+- frozen DBAASP MIC 与 frozen in-house long table 合并后，121,265 行 CSV 逐字节一致。
+- IBM SELFIES tokenizer 固定到 revision
+  `55e83392264cb998f7aa5014847df29868aefeb8`；310 行因超过 1024 tokens 排除，invalid/UNK
+  均为 0。最终 120,955 行 token cache 逐字节一致。
+- 用 PepLink 0.1.1 从 1,642 条 in-house sequence 新建结构时，ID、strain 和 MIC 全部一致；
+  legacy 结构各含一个显式 terminal `[OH]`，PepLink 输出等价 canonical `O`。归一化该写法后
+  15,718/15,718 行一致。因此论文复现读取 frozen in-house long table，新数据使用 PepLink
+  canonical 结构。
+
+`paper_legacy` 不是新的推荐科学协议。它只用于诚实复现论文数据，包括 inhibition unit 的
+历史选择行为以及 `>`/`>>` 的倍增规则；未来修正规则必须使用新 protocol/version，不能静默
+替换 frozen 数据。

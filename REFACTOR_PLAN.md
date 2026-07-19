@@ -245,8 +245,14 @@ PepLink 外部依赖边界已于 2026-07-19 完成。作者维护的独立仓库
 manifest。独立 PepLink 测试为 22 passed。179 条历史 structure correction 中 177 条输出
 逐字符串相同，另 2 条是 v0.1.1 明确移除 legacy 游离 fragment，全部 179 条均为 fragment
 parent equivalent。论文复现继续消费 frozen paper CSV；新数据使用 v0.1.1 normalization。
-旧 `DataPrepare/aa_seq_to_smiles.py` 暂不删除，因为尚有未迁移的 MIC/synergy data driver
-import 它。下一子阶段为 MIC parsing、in-house merge 与 SELFIES/token filtering。
+AMP MIC parsing、in-house merge 与 SELFIES/token filtering 也已于 2026-07-19 完成。
+canonical CLI 对原数据只读并拒绝覆盖输入；`paper_legacy` 显式保留 inhibition、censor 和
+structure-correction 执行顺序。105,547 行 DBAASP MIC 的 ID/strain/SMILES 精确一致，MIC
+最大绝对误差 `4.55e-13`；121,265 行合并表与 120,955 行 token cache 均逐字节一致。
+tokenizer revision 已固定。PepLink 重建 15,718 条 in-house row 与 legacy 的唯一差异是
+terminal `[OH]` 对 canonical `O`，归一化后全部一致；论文复现继续读取 frozen in-house
+long table。旧 `DataPrepare/aa_seq_to_smiles.py` 暂不删除，因为仍有 synergy 等未迁移 driver
+import 它。下一高置信度阶段改为 reviewer Evo-2 embedding scaling 分析的入口与发布审计。
 
 #### 4.2 迁移前需要作者或原始结果进一步核验
 

@@ -92,6 +92,24 @@ entries:
     deletion_allowed: false
     deletion_note: Legacy aa_seq_to_smiles remains until all in-repository callers and MIC/data-build scripts are migrated to the external package.
 
+  - id: amp_mic_training_data_pipeline
+    source:
+      - DataPrepare/concentration_unit_transfer_Evo.py
+      - DataPrepare/APEX_in_house_to_SMILES_Evo.py
+      - DataPrepare/convert_EVO_smiles_MIC_to_SELFIES_tokens.py
+    destination:
+      - src/apexoracle/data/amp_mic.py
+      - src/apexoracle/data/amp_training_data.py
+      - scripts/prepare_data/build_amp_mic_dataset.py
+      - scripts/prepare_data/build_amp_training_dataset.py
+      - configs/data_pipeline/amp_mic_paper.yaml
+      - experiments/amp_data_pipeline
+    status: canonical_read_only_pipeline_verified
+    evidence:
+      - experiments/amp_data_pipeline/README.md
+      - experiments/amp_data_pipeline/paper_data_reconstruction_audit.json
+    deletion_allowed: true
+
   - id: synergy_cv
     source:
       - synergy_Evo_train_new_reg_MDLM_one_base_model_classification.py
