@@ -1,0 +1,56 @@
+protocol: paper_legacy
+
+inputs:
+  dbaasp_json:
+    path: DataPrepare/Data/all_peptides_data.json
+    sha256: 927ea275f40cdc2f79acdae6a87b0efc13ae5b7acee3901a50d2005a8f187ce0
+  corrected_smiles_csv:
+    path: DataPrepare/Data/DBAASP_id_SMILES_merged.csv
+    sha256: 347b7d9b1175967e4e8199d627c4dd3df446d19f29156c97b360db9e8099a565
+  pre_correction_weight_smiles_overrides:
+    path: DataPrepare/Data/DBAASP_id_wo_PubChem_SMILES_w_DBAASP_smiles.csv
+    rows: 179
+    sha256: 0b70f558ac24a1634e43f4139efca6bff58971f17a263ce0a163ce17ee113f96
+
+frozen_paper_output:
+  path: DataPrepare/Data/DBAASP_id_bact_name_SMILES_MIC_Evo.csv
+  rows: 105547
+  unique_dbaasp_ids: 16430
+  sha256: ebbe1b32a45460a2f88f112192627f80f9f7391c1d17dfc2ebf007fe6f6ef2aa
+
+inhouse:
+  wide_source:
+    path: DataPrepare/Data/APEX 1.1 Data.csv
+    rows: 1642
+    sha256: 7ad7fe5e6e0838ea213c11fd9b2e6aa3ed6145ef079c90b8f430e9e5b139caaa
+  frozen_long_table:
+    path: DataPrepare/Data/inhouse_Evo_style_SMILES_MIC.csv
+    rows: 15718
+    sha256: 42f0421a997a23a4c07eae37c0116b2b49ee78f9fbd8c93aac03d5354f711896
+  paper_reproduction: consume_frozen_long_table
+  new_data: build_with_peplink_0.1.1
+
+merged_paper_output:
+  path: DataPrepare/Data/DBAASP_inhouse_AMP_SMILES_MIC_Evo.csv
+  rows: 121265
+  unique_ids: 18072
+  sha256: af35bb4be1e08d6c95047dd3f05fc24c70568d40373d246fced6d150b19fd079
+
+token_filter:
+  selfies_version: 2.1.1
+  model_name: ibm-research/materials.selfies-ted
+  revision: 55e83392264cb998f7aa5014847df29868aefeb8
+  tokenizer_json_sha256: 29b3568f4721f2c8635f8c8468e3c5bacddc58e5970f7a7a323d549c296e23c8
+  max_length: 1024
+  unknown_token_id: 0
+  excluded_invalid_smiles: 0
+  excluded_unknown_token: 0
+  excluded_too_long: 310
+  frozen_output:
+    path: DataPrepare/Data/DBAASP_inhouse_AMP_SELFIES_token_MIC_Evo.csv
+    rows: 120955
+    sha256: ac1a1967d9e94e169ffc23621f7e78c644753659bd08f7a8e10bb63b574930b2
+
+write_policy:
+  original_data: read_only
+  output_directory_must_be_independent: true

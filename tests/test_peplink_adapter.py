@@ -44,3 +44,13 @@ def test_dbaasp_adapter_uses_only_public_peplink_api(
 def test_release_provenance_is_frozen() -> None:
     assert peplink_adapter.PEPLINK_VERSION == "0.1.1"
     assert len(peplink_adapter.PEPLINK_GIT_COMMIT) == 40
+
+
+def test_sequence_adapter_uses_public_api(monkeypatch: pytest.MonkeyPatch) -> None:
+    calls = []
+    fake = SimpleNamespace(
+        aa_seqs_to_smiles=lambda **kwargs: calls.append(kwargs) or "SMILES"
+    )
+    monkeypatch.setattr(peplink_adapter, "load_peplink", lambda: fake)
+    assert peplink_adapter.sequence_to_smiles("AC") == "SMILES"
+    assert calls == [{"sequence": "AC"}]

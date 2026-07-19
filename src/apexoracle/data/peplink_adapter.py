@@ -38,3 +38,9 @@ def dbaasp_record_to_smiles(record: Mapping[str, Any]) -> str:
     peplink = load_peplink()
     peptide_input = peplink.from_dbaasp_record(record)
     return peplink.aa_seqs_to_smiles(**peptide_input.to_api_kwargs())
+
+
+def sequence_to_smiles(sequence: str) -> str:
+    """Convert a standard amino-acid sequence through PepLink's public API."""
+
+    return load_peplink().aa_seqs_to_smiles(sequence=sequence)

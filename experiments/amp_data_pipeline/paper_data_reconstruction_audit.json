@@ -1,0 +1,42 @@
+{
+  "audit_date": "2026-07-19",
+  "original_data_mutated": false,
+  "dbaasp_mic_reconstruction": {
+    "rows": 105547,
+    "unique_dbaasp_ids": 16430,
+    "id_strain_smiles_exact": true,
+    "mic_text_mismatches": 621,
+    "mic_values_outside_atol_1e-12": 0,
+    "mic_max_absolute_difference": 4.547473508864641e-13,
+    "rebuilt_sha256": "d58056c5de53eb6a4b2c8a201e2ed6b40bf38198cfb7eab81baafe4c2d226448",
+    "frozen_sha256": "ebbe1b32a45460a2f88f112192627f80f9f7391c1d17dfc2ebf007fe6f6ef2aa",
+    "interpretation": "All scientific values agree; remaining differences are historical floating-point CSV serialization."
+  },
+  "structure_correction_lineage": {
+    "display_smiles_source": "corrected DBAASP_id_SMILES_merged.csv",
+    "molecular_weight_override_rows": 179,
+    "material_mic_differences_removed": 21,
+    "affected_dbaasp_ids": [10504, 10674, 19000, 19087, 19088]
+  },
+  "inhouse_peplink_rebuild": {
+    "rows": 15718,
+    "ids_strains_mic_exact": true,
+    "smiles_exact": 0,
+    "smiles_exact_after_normalizing_legacy_explicit_terminal_hydroxyl": 15718,
+    "difference": "The frozen builder emitted one terminal [OH]; PepLink 0.1.1 emits equivalent canonical O. Paper reproduction therefore consumes the frozen long table."
+  },
+  "merged_mic": {
+    "rows": 121265,
+    "byte_exact": true,
+    "sha256": "af35bb4be1e08d6c95047dd3f05fc24c70568d40373d246fced6d150b19fd079"
+  },
+  "token_cache": {
+    "rows": 120955,
+    "unique_smiles_tokenized": 17988,
+    "excluded_too_long": 310,
+    "excluded_invalid_smiles": 0,
+    "excluded_unknown_token": 0,
+    "byte_exact": true,
+    "sha256": "ac1a1967d9e94e169ffc23621f7e78c644753659bd08f7a8e10bb63b574930b2"
+  }
+}

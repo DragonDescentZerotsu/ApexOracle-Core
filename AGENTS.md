@@ -261,9 +261,9 @@ Strain count mapping 的演化顺序如下：
   paper CSV 的 SHA，新数据才使用 v0.1.1 normalization。
 - `try.py`：为缺少 PubChem SMILES 的 DBAASP peptide 补结构的早期原型，输出缺失结构的中间 CSV。
 - `correct_SMILES_offered_by_DBAASP.py`：重建 DBAASP 提供的 peptide structure 以保留 stereochemistry，并更新 merged SMILES/Evo MIC 文件。它晚于 `try.py`，属于最终化学结构清理血缘。
-- `concentration_unit_transfer.py`：最早的 MIC 单位转换原型。`concentration_unit_transfer_new.py` 面向 19-task wide table；`concentration_unit_transfer_all_bact.py` 扩展到全部 bacteria 并计算 mean；`concentration_unit_transfer_Evo.py` 是最终 long-format DBAASP converter，生成 `DBAASP_id_bact_name_SMILES_MIC_Evo.csv` 和 strain count。
-- `APEX_in_house_to_SMILES.py`：把 in-house APEX 表转换为早期 wide SMILES 格式。`APEX_in_house_to_SMILES_merge_w_DBAASP.py` 合并该早期格式。`APEX_in_house_to_SMILES_Evo.py` 是最终 long-format merge，生成 `DBAASP_inhouse_AMP_SMILES_MIC_Evo.csv`。
-- `convert_EVO_smiles_MIC_to_SELFIES_tokens.py`：最终 AMP SMILES→SELFIES→IBM tokenizer ID cache，并删除 invalid、UNK 或超过 1024 token 的记录。`convert_EVO_smiles_MIC_to_SELFIES_token_SM.py` 是对应的小分子二分类转换器。
+- `concentration_unit_transfer.py`：最早的 MIC 单位转换原型。`concentration_unit_transfer_new.py` 面向 19-task wide table；`concentration_unit_transfer_all_bact.py` 扩展到全部 bacteria 并计算 mean；历史最终 long-format 行为现由 `src/apexoracle/data/amp_mic.py` 和只读入口 `scripts/prepare_data/build_amp_mic_dataset.py` 取代。
+- `APEX_in_house_to_SMILES.py`：把 in-house APEX 表转换为早期 wide SMILES 格式。`APEX_in_house_to_SMILES_merge_w_DBAASP.py` 合并该早期格式。最终 long-format、merge 和 AMP token filter 现由 `src/apexoracle/data/amp_training_data.py` 与 `scripts/prepare_data/build_amp_training_dataset.py` 取代；`convert_EVO_smiles_MIC_to_SELFIES_token_SM.py` 仍是尚未迁移的小分子二分类转换器。
+- **2026-07-19 已验证事实：** canonical MIC 重建得到相同 105,547 行，ID/strain/SMILES 精确一致，MIC 最大绝对误差 `4.55e-13`，没有记录超出 `1e-12` tolerance。历史 structure correction 是先用旧 SMILES 分子量换算 MIC、再原地替换展示 SMILES；新实现通过 179 条只用于分子量的 override 显式复现，不覆盖任何原始文件。frozen in-house long table 合并后的 121,265 行 CSV 和固定 IBM tokenizer revision 后的 120,955 行 token cache 均逐字节一致；310 行仅因超过 1024 tokens 排除，invalid/UNK 为 0。PepLink 新建 in-house structure 与 legacy 只差 terminal `[OH]`/canonical `O`，归一化后 15,718/15,718 行一致。
 - `DBAASP_SELFIES_Token_see.py` 和 `debug_notebook.py`：只用于 tokenizer vocabulary 检查。`debug.py` 把小分子 SELFIES 导出给外部 `mdlm` 项目。
 - `bacteria_get.py`：统计 DBAASP JSON 中 strain/species 出现次数和 activity unit 变体，为 mapping 构建提供探索性支持。
 - `canonical-peptide-check.py`：检查 canonical peptide 内容。`smiles_to_peptide.py` 把 peptide-like SMILES 反向转换为 D/L residue sequence，并被 peptide/non-peptide 标签脚本复用。
