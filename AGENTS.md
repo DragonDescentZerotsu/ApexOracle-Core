@@ -225,6 +225,13 @@
 - `synergy_Evo_train_on_DBAASP_test_on_inhouse.py` 和 `_classification.py` 用于测试向 prospective in-house pair 的迁移。`_few_shot.py`、`_classification_few_shot.py`、`_inner_prod.py`、`_no_lora.py` 和 `_w_pred_MIC.py` 是后续 few-shot 架构变体，属于**论文后代码**，不能与论文 DBAASP 三折指标混用。
 - `synergy_Evo_train_on_DBAASP_screen_inhouse_pairs.py` 筛选 prospective in-house pair，目标 strain 硬编码为 BAA-3170。`synergy_Evo_test_inhouse_MDLM.py` 加载 all-data synergy 模型并测试处理后的 in-house 数据。这些服务于后续发现工作，不是论文核心 CV。
 
+#### Synergy CV 重构阶段审计（2026-07-19）
+
+- **已由代码、数据、checkpoint 和日志验证的事实：** 候选 classification driver 的动态过滤得到 2,732 行 eligible pair；`PYTHONHASHSEED=0` 时三个 fold 的四路过滤前/后行数均逐项匹配旧日志。现存 21 个 checkpoint 构成完整 `3×7` 网格且结构一致，active fusion LoRA rank 为 1024，synergy head 为完整参数训练的 `24576→3072→128→1`，代码里构造的 rank-256 head LoRA config 未实际使用。候选 driver 加载的是 100-epoch base checkpoint，不是仓库中另存的 13-epoch checkpoint。
+- **根据现有证据作出的推断：** 该 family 是当前最接近论文 synergy 结果的完整候选，但三个 fold 日志的未加权均值 `0.7598/0.7440` 与论文 `0.7539/0.7454` 不完全一致，因此不能称为精确 paper run。
+- **仍待作者确认的事项：** Methods 写 fusion LoRA rank 64 和 base training 13 epochs，并把融合维度写为 `12,294→3,073`；候选 checkpoint 分别证明 rank 1024、实际加载 100-epoch base 和真实维度 `12,288→3,072`。旧日志也未记录独立进程的 `PYTHONHASHSEED`，seed-0 strain membership 只能作为确定性候选。
+- **已完成的重构验收：** 1 个 base 与 21 个 member 的逐文件 SHA-256 已登记；`fold_0/ensemble_0` 在 H100 上严格加载后，genome+text 和 text-only 两路均与 inline legacy 公式逐值一致。统一 runner 的 fold 2、1 member、1 epoch 真实数据 smoke 成功写出 checkpoint、175 条预测、metrics 和 summary；临时 2.24 GB 输出已删除。该 smoke 指标不作为论文结果。
+
 ### 论文时期训练使用的最终数据
 
 | 模态 | 论文来源和数量 | 最终本地训练数据 | 需要注意的区别 |

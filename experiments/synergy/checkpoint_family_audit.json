@@ -1,0 +1,78 @@
+{
+  "status": "experimental_candidate_not_exact_paper_identity",
+  "checkpoint_directory": "Checkpoints/genome_text_learnable_emb/strain_wise_synergy/MDLM_3_fold_ensembles_1_base_model_cls",
+  "file_pattern": "fold_{0..2}_ensemble_{0..6}.ckpt",
+  "file_count": 21,
+  "size_bytes_each": 2238287881,
+  "grid_complete": true,
+  "all_structure_signatures_identical": true,
+  "top_level_keys": [
+    "AUROC",
+    "optimizer_state_dict",
+    "re_head_state_dict",
+    "co_cross_attn_genome",
+    "co_cross_attn_text",
+    "learnable_embedding_weight"
+  ],
+  "model_contract": {
+    "molecule_dim": 768,
+    "genome_dim": 8192,
+    "text_dim": 4096,
+    "fusion_lora_rank": 1024,
+    "fusion_lora_tensor_count_per_modality": 10,
+    "head_dimensions": [24576, 3072, 128, 1],
+    "head_lora_active": false,
+    "missing_genome_shape": [1, 8192],
+    "missing_genome_requires_grad": false,
+    "optimizer_parameter_counts_by_group": [10, 10, 6]
+  },
+  "representative_checkpoint": {
+    "path": "fold_0_ensemble_0.ckpt",
+    "sha256": "e6dafd37e36a8980ffa850c84c84ce55d76ad29e02fa6538ffde71bb54f49d1b",
+    "saved_best_auroc": 0.6683234072882189
+  },
+  "base_checkpoint": {
+    "path": "Checkpoints/genome_text_learnable_emb/guidance_regressor_pad_no_mask/noise_guidance_best_R2_all_peptide_epoch_100.pth",
+    "size_bytes": 9168011801,
+    "sha256": "f24faf670b804edebbd4d6530a42c1351b62040046e14ebded67335aefc9c3a4",
+    "top_level_keys": [
+      "R2",
+      "optimizer_state_dict",
+      "mdlm_model_state_dict",
+      "re_head_state_dict",
+      "cls_head_state_dict",
+      "co_cross_attn_genome",
+      "co_cross_attn_text",
+      "learnable_embedding_weight"
+    ],
+    "fusion_state_strict_shape_match": true,
+    "training_log_epochs": 100
+  },
+  "legacy_log_ensemble_metrics": {
+    "fold_0": {"auroc": 0.6690, "auprc": 0.6159},
+    "fold_1": {"auroc": 0.7614, "auprc": 0.6853},
+    "fold_2": {"auroc": 0.8489, "auprc": 0.9307},
+    "unweighted_mean": {"auroc": 0.7597666667, "auprc": 0.7439666667}
+  },
+  "paper_reported_metrics": {"auroc": 0.7539, "auprc": 0.7454},
+  "sha256_status": "complete_all_22_files_see_checkpoint_file_manifest_csv",
+  "checkpoint_file_manifest_sha256": "86bf6b4224981978aba511f2f6353aa81960a53650f72f96c4ecf7733bd7e733",
+  "real_checkpoint_validation": {
+    "checkpoint": "fold_0_ensemble_0.ckpt",
+    "device": "NVIDIA H100 PCIe",
+    "genome_text_logit": -1.208984375,
+    "text_only_logit": 0.5029296875,
+    "inline_legacy_formula_exact_match": true
+  },
+  "one_epoch_real_data_smoke": {
+    "fold": 2,
+    "members": 1,
+    "epochs": 1,
+    "test_rows": 175,
+    "auroc": 0.8054252657911195,
+    "auprc": 0.901114705456812,
+    "checkpoint_predictions_metrics_and_summary_written": true,
+    "temporary_outputs_removed": true,
+    "interpretation": "runner_smoke_only_not_paper_result"
+  }
+}

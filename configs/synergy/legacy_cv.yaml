@@ -1,0 +1,74 @@
+schema_version: 1
+status: experimental_protocol_frozen_model_evidence_incomplete
+
+data:
+  source: DataPrepare/Data/synergistic_pairs_Evo.csv
+  source_sha256: ff57e2152159be950a9823f5d94f24c0771b18465bd17cfd11d9d0318db393be
+  raw_rows: 4285
+  eligible_rows: 2732
+  positive_label: FICI < 0.5
+  split_python_hash_seed: 0
+  tokenizer:
+    model: ibm-research/materials.selfies-ted
+    revision: 55e83392264cb998f7aa5014847df29868aefeb8
+    max_length: 512
+
+features:
+  molecule: DataPrepare/Data/synergy_mol_emb_dict_cls_wo_pad.pt
+  genome: DataPrepare/Data/Genome_embs
+  genome_scale: 1.0e14
+  text_with_genome: DataPrepare/Data/Text_Description/ATCC/embeddings
+  text_without_genome: DataPrepare/Data/Text_Description/wo_ATCC/embeddings
+  text_scale: 1.0
+
+model:
+  base_checkpoint: Checkpoints/genome_text_learnable_emb/guidance_regressor_pad_no_mask/noise_guidance_best_R2_all_peptide_epoch_100.pth
+  base_checkpoint_sha256: f24faf670b804edebbd4d6530a42c1351b62040046e14ebded67335aefc9c3a4
+  molecule_dim: 768
+  genome_dim: 8192
+  text_dim: 4096
+  attention_heads: 4
+  active_fusion_lora:
+    rank: 1024
+    alpha: 32
+    dropout: 0.1
+    targets:
+      - mol_to_genome_dim
+      - key_value_projection
+      - mha.out_proj
+      - ffn.0
+      - ffn.2
+  synergy_head:
+    dimensions: [24576, 3072, 128, 1]
+    dropout: 0.2
+    training: full_parameters_no_lora
+  missing_genome_embedding_trainable: false
+
+training:
+  folds: 3
+  ensemble_members: 7
+  seeds: [42, 2024, 2025, 2077, 2012, 1973, 2002]
+  epochs: 15
+  batch_size: 70
+  optimizer: Adam
+  learning_rate: 1.0e-5
+  weight_decay: 0.0
+  scheduler: CosineAnnealingLR
+  eta_min: 1.0e-10
+  loss: BCEWithLogitsLoss
+  checkpoint_selection: strict_held_out_fold_AUROC_improvement
+  ensemble_operation: mean_of_member_probabilities
+
+legacy_results:
+  fold_0: {auroc: 0.6690, auprc: 0.6159}
+  fold_1: {auroc: 0.7614, auprc: 0.6853}
+  fold_2: {auroc: 0.8489, auprc: 0.9307}
+  unweighted_mean: {auroc: 0.7598, auprc: 0.7440}
+
+evidence_boundaries:
+  paper_reported_mean: {auroc: 0.7539, auprc: 0.7454}
+  paper_methods_fusion_lora_rank: 64
+  paper_methods_base_training_epochs: 13
+  verified_candidate_fusion_lora_rank: 1024
+  verified_candidate_base_checkpoint_training_epochs: 100
+  exact_paper_run_confirmed: false

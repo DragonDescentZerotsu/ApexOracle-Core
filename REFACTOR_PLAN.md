@@ -262,6 +262,22 @@ import 它。下一高置信度阶段改为 reviewer Evo-2 embedding scaling 分
 记录 commit candidate，不把它加入当前仓库，也不声称它是已确认的精确 producer。下一阶段
 进入 synergy CV 的代码迁移与历史协议核验。
 
+Synergy CV 迁移已于 2026-07-19 启动，当前处于 `experimental / protocol freeze`。候选
+legacy driver 为 `synergy_Evo_train_new_reg_MDLM_one_base_model_classification.py`，输入
+`synergistic_pairs_Evo.csv` 的 SHA-256 为
+`ff57e2152159be950a9823f5d94f24c0771b18465bd17cfd11d9d0318db393be`。只读 adapter 已恢复
+2,263 行 genome+text 与 469 行 text-only、合计 2,732 行的动态 eligible 数据。由于旧 split
+依赖无序 `set` 和 taxonomy alias list 原地修改，候选 manifest 要求显式设置
+`PYTHONHASHSEED`；在 `PYTHONHASHSEED=0` 下三个 fold 的四路原始行数与 2025 年日志完全一致：
+`289/1974/727/31`、`2179/84/2436/212`、`2250/13/2538/181`。该不均衡划分属于历史协议，
+本次重构保留并披露，不静默修正。tokenizer revision 已固定，pair Dataset/collate、对称双分子
+forward、LoRA/base 初始化、held-out AUROC selection、checkpoint schema 和统一 runner 已抽取。
+21 个 member 与 1 个 base 的 SHA-256 已全部登记；代表性真实 checkpoint 在 H100 上完成
+genome+text 与 text-only 两路 inline legacy 公式逐值一致验证，fold 2 的真实数据 1-member/
+1-epoch 完整 runner smoke 也已通过。当前仍不提升为 fully supported，唯一阻塞是候选代码和
+checkpoint 与 Methods 在 LoRA rank、base epochs 及最终 mean 指标上存在未解决冲突；root
+legacy driver 暂不删除。
+
 #### 4.2 迁移前需要作者或原始结果进一步核验
 
 - phylum-wise 和 11-cluster species-wise：现存日志与论文数值或完整 fold 不完全一致；
@@ -321,7 +337,12 @@ strain/species/phylum 的共享子路径通过本批验收，
 512-token 后 KFold、molecule ID 导出、full-fusion/molecule-only forward、optimizer step、
 module mode、AUROC/AUPRC、best tracker 的 AUPRC 保存顺序、两种 checkpoint schema 和文件名。
 strict group 0 / ensemble 0 的真实 checkpoint 又与 capsule 在 batch size 70 下完成 2,335 条
-logit 逐值一致验证。全仓库当前为 50 passed / 3 skipped；三个 skipped 均为沙箱内不可见 CUDA
+logit 逐值一致验证。
+
+Synergy CV 本批新增 8 项 CPU 测试，覆盖 FICI label、双分子 token filter、Dataset/collate、
+分子顺序对称、BCE forward、LoRA-only checkpoint schema 以及 base/member round-trip。真实
+H100 checkpoint 两路 forward 与 1-member/1-epoch runner smoke 另行通过。全仓库当前为
+94 passed / 3 skipped；三个 skipped 均为沙箱内不可见 CUDA
 时跳过的测试，其中本批新增 CUDA test 已在宿主 H100 单独通过。阶段 6 仍未整体完成，因为
 其余未迁移实验尚无对应 smoke/checkpoint 验证。
 
