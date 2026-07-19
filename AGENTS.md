@@ -249,7 +249,16 @@ Strain count mapping 的演化顺序如下：
 
 - `DataPrepare/DownloadAllPep.py`：下载全部 DBAASP peptide record 到 `all_peptides_data.json`；依赖硬编码的旧 API 和路径假设。
 - `DownloadOnePep.py` 和 `ExtractSynData.py`：单条记录或 synergy API 的探索和 debug，不是正式 pipeline 步骤。
-- `aa_seq_to_smiles.py`：核心 **PepLink** 实现。根据 DBAASP metadata 构建 canonical/noncanonical residue、terminal modification，以及 residue 内或 residue 间的 bond/cycle。这是最重要的可复用预处理代码。
+- PepLink chemistry core 已由作者独立发布为 `PepLink==0.1.1`：仓库
+  `https://github.com/DragonDescentZerotsu/PepLink`，tag `v0.1.1`，commit
+  `cec2a02427766e4ba95806924801af31bdcc9939`，MIT license。ApexOracle 不 vendor、不使用
+  submodule，只通过 `src/apexoracle/data/peplink_adapter.py` 调用公开 API。旧
+  `aa_seq_to_smiles.py` 仅因仍有 legacy data driver import 而暂留，不再作为 canonical 实现。
+- **已验证事实：** 独立 PepLink 测试 22 passed；内置 amino-acid mapping 与论文文件 SHA
+  一致。179 条历史 structure correction 中 177 条与 v0.1.1 逐字符串一致；DBAASP 19000
+  和 21769 的差异仅为 v0.1.1 `FragmentParent` 移除游离 fragment，全部 179 条均为 fragment
+  parent equivalent。这两个 ID 在最终 token cache 中影响 9 行。论文复现必须使用 frozen
+  paper CSV 的 SHA，新数据才使用 v0.1.1 normalization。
 - `try.py`：为缺少 PubChem SMILES 的 DBAASP peptide 补结构的早期原型，输出缺失结构的中间 CSV。
 - `correct_SMILES_offered_by_DBAASP.py`：重建 DBAASP 提供的 peptide structure 以保留 stereochemistry，并更新 merged SMILES/Evo MIC 文件。它晚于 `try.py`，属于最终化学结构清理血缘。
 - `concentration_unit_transfer.py`：最早的 MIC 单位转换原型。`concentration_unit_transfer_new.py` 面向 19-task wide table；`concentration_unit_transfer_all_bact.py` 扩展到全部 bacteria 并计算 mean；`concentration_unit_transfer_Evo.py` 是最终 long-format DBAASP converter，生成 `DBAASP_id_bact_name_SMILES_MIC_Evo.csv` 和 strain count。

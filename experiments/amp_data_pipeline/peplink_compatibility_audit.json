@@ -1,0 +1,115 @@
+{
+  "comparison": {
+    "exact": 177,
+    "fragment_parent_equivalent": 179,
+    "mismatches": [
+      {
+        "dbaasp_id": 19000,
+        "exact": false,
+        "fragment_parent_equivalent": true,
+        "historical_smiles": "CC(C)C[C@H](NN1C(=O)[C@H]1C)C(=O)N1CCCCC1.CC(C)[C@@H]1NC1=O.CN1C(=O)[C@@H]1Cc1ccccc1",
+        "mode": "peplink",
+        "peplink_v0_1_1_smiles": "CC(C)C[C@H](NN1C(=O)[C@H]1C)C(=O)N1CCCCC1"
+      },
+      {
+        "dbaasp_id": 21769,
+        "exact": false,
+        "fragment_parent_equivalent": true,
+        "historical_smiles": "C.CC(C)C1C(=O)N(C)[C@@H](C)C(=O)NCCC[C@H](NC(=O)C=CC=CC(=O)O)C(=O)N1C",
+        "mode": "peplink",
+        "peplink_v0_1_1_smiles": "CC(C)C1C(=O)N(C)[C@@H](C)C(=O)NCCC[C@H](NC(=O)C=CC=CC(=O)O)C(=O)N1C"
+      }
+    ],
+    "mode_counts": {
+      "peplink": 169,
+      "preserved_non_monomer": 2,
+      "preserved_special": 8
+    },
+    "total": 179
+  },
+  "conclusion": {
+    "new_data": "use PepLink 0.1.1 output",
+    "paper_reproduction": "use frozen paper CSVs identified by SHA-256",
+    "submodule_required": false
+  },
+  "integration": {
+    "apexoracle_adapter": "src/apexoracle/data/peplink_adapter.py",
+    "git_submodule": false,
+    "new_data_policy": "use_peplink_0.1.1_fragment_normalization",
+    "paper_reproduction_policy": "consume_frozen_paper_csv_by_sha256",
+    "rationale": "PepLink has an independent release lifecycle and public Python API; a submodule would couple source checkout without improving package installation.",
+    "strategy": "optional_pypi_dependency_and_documented_repository_link"
+  },
+  "paper_row_impact": {
+    "final_dbaasp_mic": {
+      "19000": 2,
+      "21769": 7
+    },
+    "final_merged_mic": {
+      "19000": 2,
+      "21769": 7
+    },
+    "final_token_cache": {
+      "19000": 2,
+      "21769": 7
+    }
+  },
+  "peplink": {
+    "artifacts": {
+      "sdist_sha256": "70687d40923b36e4d181f61b75f098d54d67e2897dcca80600c7d4832a6a67a9",
+      "wheel_sha256": "78cefef15e4027f3d65e7865abaa3f403ef32b70a36c4b3ec7f943deafd1f532"
+    },
+    "git_commit": "cec2a02427766e4ba95806924801af31bdcc9939",
+    "license": "MIT",
+    "package": "PepLink",
+    "pypi": "https://pypi.org/project/PepLink/0.1.1/",
+    "repository": "https://github.com/DragonDescentZerotsu/PepLink",
+    "tag": "v0.1.1",
+    "version": "0.1.1"
+  },
+  "schema_version": 1,
+  "source_hashes": {
+    "amino_acid_mapping": {
+      "expected_sha256": "42fe91726f2d6a8fb951d7ef7d27298f3151bb45bc5fa222c5d7d9d9e5777544",
+      "matches": true,
+      "observed_sha256": "42fe91726f2d6a8fb951d7ef7d27298f3151bb45bc5fa222c5d7d9d9e5777544",
+      "path": "DataPrepare/Data/all_aa_smiles_new_handcrafted.csv"
+    },
+    "correction_input": {
+      "expected_sha256": "0b70f558ac24a1634e43f4139efca6bff58971f17a263ce0a163ce17ee113f96",
+      "matches": true,
+      "observed_sha256": "0b70f558ac24a1634e43f4139efca6bff58971f17a263ce0a163ce17ee113f96",
+      "path": "DataPrepare/Data/DBAASP_id_wo_PubChem_SMILES_w_DBAASP_smiles.csv"
+    },
+    "correction_output": {
+      "expected_sha256": "6238110a5a8f1ea9152e4d4458e210f9b0282e68cb218f218cdb64c6b512f6d8",
+      "matches": true,
+      "observed_sha256": "6238110a5a8f1ea9152e4d4458e210f9b0282e68cb218f218cdb64c6b512f6d8",
+      "path": "DataPrepare/Data/DBAASP_id_wo_PubChem_SMILES_w_DBAASP_smiles_remaked.csv"
+    },
+    "dbaasp_json": {
+      "expected_sha256": "927ea275f40cdc2f79acdae6a87b0efc13ae5b7acee3901a50d2005a8f187ce0",
+      "matches": true,
+      "observed_sha256": "927ea275f40cdc2f79acdae6a87b0efc13ae5b7acee3901a50d2005a8f187ce0",
+      "path": "DataPrepare/Data/all_peptides_data.json"
+    },
+    "final_dbaasp_mic": {
+      "expected_sha256": "ebbe1b32a45460a2f88f112192627f80f9f7391c1d17dfc2ebf007fe6f6ef2aa",
+      "matches": true,
+      "observed_sha256": "ebbe1b32a45460a2f88f112192627f80f9f7391c1d17dfc2ebf007fe6f6ef2aa",
+      "path": "DataPrepare/Data/DBAASP_id_bact_name_SMILES_MIC_Evo.csv"
+    },
+    "final_merged_mic": {
+      "expected_sha256": "af35bb4be1e08d6c95047dd3f05fc24c70568d40373d246fced6d150b19fd079",
+      "matches": true,
+      "observed_sha256": "af35bb4be1e08d6c95047dd3f05fc24c70568d40373d246fced6d150b19fd079",
+      "path": "DataPrepare/Data/DBAASP_inhouse_AMP_SMILES_MIC_Evo.csv"
+    },
+    "final_token_cache": {
+      "expected_sha256": "ac1a1967d9e94e169ffc23621f7e78c644753659bd08f7a8e10bb63b574930b2",
+      "matches": true,
+      "observed_sha256": "ac1a1967d9e94e169ffc23621f7e78c644753659bd08f7a8e10bb63b574930b2",
+      "path": "DataPrepare/Data/DBAASP_inhouse_AMP_SELFIES_token_MIC_Evo.csv"
+    }
+  }
+}

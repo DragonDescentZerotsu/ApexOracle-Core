@@ -22,6 +22,7 @@ similarity = [
   "pyyaml>=6",
   "tqdm>=4.64",
 ]
+peplink = ["PepLink==0.1.1"]
 benchmark = [
   "torch>=2.1",
   "transformers>=4.40",
