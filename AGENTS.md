@@ -155,7 +155,7 @@
 | Noisy synergy/peptide guidance classifier | `synergy_Evo_train_new_reg_MDLM_one_base_model_all_data_classification.py` 和后续较干净的 `..._all_data_classification_clean.py` | **论文后实现支持。** `clean` 版本使用 rank-64 LoRA，并在 `.../synergy_judger/cls` 下保存 noisy synergy classifier。它们是 all-data guidance head，不是论文三折 synergy benchmark。`DataPrepare/MDLM/label_pep_nonpep.py` 用于准备 peptide/non-peptide 标签。 |
 | Guided molecule generation、remasking sampler 和 256-step 三阶段 guidance | 不在当前仓库；分析脚本指向 `/data2/tianang/projects/discrete-diffusion-guidance` | **外部依赖 / 缺失。** 当前仓库包含 predictor、保存的输出或图片以及 similarity 分析，但不包含实际生成 ApexOracle-3/12/23 的 sampler。论文参数为 256 steps、MIC target 1、sigma 从 0.5 线性降到 0.2、`t_on=0.55`、`t_off=0.45`，两个阶段的 guidance strength 为 15。 |
 | Fig. 3（TeX 中使用文件 `Fig4.pdf`）guided/unguided 预测和最终验证分子 | `DataPrepare/Morgan_fingerprint_sim_generation*.py` 中的生成结果分析、`synergy_Evo_train_on_DBAASP_screen_inhouse_pairs.py` 中的筛选逻辑，以及 `paper_figs/` 下的 PDF | 当前只剩部分派生分析。候选生成和最终选择流程依赖外部代码或已经不完整；湿实验结果也没有在本仓库形成计算复现流程。 |
-| 附录 modality ablation | 较早的 genome-only、text-only、genome+text 脚本家族，以及 `Checkpoints/genome`、`Checkpoints/text`、`Checkpoints/genome_text` | **可能的来源家族 / 中低置信度。** 当前没有一个干净的入口或完整指标表可以把现存 checkpoint 精确连接到最终附录图。重建前应先核对原始绘图数据。 |
+| 附录 modality ablation | 最终绘图值：`experiments/modality_ablation/paper_values.csv`；绘图入口：`scripts/reproduce/plot_modality_ablation.py`；候选训练血缘为较早的 genome-only、text-only、genome+text 脚本家族及对应 checkpoint | **绘图终版 / 高置信度；训练血缘 / 中低置信度。** Mac 最终 notebook 的 12 个硬编码 R² 已逐项冻结，可重建论文图；现存 checkpoint 与这些 ensemble 数值仍无法精确连接。 |
 | Attention 或耐药基因解释 | `DataPrepare/ATCC_genome_annotation_get.py`、`DataPrepare/resistant_gene_check.py`、`DataPrepare/train_genome_mcr_check.py`，以及大型训练脚本中的 attention 输出 | 属于探索或审稿支持代码；不存在自包含的最终 attention figure 流程。 |
 | ApexOracle-3/12/23 sequence similarity 表 | `scripts/reproduce/run_sequence_similarity.py`；`src/apexoracle/evaluation/sequence_similarity/` | **canonical / 已验证。** 实现 Methods 中的 Biopython global alignment、BLOSUM62、gap-open 10、gap-extension 0.5、exact-match PID 和 cyclic exhaustive rotations。ApexOracle-3/23 全量输出与历史 CSV 逐字节一致；ApexOracle-12 的论文数值已复算，但旧 full CSV 未保存且 top hit 有四个 complete ties。 |
 | 审稿回复中的 Evo-2 embedding 缩放说明 | `scripts/plot_evo2_genome_embedding_abs_mean_distribution.py` | **审稿阶段 / 高置信度。** 生成支持固定 `1e14` 缩放因子的 CSV、PNG 和 PDF，统计范围为 563 个实际匹配的 embedding。 |
@@ -231,6 +231,24 @@
 - **根据现有证据作出的推断：** 该 family 是当前最接近论文 synergy 结果的完整候选，但三个 fold 日志的未加权均值 `0.7598/0.7440` 与论文 `0.7539/0.7454` 不完全一致，因此不能称为精确 paper run。
 - **仍待作者确认的事项：** Methods 写 fusion LoRA rank 64 和 base training 13 epochs，并把融合维度写为 `12,294→3,073`；候选 checkpoint 分别证明 rank 1024、实际加载 100-epoch base 和真实维度 `12,288→3,072`。旧日志也未记录独立进程的 `PYTHONHASHSEED`，seed-0 strain membership 只能作为确定性候选。
 - **已完成的重构验收：** 1 个 base 与 21 个 member 的逐文件 SHA-256 已登记；`fold_0/ensemble_0` 在 H100 上严格加载后，genome+text 和 text-only 两路均与 inline legacy 公式逐值一致。统一 runner 的 fold 2、1 member、1 epoch 真实数据 smoke 成功写出 checkpoint、175 条预测、metrics 和 summary；临时 2.24 GB 输出已删除。该 smoke 指标不作为论文结果。
+
+#### Modality ablation 绘图与训练血缘审计（2026-07-19）
+
+- **已由最终绘图 notebook 验证的事实：** Mac 的 `figs.ipynb` cell
+  `8d84054140b51b7d` 直接硬编码了四条曲线。按 phylum/species/strain 顺序，w/o text + w/o sm
+  为 `0.2382/0.3289/0.4514`，w/o genome + w/o sm 为 `0.2130/0.3441/0.4376`，w/o sm 为
+  `0.2670/0.3462/0.5184`，完整 ApexOracle 为 `0.2674/0.4010/0.4890`。这些值及系列顺序已
+  冻结在 `experiments/modality_ablation/paper_values.csv`；canonical 只读绘图入口为
+  `scripts/reproduce/plot_modality_ablation.py`。
+- **已由两台机器审计验证的事实：** 九个候选 genome-only、text-only、genome+text driver
+  在本机与 node002 的 SHA-256 完全相同；checkpoint 留存却分散且不完整。代码、日志、W&B
+  output 和表格中均没有检索到全部 12 个最终数值。checkpoint payload 的 `R2` 是单 member
+  best held-out score，不是绘图使用的 ensemble R²。
+- **根据现有证据作出的推断：** 三条 w/o sm 曲线最可能来自较早的 ChemBERTa-era modality
+  driver 家族，但现有证据不足以指定每个点使用的精确 group/member、预测文件和聚合过程。
+- **仍待确认的事项：** 完整训练血缘尚未恢复，因此当前支持级别是
+  `paper plot reproducible / training lineage unresolved`。旧 driver 会原地写过滤后的中间 CSV，
+  在建立只读替代入口前不得运行或删除。
 
 ### 论文时期训练使用的最终数据
 

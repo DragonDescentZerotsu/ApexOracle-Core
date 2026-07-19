@@ -1,0 +1,13 @@
+holdout,series,r2
+phylum-wise,"ApexOracle w/o text, w/o sm",0.2382
+species-wise,"ApexOracle w/o text, w/o sm",0.3289
+strain-wise,"ApexOracle w/o text, w/o sm",0.4514
+phylum-wise,"ApexOracle w/o genome, w/o sm",0.2130
+species-wise,"ApexOracle w/o genome, w/o sm",0.3441
+strain-wise,"ApexOracle w/o genome, w/o sm",0.4376
+phylum-wise,"ApexOracle w/o sm",0.2670
+species-wise,"ApexOracle w/o sm",0.3462
+strain-wise,"ApexOracle w/o sm",0.5184
+phylum-wise,ApexOracle,0.2674
+species-wise,ApexOracle,0.4010
+strain-wise,ApexOracle,0.4890
