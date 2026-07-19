@@ -10,17 +10,18 @@ matched genome embedding, and writes a PNG/PDF histogram plus a CSV summary.
 from __future__ import annotations
 
 import argparse
-import json
 from pathlib import Path
+import sys
 
 import pandas as pd
-import torch
 
+REPO_ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(REPO_ROOT / "src"))
 
-DEFAULT_DATASETS = (
-    "DBAASP_inhouse_AMP_SELFIES_token_MIC_Evo.csv",
-    "small_molecule/processed/small_molecule_Evo_binary_data_SELFIES.csv",
-    "synergy_DBAASP_inhouse_Evo.csv",
+from apexoracle.data.genome_embeddings import (  # noqa: E402
+    compute_abs_mean_rows,
+    genome_embedding_paths,
+    matched_genome_ids,
 )
 
 
@@ -61,139 +62,6 @@ def parse_args() -> argparse.Namespace:
         help="Scale factor shown on the secondary x-axis.",
     )
     return parser.parse_args()
-
-
-def parse_embedding_id(file_name: str) -> str:
-    stem = file_name.split(".")[0]
-    if "ATCC" not in stem:
-        return stem
-
-    tail = stem.split("ATCC")[-1]
-    components = tail.split("_")[1:]
-    if len(components) == 2:
-        return "-".join(components)
-    return components[0]
-
-
-def genome_embedding_paths(embeddings_dir: Path) -> dict[str, Path]:
-    return {
-        parse_embedding_id(path.name): path
-        for path in embeddings_dir.iterdir()
-        if path.is_file()
-    }
-
-
-def build_origin_to_standard_map(mapping_path: Path) -> dict[str, str]:
-    with mapping_path.open("r", encoding="utf-8") as handle:
-        strain_count_data = json.load(handle)
-
-    pairs: list[tuple[str, str]] = []
-    for name in strain_count_data:
-        if "*" in name:
-            original_name, standard_name = name.split("*", 1)
-            if "ATCC" in standard_name:
-                standard_name = standard_name.split("ATCC")[-1].strip()
-            else:
-                standard_name = standard_name.strip()
-            pairs.append((original_name.strip(), standard_name))
-            continue
-
-        if "ATCC" not in name:
-            continue
-
-        atcc_id = name.split("ATCC")[-1].strip()
-        if "BAA" in name:
-            atcc_id = atcc_id.replace(" ", "-")
-        if "MY" in name:
-            atcc_id = atcc_id.replace(" ", "")
-        if "MAY" in name:
-            atcc_id = atcc_id.replace("MAY", "MYA")
-        if "D" in name:
-            atcc_id = atcc_id.split("D")[0]
-        if "T" in name:
-            atcc_id = atcc_id.split("T")[0]
-        if "s" in name:
-            atcc_id = atcc_id.split("s")[0]
-        if " " in name:
-            atcc_id = atcc_id.split(" ")[0]
-        pairs.append((name.strip(), atcc_id))
-
-    return dict(pairs)
-
-
-def fallback_atcc_id(strain_name: str) -> str | None:
-    if "ATCC" not in strain_name:
-        return None
-
-    atcc_id = strain_name.split("ATCC")[-1].strip()
-    if "BAA" in strain_name:
-        atcc_id = atcc_id.replace(" ", "-")
-    if "MY" in strain_name:
-        atcc_id = atcc_id.replace(" ", "")
-    if "MAY" in strain_name:
-        atcc_id = atcc_id.replace("MAY", "MYA")
-    for sep in ("D", "T", "s", " "):
-        if sep in atcc_id:
-            atcc_id = atcc_id.split(sep)[0]
-    return atcc_id
-
-
-def resolve_genome_id(
-    strain_name: str,
-    embedded_ids: set[str],
-    origin_to_standard: dict[str, str],
-) -> str | None:
-    if strain_name in embedded_ids:
-        return strain_name
-
-    standard_id = origin_to_standard.get(strain_name)
-    if standard_id in embedded_ids:
-        return standard_id
-
-    atcc_id = fallback_atcc_id(strain_name)
-    if atcc_id in embedded_ids:
-        return atcc_id
-
-    return None
-
-
-def matched_genome_ids(data_dir: Path, emb_paths: dict[str, Path]) -> set[str]:
-    origin_to_standard = build_origin_to_standard_map(
-        data_dir / "Evo_edition_4_MIC_data_handcrafted_no_ATCC_to_custom_ATCC_and_inhouse.json"
-    )
-    embedded_ids = set(emb_paths)
-    matched: set[str] = set()
-
-    for relative_path in DEFAULT_DATASETS:
-        dataset_path = data_dir / relative_path
-        dataframe = pd.read_csv(dataset_path, usecols=["strain_name"])
-        for strain_name in dataframe["strain_name"].dropna().unique():
-            genome_id = resolve_genome_id(str(strain_name), embedded_ids, origin_to_standard)
-            if genome_id is not None:
-                matched.add(genome_id)
-
-    return matched
-
-
-def compute_abs_mean_rows(genome_ids: set[str], emb_paths: dict[str, Path]) -> pd.DataFrame:
-    rows = []
-    for genome_id in sorted(genome_ids):
-        path = emb_paths[genome_id]
-        embedding = torch.load(path, map_location="cpu")
-        values = embedding.float().flatten()
-        rows.append(
-            {
-                "genome_id": genome_id,
-                "file": path.name,
-                "shape": "x".join(str(dim) for dim in embedding.shape),
-                "dtype": str(embedding.dtype),
-                "numel": int(embedding.numel()),
-                "abs_mean": float(values.abs().mean()),
-                "std": float(values.std(unbiased=False)),
-                "abs_max": float(values.abs().max()),
-            }
-        )
-    return pd.DataFrame(rows)
 
 
 def print_summary(table: pd.DataFrame, scale: float) -> None:

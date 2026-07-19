@@ -1,0 +1,33 @@
+{
+  "audit_date": "2026-07-19",
+  "extraction_rerun": false,
+  "original_embeddings_mutated": false,
+  "files": 567,
+  "total_bytes": 3437540485,
+  "parsed_id_collisions": 0,
+  "paper_dataset_matched_files": 563,
+  "unmatched_ids": ["1041", "11696", "BAA-3170", "BAA-3197"],
+  "file_manifest_sha256": "0420058138fd0473f9c3c6d92a0dae0ebe4ffedc1924a14ab6038259f0aa7496",
+  "tensor_contract": {
+    "dtype": "torch.bfloat16",
+    "hidden_dimension": 8192,
+    "sequence_dimension": "variable",
+    "safe_load": "torch.load(map_location='cpu', weights_only=True)"
+  },
+  "reviewer_scaling_rebuild": {
+    "rows": 563,
+    "csv_byte_exact": true,
+    "csv_sha256": "d08d26ba3f1c452836b18944da763ae4ece3be3dc2f784b35f9d92b7de5cfe5d",
+    "png_byte_exact": true,
+    "png_sha256": "0b79aa17768a107e7bd2b955a0734f0bb704bffa8c1d3f0777e24b630518e46a",
+    "pdf_byte_exact": false,
+    "pdf_difference": "generation metadata only; CSV and rendered PNG are byte-identical"
+  },
+  "future_submodule": {
+    "planned_path": "external/evo2",
+    "repository": "https://github.com/ArcInstitute/evo2.git",
+    "candidate_commit": "afd0dae0a4bb25f3ca55f171fbdac4907b937afd",
+    "candidate_is_confirmed_exact_producer": false,
+    "add_to_current_repository": false
+  }
+}

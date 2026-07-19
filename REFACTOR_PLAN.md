@@ -254,6 +254,14 @@ terminal `[OH]` 对 canonical `O`，归一化后全部一致；论文复现继�
 long table。旧 `DataPrepare/aa_seq_to_smiles.py` 暂不删除，因为仍有 synergy 等未迁移 driver
 import 它。下一高置信度阶段改为 reviewer Evo-2 embedding scaling 分析的入口与发布审计。
 
+作者于 2026-07-19 确认 Evo-2 producer 边界：当前仓库不重构 genome embedding extraction，
+训练和评估直接消费预计算 tensor；未来整合后的 ApexOracle 主仓库可在 `external/evo2` 使用
+固定 commit 的 Git submodule。该 consumer contract 已完成：567 个文件的逐文件 SHA-256、
+字节数和消费状态已登记，三份论文数据匹配 563 个；只读 safe loader 和 reviewer scaling
+完整重算通过，CSV/PNG 与现有结果逐字节一致。当前 Evo-2 checkout 为 dirty，因此本阶段只
+记录 commit candidate，不把它加入当前仓库，也不声称它是已确认的精确 producer。下一阶段
+进入 synergy CV 的代码迁移与历史协议核验。
+
 #### 4.2 迁移前需要作者或原始结果进一步核验
 
 - phylum-wise 和 11-cluster species-wise：现存日志与论文数值或完整 fold 不完全一致；

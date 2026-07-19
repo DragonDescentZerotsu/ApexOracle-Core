@@ -13,6 +13,8 @@
 - 之前还有很多实验是在node002上面做的，你可以找到对应的代码在node002的 /data1/tianang/Projects/Synergy。在node002上我们同样是使用的conda的base环境完成的Synergy的实验。node002的conda路径是：/data1/tianang/anaconda3/bin/conda
 - /data2/tianang/projects/discrete-diffusion-guidance 里面是所有我们使用的generate peptide用的代码和仓库
 - /data2/tianang/projects/evo2 里面是我们使用的embedding genome的代码
+- **作者于 2026-07-19 确认的边界：** 当前仓库不重构或重跑 Evo-2 genome embedding extraction，直接消费 `DataPrepare/Data/Genome_embs` 中的预计算 tensor。未来整合后的 ApexOracle 主仓库可以在 `external/evo2` 使用固定 clean commit 的 Git submodule；权重和 embedding 数据不进入 submodule。
+- **已验证事实：** 当前 567 个 embedding 共 3,437,540,485 bytes，逐文件 SHA-256 manifest 位于 `experiments/evo2_genome_embeddings/file_manifest.csv`，其中三份论文数据匹配 563 个。全部已匹配 tensor 为 `torch.bfloat16`、hidden dimension 8192。重构后的只读 safe loader 完整重算 reviewer scaling CSV/PNG 后逐字节一致。当前外部 Evo-2 HEAD `afd0dae0a4bb25f3ca55f171fbdac4907b937afd` 的 commit object 存在，但 checkout dirty，且没有原始 extraction log 证明该 commit 是精确 producer，因此仅作为未来 submodule candidate。
 - 论文最终绘图在 SSH host alias `Mac` 上维护；主 notebook 为 `/Users/kirianozan/Documents/Study/Penn/projects/local_figs/figs.ipynb`。
 - Mac 的 conda 位于 `/Users/kirianozan/Documents/anaconda/anaconda3/bin/conda`。后续论文绘图统一使用其 `base` 环境；已验证包含 Matplotlib 3.7.1、Seaborn 0.12.2、NumPy 1.24.3 和 nbformat 5.7.0。
 - 通过非交互 SSH 生成图片时可使用 `MPLBACKEND=Agg .../conda run --no-capture-output -n base python ...`；在 notebook 中交互运行时继续使用 base kernel 即可。
