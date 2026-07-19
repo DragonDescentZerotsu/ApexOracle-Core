@@ -30,8 +30,20 @@ RESOURCE_FILES = [
         "DataPrepare/Data/small_molecule/processed/small_molecule_Evo_binary_data_SELFIES.csv",
     ),
     (
-        "antibiotic_3_strain_compare_MDLM_fix_cls_wo_pad_all_test.py",
-        "source/antibiotic_3_strain_compare_MDLM_fix_cls_wo_pad_all_test.py",
+        "scripts/reproduce/run_antibiotic_classification.py",
+        "source/run_antibiotic_classification.py",
+    ),
+    (
+        "src/apexoracle/training/antibiotic_classification_runner.py",
+        "source/antibiotic_classification_runner.py",
+    ),
+    (
+        "src/apexoracle/training/antibiotic_classification.py",
+        "source/antibiotic_classification_training.py",
+    ),
+    (
+        "src/apexoracle/data/antibiotic_classification.py",
+        "source/antibiotic_classification_data.py",
     ),
 ]
 

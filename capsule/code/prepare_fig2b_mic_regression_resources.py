@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import shutil
 from pathlib import Path
 
@@ -180,7 +181,9 @@ def run(args: argparse.Namespace) -> None:
         (repo_root / "fix_ChemBERTa_MLM_mean_emb_on_DBAASP_SMILES_5_fold_mean_MIC.py", source_dst / "fix_ChemBERTa_MLM_mean_emb_on_DBAASP_SMILES_5_fold_mean_MIC.py"),
         (repo_root / "fix_MolFormer_on_DBAASP_SMILES_5_fold_mean_MIC.py", source_dst / "fix_MolFormer_on_DBAASP_SMILES_5_fold_mean_MIC.py"),
         (repo_root / "fix_PeptideCLM_on_DBAASP_SMILES_5_fold_mean_MIC.py", source_dst / "fix_PeptideCLM_on_DBAASP_SMILES_5_fold_mean_MIC.py"),
-        (repo_root / "compare_APEX" / "APEX_fix_train_DBAASP_MIC_5_fold_mean.py", source_dst / "APEX_fix_train_DBAASP_MIC_5_fold_mean.py"),
+        (repo_root / "src/apexoracle/benchmarks/molecule_encoders/apex_adapter.py", source_dst / "apex_adapter.py"),
+        (repo_root / "src/apexoracle/benchmarks/molecule_encoders/apex_model.py", source_dst / "apex_model.py"),
+        (repo_root / "src/apexoracle/benchmarks/molecule_encoders/legacy_training.py", source_dst / "legacy_training.py"),
     ]
     for src, dst in source_files:
         if src.exists():
@@ -219,7 +222,13 @@ def run(args: argparse.Namespace) -> None:
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo-root", type=Path, default=Path.cwd())
-    parser.add_argument("--mdlm-root", type=Path, default=Path("/data2/tianang/projects/mdlm"))
+    parser.add_argument(
+        "--mdlm-root",
+        type=Path,
+        default=Path(
+            os.environ.get("APEXORACLE_MDLM_DIR", str(Path.cwd().parent / "mdlm"))
+        ),
+    )
     parser.add_argument("--capsule-data", type=Path, default=Path("capsule/data"))
     parser.add_argument("--models", nargs="+", default=["all"])
     parser.add_argument("--overwrite", action="store_true")

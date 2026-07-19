@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "status": "verified_cleanup_batch",
+  "recovery": {
+    "git_tag": "legacy-code-snapshot-2026-07-17",
+    "note": "Every deleted file remains recoverable from the sanitized legacy tag and Git history."
+  },
+  "summary": {
+    "deleted_files": 59,
+    "original_or_paper_data_deleted": 0,
+    "checkpoint_or_weight_files_deleted": 0,
+    "result_files_deleted": 0
+  },
+  "categories": {
+    "unrelated_fangping_correlation": [
+      "Fangping_correlation/Correlation.ipynb",
+      "Fangping_correlation/DNA_logFC.py",
+      "Fangping_correlation/DNA_reads_all.py",
+      "Fangping_correlation/Peptide_logFC.py",
+      "Fangping_correlation/calculate_correlation.py",
+      "Fangping_correlation/devide_cntrl_correlation.py",
+      "Fangping_correlation/get_absent_peptides.py",
+      "Fangping_correlation/merge_dict_count.py",
+      "Fangping_correlation/peptide_to_APEX_form.py",
+      "Fangping_correlation/prptide_count_average.py",
+      "Fangping_correlation/try_load_dict.py"
+    ],
+    "unrelated_e3nn_tutorials": [
+      "e3nn_playground/e3nn_convolution.py",
+      "e3nn_playground/e3nn_tetris_gate.py",
+      "e3nn_playground/e3nn_tetris_polynomial.py",
+      "e3nn_playground/try_e3nn.py"
+    ],
+    "gpu_occupancy_tools": [
+      "GPU_eye.py",
+      "run.py",
+      "run_full.py"
+    ],
+    "superseded_apex_support_and_drivers": [
+      "compare_APEX/APEX_all_data.sh",
+      "compare_APEX/APEX_fix_train_DBAASP_MIC_5_fold_mean.py",
+      "compare_APEX/APEX_models.py",
+      "compare_APEX/APEX_train_DBAASP_MIC.py",
+      "compare_APEX/APEX_train_DBAASP_MIC_5_fold_mean.py",
+      "compare_APEX/APEX_train_inhouse_MIC.py",
+      "compare_APEX/APEX_trainer_CV.py",
+      "compare_APEX/__init__.py",
+      "compare_APEX/deubg.py",
+      "compare_APEX/fine_tune_on_DBAASP_SMILES.py",
+      "compare_APEX/utils.py"
+    ],
+    "historical_fig2b_drivers": [
+      "fine_tune_on_DBAASP_SMILES_5_fold_compare.py",
+      "fine_tune_on_DBAASP_SMILES_5_fold_compare_SSL.py",
+      "fine_tune_on_DBAASP_SMILES_5_fold_compare_pre_SSL.py",
+      "fine_tune_on_DBAASP_SMILES_5_fold_mean_MIC.py",
+      "fine_tune_on_DBAASP_SMILES_all_data_for_training.py",
+      "fine_tune_on_inhouse_SMILES_CV_MIC.py"
+    ],
+    "generated_capsule_source_snapshots": [
+      "capsule/data/source/APEX_fix_train_DBAASP_MIC_5_fold_mean.py",
+      "capsule/data/source/DBAASP_MLM_MDLM.py",
+      "capsule/data/source/antibiotic_3_strain_compare_MDLM_fix_cls_wo_pad_all_test.py",
+      "capsule/data/source/cache_fig2b_molformer_fold_eval_features.py",
+      "capsule/data/source/fix_ChemBERTa_MLM_mean_emb_on_DBAASP_SMILES_5_fold_mean_MIC.py",
+      "capsule/data/source/fix_ChemBERTa_MLM_on_DBAASP_SMILES_5_fold_mean_MIC.py",
+      "capsule/data/source/fix_ChemBERTa_on_DBAASP_SMILES_5_fold_mean_MIC.py",
+      "capsule/data/source/fix_MolFormer_on_DBAASP_SMILES_5_fold_mean_MIC.py",
+      "capsule/data/source/fix_PeptideCLM_on_DBAASP_SMILES_5_fold_mean_MIC.py",
+      "capsule/data/source/reproduce_fig2b_apex_original_5fold.py",
+      "capsule/data/source/reproduce_fig2b_baselines_cached_5fold.py",
+      "capsule/data/source/reproduce_fig2b_baselines_online_5fold.py",
+      "capsule/data/source/reproduce_fig2b_mdlm_cached_5fold.py",
+      "capsule_fig2/data/source/APEX_fix_train_DBAASP_MIC_5_fold_mean.py",
+      "capsule_fig2/data/source/DBAASP_MLM_MDLM.py",
+      "capsule_fig2/data/source/cache_fig2b_molformer_fold_eval_features.py",
+      "capsule_fig2/data/source/fix_ChemBERTa_MLM_mean_emb_on_DBAASP_SMILES_5_fold_mean_MIC.py",
+      "capsule_fig2/data/source/fix_ChemBERTa_MLM_on_DBAASP_SMILES_5_fold_mean_MIC.py",
+      "capsule_fig2/data/source/fix_ChemBERTa_on_DBAASP_SMILES_5_fold_mean_MIC.py",
+      "capsule_fig2/data/source/fix_MolFormer_on_DBAASP_SMILES_5_fold_mean_MIC.py",
+      "capsule_fig2/data/source/fix_PeptideCLM_on_DBAASP_SMILES_5_fold_mean_MIC.py",
+      "capsule_fig2/data/source/reproduce_fig2b_baselines_cached_5fold.py",
+      "capsule_fig2/data/source/reproduce_fig2b_baselines_online_5fold.py",
+      "capsule_fig2/data/source/reproduce_fig2b_mdlm_cached_5fold.py"
+    ]
+  },
+  "retained_boundaries": [
+    "compare_APEX/aaindex1.csv and compare_APEX/APEX_ckpt remain ignored local paper assets",
+    "final Fig. 2b baseline source drivers remain until all capsule provenance builders use only canonical modules",
+    "modality-ablation and synergy candidate drivers remain because exact paper identity is unresolved",
+    "Fig. 2c encoder comparator drivers remain distinct scientific implementations"
+  ]
+}

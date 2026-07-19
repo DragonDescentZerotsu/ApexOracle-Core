@@ -11,13 +11,11 @@ from __future__ import annotations
 
 import argparse
 import json
-import math
 import os
 import sys
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterable
 
 import numpy as np
 import pandas as pd
@@ -31,11 +29,24 @@ from tqdm import tqdm
 from transformers import AutoModel, AutoTokenizer
 
 
-REPO_ROOT = Path("/data2/tianang/projects/Synergy")
+REPO_ROOT = Path(__file__).resolve().parents[1]
 SRC_ROOT = REPO_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
+from apexoracle.benchmarks.molecule_encoders.apex_adapter import (
+    build_apex_vocabulary,
+    legacy_onehot_encoding,
+)
+from apexoracle.benchmarks.molecule_encoders.apex_model import (
+    ApexEncoder,
+    load_aaindex_embedding,
+)
+from apexoracle.benchmarks.molecule_encoders.legacy_training import (
+    LegacyMaskedMSELoss,
+    finite_mean_or_nan,
+    legacy_r2_per_task,
+)
 from apexoracle.benchmarks.molecule_encoders.protocol import DEFAULT_TARGET_COLUMNS
 
 
@@ -257,12 +268,6 @@ class HFRegressionModel(nn.Module):
         return self.classifier(self.encode(input_ids, attention_mask))
 
 
-class MultiTaskLoss(nn.Module):
-    def forward(self, y_pred, y_true, mask):
-        loss = (y_pred - y_true) ** 2
-        return (loss * mask).sum() / (mask.sum() + 1e-8)
-
-
 def get_peptideclm_tokenizer():
     from PeptideCLM.tokenizer.my_tokenizers import SMILES_SPE_Tokenizer
 
@@ -308,29 +313,6 @@ def collate_apex(batch):
     }
 
 
-def calculate_r2_per_task(labels, preds, masks) -> list[float | None]:
-    labels = np.asarray(labels)
-    preds = np.asarray(preds)
-    masks = np.asarray(masks)
-    r2_per_task = []
-    for task_idx in range(labels.shape[1]):
-        mask = masks[:, task_idx].astype(bool)
-        y_true = labels[mask, task_idx]
-        y_pred = preds[mask, task_idx]
-        if len(y_true) == 0:
-            r2_per_task.append(None)
-            continue
-        ss_total = np.sum((y_true - np.mean(y_true)) ** 2)
-        ss_residual = np.sum((y_true - y_pred) ** 2)
-        r2_per_task.append(float(1 - (ss_residual / ss_total)))
-    return r2_per_task
-
-
-def finite_mean(values: Iterable[float | None]) -> float:
-    vals = [v for v in values if v is not None and math.isfinite(v)]
-    return float(np.mean(vals)) if vals else float("nan")
-
-
 def build_hf_dataset(spec: ModelSpec, limit_rows: int | None, shared_dir: Path | None = None):
     tokenizer = get_peptideclm_tokenizer() if spec.kind == "peptideclm" else AutoTokenizer.from_pretrained(
         spec.hf_model,
@@ -355,12 +337,10 @@ def build_apex_components(
     limit_rows: int | None,
     shared_dir: Path | None = None,
 ):
-    sys.path.insert(0, str(REPO_ROOT / "compare_APEX"))
-    from APEX_models import AMP_model_fix
-    from utils import AAindex, make_vocab, onehot_encoding
-
-    word2idx, _ = make_vocab()
-    emb, _ = AAindex(str(REPO_ROOT / "compare_APEX" / "aaindex1.csv"), word2idx)
+    word2idx, _ = build_apex_vocabulary()
+    emb, _ = load_aaindex_embedding(
+        REPO_ROOT / "compare_APEX" / "aaindex1.csv", word2idx
+    )
     if shared_dir is None:
         data = pd.read_csv(spec.data_path)
     else:
@@ -369,8 +349,15 @@ def build_apex_components(
         data = data[["DBAASP_id", "AAseqs", *DEFAULT_TARGET_COLUMNS]]
     if limit_rows is not None:
         data = data.head(limit_rows)
-    dataset = ApexDataset(data, max_length=52, word2idx=word2idx, onehot_encoding=onehot_encoding)
-    backbone = AMP_model_fix(emb, np.shape(emb)[1], num_rnn_layers=3, dim_h=128)
+    dataset = ApexDataset(
+        data,
+        max_length=52,
+        word2idx=word2idx,
+        onehot_encoding=legacy_onehot_encoding,
+    )
+    backbone = ApexEncoder(
+        emb, np.shape(emb)[1], num_rnn_layers=3, hidden_dim=128
+    )
     checkpoint = torch.load(REPO_ROOT / "compare_APEX" / "APEX_ckpt" / "APEX_pretrained_encoder_state_dict_best.ckpt", map_location="cpu")
     backbone.load_state_dict(checkpoint)
     backbone.to(device)
@@ -389,8 +376,8 @@ def evaluate_hf(model: HFRegressionModel, loader: DataLoader, device: torch.devi
             all_labels.extend(batch["label"].numpy())
             all_preds.extend(logits.detach().cpu().numpy())
             all_masks.extend(batch["label_mask"].numpy())
-    r2_per_task = calculate_r2_per_task(all_labels, all_preds, all_masks)
-    return r2_per_task, finite_mean(r2_per_task)
+    r2_per_task = legacy_r2_per_task(all_labels, all_preds, all_masks)
+    return r2_per_task, finite_mean_or_nan(r2_per_task)
 
 
 def evaluate_apex(backbone, head, loader: DataLoader, device: torch.device, *, original_head_mode: bool):
@@ -410,8 +397,8 @@ def evaluate_apex(backbone, head, loader: DataLoader, device: torch.device, *, o
             all_labels.extend(batch["label"].numpy())
             all_preds.extend(logits.detach().cpu().numpy())
             all_masks.extend(batch["label_mask"].numpy())
-    r2_per_task = calculate_r2_per_task(all_labels, all_preds, all_masks)
-    return r2_per_task, finite_mean(r2_per_task)
+    r2_per_task = legacy_r2_per_task(all_labels, all_preds, all_masks)
+    return r2_per_task, finite_mean_or_nan(r2_per_task)
 
 
 def cache_hf_held_out_features(model: HFRegressionModel, loader: DataLoader, device: torch.device):
@@ -446,8 +433,10 @@ def evaluate_cached_head(head, cache, device: torch.device, batch_size: int, *, 
     with torch.no_grad():
         for start in range(0, len(features), batch_size):
             predictions.append(head(features[start : start + batch_size].to(device)).float().cpu())
-    task_r2 = calculate_r2_per_task(labels.numpy(), torch.cat(predictions).numpy(), masks.numpy())
-    return task_r2, finite_mean(task_r2)
+    task_r2 = legacy_r2_per_task(
+        labels.numpy(), torch.cat(predictions).numpy(), masks.numpy()
+    )
+    return task_r2, finite_mean_or_nan(task_r2)
 
 
 def save_head_checkpoint(path: Path, spec: ModelSpec, fold: int, epoch: int, best_r2: float, r2_per_task, head, train_size: int, test_size: int, args):
@@ -498,7 +487,7 @@ def train_hf_model(spec: ModelSpec, output_dir: Path, device: torch.device, args
         for param in model.bert.parameters():
             param.requires_grad = False
         optimizer = optim.Adam(model.classifier.parameters(), lr=args.learning_rate)
-        criterion = MultiTaskLoss()
+        criterion = LegacyMaskedMSELoss()
         train_loader = DataLoader(
             torch.utils.data.Subset(dataset, train_idx),
             batch_size=args.batch_size,
@@ -598,7 +587,7 @@ def train_apex_model(spec: ModelSpec, output_dir: Path, device: torch.device, ar
             continue
         _, backbone, head = build_apex_components(spec, device, args.limit_rows, shared_dir)
         optimizer = optim.Adam(filter(lambda p: p.requires_grad, head.parameters()), lr=args.learning_rate)
-        criterion = MultiTaskLoss()
+        criterion = LegacyMaskedMSELoss()
         train_loader = DataLoader(torch.utils.data.Subset(dataset, train_idx), batch_size=args.batch_size, shuffle=True, collate_fn=collate_apex)
         test_loader = DataLoader(torch.utils.data.Subset(dataset, test_idx), batch_size=args.batch_size, shuffle=False, collate_fn=collate_apex)
         best_r2 = 0.0 if shared_dir is not None else -float("inf")

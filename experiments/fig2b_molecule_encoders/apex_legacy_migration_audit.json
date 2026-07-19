@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "status": "strictly_equivalent_support_code_migration",
+  "legacy_sources": {
+    "compare_APEX/APEX_models.py": "b46fcbc61499492b0b6145f9cbc8bd150a5585c786a402d06b5ac0524e3a8a9a",
+    "compare_APEX/utils.py": "b4e107ec50cdf5656c89d47da834e1b112aa3762b865c10da79271cc9e92b088",
+    "compare_APEX/fine_tune_on_DBAASP_SMILES.py": "c3f69f98947e8d6e696ab0eab17b68f2c9622b948a47ebe2eb2d801ebfa78447"
+  },
+  "paper_assets": {
+    "compare_APEX/aaindex1.csv": {
+      "sha256": "478510fa4ee5e23c871558789a3f8450c20615b82dc294794a24bfe55e2bfaef",
+      "redistribution": "ignored_local_asset"
+    },
+    "compare_APEX/APEX_ckpt/APEX_pretrained_encoder_state_dict_best.ckpt": {
+      "sha256": "a4b37338b1a26aff64c97b9aa3bbabf6874edf5805415e082f2e3bdf28d1b2b9",
+      "redistribution": "ignored_local_weight"
+    }
+  },
+  "fixed_batch": {
+    "sequences": ["ACDEFGHIK", "AXD", "A repeated 60 times", "C"],
+    "token_ids_sha256": "99d40b77459706140b3e5423716fc06710b26db0a55535e9e20f2a1547e9ebd2",
+    "aaindex_embedding_shape": [23, 566],
+    "aaindex_embedding_sha256": "9b81565083ca302f56d0131f8a38dbf19825a898fe80f881f98786132cac3454",
+    "feature_shape": [4, 128],
+    "legacy_feature_sha256": "dd1ac1a9f359f60b55a83910cdd198b5aeca00788b2d5a8c6aa691d956643cb3",
+    "canonical_feature_sha256": "dd1ac1a9f359f60b55a83910cdd198b5aeca00788b2d5a8c6aa691d956643cb3"
+  },
+  "runner_smoke": {
+    "protocol": "cached APEX runner, first 100 rows, five folds, one epoch, CPU",
+    "status": "completed",
+    "purpose": "execution-path validation only; metrics are not paper results",
+    "mean_r2": -30.01132225675844,
+    "tiny_input_boundary": "A 10-row diagnostic has folds with no finite task R2 and reproduces the legacy missing-best-summary failure; selection semantics were not changed."
+  },
+  "preserved_contract": [
+    "23-token vocabulary",
+    "unknown residues remain padding index 0",
+    "52-token truncation and start/end placement",
+    "AAindex missing values become zero",
+    "frozen 23x566 peptide embedding",
+    "three-layer bidirectional GRU and two-stage attention",
+    "strict checkpoint key and tensor-shape compatibility",
+    "legacy masked MSE and per-task R2 formulas"
+  ]
+}

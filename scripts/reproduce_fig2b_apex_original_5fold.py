@@ -21,11 +21,22 @@ from tqdm import tqdm
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 APEX_ROOT = REPO_ROOT / "compare_APEX"
-sys.path.insert(0, str(APEX_ROOT))
+SRC_ROOT = REPO_ROOT / "src"
+if str(SRC_ROOT) not in sys.path:
+    sys.path.insert(0, str(SRC_ROOT))
 
-from APEX_models import AMP_model_fix  # noqa: E402
-from fine_tune_on_DBAASP_SMILES import MultiTaskLoss, calculate_r2_per_task  # noqa: E402
-from utils import AAindex, make_vocab, onehot_encoding  # noqa: E402
+from apexoracle.benchmarks.molecule_encoders.apex_adapter import (  # noqa: E402
+    build_apex_vocabulary,
+    legacy_onehot_encoding,
+)
+from apexoracle.benchmarks.molecule_encoders.apex_model import (  # noqa: E402
+    ApexEncoder,
+    load_aaindex_embedding,
+)
+from apexoracle.benchmarks.molecule_encoders.legacy_training import (  # noqa: E402
+    LegacyMaskedMSELoss,
+    legacy_r2_per_task,
+)
 
 
 class AAseqsDataset(Dataset):
@@ -35,7 +46,9 @@ class AAseqsDataset(Dataset):
         self.max_length = max_length
         self.target_columns = self.dataframe.columns.tolist()[2:]
         self.remove_long_smiles()
-        self.seqs = onehot_encoding(self.dataframe["AAseqs"].tolist(), max_length, word2vec)
+        self.seqs = legacy_onehot_encoding(
+            self.dataframe["AAseqs"].tolist(), max_length, word2vec
+        )
 
     def remove_long_smiles(self):
         self.dataframe = self.dataframe[self.dataframe["AAseqs"].apply(lambda x: len(x) <= self.max_length)]
@@ -167,13 +180,13 @@ def main() -> None:
     args.output_dir.mkdir(parents=True, exist_ok=True)
 
     max_len = 52
-    word2idx, _ = make_vocab()
-    emb, _ = AAindex(str(APEX_ROOT / "aaindex1.csv"), word2idx)
+    word2idx, _ = build_apex_vocabulary()
+    emb, _ = load_aaindex_embedding(APEX_ROOT / "aaindex1.csv", word2idx)
     emb_size = np.shape(emb)[1]
     data = pd.read_csv(args.data_path)
     dataset = AAseqsDataset(data, max_len, word2idx)
     kf = KFold(n_splits=5, shuffle=True, random_state=42)
-    criterion = MultiTaskLoss()
+    criterion = LegacyMaskedMSELoss()
     pretrained_path = APEX_ROOT / "APEX_ckpt/APEX_pretrained_encoder_state_dict_best.ckpt"
 
     fold_results = []
@@ -191,7 +204,9 @@ def main() -> None:
             collate_fn=collate_fn,
         )
         state_dict = torch.load(pretrained_path, map_location="cpu")
-        model = AMP_model_fix(emb, emb_size, num_rnn_layers=3, dim_h=128)
+        model = ApexEncoder(
+            emb, emb_size, num_rnn_layers=3, hidden_dim=128
+        )
         model.load_state_dict(state_dict)
         model.to(device)
         for param in model.parameters():
@@ -234,7 +249,9 @@ def main() -> None:
                     all_labels.extend(batch["label"].cpu().numpy())
                     all_preds.extend(logits.cpu().numpy())
                     all_label_masks.extend(batch["label_mask"].cpu().numpy())
-            r2_per_task = calculate_r2_per_task(all_labels, all_preds, all_label_masks)
+            r2_per_task = legacy_r2_per_task(
+                all_labels, all_preds, all_label_masks
+            )
             r2_mean = float(np.array(r2_per_task).mean())
             if r2_mean > best_r2:
                 best_r2 = r2_mean

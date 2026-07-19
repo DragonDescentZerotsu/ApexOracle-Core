@@ -190,13 +190,15 @@ def extract_apex_features(
 
     apex_root = Path(apex_root).resolve()
     checkpoint_path = Path(checkpoint_path).resolve()
-    if str(apex_root) not in sys.path:
-        sys.path.insert(0, str(apex_root))
-    from APEX_models import AMP_model_fix
-    from utils import AAindex, make_vocab
+    from apexoracle.benchmarks.molecule_encoders.apex_model import (
+        ApexEncoder,
+        load_aaindex_embedding,
+    )
 
-    legacy_vocabulary, _ = make_vocab()
-    legacy_embedding, _ = AAindex(str(apex_root / "aaindex1.csv"), legacy_vocabulary)
+    legacy_vocabulary, _ = build_apex_vocabulary()
+    legacy_embedding, _ = load_aaindex_embedding(
+        apex_root / "aaindex1.csv", legacy_vocabulary
+    )
     embedding = np.asarray(legacy_embedding)
     vocabulary, _ = build_apex_vocabulary()
     token_ids, _ = encode_apex_sequences(
@@ -204,7 +206,9 @@ def extract_apex_features(
         word_to_index=vocabulary,
     )
 
-    model = AMP_model_fix(embedding, embedding.shape[1], num_rnn_layers=3, dim_h=128)
+    model = ApexEncoder(
+        embedding, embedding.shape[1], num_rnn_layers=3, hidden_dim=128
+    )
     state_dict = _torch_load(checkpoint_path)
     model.load_state_dict(state_dict, strict=True)
     torch_device = torch.device(device)

@@ -24,7 +24,17 @@ Reviewer 在一般性的 split 评论中提到 random split 不如 scaffold spli
 
 APEX 输入序列中，noncanonical residue 写成 `X`，D-residue 只保留 residue identity，cyclic、bond 和 multichain topology 使用确定性线性 residue 顺序。这只是在原模型可接受的 residue string 层面构造输入。
 
-APEX 模型、23-token vocabulary 和 AAindex embedding 不做修改。原 APEX 没有 `X` token，因此 `X` 按 `compare_APEX/utils.py::onehot_encoding` 的原行为留在 index 0。不得增加 index 23、平均 AAindex embedding 或更换原 `512→256` regression head。
+APEX 模型、23-token vocabulary 和 AAindex embedding 不做修改。原 APEX 没有 `X` token，因此
+`X` 按已冻结在 `apex_adapter.py::legacy_onehot_encoding` 的原行为留在 index 0。不得增加
+index 23、平均 AAindex embedding 或更换原 `512→256` regression head。
+
+2026-07-19 已把原 `compare_APEX` 动态 import 的支持代码迁入
+`src/apexoracle/benchmarks/molecule_encoders/{apex_model,apex_adapter,legacy_training}.py`。真实
+checkpoint 以 `strict=True` 加载，固定四序列的 legacy/canonical `(4,128)` feature SHA-256
+均为 `dd1ac1a9f359f60b55a83910cdd198b5aeca00788b2d5a8c6aa691d956643cb3`。三个 Fig. 2b
+runner 和 capsule resource builder 已切换到 canonical module；详细证据见
+`apex_legacy_migration_audit.json`。`compare_APEX/aaindex1.csv` 和 checkpoint 仍是 Git 忽略的
+本地 paper assets，不属于被删除的源码。
 
 ## 数据准备
 

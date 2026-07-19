@@ -70,3 +70,16 @@ def encode_apex_sequences(
         attention_mask[row_index, : len(encoded)] = 1
 
     return token_ids, attention_mask
+
+
+def legacy_onehot_encoding(
+    sequences: Sequence[str], max_length: int, word_to_index: Mapping[str, int]
+) -> np.ndarray:
+    """Compatibility wrapper for the original ``onehot_encoding`` signature."""
+
+    token_ids, _ = encode_apex_sequences(
+        sequences,
+        word_to_index=word_to_index,
+        max_length=max_length,
+    )
+    return token_ids
