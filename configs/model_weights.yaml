@@ -369,3 +369,31 @@ weights:
       relative_path: synergy/guidance/short_judger_2epoch_best.ckpt
       download_uri: null
       redistribution_status: to_review
+
+  synergy_prospective_screening_regression_ensembles:
+    paper_label: Post-paper BAA-3170 prospective synergy screening
+    tasks:
+      - synergy_prospective_pair_screening
+    decision_status: complete_2x7_family_h100_consumer_smoke_verified
+    source:
+      kind: local_repo_ignored_binary_family
+      current_path: Checkpoints/genome_text_learnable_emb/strain_wise_synergy/MDLM_train_on_DBAASP_test_on_inhouse_reg
+      member_profiles:
+        DBAASP_train_best: fold_0_ensemble_{0..6}_fixed_epoch.ckpt
+        inhouse_best: fold_0_ensemble_{0..6}_best_test.ckpt
+      member_count: 14
+      sha256_manifest: experiments/synergy/screening_audit.json
+    model:
+      fusion_lora_rank: 64
+      regression_head: [24576, 3072, 128, 1]
+      inverse_target: 10 ** (-logit) * 10
+      ensemble_members_per_profile: 7
+    interpretation:
+      paper_cv_result: false
+      prospective_screening: true
+      historical_sequence_alignment: legacy_positional_misalignment
+    loader: src/apexoracle/models/synergy_checkpoint.py
+    future_storage:
+      relative_path: synergy/prospective_screening
+      download_uri: null
+      redistribution_status: to_review

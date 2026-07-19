@@ -158,7 +158,7 @@
 | Synergy 或 guidance 之前使用的完整数据 MIC base model | `train_on_all_data.py`；checkpoint 家族 `Checkpoints/genome_text_learnable_emb/guidance_regressor_pad_no_mask`，尤其是 `noise_guidance_best_R2_all_peptide_epoch_100.pth` | 这是最终 synergy 和 noisy guidance 脚本共同使用的最匹配 base model。`train_on_all_data.py` 本身保存到 `all_AMP_SM_data_train/MDLM_MTR_fix_cls_wo_pad`；路径和命名在开发过程中发生过变化，重构时必须保留实际 checkpoint 来源。 |
 | All-data synergy guidance classifier | canonical 入口 `scripts/reproduce/run_synergy_guidance.py`；配置 `configs/synergy/legacy_guidance.yaml`；checkpoint 位于 `.../synergy_judger/cls` 与 `.../guidance_noise_synergy/cls` | **论文后 guidance / 已完成行为迁移。** 两个 profile 分别对应 2 和 40 epochs，均使用 frozen online MDLM、rank-64 fusion LoRA 和完整训练的 `24576→3072→128→1` head。两份 checkpoint 均已严格加载并通过 H100 真实样本 forward。stored AUROC 来自训练集，不能作为论文 CV 或泛化指标。 |
 | Guided molecule generation、remasking sampler 和 256-step 三阶段 guidance | 不在当前仓库；分析脚本指向 `/data2/tianang/projects/discrete-diffusion-guidance` | **外部依赖 / 缺失。** 当前仓库包含 predictor、保存的输出或图片以及 similarity 分析，但不包含实际生成 ApexOracle-3/12/23 的 sampler。论文参数为 256 steps、MIC target 1、sigma 从 0.5 线性降到 0.2、`t_on=0.55`、`t_off=0.45`，两个阶段的 guidance strength 为 15。 |
-| Fig. 3（TeX 中使用文件 `Fig4.pdf`）guided/unguided 预测和最终验证分子 | `DataPrepare/Morgan_fingerprint_sim_generation*.py` 中的生成结果分析、`synergy_Evo_train_on_DBAASP_screen_inhouse_pairs.py` 中的筛选逻辑，以及 `paper_figs/` 下的 PDF | 当前只剩部分派生分析。候选生成和最终选择流程依赖外部代码或已经不完整；湿实验结果也没有在本仓库形成计算复现流程。 |
+| Fig. 3（TeX 中使用文件 `Fig4.pdf`）guided/unguided 预测和最终验证分子 | prospective synergy 筛选 canonical 入口为 `scripts/reproduce/run_synergy_screening.py`；其余生成分析位于 `DataPrepare/Morgan_fingerprint_sim_generation*.py` 和外部 guidance 仓库 | **筛选 consumer 已迁移；完整候选生成/最终选择仍不完整。** BAA-3170 两组 7-member regression 权重、输入和历史筛选输出已冻结；历史 4-rank/sequence 位置错位由 canonical 显式复现。实际 guided sampler 和湿实验选择链仍未形成自包含流程。 |
 | 附录 modality ablation | 最终绘图值：`experiments/modality_ablation/paper_values.csv`；绘图入口：`scripts/reproduce/plot_modality_ablation.py`；候选训练血缘为较早的 genome-only、text-only、genome+text 脚本家族及对应 checkpoint | **绘图终版 / 高置信度；训练血缘 / 中低置信度。** Mac 最终 notebook 的 12 个硬编码 R² 已逐项冻结，可重建论文图；现存 checkpoint 与这些 ensemble 数值仍无法精确连接。 |
 | Attention 或耐药基因解释 | `DataPrepare/ATCC_genome_annotation_get.py`、`DataPrepare/resistant_gene_check.py`、`DataPrepare/train_genome_mcr_check.py`，以及大型训练脚本中的 attention 输出 | 属于探索或审稿支持代码；不存在自包含的最终 attention figure 流程。 |
 | ApexOracle-3/12/23 sequence similarity 表 | `scripts/reproduce/run_sequence_similarity.py`；`src/apexoracle/evaluation/sequence_similarity/` | **canonical / 已验证。** 实现 Methods 中的 Biopython global alignment、BLOSUM62、gap-open 10、gap-extension 0.5、exact-match PID 和 cyclic exhaustive rotations。ApexOracle-3/23 全量输出与历史 CSV 逐字节一致；ApexOracle-12 的论文数值已复算，但旧 full CSV 未保存且 top hit 有四个 complete ties。 |
@@ -237,7 +237,15 @@
   迁移。两个 all-data classification root driver 已迁入 `run_synergy_guidance.py` 的
   `short_judger` 与 `guidance_40epoch` profiles 并从工作树删除；原文件由 legacy tag 恢复。
 - `synergy_Evo_train_on_DBAASP_test_on_inhouse.py` 和 `_classification.py` 用于测试向 prospective in-house pair 的迁移。`_few_shot.py`、`_classification_few_shot.py`、`_inner_prod.py`、`_no_lora.py` 和 `_w_pred_MIC.py` 是后续 few-shot 架构变体，属于**论文后代码**，不能与论文 DBAASP 三折指标混用。
-- `synergy_Evo_train_on_DBAASP_screen_inhouse_pairs.py` 筛选 prospective in-house pair，目标 strain 硬编码为 BAA-3170。`synergy_Evo_test_inhouse_MDLM.py` 加载 all-data synergy 模型并测试处理后的 in-house 数据。这些服务于后续发现工作，不是论文核心 CV。
+- Prospective BAA-3170 screening 已迁入 `scripts/reproduce/run_synergy_screening.py`，旧 root driver
+  已删除并由 legacy tag 保留。`synergy_Evo_test_inhouse_MDLM.py` 加载 all-data synergy 模型并
+  测试处理后的 in-house 数据，尚未迁移。这些服务于后续发现工作，不是论文核心 CV。
+- **已由源码、输入、checkpoint、历史输出和 H100 验证的 prospective screening 事实：**
+  sequence 表 5,949,525 行，转换后的 SMILES 表 5,918,520 行；31,005 行差异来自含括号序列的
+  过滤。2025 年筛选由 4-rank DDP 运行，predictions 按 rank block gather 后未恢复数据顺序，
+  又按位置切未过滤 sequence 表。canonical 入口显式冻结这两层错位，默认输出到 `results/`，
+  并拒绝写入原始数据树。`DBAASP_train_best` 的 1,280-row × 7-member H100 重算中，首个完整
+  rank batch 的 110 条入选记录与历史 CSV 完全一致（FICI 最大绝对差 0）。
 
 #### Synergy CV 重构阶段审计（2026-07-19）
 
@@ -406,7 +414,8 @@ Strain count mapping 的演化顺序如下：
   `synergy_Evo_train_new_reg_MDLM_one_base_model_all_data_train.py`、
   `synergy_Evo_train_on_DBAASP_test_on_inhouse_classification.py` 及 five-shot/few-shot 变体。
   两个 all-data classification guidance driver 已迁移并删除；精确 SHA 与 checkpoint 证据见
-  `experiments/synergy/guidance_checkpoint_audit.json`。
+  `experiments/synergy/guidance_checkpoint_audit.json`。Prospective screening root driver 也已迁移
+  删除，其 SHA、14 个权重和历史输出证据见 `experiments/synergy/screening_audit.json`。
 - 生成分子的 fingerprint 变体：`DataPrepare/Morgan_fingerprint_sim_generation_SM_rediscover.py`。
 - `DataPrepare/__init__.py`、`compare_APEX/__init__.py`、`PeptideCLM/__init__.py` 和 `PeptideCLM/tokenizer/__init__.py` 只是 package marker，不包含实验逻辑。
 - 第三方 PeptideCLM 文件：`PeptideCLM/example_training_script.py`、`PeptideCLM/tokenizer/my_tokenizers.py`、`PeptideCLM/All_CycPeptMPDB_Predictions.ipynb`、`PeptideCLM/CycPeptMPDB_clustering_and_analysis.ipynb`。它们属于上游 comparator 或 tutorial bundle，不属于 ApexOracle pipeline。

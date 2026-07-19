@@ -27,6 +27,14 @@ GUIDANCE_CHECKPOINT_KEYS = {
     "co_cross_attn_text",
     "learnable_embedding_weight",
 }
+REGRESSION_MEMBER_CHECKPOINT_KEYS = {
+    "R2",
+    "optimizer_state_dict",
+    "re_head_state_dict",
+    "co_cross_attn_genome",
+    "co_cross_attn_text",
+    "learnable_embedding_weight",
+}
 
 
 @dataclass
@@ -177,3 +185,73 @@ def load_synergy_guidance_checkpoint(
         )
     )
     return contract
+
+
+def build_legacy_synergy_regression_member(
+    checkpoint_path: Path,
+    *,
+    device: torch.device,
+    molecule_dim: int = 768,
+    genome_dim: int = 8192,
+    text_dim: int = 4096,
+    attention_heads: int = 4,
+    lora_rank: int = 64,
+) -> tuple[SynergyComponents, float]:
+    """Strictly load one prospective-screening regression member."""
+
+    from peft import LoraConfig, TaskType, get_peft_model
+
+    state = torch.load(
+        checkpoint_path,
+        map_location="cpu",
+        weights_only=False,
+        mmap=True,
+    )
+    if set(state) != REGRESSION_MEMBER_CHECKPOINT_KEYS:
+        raise ValueError(
+            f"Unexpected regression checkpoint keys in {checkpoint_path}: "
+            f"{sorted(state)}"
+        )
+    lora = LoraConfig(
+        r=lora_rank,
+        lora_alpha=32,
+        target_modules=list(LEGACY_LORA_TARGETS),
+        task_type=TaskType.FEATURE_EXTRACTION,
+        lora_dropout=0.1,
+        bias="none",
+    )
+    genome_attention = get_peft_model(
+        FirstTokenAttentionGenome(
+            molecule_dim, genome_dim, attention_heads, 0.1
+        ),
+        lora,
+    ).to(device)
+    text_attention = get_peft_model(
+        FirstTokenAttentionGenome(
+            molecule_dim, text_dim, attention_heads, 0.1
+        ),
+        lora,
+    ).to(device)
+    prediction_head = RegressionHead(
+        (genome_dim + text_dim) * 2,
+        (genome_dim + text_dim) // 4,
+        128,
+        1,
+        0.2,
+    ).to(device)
+    genome_attention.load_state_dict(state["co_cross_attn_genome"], strict=True)
+    text_attention.load_state_dict(state["co_cross_attn_text"], strict=True)
+    prediction_head.load_state_dict(state["re_head_state_dict"], strict=True)
+    missing = nn.Parameter(
+        state["learnable_embedding_weight"].to(device).detach(),
+        requires_grad=False,
+    )
+    for module in (genome_attention, text_attention, prediction_head):
+        module.eval()
+    components = SynergyComponents(
+        genome_attention=genome_attention,
+        text_attention=text_attention,
+        prediction_head=prediction_head,
+        missing_genome_embedding=missing,
+    )
+    return components, float(state["R2"])

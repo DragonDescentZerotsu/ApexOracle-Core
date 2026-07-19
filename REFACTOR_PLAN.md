@@ -292,6 +292,23 @@ Python `set` 的进程哈希行序，但历史 `PYTHONHASHSEED` 未记录；成�
 行序不作声明。两个已迁移 root driver 从工作树删除，由 `legacy-code-snapshot-2026-07-17` 恢复；
 prospective in-house screening 继续作为单独消费者，不与 classifier 训练合并。
 
+Prospective BAA-3170 synergy screening 随后进入独立迁移。只读审计冻结了 5,918,520 行 SMILES
+pair、5,949,525 行 sequence pair、3,441-entry molecule cache、BAA-3170 genome/text embedding、
+两组各 7 个 regression member 以及两份历史筛选输出的 SHA-256。审计发现旧结果不是原始 row
+order：4-rank `DistributedSampler` 的 stride predictions 按 rank block 拼接后未逆置换，之后又
+用这些位置切多 31,005 行的未过滤 sequence 表。canonical runner 将四个 rank 的 stride frame
+和各自 batch=320 边界逐项复现，同时只允许输出到 `results/` 或其他非数据路径。真实
+1,280-row × 7-member H100 验证中，第一个完整 rank batch 的 110 条入选记录与历史 CSV 在 ID、
+sequence 和 FICI 上完全一致，最大绝对差 0。该路径明确属于 post-paper prospective screening，
+不属于论文三折 CV；修正 pair-ID 对齐的新结果尚未生成。旧 screening root driver 已由 canonical
+入口取代并删除，仍可从 `legacy-code-snapshot-2026-07-17` 恢复；checkpoint producer 和其他
+in-house evaluation/few-shot driver 尚未迁移。
+
+本 screening 批新增 5 项 CPU 测试，覆盖两个 profile、安全输出边界、FICI 反变换、4-rank
+stride/rank-block gather 和 sequence positional selection；阶段收尾全仓库为 124 passed / 5
+skipped。另以宿主 H100 完成 fixed-epoch 全 7 member 的 1,280-row 验证和 inhouse-best member
+smoke。所有大输入、14 个 checkpoint 和两份历史输出只读核验，原文件 SHA-256 未变化。
+
 Modality ablation 的绘图血缘已于 2026-07-19 冻结。最终 Mac notebook cell 中硬编码的四条
 曲线、三个 holdout 粒度和 12 个精确 R² 已迁移到
 `experiments/modality_ablation/paper_values.csv`，canonical 只读绘图入口为
