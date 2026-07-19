@@ -309,6 +309,27 @@ stride/rank-block gather 和 sequence positional selection；阶段收尾全仓�
 skipped。另以宿主 H100 完成 fixed-epoch 全 7 member 的 1,280-row 验证和 inhouse-best member
 smoke。所有大输入、14 个 checkpoint 和两份历史输出只读核验，原文件 SHA-256 未变化。
 
+Prospective regression producer 迁移于 2026-07-19 启动。已由 legacy source 和完整日志验证：
+`synergy_Evo_train_on_DBAASP_test_on_inhouse.py` 使用 4,285 行 DBAASP pair 作为训练来源、57 行
+in-house pair 作为 held-out test；embedding/mapping 过滤后训练 route 为 2,263 行 genome+text 与
+包含全部 2,732 行的 combined-text，test 只有 57 行 genome+text。SELFIES 512-token 过滤后为
+`2175/2597/38`，与日志逐项一致。每个 epoch 通过 `zip_longest` 交替执行两条训练 route，因此
+2,263 个 genome 样本会再次进入 text-only 分支；该重复训练属于历史行为，不能去重。模型从
+100-epoch MIC base 初始化，使用 rank-64 fusion LoRA、完整 `24576→3072→128→1` regression
+head、MSE 和 `-log10(FICI/10)` target，默认 7 members × 8 epochs。
+
+旧 producer 同时保存两种权重：`best_test` 由仅 38 行 in-house test 的 R² 严格提升选择；
+`fixed_epoch` 保存 epoch index 5 结束后的当前参数，但 payload 中的 `R2` 字段仍是截至该时刻的
+best-test R²，而不一定是当前参数的 R²。该 test-selected profile 存在直接使用 prospective
+in-house test 选模型的 leakage，不得作为独立泛化指标；`fixed_epoch` 才是历史 screening 的
+默认 profile。数据 block 拼接仍依赖未记录的 Python `set` 顺序，所以 canonical 将保留动态
+顺序并要求显式确认，不声称恢复历史逐 batch 随机轨迹。canonical regression runner、配置、
+六键 full-state checkpoint contract 和 7 项专项测试现已完成；真实 dry-run 核验了全部输入哈希
+及 `2175/2597/38` 计数，H100 上又完成 full-route、1-member、1-epoch smoke，选出 R²
+`-1.077654` 并写出 3,716,621,204-byte checkpoint。该 smoke 只验证执行链，不声称重建历史
+tensor。旧 1,835 行 producer 已由 canonical 取代并删除，可从 legacy tag 以相同 SHA-256 恢复。
+阶段收尾全仓库为 131 passed / 5 skipped；原始数据、日志和 14 个历史 checkpoint 未修改。
+
 Modality ablation 的绘图血缘已于 2026-07-19 冻结。最终 Mac notebook cell 中硬编码的四条
 曲线、三个 holdout 粒度和 12 个精确 R² 已迁移到
 `experiments/modality_ablation/paper_values.csv`，canonical 只读绘图入口为
@@ -381,8 +402,9 @@ checkpoint 网格；canonical 采用有严格 checkpoint 证据的 fixed profile
 
 - [x] 已被 canonical 入口取代的 hierarchical MIC、Fig. 1b、sequence similarity、早期
   Fig. 2b 和 APEX 支持代码；
-- [ ] synergy、few-shot 与其余 in-house 副本：all-data classification guidance 两个副本已迁移
-  删除；CV 候选、regression、few-shot 和 screening 副本继续等待各自证据冻结；
+- [ ] synergy、few-shot 与其余 in-house 副本：all-data classification guidance、prospective
+  regression producer 和 screening 副本已迁移删除；CV 候选、classification/few-shot 与其他
+  in-house 副本继续等待各自证据冻结；
 - [x] 已确认无消费者的 `_old.py`、debug、临时 notebook 和部分机器专用 launcher；
 - [x] `Fangping_correlation/`、`e3nn_playground/`；
 - [x] `GPU_eye.py`、`run.py`、`run_full.py` 等资源占用工具；

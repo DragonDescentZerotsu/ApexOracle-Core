@@ -23,6 +23,7 @@ class SynergyPairDataset(Dataset):
         molecule_embeddings: Mapping,
         text_embeddings: Mapping[str, torch.Tensor],
         genome_embeddings: Mapping[str, torch.Tensor] | None = None,
+        target_transform: Callable[[float], float] = synergy_label,
     ) -> None:
         if tuple(table.columns) != SYNERGY_COLUMNS:
             raise ValueError(f"Unexpected synergy columns: {tuple(table.columns)}")
@@ -30,6 +31,7 @@ class SynergyPairDataset(Dataset):
         self.molecule_embeddings = molecule_embeddings
         self.text_embeddings = text_embeddings
         self.genome_embeddings = genome_embeddings
+        self.target_transform = target_transform
 
     def __len__(self) -> int:
         return len(self.table)
@@ -38,7 +40,9 @@ class SynergyPairDataset(Dataset):
         row = self.table.iloc[index]
         strain = row["strain_name"]
         item = {
-            "label": torch.tensor(synergy_label(row["FICI"]), dtype=torch.float),
+            "label": torch.tensor(
+                self.target_transform(row["FICI"]), dtype=torch.float
+            ),
             "text_embedding": self.text_embeddings[strain],
             "strain_name": strain,
             "pair_key": (
