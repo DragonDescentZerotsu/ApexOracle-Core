@@ -1,0 +1,75 @@
+schema_version: 1
+protocol_family: paper_legacy_hierarchical_mic_holdouts
+status: unified_runner_behavior_frozen
+
+# strain/species/phylum share this complete model and optimization contract.
+# Only the holdout adapter, group label, and output location vary.
+model:
+  molecule_embedding_dim: 768
+  genome_embedding_dim: 8192
+  text_embedding_dim: 4096
+  attention_heads: 4
+  attention_dropout: 0.1
+  head_hidden_dims: [3072, 128]
+  head_dropout: 0.2
+  regression_targets: 1
+  missing_genome_embedding: learned_1_by_8192_parameter
+
+training:
+  ensembles_per_group: 7
+  ensemble_seeds: [42, 2024, 2025, 2077, 2012, 1973, 2002]
+  epochs: 25
+  batch_size: 80
+  optimizer: Adam
+  learning_rate: 1.0e-5
+  weight_decay: 0.0
+  scheduler: CosineAnnealingLR
+  scheduler_eta_min: 1.0e-10
+  scheduler_step: once_after_all_four_training_loader_batches_per_epoch
+  loader_coordination: zip_longest_fill_none_total_max_loader_length
+  evaluation_module_mode: train
+  freeze_epochs: 5000
+  regression_loss: MSELoss
+  auxiliary_classification_loss: BCEWithLogitsLoss
+  checkpoint_selection: highest_held_out_group_r2
+  mic_transform: -log10(MIC/10)
+  genome_embedding_scale: 1.0e14
+  text_embedding_scale: 1.0
+  optimizer_step_frequency: once_per_nonempty_modality_batch
+  amp: cuda_autocast_with_grad_scaler
+  gradient_clipping:
+    activation_epoch: 5000
+    max_norm: 1.0
+    genome_attention: true
+    text_attention: false
+    missing_genome_embedding_for_text_only: true
+    regression_head: true
+    classification_head: false
+
+paths:
+  genome_embeddings: DataPrepare/Data/Genome_embs
+  atcc_text_embeddings: DataPrepare/Data/Text_Description/ATCC/embeddings
+  text_only_embeddings: DataPrepare/Data/Text_Description/wo_ATCC/embeddings
+  peptide_embeddings: DataPrepare/Data/Pep_emb_dict.pt
+  small_molecule_embeddings: DataPrepare/Data/SM_emb_dict.pt
+
+outputs:
+  strain: Checkpoints/genome_text_learnable_emb/strain_wise_w_SM_b_attn/MDLM_MTR_fix_7_fold_ensembles
+  species: Checkpoints/genome_text_learnable_emb/11_species_w_SM/MDLM_MTR_fix_cls_wo_pad_7_fold_ensembles
+  phylum: Checkpoints/genome_text_learnable_emb/3_species_w_SM/MDLM_MTR_fix_cls_wo_pad_7_fold_ensembles
+
+holdouts:
+  strain:
+    adapter: legacy_within_species_three_fold
+    group_names: [fold 1, fold 2, fold 3]
+    historical_membership: exact_2025_hash_seed_not_recovered
+  species:
+    adapter: taxonomy_tree_agglomerative_clusters
+    clusters: 11
+    tree: DataPrepare/Data/Genome/visualization/All_species_gt_Taxonomy_Tree_cluster.phy
+    group_names: [Serinales, Betaproteobacteria, FCB, VPC, BFSP, Eurotiomycetes, MA, Bacillales, Enterobacterales, Lactobacillales, ALs]
+  phylum:
+    adapter: taxonomy_tree_agglomerative_clusters
+    clusters: 3
+    tree: DataPrepare/Data/Genome/visualization/All_species_gt_Taxonomy_Tree_draw.phy
+    group_names: [Fungi, Pseudomonadati, Bacillati]

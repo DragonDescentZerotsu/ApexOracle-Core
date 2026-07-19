@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Freeze the data/split contract used by the final strain-wise checkpoints."""
+"""Freeze the uncertain historical strain-holdout candidate membership."""
 
 from __future__ import annotations
 
@@ -28,7 +28,8 @@ def parse_args() -> argparse.Namespace:
         type=Path,
         default=REPO_ROOT
         / "experiments"
-        / "fig2c_strainwise"
+        / "hierarchical_mic"
+        / "strain"
         / "legacy_protocol_manifest.json",
     )
     return parser.parse_args()
@@ -57,22 +58,55 @@ def main() -> None:
     }
     archived_log_counts = [
         {
-            "genome_text_train": {"before_length_filter": 7103, "after_length_filter": 6828},
-            "genome_text_test": {"before_length_filter": 72801, "after_length_filter": 70544},
-            "text_only_train": {"before_length_filter": 18553, "after_length_filter": 17698},
+            "genome_text_train": {
+                "before_length_filter": 7103,
+                "after_length_filter": 6828,
+            },
+            "genome_text_test": {
+                "before_length_filter": 72801,
+                "after_length_filter": 70544,
+            },
+            "text_only_train": {
+                "before_length_filter": 18553,
+                "after_length_filter": 17698,
+            },
             "text_only_test": {"before_length_filter": 968, "after_length_filter": 876},
         },
         {
-            "genome_text_train": {"before_length_filter": 77418, "after_length_filter": 75002},
-            "genome_text_test": {"before_length_filter": 2486, "after_length_filter": 2370},
-            "text_only_train": {"before_length_filter": 83761, "after_length_filter": 80968},
-            "text_only_test": {"before_length_filter": 6075, "after_length_filter": 5780},
+            "genome_text_train": {
+                "before_length_filter": 77418,
+                "after_length_filter": 75002,
+            },
+            "genome_text_test": {
+                "before_length_filter": 2486,
+                "after_length_filter": 2370,
+            },
+            "text_only_train": {
+                "before_length_filter": 83761,
+                "after_length_filter": 80968,
+            },
+            "text_only_test": {
+                "before_length_filter": 6075,
+                "after_length_filter": 5780,
+            },
         },
         {
-            "genome_text_train": {"before_length_filter": 77253, "after_length_filter": 74807},
-            "genome_text_test": {"before_length_filter": 2651, "after_length_filter": 2565},
-            "text_only_train": {"before_length_filter": 85168, "after_length_filter": 82316},
-            "text_only_test": {"before_length_filter": 4503, "after_length_filter": 4237},
+            "genome_text_train": {
+                "before_length_filter": 77253,
+                "after_length_filter": 74807,
+            },
+            "genome_text_test": {
+                "before_length_filter": 2651,
+                "after_length_filter": 2565,
+            },
+            "text_only_train": {
+                "before_length_filter": 85168,
+                "after_length_filter": 82316,
+            },
+            "text_only_test": {
+                "before_length_filter": 4503,
+                "after_length_filter": 4237,
+            },
         },
     ]
     manifest = {

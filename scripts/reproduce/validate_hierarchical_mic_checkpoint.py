@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Strictly load one paper checkpoint and run deterministic synthetic inference."""
+"""Strictly load one hierarchical MIC checkpoint and run fixed inference."""
 
 from __future__ import annotations
 
@@ -14,8 +14,8 @@ import torch
 REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO_ROOT / "src"))
 
-from apexoracle.models.strainwise_checkpoint import (  # noqa: E402
-    load_legacy_strainwise_checkpoint,
+from apexoracle.models.hierarchical_mic_checkpoint import (  # noqa: E402
+    load_legacy_hierarchical_checkpoint,
     predict_genome_text,
     predict_text_only,
 )
@@ -41,7 +41,7 @@ def file_sha256(path: Path) -> str:
 def main():
     args = parse_args()
     device = torch.device(args.device)
-    components, contract = load_legacy_strainwise_checkpoint(
+    components, contract = load_legacy_hierarchical_checkpoint(
         args.checkpoint, device=device
     )
     components.eval()
@@ -61,9 +61,7 @@ def main():
         genome_text_prediction = predict_genome_text(
             components, molecule, genome, genome_mask, text, text_mask
         )
-        text_only_prediction = predict_text_only(
-            components, molecule, text, text_mask
-        )
+        text_only_prediction = predict_text_only(components, molecule, text, text_mask)
     resolved_checkpoint = args.checkpoint.resolve()
     try:
         checkpoint_display = str(resolved_checkpoint.relative_to(REPO_ROOT))
@@ -76,7 +74,10 @@ def main():
         "archived_r2": components.archived_r2,
         "contract": contract,
         "synthetic_seed": 20260718,
-        "genome_text_prediction": genome_text_prediction.float().cpu().flatten().tolist(),
+        "genome_text_prediction": genome_text_prediction.float()
+        .cpu()
+        .flatten()
+        .tolist(),
         "text_only_prediction": text_only_prediction.float().cpu().flatten().tolist(),
     }
     rendered = json.dumps(result, indent=2) + "\n"

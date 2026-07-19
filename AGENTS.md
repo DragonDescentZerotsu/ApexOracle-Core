@@ -63,7 +63,7 @@
   - `paper_figs/evo2_genome_embedding_abs_mean_distribution.csv`
 - 使用 `--all-embeddings` 可以统计 `Genome_embs` 中的全部文件，而不是只统计被数据集匹配到的 genome ID。
 
-## 2026-07-18 strain-wise 重构审计
+## 2026-07-19 hierarchical MIC 统一重构审计
 
 ### 已由代码、日志、checkpoint 和跨机器核验的事实
 
@@ -73,19 +73,19 @@
 - 历史 split 构造使用无序 `set`，并把 taxonomy alias 直接 `extend` 到共享 list。三个 fold
   由独立 Python 进程运行，而日志没有记录 `PYTHONHASHSEED`。当前源码重新运行得到的 membership
   因此不能被视为 2025 年 checkpoint 的精确历史 membership。
-- `experiments/fig2c_strainwise/legacy_protocol_manifest.json` 明确区分了
+- `experiments/hierarchical_mic/strain/legacy_protocol_manifest.json` 明确区分了
   `PYTHONHASHSEED=0` 的确定性候选 membership 与历史日志中的权威样本计数；任何新运行不得把
   候选 manifest 标成精确历史 split。
 - 21 个 checkpoint 的 `3 × 7` 网格完整。group 0/2 的 14 个文件只保存实际消费的
   fusion/head state；group 1 的 7 个文件还包含名为 `ChemBERTa_state_dict` 的 131-key、
   12-layer/768 MDLM backbone。三个 group 的 optimizer 都具有相同的 5 个参数组和 49 个
   state entries，额外 backbone 不在下游 optimizer 中。
-- 共享 strain-wise core 已抽取到 `src/apexoracle/`，legacy driver 的训练循环仍保留，但运行时
-  已使用共享 Dataset、collate、feature loader、fusion 和 head。代表性 group 0 / ensemble 0
-  checkpoint 已通过所有实际消费 state dict 的 `strict=True` 加载，并在 H100 上完成两次独立
-  固定批次推理，输出一致。
-- 四条单批次训练路径已经迁移到 `src/apexoracle/training/strainwise.py` 并由 legacy driver
-  实际调用。逐项测试在固定随机状态下比较 logits、loss、所有参数 gradient 和 Adam 更新后的
+- strain/species/phylum 三条路径已统一到 `src/apexoracle/`，canonical runner 为
+  `scripts/reproduce/run_hierarchical_mic.py`，唯一配置为
+  `configs/hierarchical_mic/legacy_mdlm.yaml`。模型、四路训练、评估、checkpoint 和 ensemble
+  只保留一份；三个协议只通过 split adapter、group 名称与输出路径区分。
+- 四条单批次训练路径位于 `src/apexoracle/training/hierarchical_mic.py`。逐项测试在固定随机状态下
+  比较 logits、loss、所有参数 gradient 和 Adam 更新后的
   参数，四种 modality/task 组合均完全一致。强制触发 epoch-5000 clipping 后也确认：历史实现
   不裁剪 text attention，classification 分支裁剪的是 `reg_head` 而不是 `cls_head`；为保持行为
   当前共享实现显式保留这一异常契约。
@@ -94,11 +94,19 @@
   `init_scale=128` 并要求 gradients 全部有限；默认 `65536` 会让这个小型合成 fixture 的两侧
   同时 overflow 并跳过 step，因此不能用该 overflow case 宣称参数更新已验证。正式 driver
   继续使用历史默认动态 GradScaler。
-- outer-loop helper 已覆盖 epoch-0 baseline 与逐 epoch evaluation、不同长度 DataLoader 的
+- 统一 outer runner 已覆盖 epoch-0 baseline 与逐 epoch evaluation、不同长度 DataLoader 的
   `zip_longest(fillvalue=None)` 顺序、CosineAnnealingLR 序列、prediction/loss 分区、species
   插入顺序、`len <= 1` 分区指标的 `-1000` sentinel、strict `>` best-metric tracker 和七键
   checkpoint payload。评估 helper 不切换 module mode，因此 held-out-fold selection 继续受到
   train-mode dropout 影响；这是经测试冻结的历史行为，不是推荐的新评估协议。
+- **已由 node002 源码和日志验证的事实：** 找回的 phylum-wise MDLM 终版候选 SHA-256 为
+  `36ef70bc4a20f2d94294e40b027be7b41c0c8a722c97a09bee856916622789e1`，模型与训练契约同
+  strain/species。统一 adapter 的 Fungi 数据计数与 node002 终版日志逐项一致；species group 0
+  计数也与本机 MDLM 日志一致。三个协议的真实数据 dry-run 和 H100 一轮四路训练集成 smoke
+  均已通过。
+- 被统一 runner 替代的 15 个 root DP/in-house/SM/pooling/eval 脚本、capsule 中第二份 strain
+  driver 和旧打包脚本已删除；完整恢复点为 `legacy-code-snapshot-2026-07-17`。Fig. 2c 的四个
+  不同 encoder comparator 与尚未迁移的 modality ablation 血缘仍保留。
 
 ### 根据现有证据作出的推断
 
@@ -111,10 +119,8 @@
   backbone 一并写入 checkpoint；“不在 optimizer 中”只能证明没有被下游训练更新。
 - 三个历史 fold 的精确 `PYTHONHASHSEED` / membership 仍未恢复。当前正式数值继续以保存的
   checkpoint 和完整日志为准，不以候选 split 重新训练后覆盖。
-- strain-wise 的单批次 regression/auxiliary classification、loader 协调、scheduler、
-  evaluation accumulation 和 checkpoint selection 已模块化；outer loop shell、日志、输出路径
-  和完全独立的 config-driven runner 尚未脱离 legacy driver。其余 20 个 checkpoint 的 SHA-256
-  与逐文件固定批次验证也尚待完成。在此之前不得删除 legacy driver 或 comparator 副本。
+- 其余 20 个 strain checkpoint 的逐文件 SHA-256 与固定批次推理仍未全部登记；这不影响统一
+  runner 的代码迁移结论，但仍限制对全部历史 checkpoint 逐文件身份的声称。
 
 ## 代码库审计：论文、代码与数据血缘
 
@@ -134,10 +140,10 @@
 
 | 论文内容 | 最匹配的代码或资源 | 判断及证据 |
 | --- | --- | --- |
-| Fig. 1a strain-wise 泛化；Fig. 2c 最终 DLM 和 7 模型 ensemble | `DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_strains_MDLM_MTR_fix.py`；checkpoint：`Checkpoints/genome_text_learnable_emb/strain_wise_w_SM_b_attn/MDLM_MTR_fix_7_fold_ensembles` | **最终版 / 高置信度。** 三个完整 group 的 ensemble R2 分别为 0.4057、0.6889、0.6434，平均值恰好为论文中的 0.5793；每组均有 7 个模型。 |
-| Fig. 1a / Fig. 2f phylum-wise holdout | `DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_species_3_species_5_ensemble.py`；checkpoint 位于 `.../3_species_w_SM/7_fold_ensembles` | **可能的最终版 / 中等置信度。** 实现了论文中的三个 division；文件名虽然写着 `5_ensemble`，实际使用 7 个模型。现存 R2 为 0.2194、0.3612、0.3367，平均 0.3058，与论文 0.3744 不一致。后续 MDLM checkpoint 目录中只有 Fungi 结果 0.2920，因此论文最终绘图所用完整运行可能已经缺失。 |
-| Fig. 1a / Fig. 2d、g species-wise 11-cluster holdout | `DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_species_11_species_5_ensemble_MDLM_cls_fix.py`；checkpoint 位于 `.../11_species_w_SM/MDLM_MTR_fix_cls_wo_pad_7_fold_ensembles` | **可能的最终版 / 中等置信度。** 这是最接近论文的 DLM/token cache 版本，但现存完整日志只有 group 6–10。论文中 11 个 cluster 平均 R2 0.3809、去掉 Mycoplasmatota cluster 9 后为 0.4337 的完整运行没有保留下来。 |
-| Fig. 2c strain-wise molecular encoder 比较 | 上述最终脚本，以及 `..._ChemBERTa_MLM.py`、`..._ChemBERTa_MTR.py`、`..._MolFormer.py`、`..._PeptideCLM.py` | DLM 终版为高置信度。其余脚本是对应的 strain-aware comparator，但部分 comparator checkpoint 或日志不完整。`*_cls_wo_padding*`、`*_mean_wo_padding*` 和 `*_eval.py` 是 pooling、cache 或 eval 实验，不是论文最终 7 模型 DLM 结果。 |
+| Fig. 1a strain-wise 泛化；Fig. 2c 最终 DLM 和 7 模型 ensemble | `scripts/reproduce/run_hierarchical_mic.py --protocol strain`；checkpoint：`Checkpoints/genome_text_learnable_emb/strain_wise_w_SM_b_attn/MDLM_MTR_fix_7_fold_ensembles` | **最终版 / 高置信度。** 三个完整 group 的 ensemble R2 分别为 0.4057、0.6889、0.6434，平均值恰好为论文中的 0.5793；每组均有 7 个模型。 |
+| Fig. 1a / Fig. 2f phylum-wise holdout | `scripts/reproduce/run_hierarchical_mic.py --protocol phylum`；checkpoint 位于 `.../3_species_w_SM/MDLM_MTR_fix_cls_wo_pad_7_fold_ensembles` | **代码路径已统一并验证；历史结果仍为中等置信度。** node002 找回三个 MDLM 终版日志/checkpoint，Fungi 分区与新 adapter 完全一致；现存指标与论文 0.3744 仍不一致，因此不能声称完整恢复论文绘图运行。 |
+| Fig. 1a / Fig. 2d、g species-wise 11-cluster holdout | `scripts/reproduce/run_hierarchical_mic.py --protocol species`；checkpoint 位于 `.../11_species_w_SM/MDLM_MTR_fix_cls_wo_pad_7_fold_ensembles` | **代码路径已统一并验证；历史结果仍为中等置信度。** 现存终版日志只有 group 6–10；论文中完整 11-cluster 汇总运行没有保留下来。 |
+| Fig. 2c strain-wise molecular encoder 比较 | 统一 runner 的 DLM，以及保留的 `..._ChemBERTa_MLM.py`、`..._ChemBERTa_MTR.py`、`..._MolFormer.py`、`..._PeptideCLM.py` | DLM 终版为高置信度。其余脚本是不同 encoder comparator，不属于本次删除的同模型复制版本；部分 comparator checkpoint 或日志仍不完整。 |
 | Fig. 2c Evo-2 与 k-mer 消融 | 当前没有对应源代码；`Checkpoints/KMER_genome_text_learnable_emb` 下只有 2026 年的部分或失败日志 | **缺失。** 论文报告 R2 下降 11.6%，但当前 KMER 日志没有完整结束，仓库内也没有包含 k-mer 实现的 Python 文件。不能声称当前仓库能够复现该结果。 |
 | Fig. 2b 不使用 strain knowledge 的五折 molecular representation benchmark | DLM 原始脚本位于外部 `/data2/tianang/projects/mdlm/DBAASP_MLM_MDLM.py`，capsule 的 `data/source` 中有副本。baseline 为 `fix_ChemBERTa_on_DBAASP_SMILES_5_fold_mean_MIC.py`、`fix_ChemBERTa_MLM_on_DBAASP_SMILES_5_fold_mean_MIC.py`、`fix_MolFormer_on_DBAASP_SMILES_5_fold_mean_MIC.py`、`fix_PeptideCLM_on_DBAASP_SMILES_5_fold_mean_MIC.py`；APEX 为 `compare_APEX/APEX_fix_train_DBAASP_MIC_5_fold_mean.py` | 这是原论文实验代码家族。当前论文图中数值目测约为：DLM MTR+DLM 0.530、ChemBERTa MTR 0.417、DLM MLM 0.408、ChemBERTa MLM 0.226、PeptideCLM 0.376、MolFormer 0.371、APEX 0.403。审稿阶段建立的 cache 复现资源并不能精确对应当前图中的全部数值，只能视为派生复现产物。 |
 | Fig. 1b 严格 target-strain zero-shot 小分子分类 | `antibiotic_3_strain_compare_MDLM_fix_cls_wo_pad_all_test.py`；checkpoint：`.../antibiotic_3_strain_compare/MDLM_fix_cls_sm_all_test_10_fold_ensembles` | **最终版 / 高置信度。** 脚本注释掉了目标 strain 内部的 KFold，并在完整 held-out target-strain 数据集上测试。完整 ensemble 指标：E. coli `#004` 为 0.9360 AUROC / 0.5890 AUPRC；A. baumannii 17978 为 0.7262 / 0.3243；S. aureus RN4220 为 0.7679 / 0.1655。 |
@@ -158,10 +164,12 @@
 
 - `MIC_with_genome.py`、`MIC_with_genome_no_AMP.py`、`MIC_with_genome_test_on_non_seen_species.py`、`MIC_with_genome_test_on_non_seen_species_3_species.py`、`MIC_with_genome_test_on_non_seen_species_5_fold.py`、`MIC_with_genome_test_on_non_seen_species_{3,11}_species_5_ensemble.py`、`MIC_with_genome_test_on_non_seen_strains.py` 和 `MIC_with_genome_test_on_non_seen_pep_&_non_seen_species.py` 是早期 genome-only/ChemBERTa 原型及划分实验，属于**历史版本**。
 - `MIC_with_text_test_on_non_seen_{strains,species_3_species_5_ensemble,species_11_species_5_ensemble}.py` 是 text-only 消融；`MIC_with_text_genome_test_on_non_seen_*.py` 是早期双模态版本。它们属于 modality ablation 血缘，而不是最终 DLM 模型。
-- `DP_inhouse_MIC_with_text_genome_test_on_non_seen_*.py` 加入了 in-house AMP 数据和 DataParallel 时代的结构。以 `_old.py` 结尾的文件已经明确被后续版本取代。
-- `DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_*.py` 进一步加入 small-molecule binary auxiliary task，是论文时期的代码家族。
-- 11-cluster 家族中应优先保留 `..._MDLM_cls_fix.py`，而不是非 MDLM 或 `_old.py` 副本，但必须同时记录只有五个最终日志仍然存在。
-- strain-wise 最终训练和 inference 应优先使用 `..._MDLM_MTR_fix.py`。`..._MDLM_MTR_fix_cls_wo_padding.py` 和 `..._fix_mean_wo_padding.py` 用于比较 first-token、mean pooling 或预计算 feature；它们的 `_eval.py` 版本切换到 `*_eval.pt` cache 和 eval 行为。这些是一折实验，不是论文 ensemble。
+- `DP_inhouse_MIC_with_text_genome_test_on_non_seen_*.py` 和同模型的
+  `DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_*.py` 曾构成论文时期的复制脚本家族；
+  其 hierarchical MIC 版本现已由统一 runner 替代并从工作树删除，只在 legacy tag 中保留。
+- 11-cluster、3-cluster 与 strain-wise 的最终 MDLM 路径现在都应使用
+  `scripts/reproduce/run_hierarchical_mic.py`。旧 `..._MDLM_cls_fix.py`、
+  `..._MDLM_MTR_fix.py`、pooling 和预计算 feature 变体仅作为历史血缘记录，不再是活跃入口。
 - `..._ChemBERTa_MLM.py`、`..._ChemBERTa_MTR.py`、`..._MolFormer.py` 和 `..._PeptideCLM.py` 是 Fig. 2c 的 strain-wise encoder comparator。
 
 #### Molecule-only Fig. 2b benchmark
@@ -300,9 +308,12 @@ Strain count mapping 的演化顺序如下：
 
 本索引用于确保以后搜索任意被通配符归类的文件名时，都能直接命中本审计；具体语义和终版判断仍以上文为准。
 
-- 较早的双模态或 DP 副本：`MIC_with_text_genome_test_on_non_seen_strains.py`、`MIC_with_text_genome_test_on_non_seen_species_3_species_5_ensemble.py`、`MIC_with_text_genome_test_on_non_seen_species_11_species_5_ensemble.py`、`MIC_with_text_test_on_non_seen_strains.py`、`MIC_with_text_test_on_non_seen_species_3_species_5_ensemble.py`、`MIC_with_text_test_on_non_seen_species_11_species_5_ensemble.py`、`DP_inhouse_MIC_with_text_genome_test_on_non_seen_strains.py`、`DP_inhouse_MIC_with_text_genome_test_on_non_seen_species_3_species_5_ensemble.py`、`DP_inhouse_MIC_with_text_genome_test_on_non_seen_species_11_species_5_ensemble.py`、`DP_inhouse_MIC_with_text_genome_test_on_non_seen_species_11_species_5_ensemble_old.py`。
-- 论文时期 SM auxiliary 副本：`DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_strains.py`、`DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_species_11_species_5_ensemble.py`、`DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_species_11_species_5_ensemble_old.py`。
-- Strain-wise comparator 或 feature 变体：`DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_strains_ChemBERTa_MLM.py`、`DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_strains_ChemBERTa_MTR.py`、`DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_strains_MolFormer.py`、`DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_strains_PeptideCLM.py`、`DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_strains_MDLM_MTR_fix_cls_wo_padding.py`、`DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_strains_MDLM_MTR_fix_cls_wo_padding_eval.py`、`DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_strains_MDLM_MTR_fix_mean_wo_padding.py`、`DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_strains_MDLM_MTR_fix_mean_wo_padding_eval.py`。
+- **已删除并由 legacy tag 保留：** 旧 DP/in-house/SM hierarchical drivers、11/3 species
+  复制版本、strain MDLM root driver 以及 `*_cls_wo_padding*`、`*_mean_wo_padding*`、`*_eval.py`
+  feature 变体。canonical 替代入口是 `scripts/reproduce/run_hierarchical_mic.py`。
+- **仍保留且不得当作重复版本删除：** `DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_strains_ChemBERTa_MLM.py`、`DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_strains_ChemBERTa_MTR.py`、`DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_strains_MolFormer.py`、`DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_strains_PeptideCLM.py`。它们是 Fig. 2c 的不同 encoder comparator。
+- 较早的 genome-only、text-only 与 genome+text 文件仍作为未完成核验的 modality ablation
+  血缘暂留；在建立对应统一入口前不得删除。
 - 早期 genome ensemble 的完整文件名：`MIC_with_genome_test_on_non_seen_species_3_species_5_ensemble.py` 和 `MIC_with_genome_test_on_non_seen_species_11_species_5_ensemble.py`。
 - Fig. 2b 副本：`fine_tune_on_DBAASP_SMILES_5_fold_compare_pre_SSL.py`、`fine_tune_on_DBAASP_SMILES_5_fold_compare_SSL.py`、`fix_ChemBERTa_MLM_mean_emb_on_DBAASP_SMILES_5_fold_mean_MIC.py`。
 - Synergy 副本：`synergy_Evo_train_new_reg_MDLM_one_base_model.py`、`synergy_Evo_train_new_reg_MDLM_one_base_model_all_data_train.py`、`synergy_Evo_train_new_reg_MDLM_one_base_model_all_data_classification_clean.py`、`synergy_Evo_train_on_DBAASP_test_on_inhouse_classification.py`、`synergy_Evo_train_on_DBAASP_test_on_inhouse_few_shot.py`、`synergy_Evo_train_on_DBAASP_test_on_inhouse_classification_few_shot.py`、`synergy_Evo_train_on_DBAASP_test_on_inhouse_classification_few_shot_inner_prod.py`、`synergy_Evo_train_on_DBAASP_test_on_inhouse_classification_few_shot_no_lora.py`、`synergy_Evo_train_on_DBAASP_test_on_inhouse_classification_few_shot_w_pred_MIC.py`。
@@ -315,7 +326,7 @@ Strain count mapping 的演化顺序如下：
 - `capsule/` 是大型本地 staging capsule，包含三个 inference-only 路径：最终 strain-wise Fig. 1a/Fig. 2c DLM ensemble、Fig. 1b strict zero-shot classification 和 Fig. 2b cached benchmark。其规模约 157 GB，主要因为 strain-wise checkpoint 和 genome/text embedding 很大。该目录自己的 `AGENTS.md` 记录了详细 resource manifest 和 T4 显存说明。
 - `capsule_fig2/` 是实际受存储限制的 Code Ocean capsule，只包含 **Fig. 2b**，约 212 MB。`code/run` 重新加载 frozen feature cache 和五个 regression head，不进行训练或 backbone feature extraction。
 - `capsule*/data/source/` 中的文件是从主仓库或外部 `mdlm` 复制的 provenance snapshot，不是额外的 canonical 版本。
-- `capsule/code/prepare_non_seen_strains_resources.py` 和 `reproduce_non_seen_strains_mdlm_mtr_fix.py` 打包并重新评估最终 3-group × 7-ensemble strain-wise 结果。`prepare_zero_shot_antibiotic_classification_resources.py` 和 `reproduce_zero_shot_antibiotic_classification.py` 对 3-group × 10-ensemble strict zero-shot 结果执行同样操作。`prepare_fig2b_mic_regression_resources.py` 和 `reproduce_fig2b_mic_regression.py` 构建或运行 cached Fig. 2b 路径。`capsule/code/run` 在三种模式之间分派。
+- `capsule/code/reproduce_non_seen_strains_mdlm_mtr_fix.py` 重新评估最终 3-group × 7-ensemble strain-wise 结果；旧资源打包脚本已在 unified runner 完成后删除并由 legacy tag 保留。`prepare_zero_shot_antibiotic_classification_resources.py` 和 `reproduce_zero_shot_antibiotic_classification.py` 对 3-group × 10-ensemble strict zero-shot 结果执行同样操作。`prepare_fig2b_mic_regression_resources.py` 和 `reproduce_fig2b_mic_regression.py` 构建或运行 cached Fig. 2b 路径。`capsule/code/run` 在三种模式之间分派。
 - `capsule_fig2/code/prepare_fig2b_mic_regression_resources.py`、`reproduce_fig2b_mic_regression.py` 和 `code/run` 是只保留 Fig. 2b 的精简副本；其 `data/source/` benchmark 脚本与 `capsule/data/source/` 中的 provenance snapshot 重复。
 - 审稿阶段的 `scripts/`：
   - `reproduce_fig2b_mdlm_cached_5fold.py`：使用外部 `mdlm` cache 或评估 DLM feature。

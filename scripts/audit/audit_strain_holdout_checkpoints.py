@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Audit the complete 3-fold x 7-member strain-wise checkpoint family."""
+"""Audit the complete 3-group x 7-member strain-holdout checkpoint family."""
 
 from __future__ import annotations
 
@@ -15,7 +15,9 @@ import torch
 REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO_ROOT / "src"))
 
-from apexoracle.models.strainwise_checkpoint import inspect_checkpoint_contract  # noqa: E402
+from apexoracle.models.hierarchical_mic_checkpoint import (
+    inspect_checkpoint_contract,
+)  # noqa: E402
 
 FILE_PATTERN = re.compile(
     r"genome_text_learnable_emb_Strain_wise_best_R2_group_(\d+)_ensemble_(\d+)\.pth"
@@ -38,7 +40,8 @@ def parse_args():
         type=Path,
         default=REPO_ROOT
         / "experiments"
-        / "fig2c_strainwise"
+        / "hierarchical_mic"
+        / "strain"
         / "checkpoint_family_audit.json",
     )
     return parser.parse_args()
@@ -62,9 +65,7 @@ def main():
     records = []
     canonical_contract = None
     for group, ensemble, path in files:
-        checkpoint = torch.load(
-            path, map_location="cpu", weights_only=False, mmap=True
-        )
+        checkpoint = torch.load(path, map_location="cpu", weights_only=False, mmap=True)
         contract = inspect_checkpoint_contract(checkpoint)
         structural_contract = {
             key: value

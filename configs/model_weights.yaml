@@ -217,7 +217,7 @@ weights:
       attention_heads: 4
       members_per_fold: 7
       folds: 3
-    loader: scripts/reproduce/validate_fig2c_strainwise_checkpoint.py
+    loader: scripts/reproduce/validate_hierarchical_mic_checkpoint.py
     future_storage:
       relative_path: strainwise/dlm_7ensemble
       download_uri: null

@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "completed_on": "2026-07-19",
+  "replacement_entrypoint": "scripts/reproduce/run_hierarchical_mic.py",
+  "replacement_config": "configs/hierarchical_mic/legacy_mdlm.yaml",
+  "recovery_tag": "legacy-code-snapshot-2026-07-17",
+  "deleted_files": [
+    "DP_inhouse_MIC_with_text_genome_test_on_non_seen_species_11_species_5_ensemble.py",
+    "DP_inhouse_MIC_with_text_genome_test_on_non_seen_species_11_species_5_ensemble_old.py",
+    "DP_inhouse_MIC_with_text_genome_test_on_non_seen_species_3_species_5_ensemble.py",
+    "DP_inhouse_MIC_with_text_genome_test_on_non_seen_strains.py",
+    "DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_species_11_species_5_ensemble.py",
+    "DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_species_11_species_5_ensemble_MDLM_cls_fix.py",
+    "DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_species_11_species_5_ensemble_old.py",
+    "DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_species_3_species_5_ensemble.py",
+    "DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_strains.py",
+    "DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_strains_MDLM_MTR_fix.py",
+    "DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_strains_MDLM_MTR_fix_cls_wo_padding.py",
+    "DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_strains_MDLM_MTR_fix_cls_wo_padding_eval.py",
+    "DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_strains_MDLM_MTR_fix_mean_wo_padding.py",
+    "DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_strains_MDLM_MTR_fix_mean_wo_padding_eval.py",
+    "capsule/code/prepare_non_seen_strains_resources.py",
+    "capsule/data/source/DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_strains_MDLM_MTR_fix.py",
+    "configs/fig2c_strainwise/legacy_7ensemble.yaml",
+    "scripts/audit/audit_fig2c_strainwise_checkpoints.py",
+    "scripts/prepare_data/build_fig2c_strainwise_manifest.py",
+    "scripts/reproduce/run_fig2c_strainwise.py",
+    "scripts/reproduce/validate_fig2c_strainwise_checkpoint.py"
+  ],
+  "preserved_boundaries": [
+    "Four Fig. 2c alternative molecular-encoder comparator drivers remain because they implement different models.",
+    "Genome-only, text-only, and early modality-ablation families remain until independently migrated and verified."
+  ]
+}

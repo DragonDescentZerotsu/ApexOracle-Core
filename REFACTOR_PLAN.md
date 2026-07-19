@@ -63,7 +63,7 @@ ChemBERTa MLM mean-pooling 作为可选消融，不与论文主 comparator 混�
 │   ├── fig1a_hierarchical/
 │   ├── fig1b_zero_shot/
 │   ├── fig2b_molecule_encoders/
-│   ├── fig2c_strainwise/
+│   ├── hierarchical_mic/           # strain/species/phylum 共用 runner + split adapters
 │   └── synergy/
 ├── configs/                        # 可版本化实验配置
 ├── scripts/
@@ -125,13 +125,14 @@ ChemBERTa MLM mean-pooling 作为可选消融，不与论文主 comparator 混�
 - [ ] 将硬编码路径迁移到 CLI 参数或 YAML 配置。
 - [ ] 统一预测输出格式，至少包含 sample ID、fold、label、prediction 和模型元数据。
 
-执行进度（2026-07-18）：Fig. 1a / Fig. 2c strain-wise 路径已经抽取
-strain mapping、precomputed feature loader、四种 collate、cross-attention、prediction
-head、指标、严格 checkpoint loader，以及四条单批次 forward/loss/backward/optimizer-step，
-并由 legacy driver 实际调用。epoch-0 baseline、逐 epoch evaluation、不同长度 loader 协调、
-cosine scheduler、prediction accumulation、best-metric tracker 与 checkpoint payload 也已经
-抽取。当前仍是过渡状态：outer loop shell、日志、输出路径和完整 config-driven runner 尚未
-脱离原 driver，因此本阶段的全仓库验收标准尚未满足，也不允许删除 legacy driver。
+执行进度（2026-07-19）：hierarchical MIC 路径已完成统一。strain-wise、论文中的
+species-wise（11 clusters）和 phylum-wise（3 clusters）共用同一份 Dataset/collate、
+precomputed feature loader、cross-attention、prediction heads、四路训练、评估、scheduler、
+best-metric selection、checkpoint payload 和 ensemble runner；三个实验只保留 split adapter、
+group 名称与输出路径差异。canonical 入口为 `scripts/reproduce/run_hierarchical_mic.py`，
+配置为 `configs/hierarchical_mic/legacy_mdlm.yaml`。三个真实数据 dry-run、保存日志计数对照、
+CPU 等价测试和 H100 一轮四路训练 smoke 均已通过；被替代的 DP/in-house/SM 和 pooling/eval
+复制脚本已删除，完整历史由 `legacy-code-snapshot-2026-07-17` tag 保留。
 
 验收标准：论文主实验不再复制共享模型和数据逻辑；公共模块具备单元测试。
 
@@ -181,22 +182,21 @@ APEX 输入转换规则：
 
 #### 4.1 优先迁移的高置信度最终版
 
-- Fig. 1a / Fig. 2c strain-wise DLM ensemble：`DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_strains_MDLM_MTR_fix.py`。
+- Fig. 1a / Fig. 2c strain-wise、species-wise 和 phylum-wise DLM ensemble：统一入口
+  `scripts/reproduce/run_hierarchical_mic.py`，旧 root drivers 由 legacy tag 追溯。
 - Fig. 1b strict target-strain zero-shot：`antibiotic_3_strain_compare_MDLM_fix_cls_wo_pad_all_test.py`。
 - AMP/PepLink 最终数据处理血缘。
 - ApexOracle-3/12/23 sequence similarity 流程。
 - reviewer 的 Evo-2 embedding scaling 分析脚本。
 
-状态（2026-07-18）：strain-wise DLM ensemble 已完成第一批行为保持迁移。
+状态（2026-07-19）：三个 hierarchical holdout 已完成单一 runner 的行为保持迁移。
 
-- 共享实现位于 `src/apexoracle/{data,features,models,evaluation}`；稳定的过渡入口为
-  `scripts/reproduce/run_fig2c_strainwise.py`，实验契约和审计材料位于
-  `experiments/fig2c_strainwise/`。
-- legacy driver 的训练循环保持不变，并在进入主程序后显式切换到共享 Dataset、collate、
-  feature loader、fusion 和 head。四条单批次 optimizer-step 路径也已迁移；测试逐项比较
-  logits、loss、gradient 和 Adam 更新后的参数，而不是只检查 shape。后续 outer-loop helper
-  又覆盖 epoch-0/逐 epoch evaluation、prediction 分区、loader `zip_longest`、scheduler 序列、
-  strict best-metric selection 和七键 checkpoint payload；driver shell 与日志仍保持原样。
+- 共享实现位于 `src/apexoracle/{data,features,models,training,evaluation}`；唯一入口为
+  `scripts/reproduce/run_hierarchical_mic.py`，实验契约和审计材料位于
+  `experiments/hierarchical_mic/`。
+- 完整 outer loop 已脱离 root legacy driver。测试覆盖 logits、loss、gradient、Adam 更新、
+  epoch-0/逐 epoch evaluation、prediction 分区、loader `zip_longest`、scheduler、strict
+  best-metric selection、七键 checkpoint payload 和统一 runner 的 H100 一轮集成 smoke。
 - 21 个历史 checkpoint 的 `3 × 7` 网格和实际消费的 fusion/head contract 已全部扫描。
   group 0/2 的 14 个文件只保存 fusion/head；group 1 的 7 个文件额外保存一个名称错误的
   `ChemBERTa_state_dict`，其结构实际是 12-layer/768 MDLM backbone。三个 group 的 optimizer
@@ -208,7 +208,7 @@ APEX 输入转换规则：
 - group 0 / ensemble 0 已在 H100 上完成两次独立固定批次严格加载与推理，结果一致；其余
   checkpoint 已完成结构扫描，但剩余 20 个 SHA-256 和逐文件推理仍待补齐。
 
-因此 strain-wise 项当前状态是 `shared core extracted / training loop transitional`；
+因此 hierarchical MIC 项当前状态是 `unified runner complete / legacy duplicates removed`；
 strict zero-shot、sequence similarity 和其余高置信度入口尚未开始迁移。
 
 #### 4.2 迁移前需要作者或原始结果进一步核验
@@ -256,14 +256,14 @@ strict zero-shot、sequence similarity 和其余高置信度入口尚未开始�
 
 本阶段默认不重新训练全部论文实验。Fig. 2b 公平 benchmark 是例外：完成代码和数据协议验证后，需要正式重新训练并将其作为 reviewer 要求的新结果。
 
-执行记录（2026-07-18）：strain-wise 第一批迁移新增了 legacy/shared 逐项等价测试，覆盖四种
+执行记录（2026-07-19）：hierarchical MIC 统一迁移新增了 legacy/shared 逐项等价测试，覆盖四种
 collate、Dataset lookup、MIC label transform、feature filename parsing/loading、strain mapping、
 cross-attention、regression head、split mutation 语义和两类 checkpoint 顶层 payload。代表性
 9.08 GB checkpoint 已通过 H100 固定批次验证。后续单批次训练测试又覆盖四种 modality/task
 组合，并逐参数验证 gradient、历史 clipping 目标和 Adam step 后的参数一致性；H100 上另以
 有限合成 GradScaler scale 验证 CUDA autocast 路径逐位一致。正式 driver 的默认动态 scaler
 保持不变。这里仅表示
-strain-wise 子路径通过本批验收，
+strain/species/phylum 的共享子路径通过本批验收，
 不等同于阶段 6 的全仓库验证已经完成。
 
 ### 阶段 7：文档和发布

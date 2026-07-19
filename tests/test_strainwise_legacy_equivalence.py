@@ -1,10 +1,8 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-import importlib.util
 import itertools
 import json
-import logging
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -58,18 +56,6 @@ from apexoracle.training.strainwise import (
     strainwise_optimizer_step,
 )
 
-REPO_ROOT = Path(__file__).resolve().parents[1]
-
-
-def _load_legacy_module():
-    path = REPO_ROOT / "DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_strains_MDLM_MTR_fix.py"
-    spec = importlib.util.spec_from_file_location("legacy_strainwise_reference", path)
-    module = importlib.util.module_from_spec(spec)
-    assert spec.loader is not None
-    spec.loader.exec_module(module)
-    module.logger = logging.getLogger("legacy_strainwise_test")
-    return module
-
 
 def _synthetic_batch():
     return [
@@ -90,40 +76,31 @@ def _synthetic_batch():
     ]
 
 
-def _assert_batches_equal(left, right):
-    assert left.keys() == right.keys()
-    for key in left:
-        if torch.is_tensor(left[key]):
-            assert left[key].dtype == right[key].dtype
-            assert left[key].shape == right[key].shape
-            torch.testing.assert_close(left[key], right[key], rtol=0, atol=0)
-        else:
-            assert left[key] == right[key]
-
-
-def test_all_collators_match_executable_legacy_reference():
-    legacy = _load_legacy_module()
+def test_all_collators_preserve_frozen_legacy_tensor_contract():
     batch = _synthetic_batch()
-    pairs = [
-        (legacy.legacy_collate_fn, collate_genome_text_regression, batch),
-        (
-            legacy.legacy_collate_fn_text_only,
-            collate_text_regression,
-            [{key: value for key, value in item.items() if key != "genome_embedding"} for item in batch],
-        ),
-        (legacy.legacy_collate_fn_cls, collate_genome_text_classification, batch),
-        (
-            legacy.legacy_collate_fn_text_only_cls,
-            collate_text_classification,
-            [{key: value for key, value in item.items() if key != "genome_embedding"} for item in batch],
-        ),
+    text_batch = [
+        {key: value for key, value in item.items() if key != "genome_embedding"}
+        for item in batch
     ]
-    for legacy_fn, shared_fn, fn_batch in pairs:
-        _assert_batches_equal(legacy_fn(fn_batch), shared_fn(fn_batch))
+    regression = collate_genome_text_regression(batch)
+    text_regression = collate_text_regression(text_batch)
+    classification = collate_genome_text_classification(batch)
+    text_classification = collate_text_classification(text_batch)
+
+    assert regression["label"].tolist() == pytest.approx([-0.0, -1.0])
+    assert classification["label"].tolist() == pytest.approx([10.0, 100.0])
+    assert regression["padded_genome_embeddings"].dtype == torch.bfloat16
+    assert regression["genome_attn_masks"].dtype == torch.uint8
+    assert regression["padded_genome_embeddings"].shape == (2, 3, 4)
+    assert regression["padded_text_embeddings"].shape == (2, 3, 4)
+    assert regression["genome_attn_masks"].tolist() == [[1, 1, 0], [1, 1, 1]]
+    assert regression["text_attn_masks"].tolist() == [[1, 1, 1], [1, 0, 0]]
+    assert text_regression["label"].tolist() == regression["label"].tolist()
+    assert text_classification["label"].tolist() == classification["label"].tolist()
+    assert "padded_genome_embeddings" not in text_regression
 
 
-def test_dataset_lookup_and_length_filter_match_legacy_reference():
-    legacy = _load_legacy_module()
+def test_dataset_lookup_and_length_filter_preserve_frozen_contract():
     frame = pd.DataFrame(
         [
             [1, "strain-a", "[1, 2, 3]", 10.0],
@@ -141,50 +118,78 @@ def test_dataset_lookup_and_length_filter_match_legacy_reference():
     }
     peptide = {1: torch.arange(6).reshape(1, 6)}
     small_molecule = {2: torch.arange(6).reshape(1, 6) + 10}
-    legacy_dataset = legacy.LegacySMILESDatasetWithGenomeAndText(
-        frame.copy(), None, genomes, texts, "legacy", peptide, small_molecule, max_length=4
-    )
     shared_dataset = StrainEmbeddingDataset(
-        frame.copy(), None, genomes, texts, "shared", peptide, small_molecule, max_length=4
+        frame.copy(),
+        None,
+        genomes,
+        texts,
+        "shared",
+        peptide,
+        small_molecule,
+        max_length=4,
     )
-    assert len(legacy_dataset) == len(shared_dataset) == 1
-    legacy_item = legacy_dataset[0]
+    assert len(shared_dataset) == 1
     shared_item = shared_dataset[0]
-    assert legacy_item.keys() == shared_item.keys()
-    for key in legacy_item:
-        if torch.is_tensor(legacy_item[key]):
-            torch.testing.assert_close(legacy_item[key], shared_item[key], rtol=0, atol=0)
-        else:
-            assert legacy_item[key] == shared_item[key]
+    assert shared_item["strain_name"] == "strain-a"
+    assert shared_item["label"].item() == 10.0
+    torch.testing.assert_close(shared_item["mol_emb"], torch.arange(6))
+    torch.testing.assert_close(shared_item["genome_embedding"], genomes["strain-a"])
+    torch.testing.assert_close(shared_item["text_embedding"], texts["strain-a"])
 
 
-def test_regression_head_matches_legacy_reference():
-    legacy = _load_legacy_module()
+def test_regression_head_matches_frozen_legacy_output():
     torch.manual_seed(7)
-    reference = legacy.LegacyRegressionHead(12, 8, 4, 1, 0.2).eval()
     shared = RegressionHead(12, 8, 4, 1, 0.2).eval()
-    shared.load_state_dict(reference.state_dict(), strict=True)
     features = torch.randn(3, 12)
-    torch.testing.assert_close(reference(features), shared(features), rtol=0, atol=0)
-    assert list(reference.state_dict()) == list(shared.state_dict())
+    expected = torch.tensor(
+        [[-0.41448041796684265], [-0.3930213451385498], [-0.4356546700000763]]
+    )
+    torch.testing.assert_close(shared(features), expected, rtol=0, atol=0)
+    assert list(shared.state_dict()) == [
+        "dense_1.weight",
+        "dense_1.bias",
+        "dense_2.weight",
+        "dense_2.bias",
+        "out_proj.weight",
+        "out_proj.bias",
+    ]
 
 
-def test_cross_attention_matches_legacy_reference():
-    legacy = _load_legacy_module()
+def test_cross_attention_matches_frozen_legacy_output():
     torch.manual_seed(11)
-    reference = legacy.LegacyFirstTokenAttentionGenome(6, 8, 2, 0.1).eval()
     shared = FirstTokenAttentionGenome(6, 8, 2, 0.1).eval()
-    shared.load_state_dict(reference.state_dict(), strict=True)
     molecule = torch.randn(2, 6)
     sequence = torch.randn(2, 4, 8)
-    padding_mask = torch.tensor([[False, False, False, True], [False, False, True, True]])
-    torch.testing.assert_close(
-        reference(molecule, sequence, padding_mask),
-        shared(molecule, sequence, padding_mask),
-        rtol=0,
-        atol=0,
+    padding_mask = torch.tensor(
+        [[False, False, False, True], [False, False, True, True]]
     )
-    assert list(reference.state_dict()) == list(shared.state_dict())
+    expected = torch.tensor(
+        [
+            [
+                -0.6819068193435669,
+                -1.107102870941162,
+                -0.7833424210548401,
+                -0.43705692887306213,
+                0.022076575085520744,
+                1.7572269439697266,
+                -0.295902281999588,
+                1.5260075330734253,
+            ],
+            [
+                -1.3900659084320068,
+                -1.1388553380966187,
+                -0.6112988591194153,
+                -0.49506962299346924,
+                1.0580555200576782,
+                1.487972378730774,
+                0.20917165279388428,
+                0.8800899982452393,
+            ],
+        ]
+    )
+    torch.testing.assert_close(
+        shared(molecule, sequence, padding_mask), expected, rtol=0, atol=0
+    )
 
 
 def test_split_builder_preserves_legacy_mutation_semantics():
@@ -194,8 +199,6 @@ def test_split_builder_preserves_legacy_mutation_semantics():
         "Species stable": ["x", "y", "z"],
     }
     second = {key: list(value) for key, value in first.items()}
-    legacy = _load_legacy_module()
-
     # Local executable reference of the loop, using the same operations as the
     # historical driver. This comparison explicitly includes input mutation.
     legacy_train = [[], [], []]
@@ -283,9 +286,7 @@ def test_checkpoint_contract_records_optional_misnamed_mdlm_payload(tmp_path):
         "co_cross_attn_genome": genome_attention.state_dict(),
         "co_cross_attn_text": text_attention.state_dict(),
         "learnable_embedding_weight": torch.randn(1, 8),
-        "ChemBERTa_state_dict": {
-            "backbone.vocab_embed.embedding": torch.randn(10, 6)
-        },
+        "ChemBERTa_state_dict": {"backbone.vocab_embed.embedding": torch.randn(10, 6)},
     }
     path = tmp_path / "optional.pth"
     torch.save(checkpoint, path)
@@ -295,8 +296,7 @@ def test_checkpoint_contract_records_optional_misnamed_mdlm_payload(tmp_path):
     assert payload["vocab_embedding_shape"] == [10, 6]
 
 
-def test_embedding_filename_parsing_and_loading_match_legacy_reference(tmp_path):
-    legacy = _load_legacy_module()
+def test_embedding_filename_parsing_and_loading_preserve_frozen_contract(tmp_path):
     atcc_folder = tmp_path / "atcc"
     text_folder = tmp_path / "text"
     atcc_folder.mkdir()
@@ -305,32 +305,24 @@ def test_embedding_filename_parsing_and_loading_match_legacy_reference(tmp_path)
     torch.save(torch.ones(1, 3) * 2, atcc_folder / "Enterobacter_ATCC_BAA_2468.pt")
     torch.save(torch.ones(2, 4), text_folder / "Species～strain^variant.pt")
 
-    assert legacy.legacy_get_embedded_genome_IDs(atcc_folder) == get_embedded_genome_ids(
-        atcc_folder
-    )
-    legacy_atcc = legacy.legacy_load_all_genome_embeddings(
-        atcc_folder, 3.0, torch.device("cpu"), "legacy"
-    )
-    shared_atcc = load_all_embeddings(
-        atcc_folder, 3.0, torch.device("cpu"), "shared"
-    )
-    assert legacy_atcc.keys() == shared_atcc.keys()
-    for key in legacy_atcc:
-        torch.testing.assert_close(legacy_atcc[key], shared_atcc[key], rtol=0, atol=0)
+    ids, names = get_embedded_genome_ids(atcc_folder)
+    assert set(ids) == {"25922", "BAA-2468"}
+    assert names == {"25922": "Escherichia", "BAA-2468": "Enterobacter"}
+    shared_atcc = load_all_embeddings(atcc_folder, 3.0, torch.device("cpu"), "shared")
+    assert set(shared_atcc) == {"25922", "BAA-2468"}
+    torch.testing.assert_close(shared_atcc["25922"], torch.ones(2, 3) * 3)
+    torch.testing.assert_close(shared_atcc["BAA-2468"], torch.ones(1, 3) * 6)
 
-    legacy_text = legacy.legacy_load_text_wo_genome_embeddings(
-        text_folder, 2.0, torch.device("cpu"), "legacy"
-    )
     shared_text = load_text_only_embeddings(
         text_folder, 2.0, torch.device("cpu"), "shared"
     )
-    assert legacy_text.keys() == shared_text.keys()
-    for key in legacy_text:
-        torch.testing.assert_close(legacy_text[key], shared_text[key], rtol=0, atol=0)
+    assert set(shared_text) == {"Species strain/variant"}
+    torch.testing.assert_close(
+        shared_text["Species strain/variant"], torch.ones(2, 4) * 2
+    )
 
 
-def test_strain_mapping_utilities_match_legacy_reference(tmp_path, capsys):
-    legacy = _load_legacy_module()
+def test_strain_mapping_utilities_preserve_frozen_contract(tmp_path, capsys):
     mapping_path = tmp_path / "mapping.json"
     mapping_path.write_text(
         json.dumps(
@@ -341,13 +333,17 @@ def test_strain_mapping_utilities_match_legacy_reference(tmp_path, capsys):
             }
         )
     )
-    legacy_mapping = legacy.legacy_get_original_strain_name_with_genome_embedding(
-        mapping_path, ["123", "BAA-456"]
-    )
     shared_mapping = get_original_strain_names_with_genome_embedding(
         mapping_path, ["123", "BAA-456"]
     )
-    assert legacy_mapping == shared_mapping
+    assert shared_mapping == (
+        ["Species one"],
+        ["Species two ATCC BAA 456"],
+        {
+            "Species one": "123",
+            "Species two ATCC BAA 456": "BAA-456",
+        },
+    )
 
     atcc_folder = tmp_path / "fasta"
     text_folder = tmp_path / "text"
@@ -356,15 +352,21 @@ def test_strain_mapping_utilities_match_legacy_reference(tmp_path, capsys):
     (atcc_folder / "Escherichia_coli_ATCC_25922.fasta").touch()
     (atcc_folder / "Salmonella_enterica_subsp_enterica_ATCC_14028.fasta").touch()
     (text_folder / "Escherichia～coli～K12.pt").touch()
-    assert _normalized_maps(
-        legacy.legacy_get_ATCC_ID_to_species_name_map(atcc_folder)
-    ) == _normalized_maps(get_atcc_id_to_species_name_map(atcc_folder))
-    assert _normalized_maps(
-        legacy.legacy_get_original_strain_ID_to_species_name_map(text_folder)
-    ) == _normalized_maps(get_original_strain_id_to_species_name_map(text_folder))
+    atcc_maps = _normalized_maps(get_atcc_id_to_species_name_map(atcc_folder))
+    assert atcc_maps == (
+        {"25922": "Escherichia coli", "14028": "Salmonella enterica"},
+        {"Escherichia coli": ("25922",), "Salmonella enterica": ("14028",)},
+    )
+    text_maps = _normalized_maps(
+        get_original_strain_id_to_species_name_map(text_folder)
+    )
+    assert text_maps == (
+        {"Escherichia coli K12": "Escherichia coli"},
+        {"Escherichia coli": ("Escherichia coli K12",)},
+    )
     first = {"a": np.array(["1", "2"])}
     second = {"a": np.array(["3"]), "b": np.array(["4"])}
-    assert legacy.legacy_merge_dict(first, second) == merge_strain_maps(first, second)
+    assert merge_strain_maps(first, second) == {"a": ["1", "2", "3"], "b": ["4"]}
 
     records = np.array(
         [
@@ -374,19 +376,14 @@ def test_strain_mapping_utilities_match_legacy_reference(tmp_path, capsys):
         ],
         dtype=object,
     )
-    legacy_filtered = legacy.legacy_exclude_wrong_species_ATCC_map(
-        records.copy(), {"25922": "Escherichia"}
-    )
-    capsys.readouterr()
     shared_filtered = exclude_wrong_species_atcc_map(
         records.copy(), {"25922": "Escherichia"}
     )
     capsys.readouterr()
-    np.testing.assert_array_equal(legacy_filtered, shared_filtered)
+    np.testing.assert_array_equal(shared_filtered, records[[0, 2]])
 
 
-def test_shared_metrics_match_legacy_reference_operations():
-    legacy = _load_legacy_module()
+def test_shared_metrics_match_frozen_legacy_operations():
     labels = [0.0, 1.0, 2.0, 4.0]
     member_predictions = [
         [0.2, 0.8, 2.2, 3.7],
@@ -397,7 +394,11 @@ def test_shared_metrics_match_legacy_reference_operations():
         ensemble_predictions(member_predictions), expected_ensemble
     )
     metrics = summarize_predictions(labels, expected_ensemble)
-    assert metrics["r2"] == legacy.legacy_calculate_r2(labels, expected_ensemble)
+    expected_r2 = 1 - (
+        np.sum((np.array(labels) - expected_ensemble) ** 2)
+        / np.sum((np.array(labels) - np.mean(labels)) ** 2)
+    )
+    assert metrics["r2"] == expected_r2
     assert metrics["spearman"] == spearmanr(labels, expected_ensemble)[0]
     assert metrics["pearson"] == pearsonr(labels, expected_ensemble)[0]
     assert calculate_r2(labels, expected_ensemble) == metrics["r2"]
@@ -492,9 +493,9 @@ def test_partition_summary_preserves_legacy_sentinel_rule():
     }
     labels = [0.0, 1.0, 2.0]
     predictions = [0.1, 0.9, 2.2]
-    assert summarize_partition_or_sentinel(labels, predictions) == summarize_predictions(
+    assert summarize_partition_or_sentinel(
         labels, predictions
-    )
+    ) == summarize_predictions(labels, predictions)
 
 
 def test_best_metric_tracker_preserves_strict_improvement_and_list_identity():
@@ -535,10 +536,7 @@ def test_checkpoint_payload_preserves_legacy_keys_and_parameter_identity():
         "learnable_embedding_weight",
     ]
     assert payload["R2"] == 0.42
-    assert (
-        payload["learnable_embedding_weight"]
-        is components.missing_genome_embedding
-    )
+    assert payload["learnable_embedding_weight"] is components.missing_genome_embedding
 
 
 def test_loader_orchestration_matches_legacy_zip_longest_order():
@@ -607,9 +605,7 @@ def _training_batch(*, has_genome: bool, classification: bool) -> dict:
     generator = torch.Generator().manual_seed(303)
     batch = {
         "label": (
-            torch.tensor([0.0, 1.0])
-            if classification
-            else torch.tensor([0.5, 1.5])
+            torch.tensor([0.0, 1.0]) if classification else torch.tensor([0.5, 1.5])
         ),
         "padded_text_embeddings": torch.randn(2, 3, 4, generator=generator),
         "text_attn_masks": torch.tensor([[1, 1, 1], [1, 1, 0]], dtype=torch.uint8),
@@ -619,12 +615,8 @@ def _training_batch(*, has_genome: bool, classification: bool) -> dict:
     if has_genome:
         batch.update(
             {
-                "padded_genome_embeddings": torch.randn(
-                    2, 2, 8, generator=generator
-                ),
-                "genome_attn_masks": torch.tensor(
-                    [[1, 1], [1, 0]], dtype=torch.uint8
-                ),
+                "padded_genome_embeddings": torch.randn(2, 2, 8, generator=generator),
+                "genome_attn_masks": torch.tensor([[1, 1], [1, 0]], dtype=torch.uint8),
             }
         )
     return batch
@@ -638,13 +630,9 @@ def _legacy_inline_optimizer_step(
     classification: bool,
 ):
     head = (
-        components.classification_head
-        if classification
-        else components.regression_head
+        components.classification_head if classification else components.regression_head
     )
-    criterion = (
-        torch.nn.BCEWithLogitsLoss() if classification else torch.nn.MSELoss()
-    )
+    criterion = torch.nn.BCEWithLogitsLoss() if classification else torch.nn.MSELoss()
     optimizer = components.optimizer
     scaler = torch.amp.GradScaler("cuda", enabled=False)
     optimizer.zero_grad()
@@ -678,9 +666,13 @@ def _legacy_inline_optimizer_step(
         torch.nn.utils.clip_grad_norm_(
             [components.missing_genome_embedding], max_norm=1.0
         )
-    torch.nn.utils.clip_grad_norm_(components.genome_attention.parameters(), max_norm=1.0)
+    torch.nn.utils.clip_grad_norm_(
+        components.genome_attention.parameters(), max_norm=1.0
+    )
     # Intentional historical behavior: classification also clips reg_head.
-    torch.nn.utils.clip_grad_norm_(components.regression_head.parameters(), max_norm=1.0)
+    torch.nn.utils.clip_grad_norm_(
+        components.regression_head.parameters(), max_norm=1.0
+    )
     scaler.step(optimizer)
     scaler.update()
     return logits, loss
@@ -694,7 +686,9 @@ def _named_training_parameters(components: _TrainingComponents) -> dict:
         ("regression", components.regression_head),
         ("classification", components.classification_head),
     ):
-        named.update({f"{prefix}.{name}": value for name, value in module.named_parameters()})
+        named.update(
+            {f"{prefix}.{name}": value for name, value in module.named_parameters()}
+        )
     named["missing_genome_embedding"] = components.missing_genome_embedding
     return named
 
@@ -721,9 +715,7 @@ def test_all_four_optimizer_steps_match_legacy_operations():
                 else shared_components.regression_head
             )
             shared_criterion = (
-                torch.nn.BCEWithLogitsLoss()
-                if classification
-                else torch.nn.MSELoss()
+                torch.nn.BCEWithLogitsLoss() if classification else torch.nn.MSELoss()
             )
             torch.manual_seed(707)
             shared_result = strainwise_optimizer_step(
@@ -747,9 +739,7 @@ def test_all_four_optimizer_steps_match_legacy_operations():
             torch.testing.assert_close(
                 shared_result.logits, legacy_logits, rtol=0, atol=0
             )
-            torch.testing.assert_close(
-                shared_result.loss, legacy_loss, rtol=0, atol=0
-            )
+            torch.testing.assert_close(shared_result.loss, legacy_loss, rtol=0, atol=0)
             legacy_parameters = _named_training_parameters(legacy_components)
             shared_parameters = _named_training_parameters(shared_components)
             assert legacy_parameters.keys() == shared_parameters.keys()
@@ -778,9 +768,7 @@ def test_evaluation_forward_matches_legacy_without_changing_train_mode():
         batch = _training_batch(has_genome=has_genome, classification=False)
         before = {
             name: parameter.detach().clone()
-            for name, parameter in _named_training_parameters(
-                shared_components
-            ).items()
+            for name, parameter in _named_training_parameters(shared_components).items()
         }
 
         torch.manual_seed(808)

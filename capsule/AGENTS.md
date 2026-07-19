@@ -4,9 +4,8 @@
 
 ## 已完成：non-seen-strain MDLM-MTR 7-ensemble 复现
 
-目标原始训练脚本：
-
-- `DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_strains_MDLM_MTR_fix.py`
+目标原始训练脚本已由当前仓库的统一 hierarchical runner 替代；旧文件只从
+`legacy-code-snapshot-2026-07-17` tag 追溯。
 
 判断依据：
 
@@ -40,12 +39,6 @@
   - `--batch-size 128` 是按 T4 15GB 显存短测后选择的；短测中 reserved peak 约 11.6GB。若 Code Ocean OOM，可降到 `96` 或 `64`。
   - `--max-batches N` 可用于 smoke test，只跑每个 loader 的前 N 个 batch。
 
-- `code/prepare_non_seen_strains_resources.py`
-  - 本地准备 capsule 资源用，不是 Code Ocean 正式运行入口
-  - 负责把原始数据/embedding/checkpoint 迁移到 `capsule/data`
-  - 保留全量原始 embedding/data
-  - 对 checkpoint 去掉 optimizer state，减少上传体积
-
 - `code/run`
   - Code Ocean run entrypoint
   - 默认执行：
@@ -56,13 +49,8 @@
 
 ### 数据和权重如何迁移
 
-资源准备命令：
-
-```bash
-/home/tianang/anaconda3/bin/conda run -n base python capsule/code/prepare_non_seen_strains_resources.py \
-  --repo-root /data2/tianang/projects/Synergy \
-  --capsule-data /data2/tianang/projects/Synergy/capsule/data
-```
+旧资源准备脚本已在 unified runner 验证后删除；现有 capsule inference 与已准备资源仍可用，
+旧打包逻辑从 legacy tag 恢复。
 
 迁移到 `capsule/data` 的全量原始资源：
 
@@ -89,8 +77,7 @@
   - 原始 strain name 到 standard ATCC/custom ID 的映射
 - `DataPrepare/Data/Genome/old_to_new_NCBI_taxonomy.json`
   - NCBI taxonomy 新旧命名映射
-- `source/DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_strains_MDLM_MTR_fix.py`
-  - 原始训练脚本备份，方便追溯
+- 原始训练脚本不再在 capsule 中保留第二份副本，统一从 legacy tag 追溯
 
 checkpoint 迁移：
 
@@ -181,14 +168,7 @@ code/run --batch-size 64
 
 ### 可复用代码/模式
 
-后续复现其它结果时可以复用以下部分：
-
-- `code/prepare_non_seen_strains_resources.py`
-  - `copy_tree`
-  - `copy_file`
-  - `strip_checkpoint`
-  - checkpoint 去 optimizer 的保留 key 逻辑
-  - manifest 写出逻辑
+后续复现其它结果时可以复用以下现存部分：
 
 - `code/reproduce_non_seen_strains_mdlm_mtr_fix.py`
   - `RegressionHead`
