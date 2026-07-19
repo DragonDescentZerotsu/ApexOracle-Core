@@ -4,10 +4,22 @@
 命令行入口。重构原则是先冻结并验证历史行为，再删除被替代副本；原始源码血缘可从 Git tag
 `legacy-code-snapshot-2026-07-17` 查看。
 
-当前已完成两条主路径：
+当前已完成三类主路径：
 
 - Fig. 2b 共享 10,886 molecule / 5-fold molecular encoder benchmark；
 - hierarchical MIC（strain/species/phylum）和 Fig. 1b 三菌株抗生素分类的行为保持重构。
+- ApexOracle-3/12/23 sequence-similarity 分析的 cache、alignment 和输出等价重构。
+
+## Lead peptide sequence similarity
+
+```bash
+python scripts/reproduce/run_sequence_similarity.py all
+```
+
+该入口重建 paper cache、计算 linear/exhaustive-cyclic similarity、提取 top hits 并验证输出。
+论文的三个最大 PID `0.3667 / 0.3571 / 0.3684` 已全部复算；ApexOracle-3/23 的四份历史
+核心 CSV 与新模块逐字节相同。数据大小写契约和 ApexOracle-12 的完整 tie 见
+`experiments/sequence_similarity/README.md`。
 
 ## Fig. 1b 三菌株分类
 

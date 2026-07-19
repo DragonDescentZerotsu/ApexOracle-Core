@@ -224,8 +224,19 @@ checkpoint logit 与 capsule 在 batch size 70 下逐值完全一致。30 个 st
 150 个 molecule-only checkpoint 网格完整；fine-tune 仅存 77/150 个 checkpoint，因此仍按
 证据不完整处理。详见 `experiments/fig1b_antibiotic_classification/`。
 
-当前下一项高置信度迁移是 sequence similarity；fine-tune 完整正式结果、synergy CV 和
-modality ablation 继续保留证据边界，不因代码入口统一而声称已完整复现。
+Sequence similarity 已于 2026-07-19 完成迁移。canonical 入口为
+`scripts/reproduce/run_sequence_similarity.py`，配置为
+`configs/sequence_similarity/paper_leads.yaml`。训练 cache 可从当前源数据逐字节重建；
+ApexOracle-3/23 的四份核心历史 CSV 也与 canonical 全量重算逐字节相同。三条 lead 的
+最大 PID 均与论文一致。历史 cache 的 training sequence 使用 uppercase normalization；
+直接保留当前 DBAASP JSON 大小写会改变 ApexOracle-23 结果，因此只作为 sensitivity，不能
+替代正式 paper contract。ApexOracle-12 的旧 full CSV 未保存，且其 35.7% 有四个 complete
+ties；论文展示 15510，而稳定输入顺序选择 9800，数值不变。旧 `DataPrepare/get_similarity`
+tracked drivers/manifests 已删除并由 legacy tag 保留。详见
+`experiments/sequence_similarity/`。
+
+当前下一项高置信度迁移改为 AMP/PepLink 最终数据处理血缘；fine-tune 完整正式结果、
+synergy CV 和 modality ablation 继续保留证据边界。
 
 #### 4.2 迁移前需要作者或原始结果进一步核验
 

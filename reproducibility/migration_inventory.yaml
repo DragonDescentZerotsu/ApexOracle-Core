@@ -62,10 +62,18 @@ entries:
     source:
       - DataPrepare/get_similarity
     destination:
+      - src/apexoracle/data/peptide_similarity.py
       - src/apexoracle/evaluation/sequence_similarity
+      - scripts/reproduce/run_sequence_similarity.py
+      - configs/sequence_similarity/paper_leads.yaml
       - experiments/sequence_similarity
-    status: high_confidence_pending_migration
-    deletion_allowed: false
+    status: canonical_pipeline_verified_legacy_scripts_removed
+    evidence:
+      - experiments/sequence_similarity/README.md
+      - experiments/sequence_similarity/equivalence_audit.json
+      - experiments/sequence_similarity/case_sensitivity_audit.json
+      - experiments/sequence_similarity/legacy_cleanup.json
+    deletion_allowed: true
 
   - id: synergy_cv
     source:

@@ -1,0 +1,140 @@
+{
+  "apexoracle_12_complete_ties": [
+    {
+      "aligned_positions": 28,
+      "matches": 10,
+      "max_len_identity": 0.35714285714285715,
+      "train_dbaasp_id": "9800",
+      "train_sequence": "FLSLIPKAIKAVGVKAKKF"
+    },
+    {
+      "aligned_positions": 28,
+      "matches": 10,
+      "max_len_identity": 0.35714285714285715,
+      "train_dbaasp_id": "9801",
+      "train_sequence": "FLSLIPKAIKAVGVKAKKF"
+    },
+    {
+      "aligned_positions": 28,
+      "matches": 10,
+      "max_len_identity": 0.35714285714285715,
+      "train_dbaasp_id": "9802",
+      "train_sequence": "FLSLIPKAIKAVGVKAKKF"
+    },
+    {
+      "aligned_positions": 28,
+      "matches": 10,
+      "max_len_identity": 0.35714285714285715,
+      "train_dbaasp_id": "15510",
+      "train_sequence": "FWFTLIKTQAKQPARYRRFC"
+    }
+  ],
+  "canonical_sample_recomputation": {
+    "cyclic": {
+      "first_mismatches": [],
+      "mismatch_count": 0,
+      "path": "DataPrepare/get_similarity/cyclic_rotation_similarity_results.csv",
+      "sampled_rows": 100,
+      "total_rows": 383800
+    },
+    "linear": {
+      "first_mismatches": [],
+      "mismatch_count": 0,
+      "path": "DataPrepare/get_similarity/linear_similarity_results.csv",
+      "sampled_rows": 100,
+      "total_rows": 26154
+    }
+  },
+  "evidence_boundary": {
+    "ApexOracle-12": "recomputed from canonical algorithm; absent from saved main output",
+    "ApexOracle-23": "historical full output and canonical recomputation",
+    "ApexOracle-3": "historical full output and canonical recomputation"
+  },
+  "historical_output_equivalence": {
+    "all_byte_identical": true,
+    "files": {
+      "cyclic_best_by_max_len_identity.csv": {
+        "byte_identical": true,
+        "bytes": 284262,
+        "canonical_recomputed_path": "<recomputed-raw-dir>/cyclic_best_by_max_len_identity.csv",
+        "canonical_recomputed_sha256": "3b27fb001c000d0e73280a57090aae37728a2aada55593c911b8cf61c023ba10",
+        "historical_path": "DataPrepare/get_similarity/cyclic_best_by_max_len_identity.csv",
+        "historical_sha256": "3b27fb001c000d0e73280a57090aae37728a2aada55593c911b8cf61c023ba10"
+      },
+      "cyclic_best_by_pid.csv": {
+        "byte_identical": true,
+        "bytes": 257300,
+        "canonical_recomputed_path": "<recomputed-raw-dir>/cyclic_best_by_pid.csv",
+        "canonical_recomputed_sha256": "982b017482a638a0b381852da1935a98e4e4f9898bbc9569bc1d0d0771ace001",
+        "historical_path": "DataPrepare/get_similarity/cyclic_best_by_pid.csv",
+        "historical_sha256": "982b017482a638a0b381852da1935a98e4e4f9898bbc9569bc1d0d0771ace001"
+      },
+      "cyclic_rotation_similarity_results.csv": {
+        "byte_identical": true,
+        "bytes": 48213995,
+        "canonical_recomputed_path": "<recomputed-raw-dir>/cyclic_rotation_similarity_results.csv",
+        "canonical_recomputed_sha256": "0c8fc610104e741fd98719df5c1fe9e4cf4ab30dfa15913d60c4513103848886",
+        "historical_path": "DataPrepare/get_similarity/cyclic_rotation_similarity_results.csv",
+        "historical_sha256": "0c8fc610104e741fd98719df5c1fe9e4cf4ab30dfa15913d60c4513103848886"
+      },
+      "linear_similarity_results.csv": {
+        "byte_identical": true,
+        "bytes": 2918984,
+        "canonical_recomputed_path": "<recomputed-raw-dir>/linear_similarity_results.csv",
+        "canonical_recomputed_sha256": "b191a4ab28ab775b8349d6c8c4b48449ff4645099f4d93fe06925fb812800eae",
+        "historical_path": "DataPrepare/get_similarity/linear_similarity_results.csv",
+        "historical_sha256": "b191a4ab28ab775b8349d6c8c4b48449ff4645099f4d93fe06925fb812800eae"
+      }
+    }
+  },
+  "schema_version": 1,
+  "three_lead_check": {
+    "all_match_paper_pid": true,
+    "all_three_present": true
+  },
+  "three_lead_paper_pid": {
+    "ApexOracle-12": {
+      "aligned_positions": 28,
+      "matches": 10,
+      "matches_paper_pid": true,
+      "paper_pid": 0.35714285714285715,
+      "pid": 0.35714285714285715,
+      "train_dbaasp_id": "9800",
+      "train_sequence": "FLSLIPKAIKAVGVKAKKF"
+    },
+    "ApexOracle-23": {
+      "aligned_positions": 19,
+      "matches": 7,
+      "matches_paper_pid": true,
+      "paper_pid": 0.3684210526315789,
+      "pid": 0.3684210526315789,
+      "train_dbaasp_id": "1713",
+      "train_sequence": "FPVKLKFPKVKL"
+    },
+    "ApexOracle-3": {
+      "aligned_positions": 30,
+      "matches": 11,
+      "matches_paper_pid": true,
+      "paper_pid": 0.36666666666666664,
+      "pid": 0.36666666666666664,
+      "train_dbaasp_id": "8160",
+      "train_sequence": "LKKLKGRVSRSFLFFVKLRPAKRTLKKRIL"
+    }
+  },
+  "training_cache_rebuild_equivalence": {
+    "all_byte_identical": true,
+    "files": {
+      "train_cyclic_peptides.csv": {
+        "byte_identical": true,
+        "canonical_prepared_sha256": "c415b1278cb947c8b12121d4c3f414d2dc8b19cef6071af08e52376cf53bd9e5",
+        "historical_sha256": "c415b1278cb947c8b12121d4c3f414d2dc8b19cef6071af08e52376cf53bd9e5"
+      },
+      "train_linear_peptides.csv": {
+        "byte_identical": true,
+        "canonical_prepared_sha256": "3d30fa6509e489312e31110dcc27da13b8ea47622b5e2dd1897a6f6f24adafb9",
+        "historical_sha256": "3d30fa6509e489312e31110dcc27da13b8ea47622b5e2dd1897a6f6f24adafb9"
+      }
+    },
+    "normalization": "uppercase training sequences"
+  }
+}
