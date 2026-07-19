@@ -37,12 +37,21 @@ benchmark = [
   "scipy>=1.9",
   "tqdm>=4.64",
 ]
+synergy = [
+  "torch>=2.1",
+  "peft>=0.15",
+  "selfies>=2.1",
+  "transformers>=4.40",
+  "pyyaml>=6",
+  "tqdm>=4.64",
+]
 
 [project.scripts]
 apexoracle-build-fig2b-data = "apexoracle.benchmarks.molecule_encoders.protocol:main"
 apexoracle-run-hierarchical-mic = "apexoracle.training.hierarchical_mic_runner:main"
 apexoracle-run-antibiotic-classification = "apexoracle.training.antibiotic_classification_runner:main"
 apexoracle-run-sequence-similarity = "apexoracle.evaluation.sequence_similarity.runner:main"
+apexoracle-run-synergy-cv = "apexoracle.training.synergy_runner:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

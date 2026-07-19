@@ -58,7 +58,8 @@ class FirstTokenAttentionGenome(nn.Module):
         )
         self.norm2 = nn.LayerNorm(genome_embed_dim)
 
-    def forward(self, mol_cls_emb, genome_embs, key_padding_mask):
+    def forward(self, mol_cls_emb, genome_embs, key_padding_mask, **kwargs):
+        del kwargs
         genome_embs_dim = genome_embs.shape[-1]
         query = self.mol_to_genome_dim(mol_cls_emb)[:, None, :]
         query = query.transpose(0, 1)
@@ -97,10 +98,14 @@ def fuse_genome_text_embeddings(
     """Run the paper-era dual cross-attention and concatenate its outputs."""
 
     genome = genome_attention(
-        molecule_embedding, genome_embeddings, 1 - genome_attention_mask
+        mol_cls_emb=molecule_embedding,
+        genome_embs=genome_embeddings,
+        key_padding_mask=1 - genome_attention_mask,
     )
     text = text_attention(
-        molecule_embedding, text_embeddings, 1 - text_attention_mask
+        mol_cls_emb=molecule_embedding,
+        genome_embs=text_embeddings,
+        key_padding_mask=1 - text_attention_mask,
     )
     if reshape_outputs:
         genome = genome.reshape(-1, genome_embeddings.shape[-1])
