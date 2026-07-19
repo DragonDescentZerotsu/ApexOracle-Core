@@ -1,0 +1,73 @@
+schema_version: 1
+last_updated: 2026-07-18
+
+entries:
+  - id: fig2b_molecule_encoders
+    source:
+      - capsule_fig2/code
+      - fix_*_on_DBAASP_SMILES_5_fold_mean_MIC.py
+      - compare_APEX/APEX_fix_train_DBAASP_MIC_5_fold_mean.py
+    destination:
+      - src/apexoracle/benchmarks/molecule_encoders
+      - experiments/fig2b_molecule_encoders
+    status: migrated_and_formally_rerun
+    evidence: experiments/fig2b_molecule_encoders/results_shared_5fold.md
+
+  - id: fig1a_fig2c_strainwise_dlm
+    source:
+      - DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_strains_MDLM_MTR_fix.py
+    destination:
+      - src/apexoracle/data/strainwise.py
+      - src/apexoracle/features/precomputed.py
+      - src/apexoracle/models/strain_fusion.py
+      - src/apexoracle/models/strainwise_checkpoint.py
+      - src/apexoracle/evaluation/strainwise.py
+      - experiments/fig2c_strainwise
+    status: shared_core_and_single_batch_optimizer_steps_extracted_outer_loop_transitional
+    evidence: experiments/fig2c_strainwise/checkpoint_validation_group0_ensemble0.json
+    deletion_allowed: false
+
+  - id: fig1b_strict_zero_shot
+    source:
+      - antibiotic_3_strain_compare_MDLM_fix_cls_wo_pad_all_test.py
+    destination:
+      - experiments/fig1b_zero_shot
+    status: pending_after_strainwise_core
+    deletion_allowed: false
+
+  - id: sequence_similarity
+    source:
+      - DataPrepare/get_similarity
+    destination:
+      - src/apexoracle/evaluation/sequence_similarity
+      - experiments/sequence_similarity
+    status: high_confidence_pending_migration
+    deletion_allowed: false
+
+  - id: synergy_cv
+    source:
+      - synergy_Evo_train_new_reg_MDLM_one_base_model_classification.py
+    destination:
+      - experiments/synergy
+    status: blocked_on_exact_version_and_lora_rank_confirmation
+    deletion_allowed: false
+
+  - id: phylum_and_species_holdouts
+    source:
+      - DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_species_*.py
+    destination:
+      - experiments/experimental_hierarchical_holdouts
+    status: evidence_incomplete_do_not_claim_reproduced
+    deletion_allowed: false
+
+  - id: superseded_root_scripts
+    source:
+      - '*_old.py'
+      - GPU_eye.py
+      - run.py
+      - run_full.py
+      - bash/*.sh
+    destination:
+      - legacy-code-snapshot-2026-07-17
+    status: delete_only_after_replacement_entrypoints_are_verified
+    deletion_allowed: false

@@ -63,6 +63,54 @@
   - `paper_figs/evo2_genome_embedding_abs_mean_distribution.csv`
 - 使用 `--all-embeddings` 可以统计 `Genome_embs` 中的全部文件，而不是只统计被数据集匹配到的 genome ID。
 
+## 2026-07-18 strain-wise 重构审计
+
+### 已由代码、日志、checkpoint 和跨机器核验的事实
+
+- Fig. 1a / Fig. 2c 最终 strain-wise driver、MIC CSV、small-molecule auxiliary CSV、strain
+  mapping 和 taxonomy mapping 在本机与 node002 上的 SHA-256 一致；genome embedding、
+  ATCC text embedding、text-only embedding 和 FASTA 的文件数量及文件名清单也一致。
+- 历史 split 构造使用无序 `set`，并把 taxonomy alias 直接 `extend` 到共享 list。三个 fold
+  由独立 Python 进程运行，而日志没有记录 `PYTHONHASHSEED`。当前源码重新运行得到的 membership
+  因此不能被视为 2025 年 checkpoint 的精确历史 membership。
+- `experiments/fig2c_strainwise/legacy_protocol_manifest.json` 明确区分了
+  `PYTHONHASHSEED=0` 的确定性候选 membership 与历史日志中的权威样本计数；任何新运行不得把
+  候选 manifest 标成精确历史 split。
+- 21 个 checkpoint 的 `3 × 7` 网格完整。group 0/2 的 14 个文件只保存实际消费的
+  fusion/head state；group 1 的 7 个文件还包含名为 `ChemBERTa_state_dict` 的 131-key、
+  12-layer/768 MDLM backbone。三个 group 的 optimizer 都具有相同的 5 个参数组和 49 个
+  state entries，额外 backbone 不在下游 optimizer 中。
+- 共享 strain-wise core 已抽取到 `src/apexoracle/`，legacy driver 的训练循环仍保留，但运行时
+  已使用共享 Dataset、collate、feature loader、fusion 和 head。代表性 group 0 / ensemble 0
+  checkpoint 已通过所有实际消费 state dict 的 `strict=True` 加载，并在 H100 上完成两次独立
+  固定批次推理，输出一致。
+- 四条单批次训练路径已经迁移到 `src/apexoracle/training/strainwise.py` 并由 legacy driver
+  实际调用。逐项测试在固定随机状态下比较 logits、loss、所有参数 gradient 和 Adam 更新后的
+  参数，四种 modality/task 组合均完全一致。强制触发 epoch-5000 clipping 后也确认：历史实现
+  不裁剪 text attention，classification 分支裁剪的是 `reg_head` 而不是 `cls_head`；为保持行为
+  当前共享实现显式保留这一异常契约。
+- 四条 modality/task optimizer-step 等价测试在 CPU float32 下逐位通过；genome+text
+  regression 另在 H100 CUDA autocast + GradScaler 下逐位通过。H100 合成测试使用有限的
+  `init_scale=128` 并要求 gradients 全部有限；默认 `65536` 会让这个小型合成 fixture 的两侧
+  同时 overflow 并跳过 step，因此不能用该 overflow case 宣称参数更新已验证。正式 driver
+  继续使用历史默认动态 GradScaler。
+
+### 根据现有证据作出的推断
+
+- node002 当前 driver 的修改时间位于 group 1 长任务运行期间；结合 group 1 独有的额外 MDLM
+  payload，该进程很可能持有修改前的内存代码版本。修改时间只是弱证据，不能据此恢复旧实现。
+
+### 仍待作者或旧源码确认的事项
+
+- group 1 当时是否在线调用 frozen MDLM backbone 生成 molecule feature，还是只把未消费的
+  backbone 一并写入 checkpoint；“不在 optimizer 中”只能证明没有被下游训练更新。
+- 三个历史 fold 的精确 `PYTHONHASHSEED` / membership 仍未恢复。当前正式数值继续以保存的
+  checkpoint 和完整日志为准，不以候选 split 重新训练后覆盖。
+- strain-wise 的单批次 regression/auxiliary classification 已模块化；外层 epoch/DataLoader
+  协调、scheduler、evaluation 和 checkpoint selection 尚未完全模块化。其余 20 个 checkpoint
+  的 SHA-256 与逐文件固定批次验证也尚待完成。在此之前不得删除 legacy driver 或 comparator
+  副本。
+
 ## 代码库审计：论文、代码与数据血缘
 
 本节记录了 2026-07-16 在代码库清理前完成的静态审计。审计覆盖当前代码库中的全部 Python、shell、notebook、capsule、checkpoint 日志以及相关数据和配置文件，并与 `sn-article.tex` 进行了对照。本次审计没有重新运行任何实验。

@@ -1,0 +1,34 @@
+{
+  "checkpoint": "Checkpoints/genome_text_learnable_emb/strain_wise_w_SM_b_attn/MDLM_MTR_fix_7_fold_ensembles/genome_text_learnable_emb_Strain_wise_best_R2_group_0_ensemble_0.pth",
+  "size_bytes": 9084185130,
+  "sha256": "9b097645b3fe0ba41d3d044e264f68d745647b09b6c9342c7664264fea15e24e",
+  "archived_r2": 0.3077860598090124,
+  "contract": {
+    "molecule_dim": 768,
+    "genome_dim": 8192,
+    "text_dim": 4096,
+    "head_input_dim": 12288,
+    "hidden_dim_1": 3072,
+    "hidden_dim_2": 128,
+    "num_targets": 1,
+    "checkpoint_keys": [
+      "R2",
+      "cls_head_state_dict",
+      "co_cross_attn_genome",
+      "co_cross_attn_text",
+      "learnable_embedding_weight",
+      "optimizer_state_dict",
+      "re_head_state_dict"
+    ],
+    "optional_payloads": {}
+  },
+  "synthetic_seed": 20260718,
+  "genome_text_prediction": [
+    -0.9375,
+    -0.80615234375
+  ],
+  "text_only_prediction": [
+    -0.92626953125,
+    -0.89404296875
+  ]
+}

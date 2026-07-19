@@ -1,0 +1,656 @@
+{
+  "schema_version": 1,
+  "status": "complete_grid_common_consumed_contract_verified_two_top_level_variants",
+  "checkpoint_count": 21,
+  "expected_groups": 3,
+  "expected_ensembles_per_group": 7,
+  "common_contract": {
+    "molecule_dim": 768,
+    "genome_dim": 8192,
+    "text_dim": 4096,
+    "head_input_dim": 12288,
+    "hidden_dim_1": 3072,
+    "hidden_dim_2": 128,
+    "num_targets": 1
+  },
+  "sha256_status": "representative_only_remaining_files_pending",
+  "records": [
+    {
+      "group": 0,
+      "ensemble": 0,
+      "file": "genome_text_learnable_emb_Strain_wise_best_R2_group_0_ensemble_0.pth",
+      "size_bytes": 9084185130,
+      "archived_best_r2": 0.3077860598090124,
+      "contract": {
+        "molecule_dim": 768,
+        "genome_dim": 8192,
+        "text_dim": 4096,
+        "head_input_dim": 12288,
+        "hidden_dim_1": 3072,
+        "hidden_dim_2": 128,
+        "num_targets": 1,
+        "checkpoint_keys": [
+          "R2",
+          "cls_head_state_dict",
+          "co_cross_attn_genome",
+          "co_cross_attn_text",
+          "learnable_embedding_weight",
+          "optimizer_state_dict",
+          "re_head_state_dict"
+        ],
+        "optional_payloads": {}
+      },
+      "checkpoint_variant": "fusion_and_heads_only"
+    },
+    {
+      "group": 0,
+      "ensemble": 1,
+      "file": "genome_text_learnable_emb_Strain_wise_best_R2_group_0_ensemble_1.pth",
+      "size_bytes": 9084185130,
+      "archived_best_r2": 0.32204486675480104,
+      "contract": {
+        "molecule_dim": 768,
+        "genome_dim": 8192,
+        "text_dim": 4096,
+        "head_input_dim": 12288,
+        "hidden_dim_1": 3072,
+        "hidden_dim_2": 128,
+        "num_targets": 1,
+        "checkpoint_keys": [
+          "R2",
+          "cls_head_state_dict",
+          "co_cross_attn_genome",
+          "co_cross_attn_text",
+          "learnable_embedding_weight",
+          "optimizer_state_dict",
+          "re_head_state_dict"
+        ],
+        "optional_payloads": {}
+      },
+      "checkpoint_variant": "fusion_and_heads_only"
+    },
+    {
+      "group": 0,
+      "ensemble": 2,
+      "file": "genome_text_learnable_emb_Strain_wise_best_R2_group_0_ensemble_2.pth",
+      "size_bytes": 9084185130,
+      "archived_best_r2": 0.3225297689739619,
+      "contract": {
+        "molecule_dim": 768,
+        "genome_dim": 8192,
+        "text_dim": 4096,
+        "head_input_dim": 12288,
+        "hidden_dim_1": 3072,
+        "hidden_dim_2": 128,
+        "num_targets": 1,
+        "checkpoint_keys": [
+          "R2",
+          "cls_head_state_dict",
+          "co_cross_attn_genome",
+          "co_cross_attn_text",
+          "learnable_embedding_weight",
+          "optimizer_state_dict",
+          "re_head_state_dict"
+        ],
+        "optional_payloads": {}
+      },
+      "checkpoint_variant": "fusion_and_heads_only"
+    },
+    {
+      "group": 0,
+      "ensemble": 3,
+      "file": "genome_text_learnable_emb_Strain_wise_best_R2_group_0_ensemble_3.pth",
+      "size_bytes": 9084185130,
+      "archived_best_r2": 0.3456177768135824,
+      "contract": {
+        "molecule_dim": 768,
+        "genome_dim": 8192,
+        "text_dim": 4096,
+        "head_input_dim": 12288,
+        "hidden_dim_1": 3072,
+        "hidden_dim_2": 128,
+        "num_targets": 1,
+        "checkpoint_keys": [
+          "R2",
+          "cls_head_state_dict",
+          "co_cross_attn_genome",
+          "co_cross_attn_text",
+          "learnable_embedding_weight",
+          "optimizer_state_dict",
+          "re_head_state_dict"
+        ],
+        "optional_payloads": {}
+      },
+      "checkpoint_variant": "fusion_and_heads_only"
+    },
+    {
+      "group": 0,
+      "ensemble": 4,
+      "file": "genome_text_learnable_emb_Strain_wise_best_R2_group_0_ensemble_4.pth",
+      "size_bytes": 9084185130,
+      "archived_best_r2": 0.2842326619192129,
+      "contract": {
+        "molecule_dim": 768,
+        "genome_dim": 8192,
+        "text_dim": 4096,
+        "head_input_dim": 12288,
+        "hidden_dim_1": 3072,
+        "hidden_dim_2": 128,
+        "num_targets": 1,
+        "checkpoint_keys": [
+          "R2",
+          "cls_head_state_dict",
+          "co_cross_attn_genome",
+          "co_cross_attn_text",
+          "learnable_embedding_weight",
+          "optimizer_state_dict",
+          "re_head_state_dict"
+        ],
+        "optional_payloads": {}
+      },
+      "checkpoint_variant": "fusion_and_heads_only"
+    },
+    {
+      "group": 0,
+      "ensemble": 5,
+      "file": "genome_text_learnable_emb_Strain_wise_best_R2_group_0_ensemble_5.pth",
+      "size_bytes": 9084185130,
+      "archived_best_r2": 0.31456104220060643,
+      "contract": {
+        "molecule_dim": 768,
+        "genome_dim": 8192,
+        "text_dim": 4096,
+        "head_input_dim": 12288,
+        "hidden_dim_1": 3072,
+        "hidden_dim_2": 128,
+        "num_targets": 1,
+        "checkpoint_keys": [
+          "R2",
+          "cls_head_state_dict",
+          "co_cross_attn_genome",
+          "co_cross_attn_text",
+          "learnable_embedding_weight",
+          "optimizer_state_dict",
+          "re_head_state_dict"
+        ],
+        "optional_payloads": {}
+      },
+      "checkpoint_variant": "fusion_and_heads_only"
+    },
+    {
+      "group": 0,
+      "ensemble": 6,
+      "file": "genome_text_learnable_emb_Strain_wise_best_R2_group_0_ensemble_6.pth",
+      "size_bytes": 9084185130,
+      "archived_best_r2": 0.31598309797311175,
+      "contract": {
+        "molecule_dim": 768,
+        "genome_dim": 8192,
+        "text_dim": 4096,
+        "head_input_dim": 12288,
+        "hidden_dim_1": 3072,
+        "hidden_dim_2": 128,
+        "num_targets": 1,
+        "checkpoint_keys": [
+          "R2",
+          "cls_head_state_dict",
+          "co_cross_attn_genome",
+          "co_cross_attn_text",
+          "learnable_embedding_weight",
+          "optimizer_state_dict",
+          "re_head_state_dict"
+        ],
+        "optional_payloads": {}
+      },
+      "checkpoint_variant": "fusion_and_heads_only"
+    },
+    {
+      "group": 1,
+      "ensemble": 0,
+      "file": "genome_text_learnable_emb_Strain_wise_best_R2_group_1_ensemble_0.pth",
+      "size_bytes": 9473192915,
+      "archived_best_r2": 0.6417509012652058,
+      "contract": {
+        "molecule_dim": 768,
+        "genome_dim": 8192,
+        "text_dim": 4096,
+        "head_input_dim": 12288,
+        "hidden_dim_1": 3072,
+        "hidden_dim_2": 128,
+        "num_targets": 1,
+        "checkpoint_keys": [
+          "ChemBERTa_state_dict",
+          "R2",
+          "cls_head_state_dict",
+          "co_cross_attn_genome",
+          "co_cross_attn_text",
+          "learnable_embedding_weight",
+          "optimizer_state_dict",
+          "re_head_state_dict"
+        ],
+        "optional_payloads": {
+          "ChemBERTa_state_dict": {
+            "interpretation": "historically_misnamed_mdlm_backbone_state_dict",
+            "key_count": 131,
+            "vocab_embedding_shape": [
+              3160,
+              768
+            ]
+          }
+        }
+      },
+      "checkpoint_variant": "with_saved_frozen_mdlm_backbone"
+    },
+    {
+      "group": 1,
+      "ensemble": 1,
+      "file": "genome_text_learnable_emb_Strain_wise_best_R2_group_1_ensemble_1.pth",
+      "size_bytes": 9473192915,
+      "archived_best_r2": 0.6384206811306783,
+      "contract": {
+        "molecule_dim": 768,
+        "genome_dim": 8192,
+        "text_dim": 4096,
+        "head_input_dim": 12288,
+        "hidden_dim_1": 3072,
+        "hidden_dim_2": 128,
+        "num_targets": 1,
+        "checkpoint_keys": [
+          "ChemBERTa_state_dict",
+          "R2",
+          "cls_head_state_dict",
+          "co_cross_attn_genome",
+          "co_cross_attn_text",
+          "learnable_embedding_weight",
+          "optimizer_state_dict",
+          "re_head_state_dict"
+        ],
+        "optional_payloads": {
+          "ChemBERTa_state_dict": {
+            "interpretation": "historically_misnamed_mdlm_backbone_state_dict",
+            "key_count": 131,
+            "vocab_embedding_shape": [
+              3160,
+              768
+            ]
+          }
+        }
+      },
+      "checkpoint_variant": "with_saved_frozen_mdlm_backbone"
+    },
+    {
+      "group": 1,
+      "ensemble": 2,
+      "file": "genome_text_learnable_emb_Strain_wise_best_R2_group_1_ensemble_2.pth",
+      "size_bytes": 9473192915,
+      "archived_best_r2": 0.626057407751385,
+      "contract": {
+        "molecule_dim": 768,
+        "genome_dim": 8192,
+        "text_dim": 4096,
+        "head_input_dim": 12288,
+        "hidden_dim_1": 3072,
+        "hidden_dim_2": 128,
+        "num_targets": 1,
+        "checkpoint_keys": [
+          "ChemBERTa_state_dict",
+          "R2",
+          "cls_head_state_dict",
+          "co_cross_attn_genome",
+          "co_cross_attn_text",
+          "learnable_embedding_weight",
+          "optimizer_state_dict",
+          "re_head_state_dict"
+        ],
+        "optional_payloads": {
+          "ChemBERTa_state_dict": {
+            "interpretation": "historically_misnamed_mdlm_backbone_state_dict",
+            "key_count": 131,
+            "vocab_embedding_shape": [
+              3160,
+              768
+            ]
+          }
+        }
+      },
+      "checkpoint_variant": "with_saved_frozen_mdlm_backbone"
+    },
+    {
+      "group": 1,
+      "ensemble": 3,
+      "file": "genome_text_learnable_emb_Strain_wise_best_R2_group_1_ensemble_3.pth",
+      "size_bytes": 9473192915,
+      "archived_best_r2": 0.628266771116156,
+      "contract": {
+        "molecule_dim": 768,
+        "genome_dim": 8192,
+        "text_dim": 4096,
+        "head_input_dim": 12288,
+        "hidden_dim_1": 3072,
+        "hidden_dim_2": 128,
+        "num_targets": 1,
+        "checkpoint_keys": [
+          "ChemBERTa_state_dict",
+          "R2",
+          "cls_head_state_dict",
+          "co_cross_attn_genome",
+          "co_cross_attn_text",
+          "learnable_embedding_weight",
+          "optimizer_state_dict",
+          "re_head_state_dict"
+        ],
+        "optional_payloads": {
+          "ChemBERTa_state_dict": {
+            "interpretation": "historically_misnamed_mdlm_backbone_state_dict",
+            "key_count": 131,
+            "vocab_embedding_shape": [
+              3160,
+              768
+            ]
+          }
+        }
+      },
+      "checkpoint_variant": "with_saved_frozen_mdlm_backbone"
+    },
+    {
+      "group": 1,
+      "ensemble": 4,
+      "file": "genome_text_learnable_emb_Strain_wise_best_R2_group_1_ensemble_4.pth",
+      "size_bytes": 9473192915,
+      "archived_best_r2": 0.6211575428275921,
+      "contract": {
+        "molecule_dim": 768,
+        "genome_dim": 8192,
+        "text_dim": 4096,
+        "head_input_dim": 12288,
+        "hidden_dim_1": 3072,
+        "hidden_dim_2": 128,
+        "num_targets": 1,
+        "checkpoint_keys": [
+          "ChemBERTa_state_dict",
+          "R2",
+          "cls_head_state_dict",
+          "co_cross_attn_genome",
+          "co_cross_attn_text",
+          "learnable_embedding_weight",
+          "optimizer_state_dict",
+          "re_head_state_dict"
+        ],
+        "optional_payloads": {
+          "ChemBERTa_state_dict": {
+            "interpretation": "historically_misnamed_mdlm_backbone_state_dict",
+            "key_count": 131,
+            "vocab_embedding_shape": [
+              3160,
+              768
+            ]
+          }
+        }
+      },
+      "checkpoint_variant": "with_saved_frozen_mdlm_backbone"
+    },
+    {
+      "group": 1,
+      "ensemble": 5,
+      "file": "genome_text_learnable_emb_Strain_wise_best_R2_group_1_ensemble_5.pth",
+      "size_bytes": 9473192915,
+      "archived_best_r2": 0.6315824943317098,
+      "contract": {
+        "molecule_dim": 768,
+        "genome_dim": 8192,
+        "text_dim": 4096,
+        "head_input_dim": 12288,
+        "hidden_dim_1": 3072,
+        "hidden_dim_2": 128,
+        "num_targets": 1,
+        "checkpoint_keys": [
+          "ChemBERTa_state_dict",
+          "R2",
+          "cls_head_state_dict",
+          "co_cross_attn_genome",
+          "co_cross_attn_text",
+          "learnable_embedding_weight",
+          "optimizer_state_dict",
+          "re_head_state_dict"
+        ],
+        "optional_payloads": {
+          "ChemBERTa_state_dict": {
+            "interpretation": "historically_misnamed_mdlm_backbone_state_dict",
+            "key_count": 131,
+            "vocab_embedding_shape": [
+              3160,
+              768
+            ]
+          }
+        }
+      },
+      "checkpoint_variant": "with_saved_frozen_mdlm_backbone"
+    },
+    {
+      "group": 1,
+      "ensemble": 6,
+      "file": "genome_text_learnable_emb_Strain_wise_best_R2_group_1_ensemble_6.pth",
+      "size_bytes": 9473192915,
+      "archived_best_r2": 0.6402717870611283,
+      "contract": {
+        "molecule_dim": 768,
+        "genome_dim": 8192,
+        "text_dim": 4096,
+        "head_input_dim": 12288,
+        "hidden_dim_1": 3072,
+        "hidden_dim_2": 128,
+        "num_targets": 1,
+        "checkpoint_keys": [
+          "ChemBERTa_state_dict",
+          "R2",
+          "cls_head_state_dict",
+          "co_cross_attn_genome",
+          "co_cross_attn_text",
+          "learnable_embedding_weight",
+          "optimizer_state_dict",
+          "re_head_state_dict"
+        ],
+        "optional_payloads": {
+          "ChemBERTa_state_dict": {
+            "interpretation": "historically_misnamed_mdlm_backbone_state_dict",
+            "key_count": 131,
+            "vocab_embedding_shape": [
+              3160,
+              768
+            ]
+          }
+        }
+      },
+      "checkpoint_variant": "with_saved_frozen_mdlm_backbone"
+    },
+    {
+      "group": 2,
+      "ensemble": 0,
+      "file": "genome_text_learnable_emb_Strain_wise_best_R2_group_2_ensemble_0.pth",
+      "size_bytes": 9084185130,
+      "archived_best_r2": 0.559876162044846,
+      "contract": {
+        "molecule_dim": 768,
+        "genome_dim": 8192,
+        "text_dim": 4096,
+        "head_input_dim": 12288,
+        "hidden_dim_1": 3072,
+        "hidden_dim_2": 128,
+        "num_targets": 1,
+        "checkpoint_keys": [
+          "R2",
+          "cls_head_state_dict",
+          "co_cross_attn_genome",
+          "co_cross_attn_text",
+          "learnable_embedding_weight",
+          "optimizer_state_dict",
+          "re_head_state_dict"
+        ],
+        "optional_payloads": {}
+      },
+      "checkpoint_variant": "fusion_and_heads_only"
+    },
+    {
+      "group": 2,
+      "ensemble": 1,
+      "file": "genome_text_learnable_emb_Strain_wise_best_R2_group_2_ensemble_1.pth",
+      "size_bytes": 9084185130,
+      "archived_best_r2": 0.5729847056321888,
+      "contract": {
+        "molecule_dim": 768,
+        "genome_dim": 8192,
+        "text_dim": 4096,
+        "head_input_dim": 12288,
+        "hidden_dim_1": 3072,
+        "hidden_dim_2": 128,
+        "num_targets": 1,
+        "checkpoint_keys": [
+          "R2",
+          "cls_head_state_dict",
+          "co_cross_attn_genome",
+          "co_cross_attn_text",
+          "learnable_embedding_weight",
+          "optimizer_state_dict",
+          "re_head_state_dict"
+        ],
+        "optional_payloads": {}
+      },
+      "checkpoint_variant": "fusion_and_heads_only"
+    },
+    {
+      "group": 2,
+      "ensemble": 2,
+      "file": "genome_text_learnable_emb_Strain_wise_best_R2_group_2_ensemble_2.pth",
+      "size_bytes": 9084185130,
+      "archived_best_r2": 0.5865307154338216,
+      "contract": {
+        "molecule_dim": 768,
+        "genome_dim": 8192,
+        "text_dim": 4096,
+        "head_input_dim": 12288,
+        "hidden_dim_1": 3072,
+        "hidden_dim_2": 128,
+        "num_targets": 1,
+        "checkpoint_keys": [
+          "R2",
+          "cls_head_state_dict",
+          "co_cross_attn_genome",
+          "co_cross_attn_text",
+          "learnable_embedding_weight",
+          "optimizer_state_dict",
+          "re_head_state_dict"
+        ],
+        "optional_payloads": {}
+      },
+      "checkpoint_variant": "fusion_and_heads_only"
+    },
+    {
+      "group": 2,
+      "ensemble": 3,
+      "file": "genome_text_learnable_emb_Strain_wise_best_R2_group_2_ensemble_3.pth",
+      "size_bytes": 9084185130,
+      "archived_best_r2": 0.5748116743970404,
+      "contract": {
+        "molecule_dim": 768,
+        "genome_dim": 8192,
+        "text_dim": 4096,
+        "head_input_dim": 12288,
+        "hidden_dim_1": 3072,
+        "hidden_dim_2": 128,
+        "num_targets": 1,
+        "checkpoint_keys": [
+          "R2",
+          "cls_head_state_dict",
+          "co_cross_attn_genome",
+          "co_cross_attn_text",
+          "learnable_embedding_weight",
+          "optimizer_state_dict",
+          "re_head_state_dict"
+        ],
+        "optional_payloads": {}
+      },
+      "checkpoint_variant": "fusion_and_heads_only"
+    },
+    {
+      "group": 2,
+      "ensemble": 4,
+      "file": "genome_text_learnable_emb_Strain_wise_best_R2_group_2_ensemble_4.pth",
+      "size_bytes": 9084185130,
+      "archived_best_r2": 0.5679675203840311,
+      "contract": {
+        "molecule_dim": 768,
+        "genome_dim": 8192,
+        "text_dim": 4096,
+        "head_input_dim": 12288,
+        "hidden_dim_1": 3072,
+        "hidden_dim_2": 128,
+        "num_targets": 1,
+        "checkpoint_keys": [
+          "R2",
+          "cls_head_state_dict",
+          "co_cross_attn_genome",
+          "co_cross_attn_text",
+          "learnable_embedding_weight",
+          "optimizer_state_dict",
+          "re_head_state_dict"
+        ],
+        "optional_payloads": {}
+      },
+      "checkpoint_variant": "fusion_and_heads_only"
+    },
+    {
+      "group": 2,
+      "ensemble": 5,
+      "file": "genome_text_learnable_emb_Strain_wise_best_R2_group_2_ensemble_5.pth",
+      "size_bytes": 9084185130,
+      "archived_best_r2": 0.5807689326054011,
+      "contract": {
+        "molecule_dim": 768,
+        "genome_dim": 8192,
+        "text_dim": 4096,
+        "head_input_dim": 12288,
+        "hidden_dim_1": 3072,
+        "hidden_dim_2": 128,
+        "num_targets": 1,
+        "checkpoint_keys": [
+          "R2",
+          "cls_head_state_dict",
+          "co_cross_attn_genome",
+          "co_cross_attn_text",
+          "learnable_embedding_weight",
+          "optimizer_state_dict",
+          "re_head_state_dict"
+        ],
+        "optional_payloads": {}
+      },
+      "checkpoint_variant": "fusion_and_heads_only"
+    },
+    {
+      "group": 2,
+      "ensemble": 6,
+      "file": "genome_text_learnable_emb_Strain_wise_best_R2_group_2_ensemble_6.pth",
+      "size_bytes": 9084185130,
+      "archived_best_r2": 0.5532819874098487,
+      "contract": {
+        "molecule_dim": 768,
+        "genome_dim": 8192,
+        "text_dim": 4096,
+        "head_input_dim": 12288,
+        "hidden_dim_1": 3072,
+        "hidden_dim_2": 128,
+        "num_targets": 1,
+        "checkpoint_keys": [
+          "R2",
+          "cls_head_state_dict",
+          "co_cross_attn_genome",
+          "co_cross_attn_text",
+          "learnable_embedding_weight",
+          "optimizer_state_dict",
+          "re_head_state_dict"
+        ],
+        "optional_payloads": {}
+      },
+      "checkpoint_variant": "fusion_and_heads_only"
+    }
+  ]
+}
