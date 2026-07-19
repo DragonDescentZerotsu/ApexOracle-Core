@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "status": "verified_sensitivity_not_paper_result",
+  "paper_training_sequence_case": "uppercase",
+  "case_preserving_rebuild": {
+    "linear_records": 13077,
+    "linear_records_with_lowercase": 1265,
+    "cyclic_records": 1039,
+    "cyclic_records_with_lowercase": 636,
+    "blosum62_max_pid": {
+      "ApexOracle-3": 0.36666666666666664,
+      "ApexOracle-12": 0.35714285714285715,
+      "ApexOracle-23": 0.3157894736842105
+    },
+    "apexoracle_23_top_hit": {
+      "train_dbaasp_id": "5099",
+      "train_sequence": "VKLFVyPLKVKLyP"
+    }
+  },
+  "interpretation": "Case-preserving source rebuild is a chirality sensitivity analysis and must not replace the paper cache contract."
+}

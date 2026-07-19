@@ -1,0 +1,65 @@
+schema_version: 1
+protocol: paper_lead_peptide_sequence_similarity
+status: algorithm_verified_historical_output_evidence_mixed
+
+queries:
+  - peptide_id: ApexOracle-23
+    cyclic: "Yes"
+    sequence: VLKAAFHMRKLFRGHWVWW
+  - peptide_id: ApexOracle-3
+    cyclic: "No"
+    sequence: MKILKKRRLVSVTLARDITTLENRL
+  - peptide_id: ApexOracle-12
+    cyclic: "No"
+    sequence: LFFRSLkIKTQVKRPANYAMLVKRWKFR
+
+sources:
+  training_csv: DataPrepare/Data/DBAASP_inhouse_AMP_SELFIES_token_MIC_Evo.csv
+  all_peptides_json: DataPrepare/Data/all_peptides_data.json
+  # The March 2026 paper cache uppercased DBAASP training sequences. This is
+  # required to reproduce the saved ApexOracle-23 result (0.3684). A
+  # case-preserving rebuild is a separate chirality sensitivity analysis.
+  training_sequence_case: uppercase
+
+runtime:
+  processes: 8
+  linear_chunk_size: 500
+  cyclic_chunk_size: 40
+
+output_dir: results/sequence_similarity/paper_leads
+
+alignment_contract:
+  mode: global
+  schemes:
+    - blosum62_needle
+    - exact_match_needle
+  blosum62_gap_open: -10.0
+  blosum62_gap_extension: -0.5
+  pid_denominator: aligned_positions_including_gaps
+  matches: case_sensitive_exact_residue_matches
+  cyclic_search: exhaustive_query_and_training_rotations
+  tie_break:
+    - primary_metric
+    - secondary_metric
+    - matches
+    - smallest_query_rotation
+    - smallest_training_rotation
+    - first_input_row_on_complete_tie
+
+evidence:
+  paper_max_pid:
+    ApexOracle-3: 0.36666666666666664
+    ApexOracle-12: 0.35714285714285715
+    ApexOracle-23: 0.3684210526315789
+  historical_saved_main_outputs:
+    ApexOracle-3: complete
+    ApexOracle-12: absent_from_saved_main_csvs_recomputed_with_current_algorithm
+    ApexOracle-23: complete
+  source_rebuild_modes:
+    paper: uppercase_training_sequences
+    sensitivity_only: preserve_training_sequence_case
+  apexoracle_12_complete_tie:
+    score: 0.35714285714285715
+    current_first_dbaasp_id: "9800"
+    paper_table_dbaasp_id: "15510"
+    interpretation: same_reported_max_pid_different_fully_tied_representative

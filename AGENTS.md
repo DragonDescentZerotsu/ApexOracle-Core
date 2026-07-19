@@ -155,7 +155,7 @@
 | Fig. 3（TeX 中使用文件 `Fig4.pdf`）guided/unguided 预测和最终验证分子 | `DataPrepare/Morgan_fingerprint_sim_generation*.py` 中的生成结果分析、`synergy_Evo_train_on_DBAASP_screen_inhouse_pairs.py` 中的筛选逻辑，以及 `paper_figs/` 下的 PDF | 当前只剩部分派生分析。候选生成和最终选择流程依赖外部代码或已经不完整；湿实验结果也没有在本仓库形成计算复现流程。 |
 | 附录 modality ablation | 较早的 genome-only、text-only、genome+text 脚本家族，以及 `Checkpoints/genome`、`Checkpoints/text`、`Checkpoints/genome_text` | **可能的来源家族 / 中低置信度。** 当前没有一个干净的入口或完整指标表可以把现存 checkpoint 精确连接到最终附录图。重建前应先核对原始绘图数据。 |
 | Attention 或耐药基因解释 | `DataPrepare/ATCC_genome_annotation_get.py`、`DataPrepare/resistant_gene_check.py`、`DataPrepare/train_genome_mcr_check.py`，以及大型训练脚本中的 attention 输出 | 属于探索或审稿支持代码；不存在自包含的最终 attention figure 流程。 |
-| ApexOracle-3/12/23 sequence similarity 表 | `DataPrepare/get_similarity/` | **最终版 / 高置信度。** 实现了当前 Methods 中的定义：Biopython global alignment、BLOSUM62、gap-open 10、gap-extension 0.5、exact-match PID，以及 cyclic peptide 的穷举旋转。 |
+| ApexOracle-3/12/23 sequence similarity 表 | `scripts/reproduce/run_sequence_similarity.py`；`src/apexoracle/evaluation/sequence_similarity/` | **canonical / 已验证。** 实现 Methods 中的 Biopython global alignment、BLOSUM62、gap-open 10、gap-extension 0.5、exact-match PID 和 cyclic exhaustive rotations。ApexOracle-3/23 全量输出与历史 CSV 逐字节一致；ApexOracle-12 的论文数值已复算，但旧 full CSV 未保存且 top hit 有四个 complete ties。 |
 | 审稿回复中的 Evo-2 embedding 缩放说明 | `scripts/plot_evo2_genome_embedding_abs_mean_distribution.py` | **审稿阶段 / 高置信度。** 生成支持固定 `1e14` 缩放因子的 CSV、PNG 和 PDF，统计范围为 563 个实际匹配的 embedding。 |
 
 ### 主要训练脚本的版本家族
@@ -280,10 +280,18 @@ Strain count mapping 的演化顺序如下：
 
 #### Similarity 与结构探索
 
-- `DataPrepare/get_similarity/extract_training_peptides.py`：从最终 AMP 数据和 DBAASP JSON 构建 linear/cyclic training sequence cache。
-- `compute_percent_identity.py`：与当前 Methods 一致的最终 linear/cyclic exhaustive alignment 实现。
-- `extract_top_similarity_hits.py`：提取 best hit 和论文格式 summary；`validate_similarity_outputs.py` 检查内部一致性。
-- `compare_linear_query_to_apex11.py`：额外与 in-house APEX 1.1 collection 比较，不是论文主表。
+- sequence similarity 已迁移到 `src/apexoracle/data/peptide_similarity.py` 和
+  `src/apexoracle/evaluation/sequence_similarity/`，唯一入口为
+  `scripts/reproduce/run_sequence_similarity.py`；旧 `DataPrepare/get_similarity` driver 由
+  `legacy-code-snapshot-2026-07-17` tag 追溯。
+- **已验证事实：** paper cache 使用 uppercase training sequences；当前源数据可逐字节重建
+  13,077 条 linear 和 1,039 条 cyclic cache。canonical 全量重算与 ApexOracle-3/23 的四份
+  历史核心 CSV 逐字节相同，三条 lead 的最大 PID 为 0.3667/0.3571/0.3684。
+- **证据边界：** ApexOracle-12 未保存历史 full CSV；其最大 PID 有四个 complete ties。论文
+  展示 DBAASP 15510，稳定输入顺序选择 9800，二者指标完全相同。保留当前 DBAASP sequence
+  大小写会把 ApexOracle-23 最大 PID 改为 0.3158，只能作为 chirality sensitivity。
+- 旧 `compare_linear_query_to_apex11.py` 是额外的 in-house APEX 1.1 collection 对照，不是
+  论文主表。
 - `Morgan_Fingerprint_Similarity.py`：旧的 all-pairs Morgan fingerprint similarity。
 - `Morgan_fingerprint_sim_generation.py`：把外部 generation 仓库中的 BAA-3170 生成分子与训练集进行 Morgan similarity 比较；`_SM_rediscover.py` 是 small-molecule rediscovery 版本。
 - `group_peptides.py`：较早的 BLOSUM50 clustering/similarity matrix 实验；论文 similarity 表已由 `get_similarity/` 取代。

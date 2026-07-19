@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "legacy_tag": "legacy-code-snapshot-2026-07-17",
+  "replacement_entrypoint": "scripts/reproduce/run_sequence_similarity.py",
+  "replacement_config": "configs/sequence_similarity/paper_leads.yaml",
+  "deleted_tracked_files": {
+    "DataPrepare/get_similarity/compare_linear_query_to_apex11.py": "a220b46e790080921e76e7103b06b09fd0fc16d1",
+    "DataPrepare/get_similarity/compute_percent_identity.py": "3aef365ea86a4d763eed55f0d09a133e85ee4f69",
+    "DataPrepare/get_similarity/extract_top_similarity_hits.py": "2a658de68880491f4a1159ae003582b1a6bac786",
+    "DataPrepare/get_similarity/extract_training_peptides.py": "bd27de2674bc742d45171d83164d9e3ceec6992e",
+    "DataPrepare/get_similarity/similarity_run_manifest.json": "0c1841483c82eb94d4c946c860a639fda7ab7f2f",
+    "DataPrepare/get_similarity/similarity_validation_report.json": "136ad9fdb1034f3b5899bec6d19af69b8a68cd23",
+    "DataPrepare/get_similarity/top_similarity_alignments.txt": "c9af06d6027e2aa5cd7a78e10c34c5a0c107bb5e",
+    "DataPrepare/get_similarity/training_peptide_manifest.json": "6d3c39d8310fdebed4fd5c6b93f591817196ff72",
+    "DataPrepare/get_similarity/validate_similarity_outputs.py": "b7ba1c39cda720ae6624da64ca4ca6c442d4dd0a"
+  },
+  "recovery": "git show legacy-code-snapshot-2026-07-17:<path>",
+  "deletion_basis": "Canonical cache rebuild and four full output CSVs passed byte-for-byte equivalence; legacy manifests contained stale absolute paths and only two of the three paper leads."
+}
