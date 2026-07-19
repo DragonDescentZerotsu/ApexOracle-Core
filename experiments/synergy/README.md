@@ -120,3 +120,37 @@ canonical 默认写入 `results/synergy_guidance/<profile>`，不会覆盖历史
 4.1 GB checkpoint 均已严格加载，并在 H100 上完成真实样本 forward；完整 SHA-256、schema、
 固定批次值和 source-version 边界见 `guidance_checkpoint_audit.json`。prospective in-house
 screening 仍是独立的 regression ensemble consumer，不属于本 guidance 训练入口。
+
+## Prospective BAA-3170 pair screening（post-paper）
+
+Canonical 入口为 `scripts/reproduce/run_synergy_screening.py`，配置为
+`configs/synergy/legacy_screening.yaml`。它消费 3,441 个预计算 molecule embedding、BAA-3170
+的 frozen genome/text embedding，以及两组各 7 个 rank-64 regression checkpoint。默认
+`DBAASP_train_best` 使用 `fixed_epoch` 权重；`inhouse_best` 使用按 in-house test R² 选择的权重。
+两组都不是论文三折 CV 证据。
+
+历史输出存在两个必须保留并披露的位置语义：4-rank `DistributedSampler` 的 stride predictions
+按 rank block 拼接后没有恢复原始顺序；随后这些位置又被直接用于筛选比 SMILES 表多 31,005 行的
+sequence 表。canonical reproduction 默认精确保留该行为，并要求显式确认。1,280 个真实 pair、
+7 个真实 member 的 H100 验证中，第一个完整 rank batch 的 110 条入选记录与历史 CSV 在 ID、
+sequence 和 FICI 上逐值一致，最大绝对差为 0。
+
+只读 dry-run：
+
+```bash
+python scripts/reproduce/run_synergy_screening.py \
+  --profile DBAASP_train_best --dry-run
+```
+
+小规模验证或完整复现都只写 `results/synergy_screening/`（也可用 `--output` 指定），并拒绝写入
+`DataPrepare/Data`：
+
+```bash
+python scripts/reproduce/run_synergy_screening.py \
+  --profile DBAASP_train_best --device cuda:0 \
+  --confirm-legacy-positional-alignment
+```
+
+完整输入、14 个 checkpoint 和两份历史输出的 SHA-256 见 `screening_audit.json`。当前没有生成
+按 pair ID 修正对齐的新筛选结果；将来如做该分析，必须作为单独 sensitivity result 发布，不能
+替换历史结果。
