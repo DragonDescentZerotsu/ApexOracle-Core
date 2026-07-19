@@ -121,6 +121,45 @@ canonical 默认写入 `results/synergy_guidance/<profile>`，不会覆盖历史
 固定批次值和 source-version 边界见 `guidance_checkpoint_audit.json`。prospective in-house
 screening 仍是独立的 regression ensemble consumer，不属于本 guidance 训练入口。
 
+## Prospective regression producer（post-paper）
+
+`scripts/reproduce/run_synergy_regression.py` 迁移了 screening 所消费的两组七模型 regression
+checkpoint 的上游 producer。它读取 DBAASP pair 作为训练来源，并只在 57 行 prospective
+in-house 数据上测试；动态 mapping 和 SELFIES 过滤后的三条实际路径为：
+
+- genome+text training：`2263→2175`；
+- combined-text training：`2732→2597`；
+- genome+text in-house test：`57→38`。
+
+旧脚本在每个 `zip_longest` iteration 中先执行 genome+text optimizer step，再执行
+combined-text step，因此 genome 样本会在两个 route 中重复训练。target 是
+`-log10(FICI/10)`，loss 为 MSE，fusion LoRA rank 64，head 为完整训练的
+`24576→3072→128→1`。两类 checkpoint 语义不能混淆：
+
+- `best_test` 直接由 38 行 in-house test R² 的严格提升选择，存在 test-selection leakage；
+- `fixed_epoch` 保存 epoch index 5（第 6 epoch）结束后的参数，但 payload 的 `R2` 仍是截至
+  当时观察到的 best-test R²，而不一定属于所保存参数。
+
+只读 dry-run 会核验 source、mapping、两个 molecule cache 和 9.17 GB base checkpoint 的哈希：
+
+```bash
+PYTHONHASHSEED=0 python scripts/reproduce/run_synergy_regression.py \
+  --dry-run --local-files-only
+```
+
+真实训练只写 `results/synergy_regression_producer/`，并拒绝写入 `DataPrepare/Data` 或
+`Checkpoints`。由于 2025 年进程没有记录 `PYTHONHASHSEED`，必须显式确认动态 set-block 行序：
+
+```bash
+python scripts/reproduce/run_synergy_regression.py --device cuda:0 \
+  --local-files-only --confirm-post-paper-regression \
+  --acknowledge-dynamic-legacy-order
+```
+
+真实全 route、1 member、1 epoch 的 H100 smoke 已完成并写出符合历史六键 schema 的 checkpoint；
+这只验证执行路径，不声称重新得到历史 tensor。完整数据、日志、stored R² 和证据边界见
+`regression_producer_audit.json`。
+
 ## Prospective BAA-3170 pair screening（post-paper）
 
 Canonical 入口为 `scripts/reproduce/run_synergy_screening.py`，配置为

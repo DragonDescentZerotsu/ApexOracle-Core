@@ -154,6 +154,27 @@ def legacy_synergy_checkpoint_payload(
     }
 
 
+def legacy_synergy_regression_checkpoint_payload(
+    *,
+    r2: float,
+    optimizer: torch.optim.Optimizer,
+    prediction_head: nn.Module,
+    genome_attention: nn.Module,
+    text_attention: nn.Module,
+    missing_genome_embedding: nn.Parameter,
+) -> dict:
+    """Preserve the six-key full-state prospective regression schema."""
+
+    return {
+        "R2": r2,
+        "optimizer_state_dict": optimizer.state_dict(),
+        "re_head_state_dict": prediction_head.state_dict(),
+        "co_cross_attn_genome": genome_attention.state_dict(),
+        "co_cross_attn_text": text_attention.state_dict(),
+        "learnable_embedding_weight": missing_genome_embedding,
+    }
+
+
 def synergy_guidance_pair_forward(
     batch: dict,
     *,

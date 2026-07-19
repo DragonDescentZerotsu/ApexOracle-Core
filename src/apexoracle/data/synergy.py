@@ -113,6 +113,15 @@ def synergy_label(fici: float) -> float:
     return 1.0 if float(fici) < 0.5 else 0.0
 
 
+def synergy_regression_target(fici: float) -> float:
+    """Legacy continuous target: ``-log10(FICI / 10)``."""
+
+    value = float(fici)
+    if value <= 0:
+        raise ValueError("FICI must be positive for the legacy log transform")
+    return float(-np.log10(value / 10.0))
+
+
 def _parse_atcc_id(name: str) -> str:
     atcc_id = name.split("ATCC")[-1].strip()
     if "BAA" in name:
