@@ -146,8 +146,8 @@
 | Fig. 2c strain-wise molecular encoder 比较 | 统一 runner 的 DLM，以及保留的 `..._ChemBERTa_MLM.py`、`..._ChemBERTa_MTR.py`、`..._MolFormer.py`、`..._PeptideCLM.py` | DLM 终版为高置信度。其余脚本是不同 encoder comparator，不属于本次删除的同模型复制版本；部分 comparator checkpoint 或日志仍不完整。 |
 | Fig. 2c Evo-2 与 k-mer 消融 | 当前没有对应源代码；`Checkpoints/KMER_genome_text_learnable_emb` 下只有 2026 年的部分或失败日志 | **缺失。** 论文报告 R2 下降 11.6%，但当前 KMER 日志没有完整结束，仓库内也没有包含 k-mer 实现的 Python 文件。不能声称当前仓库能够复现该结果。 |
 | Fig. 2b 不使用 strain knowledge 的五折 molecular representation benchmark | DLM 原始脚本位于外部 `/data2/tianang/projects/mdlm/DBAASP_MLM_MDLM.py`，capsule 的 `data/source` 中有副本。baseline 为 `fix_ChemBERTa_on_DBAASP_SMILES_5_fold_mean_MIC.py`、`fix_ChemBERTa_MLM_on_DBAASP_SMILES_5_fold_mean_MIC.py`、`fix_MolFormer_on_DBAASP_SMILES_5_fold_mean_MIC.py`、`fix_PeptideCLM_on_DBAASP_SMILES_5_fold_mean_MIC.py`；APEX 为 `compare_APEX/APEX_fix_train_DBAASP_MIC_5_fold_mean.py` | 这是原论文实验代码家族。当前论文图中数值目测约为：DLM MTR+DLM 0.530、ChemBERTa MTR 0.417、DLM MLM 0.408、ChemBERTa MLM 0.226、PeptideCLM 0.376、MolFormer 0.371、APEX 0.403。审稿阶段建立的 cache 复现资源并不能精确对应当前图中的全部数值，只能视为派生复现产物。 |
-| Fig. 1b 严格 target-strain zero-shot 小分子分类 | `antibiotic_3_strain_compare_MDLM_fix_cls_wo_pad_all_test.py`；checkpoint：`.../antibiotic_3_strain_compare/MDLM_fix_cls_sm_all_test_10_fold_ensembles` | **最终版 / 高置信度。** 脚本注释掉了目标 strain 内部的 KFold，并在完整 held-out target-strain 数据集上测试。完整 ensemble 指标：E. coli `#004` 为 0.9360 AUROC / 0.5890 AUPRC；A. baumannii 17978 为 0.7262 / 0.3243；S. aureus RN4220 为 0.7679 / 0.1655。 |
-| Fig. 1b fine-tuned ApexOracle | `antibiotic_3_strain_compare_MDLM_fix_cls_wo_pad.py`；checkpoint：`MDLM_fix_cls_10_fold_ensembles` | **可能的最终版 / 证据不完整。** 该脚本在目标 strain 上进行 KFold fine-tuning，但保留下来的日志只完成了前几个 fold。`..._wo_SAND.py` 去掉了 strain-aware 融合，只在分子 DLM embedding 上训练分类头，因此是 molecule-only baseline 或消融，不是完整 fine-tuned ApexOracle。 |
+| Fig. 1b 严格 target-strain zero-shot 小分子分类 | canonical 入口 `scripts/reproduce/run_antibiotic_classification.py --mode strict-zero-shot`；checkpoint：`.../antibiotic_3_strain_compare/MDLM_fix_cls_sm_all_test_10_fold_ensembles` | **最终版 / 高置信度，已完成行为保持迁移。** 完整 held-out target-strain 数据不进入训练，但仍逐 epoch 用于 best-AUROC checkpoint selection。完整 ensemble 指标：E. coli `#004` 为 0.9360 AUROC / 0.5890 AUPRC；A. baumannii 17978 为 0.7262 / 0.3243；S. aureus RN4220 为 0.7679 / 0.1655。30 个 checkpoint 和 3 个完成日志网格完整；group 0 / ensemble 0 已在 H100 上与 capsule 做到 2,335 条 logit 逐值一致。 |
+| Fig. 1b fine-tuned ApexOracle | 同一入口的 `--mode fine-tune --fold N`；checkpoint：`MDLM_fix_cls_10_fold_ensembles` | **代码路径已统一 / 历史结果证据不完整。** 该模式保留目标 strain 上的五折 KFold fine-tuning，但现存 checkpoint 只有 77/150，14 个日志中只有 6 个包含最终汇总。`--mode molecule-only` 对应旧 `wo_SAND`，完整保留仅用 DLM molecule embedding 的对照；它不是 strict zero-shot ApexOracle。 |
 | Synergy 二分类结果 | `synergy_Evo_train_new_reg_MDLM_one_base_model_classification.py`；checkpoint：`.../strain_wise_synergy/MDLM_3_fold_ensembles_1_base_model_cls` | **可能的最终版 / 中等置信度。** 使用 `synergistic_pairs_Evo.csv`、strain-wise 三折划分、单个完整 MIC base checkpoint、FICI 二分类和 7 个 ensemble。现存三个 fold 的 AUROC/AUPRC 分别为 0.6690/0.6159、0.7614/0.6853、0.8489/0.9307，未加权平均约为 0.7598/0.7440，与论文 0.7539/0.7454 接近但不完全相同。论文写 LoRA rank 64，而该 CV 脚本对 fusion 使用 1024、对 head 使用 256；rank 64 出现在后续 all-data noisy classifier 中，因此需要作者进一步确认精确版本。 |
 | Synergy 或 guidance 之前使用的完整数据 MIC base model | `train_on_all_data.py`；checkpoint 家族 `Checkpoints/genome_text_learnable_emb/guidance_regressor_pad_no_mask`，尤其是 `noise_guidance_best_R2_all_peptide_epoch_100.pth` | 这是最终 synergy 和 noisy guidance 脚本共同使用的最匹配 base model。`train_on_all_data.py` 本身保存到 `all_AMP_SM_data_train/MDLM_MTR_fix_cls_wo_pad`；路径和命名在开发过程中发生过变化，重构时必须保留实际 checkpoint 来源。 |
 | Noisy synergy/peptide guidance classifier | `synergy_Evo_train_new_reg_MDLM_one_base_model_all_data_classification.py` 和后续较干净的 `..._all_data_classification_clean.py` | **论文后实现支持。** `clean` 版本使用 rank-64 LoRA，并在 `.../synergy_judger/cls` 下保存 noisy synergy classifier。它们是 all-data guidance head，不是论文三折 synergy benchmark。`DataPrepare/MDLM/label_pep_nonpep.py` 用于准备 peptide/non-peptide 标签。 |
@@ -205,11 +205,15 @@
 
 #### 小分子抗生素分类
 
-- `antibiotic_3_strain_compare.py` 是 DLM 之前的 ChemBERTa 版本。
-- `antibiotic_3_strain_compare_MDLM_fix_cls_wo_pad_all_test.py` 是论文严格 zero-shot 实现。
-- `antibiotic_3_strain_compare_MDLM_fix_cls_wo_pad.py` 是在目标 strain 上进行 KFold fine-tuning 的版本。
-- `antibiotic_3_strain_compare_MDLM_fix_cls_wo_pad_wo_SAND.py` 注释掉 AMP/pathogen fusion 训练，只在 DLM embedding 上使用 molecule-only classification head。因此这里的 “wo_SAND” 表示没有 strain-aware 数据或融合的 baseline，而不是 strict zero-shot ApexOracle。
-- `bash/3-strain-compare-CESGA.sh` 和 `bash/3_strain_compare.sh` 是包含机器特定环境和路径的旧 SLURM/手工启动脚本。
+- 三菌株分类家族已迁移到 `scripts/reproduce/run_antibiotic_classification.py` 和
+  `configs/antibiotic_classification/legacy_three_strain.yaml`；三份 MDLM root driver、早期
+  ChemBERTa driver 及两份机器专用 launcher 已删除并由 `legacy-code-snapshot-2026-07-17`
+  tag 保留。
+- `strict-zero-shot` 不在目标 strain 上训练；`fine-tune` 使用目标 strain 五折；
+  `molecule-only` 对应旧 “wo_SAND”，仅训练 DLM molecule embedding classification head。
+- full-fusion 的 held-target selection 中 classification head 历史上未调用 `eval()`，dropout
+  仍然开启；checkpoint 的 AUPRC 又在 AUROC 改善保存之后才更新。这两项不理想行为均由
+  canonical runner 和测试明确冻结，不得在无新实验的情况下“修正”。
 
 #### Synergy 与后续 in-house 实验
 
@@ -363,7 +367,8 @@ Strain count mapping 的演化顺序如下：
 1. 撤销并删除全部明文凭据，同时加入 secret scanning。
 2. 为最终 AMP、小分子、synergy、genome、text 和 checkpoint 产物建立不可变 manifest，记录 hash 和行数。
 3. 抽取一个共享 ApexOracle library，统一 dataset/mapping、split protocol、fusion block、head、metric 和 checkpoint schema；每个论文实验只保留小型 config-driven 入口。
-4. 首先把高置信度 strain-wise 和 strict zero-shot 路径做成正式支持的 quickstart。
+4. 高置信度 hierarchical MIC 和 strict zero-shot 分类路径已经完成统一入口；下一步把这些
+   已验证入口纳入正式 quickstart，并继续迁移 sequence similarity。
 5. 在声称完整复现之前，解决或明确归档 species/phylum、synergy rank、k-mer 和 Fig. 2b 指标不一致。
 6. 清晰拆分外部项目：要么在许可证允许的前提下 vendoring 固定版本的 DLM/generation 代码，要么把它们声明为带版本的外部依赖。
 7. 把历史副本、W&B 日志、notebook、旁支项目、巨型 checkpoint 和 reviewer capsule 移出源代码包；不要盲目删除 provenance，而应保留机器可读的 archive manifest。

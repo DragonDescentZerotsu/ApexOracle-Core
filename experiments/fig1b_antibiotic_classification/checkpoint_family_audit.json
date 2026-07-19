@@ -1,0 +1,452 @@
+{
+  "audit_method": "filename_grid_stat_and_log_completion_pattern_only",
+  "checkpoint_tensors_loaded": false,
+  "families": {
+    "fine-tune": {
+      "checkpoint_grid_complete": false,
+      "checkpoint_size_bytes": {
+        "9084192442": 72,
+        "9084192506": 5
+      },
+      "complete_log_count": 6,
+      "complete_logs": [
+        "log_group_0_fold_0.log",
+        "log_group_0_fold_1.log",
+        "log_group_1_fold_0.log",
+        "log_group_1_fold_1.log",
+        "log_group_2_fold_0.log",
+        "log_group_2_fold_1.log"
+      ],
+      "directory": "Checkpoints/genome_text_learnable_emb/antibiotic_3_strain_compare/MDLM_fix_cls_10_fold_ensembles",
+      "evidence_interpretation": "checkpoint_presence_does_not_establish_complete_historical_run",
+      "expected_checkpoint_count": 150,
+      "family": "fine-tune",
+      "log_count": 14,
+      "missing_grid_members": [
+        [
+          0,
+          4,
+          2
+        ],
+        [
+          0,
+          4,
+          3
+        ],
+        [
+          0,
+          4,
+          4
+        ],
+        [
+          0,
+          5,
+          2
+        ],
+        [
+          0,
+          5,
+          3
+        ],
+        [
+          0,
+          5,
+          4
+        ],
+        [
+          0,
+          6,
+          2
+        ],
+        [
+          0,
+          6,
+          3
+        ],
+        [
+          0,
+          6,
+          4
+        ],
+        [
+          0,
+          7,
+          2
+        ],
+        [
+          0,
+          7,
+          3
+        ],
+        [
+          0,
+          7,
+          4
+        ],
+        [
+          0,
+          8,
+          2
+        ],
+        [
+          0,
+          8,
+          3
+        ],
+        [
+          0,
+          8,
+          4
+        ],
+        [
+          0,
+          9,
+          2
+        ],
+        [
+          0,
+          9,
+          3
+        ],
+        [
+          0,
+          9,
+          4
+        ],
+        [
+          1,
+          1,
+          2
+        ],
+        [
+          1,
+          1,
+          3
+        ],
+        [
+          1,
+          1,
+          4
+        ],
+        [
+          1,
+          2,
+          2
+        ],
+        [
+          1,
+          2,
+          3
+        ],
+        [
+          1,
+          2,
+          4
+        ],
+        [
+          1,
+          3,
+          2
+        ],
+        [
+          1,
+          3,
+          3
+        ],
+        [
+          1,
+          3,
+          4
+        ],
+        [
+          1,
+          4,
+          2
+        ],
+        [
+          1,
+          4,
+          3
+        ],
+        [
+          1,
+          4,
+          4
+        ],
+        [
+          1,
+          5,
+          2
+        ],
+        [
+          1,
+          5,
+          3
+        ],
+        [
+          1,
+          5,
+          4
+        ],
+        [
+          1,
+          6,
+          2
+        ],
+        [
+          1,
+          6,
+          3
+        ],
+        [
+          1,
+          6,
+          4
+        ],
+        [
+          1,
+          7,
+          2
+        ],
+        [
+          1,
+          7,
+          3
+        ],
+        [
+          1,
+          7,
+          4
+        ],
+        [
+          1,
+          8,
+          2
+        ],
+        [
+          1,
+          8,
+          3
+        ],
+        [
+          1,
+          8,
+          4
+        ],
+        [
+          1,
+          9,
+          2
+        ],
+        [
+          1,
+          9,
+          3
+        ],
+        [
+          1,
+          9,
+          4
+        ],
+        [
+          2,
+          0,
+          4
+        ],
+        [
+          2,
+          1,
+          2
+        ],
+        [
+          2,
+          1,
+          3
+        ],
+        [
+          2,
+          1,
+          4
+        ],
+        [
+          2,
+          2,
+          2
+        ],
+        [
+          2,
+          2,
+          3
+        ],
+        [
+          2,
+          2,
+          4
+        ],
+        [
+          2,
+          3,
+          2
+        ],
+        [
+          2,
+          3,
+          3
+        ],
+        [
+          2,
+          3,
+          4
+        ],
+        [
+          2,
+          4,
+          2
+        ],
+        [
+          2,
+          4,
+          3
+        ],
+        [
+          2,
+          4,
+          4
+        ],
+        [
+          2,
+          5,
+          2
+        ],
+        [
+          2,
+          5,
+          3
+        ],
+        [
+          2,
+          5,
+          4
+        ],
+        [
+          2,
+          6,
+          2
+        ],
+        [
+          2,
+          6,
+          3
+        ],
+        [
+          2,
+          6,
+          4
+        ],
+        [
+          2,
+          7,
+          2
+        ],
+        [
+          2,
+          7,
+          3
+        ],
+        [
+          2,
+          7,
+          4
+        ],
+        [
+          2,
+          8,
+          2
+        ],
+        [
+          2,
+          8,
+          3
+        ],
+        [
+          2,
+          8,
+          4
+        ],
+        [
+          2,
+          9,
+          2
+        ],
+        [
+          2,
+          9,
+          3
+        ],
+        [
+          2,
+          9,
+          4
+        ]
+      ],
+      "observed_checkpoint_count": 77,
+      "unexpected_grid_members": [],
+      "unmatched_checkpoint_filenames": []
+    },
+    "molecule-only": {
+      "checkpoint_grid_complete": true,
+      "checkpoint_size_bytes": {
+        "4148002": 150
+      },
+      "complete_log_count": 15,
+      "complete_logs": [
+        "log_group_0_fold_0.log",
+        "log_group_0_fold_1.log",
+        "log_group_0_fold_2.log",
+        "log_group_0_fold_3.log",
+        "log_group_0_fold_4.log",
+        "log_group_1_fold_0.log",
+        "log_group_1_fold_1.log",
+        "log_group_1_fold_2.log",
+        "log_group_1_fold_3.log",
+        "log_group_1_fold_4.log",
+        "log_group_2_fold_0.log",
+        "log_group_2_fold_1.log",
+        "log_group_2_fold_2.log",
+        "log_group_2_fold_3.log",
+        "log_group_2_fold_4.log"
+      ],
+      "directory": "Checkpoints/genome_text_learnable_emb/antibiotic_3_strain_compare/MDLM_fix_cls_wo_sand_10_fold_ensembles",
+      "evidence_interpretation": "checkpoint_grid_and_completion_logs_complete",
+      "expected_checkpoint_count": 150,
+      "family": "molecule-only",
+      "log_count": 15,
+      "missing_grid_members": [],
+      "observed_checkpoint_count": 150,
+      "unexpected_grid_members": [],
+      "unmatched_checkpoint_filenames": []
+    },
+    "strict-zero-shot": {
+      "checkpoint_grid_complete": true,
+      "checkpoint_size_bytes": {
+        "9084187330": 30
+      },
+      "complete_log_count": 3,
+      "complete_logs": [
+        "log_group_0.log",
+        "log_group_1.log",
+        "log_group_2.log"
+      ],
+      "directory": "Checkpoints/genome_text_learnable_emb/antibiotic_3_strain_compare/MDLM_fix_cls_sm_all_test_10_fold_ensembles",
+      "evidence_interpretation": "checkpoint_grid_and_completion_logs_complete",
+      "expected_checkpoint_count": 30,
+      "family": "strict-zero-shot",
+      "log_count": 3,
+      "missing_grid_members": [],
+      "observed_checkpoint_count": 30,
+      "unexpected_grid_members": [],
+      "unmatched_checkpoint_filenames": []
+    }
+  },
+  "schema_version": 1
+}

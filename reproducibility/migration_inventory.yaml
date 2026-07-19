@@ -36,13 +36,27 @@ entries:
       - experiments/hierarchical_mic/legacy_cleanup.json
     deletion_allowed: true
 
-  - id: fig1b_strict_zero_shot
+  - id: fig1b_antibiotic_classification
     source:
       - antibiotic_3_strain_compare_MDLM_fix_cls_wo_pad_all_test.py
+      - antibiotic_3_strain_compare_MDLM_fix_cls_wo_pad.py
+      - antibiotic_3_strain_compare_MDLM_fix_cls_wo_pad_wo_SAND.py
     destination:
-      - experiments/fig1b_zero_shot
-    status: pending_after_strainwise_core
-    deletion_allowed: false
+      - src/apexoracle/data/antibiotic_classification.py
+      - src/apexoracle/models/strain_fusion.py
+      - src/apexoracle/training/antibiotic_classification.py
+      - src/apexoracle/training/antibiotic_classification_runner.py
+      - src/apexoracle/evaluation/antibiotic_classification.py
+      - scripts/reproduce/run_antibiotic_classification.py
+      - configs/antibiotic_classification/legacy_three_strain.yaml
+      - experiments/fig1b_antibiotic_classification
+    status: unified_three_mode_runner_verified_legacy_root_duplicates_removed
+    evidence:
+      - experiments/fig1b_antibiotic_classification/README.md
+      - experiments/fig1b_antibiotic_classification/checkpoint_family_audit.json
+      - experiments/fig1b_antibiotic_classification/checkpoint_validation_group0_ensemble0.json
+      - experiments/fig1b_antibiotic_classification/legacy_cleanup.json
+    deletion_allowed: true
 
   - id: sequence_similarity
     source:

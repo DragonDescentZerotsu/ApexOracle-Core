@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "validated_at": "2026-07-19",
+  "mode": "strict-zero-shot",
+  "target_group": 0,
+  "target_strain": "#004",
+  "ensemble": 0,
+  "checkpoint_source": "capsule stripped inference checkpoint",
+  "checkpoint_schema": "seven inference keys; optimizer_state_dict intentionally omitted by capsule resource preparation",
+  "device": "NVIDIA H100 PCIe",
+  "batch_size": 70,
+  "num_examples": 2335,
+  "canonical_runner": "scripts/reproduce/run_antibiotic_classification.py",
+  "reference_runner": "capsule/code/reproduce_zero_shot_antibiotic_classification.py",
+  "ids_equal": true,
+  "labels_equal": true,
+  "predictions_exactly_equal": true,
+  "prediction_max_absolute_difference": 0.0,
+  "prediction_mean_absolute_difference": 0.0,
+  "canonical_metrics": {
+    "auroc": 0.9350169300225734,
+    "auprc": 0.6120361666817208
+  },
+  "reference_metrics": {
+    "auroc": 0.9350169300225734,
+    "auprc": 0.6120361666817208
+  },
+  "stored_checkpoint_metrics": {
+    "auroc": 0.9360647103085027,
+    "auprc": 0.5447244579454754
+  },
+  "interpretation": "Deterministic checkpoint inference is exactly equivalent when batch size and module modes are held fixed. Stored training-time metrics differ because the legacy full-fusion classification head remained in train mode during checkpoint selection."
+}
