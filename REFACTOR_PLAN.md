@@ -310,12 +310,27 @@ Modality ablation 的绘图血缘已于 2026-07-19 冻结。最终 Mac notebook 
 
 完成迁移与最小验证后，从重构分支删除：
 
-- 被最终入口取代的 MIC、fine-tune、synergy、few-shot 复制脚本；
-- `_old.py`、debug、临时 notebook 和机器专用 launcher；
-- `Fangping_correlation/`、`e3nn_playground/`；
-- `GPU_eye.py`、`run.py`、`run_full.py` 等资源占用工具；
-- W&B 本地日志、缓存、旧结果和 capsule 中的重复源码；
-- 无法移植且不再使用的绝对路径 shell 脚本。
+- [x] 已被 canonical 入口取代的 hierarchical MIC、Fig. 1b、sequence similarity、早期
+  Fig. 2b 和 APEX 支持代码；
+- [ ] synergy、few-shot 与其余 in-house 副本：在 guidance/候选血缘迁移前暂留；
+- [x] 已确认无消费者的 `_old.py`、debug、临时 notebook 和部分机器专用 launcher；
+- [x] `Fangping_correlation/`、`e3nn_playground/`；
+- [x] `GPU_eye.py`、`run.py`、`run_full.py` 等资源占用工具；
+- [x] tracked capsule 重复源码；W&B 本地日志、缓存和旧结果继续由 `.gitignore` 排除；
+- [ ] 仍服务于外部 DLM preprocessing 的机器专用 shell，以及证据未冻结的 launcher。
+
+执行进度（2026-07-19）：已完成第一批发布清理，共删除 59 个 tracked 文件、未删除任何数据、
+checkpoint 或结果。范围包括 11 个 `Fangping_correlation` 旁支文件、4 个 e3nn 教程、3 个 GPU
+占卡/监控工具、11 个被取代的 `compare_APEX` Python/launcher、6 个早期 Fig. 2b driver 和
+24 个可由 builder 重建的 `capsule*/data/source` 副本。精确清单和恢复点位于
+`reproducibility/release_cleanup_2026-07-19.json`。
+
+删除 `compare_APEX` 源码前，实际消费的 APEX encoder、AAindex loader、23-token adapter、masked
+loss 和 per-task R² 已迁入 `src/apexoracle/benchmarks/molecule_encoders/`。真实 checkpoint
+`strict=True` 加载，固定四序列的 legacy/canonical `(4,128)` feature SHA-256 完全相同；三个
+Fig. 2b runner、两个 Fig. 2b capsule builder 和 zero-shot capsule source builder 均已切换到
+canonical source。`compare_APEX/aaindex1.csv` 与 checkpoint 继续作为被 Git 忽略的 paper
+assets 保留。modality、synergy 和 Fig. 2c comparator driver 因证据边界仍暂留。
 
 `PeptideCLM/` 不作为自有核心代码维护。优先改为明确版本的外部依赖；如果必须 vendor，则只保留必要文件并完整保留上游 README、LICENSE 和来源说明。
 
@@ -352,9 +367,14 @@ logit 逐值一致验证。
 Synergy CV 本批新增 8 项 CPU 测试，覆盖 FICI label、双分子 token filter、Dataset/collate、
 分子顺序对称、BCE forward、LoRA-only checkpoint schema 以及 base/member round-trip。真实
 H100 checkpoint 两路 forward 与 1-member/1-epoch runner smoke 另行通过。全仓库当前为
-94 passed / 3 skipped；三个 skipped 均为沙箱内不可见 CUDA
+103 passed / 3 skipped；三个 skipped 均为沙箱内不可见 CUDA
 时跳过的测试，其中本批新增 CUDA test 已在宿主 H100 单独通过。阶段 6 仍未整体完成，因为
 其余未迁移实验尚无对应 smoke/checkpoint 验证。
+
+同日 APEX support migration 新增 3 项测试，覆盖 inline legacy forward、masked loss/R² 公式、
+真实 AAindex checksum、真实 checkpoint strict load 和固定 feature hash；另以 100-row、5-fold、
+1-epoch CPU cached runner 完成端到端 smoke。10-row 诊断会因部分 fold 没有 finite task R² 触发
+旧 runner 的 missing-best-summary 边界，本阶段为保持 selection 行为没有修改该语义。
 
 ### 阶段 7：文档和发布
 

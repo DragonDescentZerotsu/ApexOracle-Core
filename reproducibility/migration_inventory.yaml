@@ -4,14 +4,19 @@ last_updated: 2026-07-19
 entries:
   - id: fig2b_molecule_encoders
     source:
-      - capsule_fig2/code
+      - legacy-code-snapshot-2026-07-17:compare_APEX
+      - legacy-code-snapshot-2026-07-17:fine_tune_on_DBAASP_SMILES_*.py
       - fix_*_on_DBAASP_SMILES_5_fold_mean_MIC.py
-      - compare_APEX/APEX_fix_train_DBAASP_MIC_5_fold_mean.py
     destination:
       - src/apexoracle/benchmarks/molecule_encoders
       - experiments/fig2b_molecule_encoders
+      - src/apexoracle/benchmarks/molecule_encoders/apex_model.py
+      - src/apexoracle/benchmarks/molecule_encoders/legacy_training.py
     status: migrated_and_formally_rerun
-    evidence: experiments/fig2b_molecule_encoders/results_shared_5fold.md
+    evidence:
+      - experiments/fig2b_molecule_encoders/results_shared_5fold.md
+      - experiments/fig2b_molecule_encoders/apex_legacy_migration_audit.json
+    deletion_allowed: true
 
   - id: hierarchical_mic_holdouts
     source:
@@ -153,5 +158,6 @@ entries:
       - bash/*.sh
     destination:
       - legacy-code-snapshot-2026-07-17
-    status: hierarchical_mic_duplicates_deleted_other_families_pending
+    status: cleanup_batch_2026_07_19_completed_remaining_families_evidence_gated
+    evidence: reproducibility/release_cleanup_2026-07-19.json
     deletion_allowed: true

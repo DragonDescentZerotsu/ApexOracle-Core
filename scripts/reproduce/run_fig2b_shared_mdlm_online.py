@@ -2,7 +2,7 @@
 """Run one paper-compatible shared-data Fig. 2b DLM fold.
 
 This keeps the online frozen-backbone behavior of
-``/data2/tianang/projects/mdlm/DBAASP_MLM_MDLM.py``.  The only scientific
+the external ``mdlm/DBAASP_MLM_MDLM.py`` implementation. The only scientific
 protocol changes are the reviewer-requested common molecule IDs and common
 fold assignment.
 """
@@ -13,6 +13,7 @@ import argparse
 import hashlib
 import json
 import math
+import os
 import sys
 import time
 from collections import OrderedDict
@@ -30,8 +31,10 @@ from torch.utils.data import DataLoader, Dataset, Subset
 from transformers import AutoTokenizer
 
 
-SYNERGY_DIR = Path("/data2/tianang/projects/Synergy")
-MDLM_DIR = Path("/data2/tianang/projects/mdlm")
+SYNERGY_DIR = Path(__file__).resolve().parents[2]
+MDLM_DIR = Path(
+    os.environ.get("APEXORACLE_MDLM_DIR", str(SYNERGY_DIR.parent / "mdlm"))
+).resolve()
 SHARED_DIR = SYNERGY_DIR / "DataPrepare" / "Data" / "fig2b_shared_v1"
 SELFIES_SOURCE = SYNERGY_DIR / "DataPrepare" / "Data" / "DBAASP_id_SELFIES_bact_MICs.csv"
 TOKENIZER_NAME = "ibm-research/materials.selfies-ted"

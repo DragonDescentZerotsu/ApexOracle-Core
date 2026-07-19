@@ -10,13 +10,11 @@ from __future__ import annotations
 
 import argparse
 import json
-import math
 import os
 import sys
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterable
 
 import numpy as np
 import pandas as pd
@@ -30,7 +28,25 @@ from tqdm import tqdm
 from transformers import AutoModel, AutoTokenizer
 
 
-REPO_ROOT = Path("/data2/tianang/projects/Synergy")
+REPO_ROOT = Path(__file__).resolve().parents[1]
+SRC_ROOT = REPO_ROOT / "src"
+if str(SRC_ROOT) not in sys.path:
+    sys.path.insert(0, str(SRC_ROOT))
+
+from apexoracle.benchmarks.molecule_encoders.apex_adapter import (
+    build_apex_vocabulary,
+    legacy_onehot_encoding,
+)
+from apexoracle.benchmarks.molecule_encoders.apex_model import (
+    ApexEncoder,
+    load_aaindex_embedding,
+)
+from apexoracle.benchmarks.molecule_encoders.legacy_training import (
+    LegacyMaskedMSELoss,
+    finite_mean_or_nan,
+    legacy_r2_per_task,
+)
+
 DEFAULT_OUTPUT_DIR = REPO_ROOT / "Checkpoints" / "fig2b_baselines_cached_5fold"
 SMILES_DATA = REPO_ROOT / "DataPrepare" / "Data" / "DBAASP_id_SMILES_bact_MICs.csv"
 APEX_DATA = REPO_ROOT / "DataPrepare" / "Data" / "DBAASP_id_same_as_SMILES_AAseqs_bact_MICs_512_limit.csv"
@@ -186,21 +202,6 @@ class RegressionHead(nn.Module):
         return self.out_proj(x)
 
 
-class MultiTaskLoss(nn.Module):
-    def __init__(self, reduction: str = "mean"):
-        super().__init__()
-        self.reduction = reduction
-
-    def forward(self, y_pred, y_true, mask):
-        loss = (y_pred - y_true) ** 2
-        masked_loss = loss * mask
-        if self.reduction == "mean":
-            return masked_loss.sum() / (mask.sum() + 1e-8)
-        if self.reduction == "sum":
-            return masked_loss.sum()
-        return masked_loss
-
-
 def collate_tokens(batch, pad_token_id: int):
     input_ids = pad_sequence([item["input_ids"] for item in batch], batch_first=True, padding_value=pad_token_id)
     attention_mask = pad_sequence([item["attention_mask"] for item in batch], batch_first=True, padding_value=0)
@@ -222,29 +223,6 @@ def prepare_labels(raw_labels: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
     valid = mask.astype(bool)
     labels[valid] = -np.log10(labels[valid] / 10.0)
     return labels, mask
-
-
-def calculate_r2_per_task(labels, preds, masks) -> list[float | None]:
-    labels = np.asarray(labels)
-    preds = np.asarray(preds)
-    masks = np.asarray(masks)
-    r2_per_task = []
-    for task_idx in range(labels.shape[1]):
-        mask = masks[:, task_idx].astype(bool)
-        y_true = labels[mask, task_idx]
-        y_pred = preds[mask, task_idx]
-        if len(y_true) == 0:
-            r2_per_task.append(None)
-            continue
-        ss_total = np.sum((y_true - np.mean(y_true)) ** 2)
-        ss_residual = np.sum((y_true - y_pred) ** 2)
-        r2_per_task.append(float(1 - (ss_residual / ss_total)))
-    return r2_per_task
-
-
-def finite_mean(values: Iterable[float | None]) -> float:
-    vals = [v for v in values if v is not None and math.isfinite(v)]
-    return float(np.mean(vals)) if vals else float("nan")
 
 
 def get_peptideclm_tokenizer():
@@ -314,18 +292,23 @@ def extract_hf_features(spec: ModelSpec, device: torch.device, batch_size: int, 
 
 
 def extract_apex_features(spec: ModelSpec, device: torch.device, batch_size: int, limit_rows: int | None):
-    sys.path.insert(0, str(REPO_ROOT / "compare_APEX"))
-    from APEX_models import AMP_model_fix
-    from utils import AAindex, make_vocab, onehot_encoding
-
-    word2idx, _ = make_vocab()
-    emb, _ = AAindex(str(REPO_ROOT / "compare_APEX" / "aaindex1.csv"), word2idx)
+    word2idx, _ = build_apex_vocabulary()
+    emb, _ = load_aaindex_embedding(
+        REPO_ROOT / "compare_APEX" / "aaindex1.csv", word2idx
+    )
     data = pd.read_csv(spec.data_path)
     if limit_rows is not None:
         data = data.head(limit_rows)
-    dataset = ApexDataset(data, max_length=52, word2idx=word2idx, onehot_encoding=onehot_encoding)
+    dataset = ApexDataset(
+        data,
+        max_length=52,
+        word2idx=word2idx,
+        onehot_encoding=legacy_onehot_encoding,
+    )
     loader = DataLoader(dataset, batch_size=batch_size, shuffle=False, collate_fn=collate_apex)
-    model = AMP_model_fix(emb, np.shape(emb)[1], num_rnn_layers=3, dim_h=128)
+    model = ApexEncoder(
+        emb, np.shape(emb)[1], num_rnn_layers=3, hidden_dim=128
+    )
     checkpoint = torch.load(REPO_ROOT / "compare_APEX" / "APEX_ckpt" / "APEX_pretrained_encoder_state_dict_best.ckpt", map_location="cpu")
     model.load_state_dict(checkpoint)
     model.to(device)
@@ -394,8 +377,8 @@ def evaluate_head(head, features, labels, masks, device: torch.device, batch_siz
             batch = features[start : start + batch_size].to(device)
             preds.append(head(batch).detach().cpu())
     preds = torch.cat(preds, dim=0).numpy()
-    r2_per_task = calculate_r2_per_task(labels.numpy(), preds, masks.numpy())
-    return r2_per_task, finite_mean(r2_per_task)
+    r2_per_task = legacy_r2_per_task(labels.numpy(), preds, masks.numpy())
+    return r2_per_task, finite_mean_or_nan(r2_per_task)
 
 
 def train_fold(spec: ModelSpec, cache: dict, fold: int, train_idx, test_idx, output_dir: Path, device: torch.device, args):
@@ -416,7 +399,7 @@ def train_fold(spec: ModelSpec, cache: dict, fold: int, train_idx, test_idx, out
         num_targets=int(labels.shape[1]),
         pooler_dropout=0.2,
     ).to(device)
-    criterion = MultiTaskLoss()
+    criterion = LegacyMaskedMSELoss()
     optimizer = optim.Adam(head.parameters(), lr=args.learning_rate)
     test_features = features[test_idx]
     test_labels = labels[test_idx]

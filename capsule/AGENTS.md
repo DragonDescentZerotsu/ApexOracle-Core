@@ -338,7 +338,8 @@ code/run zero-shot --group 0 --num-ensembles 1 --max-batches 2
 - `fix_ChemBERTa_MLM_mean_emb_on_DBAASP_SMILES_5_fold_mean_MIC.py`
 - `fix_MolFormer_on_DBAASP_SMILES_5_fold_mean_MIC.py`
 - `fix_PeptideCLM_on_DBAASP_SMILES_5_fold_mean_MIC.py`
-- `compare_APEX/APEX_fix_train_DBAASP_MIC_5_fold_mean.py`
+- legacy tag 中的 `compare_APEX/APEX_fix_train_DBAASP_MIC_5_fold_mean.py`；当前 APEX 支持实现位于
+  `src/apexoracle/benchmarks/molecule_encoders/`
 
 判断依据：
 
@@ -401,11 +402,11 @@ code/run zero-shot --group 0 --num-ensembles 1 --max-batches 2
   - 本地 head 训练记录
 - `fig2b_mic_regression/mdlm_dlm_mtr/embedding_cache_manifest.json`
   - feature cache 生成记录
-- `source/reproduce_fig2b_mdlm_cached_5fold.py`
+- builder 生成的 `source/reproduce_fig2b_mdlm_cached_5fold.py`
   - 本地生成 feature cache 和 head checkpoint 的脚本备份
-- `source/reproduce_fig2b_baselines_cached_5fold.py`
+- builder 生成的 `source/reproduce_fig2b_baselines_cached_5fold.py`
   - 本地生成 baseline feature cache 和 head checkpoint 的脚本备份
-- `source/DBAASP_MLM_MDLM.py`
+- builder 生成的 `source/DBAASP_MLM_MDLM.py`
   - 原始 DLM Fig. 2b 脚本备份
 
 正式运行命令：
