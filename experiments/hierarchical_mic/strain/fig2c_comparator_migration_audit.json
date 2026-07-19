@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "audit_date": "2026-07-19",
+  "scope": "Fig. 2c strain-wise online molecular encoder comparators",
+  "canonical_runner": "scripts/reproduce/run_hierarchical_mic.py",
+  "canonical_config": "configs/hierarchical_mic/legacy_fig2c_comparators.yaml",
+  "deleted_legacy_files": [
+    "DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_strains_ChemBERTa_MTR.py",
+    "DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_strains_ChemBERTa_MLM.py",
+    "DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_strains_MolFormer.py",
+    "DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_strains_PeptideCLM.py",
+    "bash/PeptideCLM_benchmarking.sh"
+  ],
+  "recovery_tag": "legacy-code-snapshot-2026-07-17",
+  "data_mutation": "none; all source CSV, embedding, and checkpoint inputs were opened read-only",
+  "source_data_sha256": {
+    "DataPrepare/Data/DBAASP_inhouse_AMP_SMILES_MIC_Evo.csv": "af35bb4be1e08d6c95047dd3f05fc24c70568d40373d246fced6d150b19fd079",
+    "DataPrepare/Data/small_molecule/processed/small_molecule_Evo_binary_data.csv": "4dabc0f8ac808d33ede3eacb47bacf7b55b2a900fcf78fd3d45a89c2037f3dc2",
+    "DataPrepare/Data/DBAASP_inhouse_AMP_SELFIES_token_MIC_Evo.csv": "ac1a1967d9e94e169ffc23621f7e78c644753659bd08f7a8e10bb63b574930b2",
+    "DataPrepare/Data/small_molecule/processed/small_molecule_Evo_binary_data_SELFIES.csv": "d8e6391bfae3c35fe8d311461565df177fc75044cbc40204bf74f7ecf1fe7f27"
+  },
+  "comparators": {
+    "chemberta_mtr": {
+      "legacy_source": "DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_strains_ChemBERTa_MTR.py",
+      "local_source_sha256": "420da351dab7016f0554ce52a70c509fb1ad23e5dd853754f1c089e9ab4bc4db",
+      "node002_source": "not_found",
+      "model_id": "DeepChem/ChemBERTa-77M-MTR",
+      "pinned_reproduction_revision": "66b895cab8adebea0cb59a8effa66b2020f204ca",
+      "hidden_size": 384,
+      "initial_mode": "eval",
+      "freeze_epochs": 3000,
+      "ensembles_per_group": 1,
+      "checkpoint_validation": {
+        "path": "Checkpoints/genome_text_learnable_emb/strain_wise_w_SM_b_attn/ChemBERTa_eval_1_fold_ensembles/genome_text_learnable_emb_Strain_wise_best_R2_group_1_ensemble_0.pth",
+        "stored_r2": 0.4951401654160912,
+        "encoder_state_keys": 55,
+        "strict_load_missing_keys": [],
+        "strict_load_unexpected_keys": []
+      }
+    },
+    "chemberta_mlm": {
+      "legacy_source": "DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_strains_ChemBERTa_MLM.py",
+      "local_source_sha256": "1459209b6d263b7d7c8d522edefccb2b6ce8a4c46df335f63ceeda71d2547cf4",
+      "node002_source_sha256": "1459209b6d263b7d7c8d522edefccb2b6ce8a4c46df335f63ceeda71d2547cf4",
+      "model_id": "DeepChem/ChemBERTa-77M-MLM",
+      "pinned_reproduction_revision": "ed8a5374f2024ec8da53760af91a33fb8f6a15ff",
+      "hidden_size": 384,
+      "initial_mode": "train",
+      "freeze_epochs": 3,
+      "ensembles_per_group": 7,
+      "checkpoint_validation": {
+        "path": "node002:/data1/tianang/Projects/Synergy/Checkpoints/genome_text_learnable_emb/strain_wise_w_SM_b_attn/ChemBERTa_MLM_7_fold_ensembles/genome_text_learnable_emb_Strain_wise_best_R2_group_0_ensemble_0.pth",
+        "stored_r2": 0.23283149570566453,
+        "encoder_state_keys": 55,
+        "state_schema_sha256": "6f6f04224f18c4375ff6c308e8a60c838f511e809d0414e95a834c0467efbc1c",
+        "schema_matches_pinned_model": true
+      }
+    },
+    "molformer": {
+      "legacy_source": "DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_strains_MolFormer.py",
+      "local_source_sha256": "61d6db9a331c1f767fc2379333be84195c7d38789906761a55b0bff569ec6a85",
+      "node002_source_sha256": "61d6db9a331c1f767fc2379333be84195c7d38789906761a55b0bff569ec6a85",
+      "model_id": "ibm/MoLFormer-XL-both-10pct",
+      "pinned_reproduction_revision": "7b12d946c181a37f6012b9dc3b002275de070314",
+      "hidden_size": 768,
+      "initial_mode": "train",
+      "freeze_epochs": 3,
+      "ensembles_per_group": 7,
+      "checkpoint_validation": {
+        "path": "Checkpoints/genome_text_learnable_emb/strain_wise_w_SM_b_attn/MolFormer_7_fold_ensembles/genome_text_learnable_emb_Strain_wise_best_R2_group_0_ensemble_0.pth",
+        "stored_r2": 0.25281491329083927,
+        "encoder_state_keys": 207,
+        "strict_load_missing_keys": [],
+        "strict_load_unexpected_keys": []
+      }
+    },
+    "peptideclm": {
+      "legacy_source": "DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_strains_PeptideCLM.py",
+      "local_source_sha256": "44eb7435447bdcea1007258e34c35ddd72fbb8c9e380952afd7b0d6034356fd8",
+      "node002_source_sha256": "1589c7ced6366a90802b71ebbda5d46a09ab7798fb6459dcf1eba26ccecadcf5",
+      "model_id": "aaronfeller/PeptideCLM-23M-all",
+      "pinned_reproduction_revision": "a0847d8231d236645a2c4f629590118716c6fdda",
+      "hidden_size": 768,
+      "initial_mode": "eval",
+      "freeze_epochs": 5000,
+      "ensembles_per_group": 1,
+      "checkpoint_validation": {
+        "path": "Checkpoints/genome_text_learnable_emb/strain_wise_w_SM_b_attn/PeptideCLM_fix_1_fold_ensembles/genome_text_learnable_emb_Strain_wise_best_R2_group_1_ensemble_0.pth",
+        "stored_r2": 0.5736771016647191,
+        "encoder_state_keys": 101,
+        "strict_load_missing_keys": [],
+        "strict_load_unexpected_keys": []
+      },
+      "provenance_limit": "The later local fixed driver/checkpoint uses one frozen eval-mode member; node002 preserves an earlier seven-member, freeze-after-three-epochs variant, but no complete seven-member checkpoint grid was found. The exact paper ensemble lineage remains unresolved."
+    }
+  },
+  "shared_legacy_contract": {
+    "input": "raw SMILES tokenized online",
+    "pooling": "last_hidden_state[:, 0, :]",
+    "batch_size": 70,
+    "backbone_optimizer_learning_rate": 0.000003,
+    "backbone_weight_decay_multiplier": 0.1,
+    "optimizer_group_order": [
+      "genome_attention",
+      "text_attention",
+      "regression_head",
+      "classification_head",
+      "missing_genome_embedding",
+      "molecule_encoder"
+    ],
+    "checkpoint_encoder_key": "ChemBERTa_state_dict"
+  },
+  "evidence_boundary": {
+    "verified_facts": [
+      "The canonical profiles preserve the source-level mode, freeze boundary, ensemble count, hidden size, optimizer group order, pooling, and checkpoint key differences.",
+      "The surviving MTR, MolFormer, and PeptideCLM checkpoint encoder states load strictly into their pinned reproduction revisions; the node002 MLM checkpoint state schema exactly matches its pinned revision.",
+      "Real-data dry-runs succeeded without writing source data.",
+      "All four pinned backbones completed a real H100 CUDA forward; ChemBERTa-MLM and MolFormer also completed backward after the preserved epoch-three unfreeze transition."
+    ],
+    "inference": "Pinned revisions are compatible reproduction anchors; legacy scripts did not log the precise upstream Hugging Face commit used in 2025.",
+    "unresolved": [
+      "The historical Python hash seed was not logged, so exact held-out membership is not claimed even when aggregate counts match.",
+      "PeptideCLM has divergent local fixed and node002 seven-member variants, and the exact plotted ensemble lineage is not fully recovered."
+    ]
+  }
+}

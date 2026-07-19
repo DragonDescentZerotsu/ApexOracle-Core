@@ -37,7 +37,10 @@
 - **已由 node002 原始目录和源码验证的事实：** 24-layer、hidden size 1024 的 `best.ckpt` 原始训练目录为 `node002:/data1/fangping/mdlm/outputs/openwebtext-train/2025.05.06/112126/checkpoints`；该目录现存 `best.ckpt`、`last.ckpt` 和 step 960000–1000000 的 checkpoint，均为 5,268,558,165 bytes。原始 `diffusion.py` 从训练目标中直接返回 `loss + 0.1*reg_mse`，`models/dit.py` 构建 209-descriptor regression head，因此这是从训练开始就使用联合 DLM+MTR 目标的模型。
 - **已由 node002 checkpoint 验证的事实：** 存在 12-layer、hidden size 768 的 joint DLM+MTR checkpoint：`node002:/data1/fangping/mdlm/outputs/openwebtext-train/2025.04.29/165523/checkpoints/best.ckpt`，global step 650032，SHA-256 `3c612c9c68b9ee72c077dc1492153fa30d5c9fa4cb1753355bf146cff616c9d6`，包含四个 `backbone.regression.*` 参数。这与 12-layer/768 的 DLM-only `best_2.ckpt` 构成容量匹配候选对。
 - **仍待实验核验的事项：** 上述 12-layer 配对尚未运行共同数据五折 benchmark，而且两次预训练的 learning rate、global batch size 和最佳 step 不同，因此只能称为容量匹配比较，不能称为除 objective 外所有条件完全相同的单变量消融。在当前机器、node002、W&B 和公开 Hugging Face 权重中仍未找到 24-layer/1024 的纯 DLM checkpoint。
-- Fig. 2b 的两个 DLM 本地 checkpoint、APEX checkpoint 和四个 Hugging Face 模型均已进入 manifest。ChemBERTa-MTR、ChemBERTa-MLM 和 PeptideCLM 的上游 revision 尚待固定；MolFormer revision 已固定。
+- Fig. 2b 的两个 DLM 本地 checkpoint、APEX checkpoint 和四个 Hugging Face 模型均已进入
+  manifest。ChemBERTa-MTR、ChemBERTa-MLM、MolFormer 和 PeptideCLM 的复现 revision 均已
+  固定；ChemBERTa-MTR、ChemBERTa-MLM 和 PeptideCLM 的原始 2025 run 没有记录精确 upstream
+  commit，因此状态明确写为“固定复现锚点，旧 run revision 未记录”。
 
 ## 论文及审稿回复路径
 
@@ -106,9 +109,10 @@
   strain/species。统一 adapter 的 Fungi 数据计数与 node002 终版日志逐项一致；species group 0
   计数也与本机 MDLM 日志一致。三个协议的真实数据 dry-run 和 H100 一轮四路训练集成 smoke
   均已通过。
-- 被统一 runner 替代的 15 个 root DP/in-house/SM/pooling/eval 脚本、capsule 中第二份 strain
+- 被统一 runner 替代的 root DP/in-house/SM/pooling/eval 脚本、capsule 中第二份 strain
   driver 和旧打包脚本已删除；完整恢复点为 `legacy-code-snapshot-2026-07-17`。Fig. 2c 的四个
-  不同 encoder comparator 与尚未迁移的 modality ablation 血缘仍保留。
+  online encoder comparator 也已迁入同一 runner 的显式 profiles 并删除 root 复制 driver；
+  尚未迁移的 modality ablation 训练血缘继续保留。
 
 ### 根据现有证据作出的推断
 
@@ -145,7 +149,7 @@
 | Fig. 1a strain-wise 泛化；Fig. 2c 最终 DLM 和 7 模型 ensemble | `scripts/reproduce/run_hierarchical_mic.py --protocol strain`；checkpoint：`Checkpoints/genome_text_learnable_emb/strain_wise_w_SM_b_attn/MDLM_MTR_fix_7_fold_ensembles` | **最终版 / 高置信度。** 三个完整 group 的 ensemble R2 分别为 0.4057、0.6889、0.6434，平均值恰好为论文中的 0.5793；每组均有 7 个模型。 |
 | Fig. 1a / Fig. 2f phylum-wise holdout | `scripts/reproduce/run_hierarchical_mic.py --protocol phylum`；checkpoint 位于 `.../3_species_w_SM/MDLM_MTR_fix_cls_wo_pad_7_fold_ensembles` | **代码路径已统一并验证；历史结果仍为中等置信度。** node002 找回三个 MDLM 终版日志/checkpoint，Fungi 分区与新 adapter 完全一致；现存指标与论文 0.3744 仍不一致，因此不能声称完整恢复论文绘图运行。 |
 | Fig. 1a / Fig. 2d、g species-wise 11-cluster holdout | `scripts/reproduce/run_hierarchical_mic.py --protocol species`；checkpoint 位于 `.../11_species_w_SM/MDLM_MTR_fix_cls_wo_pad_7_fold_ensembles` | **代码路径已统一并验证；历史结果仍为中等置信度。** 现存终版日志只有 group 6–10；论文中完整 11-cluster 汇总运行没有保留下来。 |
-| Fig. 2c strain-wise molecular encoder 比较 | 统一 runner 的 DLM，以及保留的 `..._ChemBERTa_MLM.py`、`..._ChemBERTa_MTR.py`、`..._MolFormer.py`、`..._PeptideCLM.py` | DLM 终版为高置信度。其余脚本是不同 encoder comparator，不属于本次删除的同模型复制版本；部分 comparator checkpoint 或日志仍不完整。 |
+| Fig. 2c strain-wise molecular encoder 比较 | `scripts/reproduce/run_hierarchical_mic.py --protocol strain --molecule-encoder {chemberta_mtr,chemberta_mlm,molformer,peptideclm}`；配置 `configs/hierarchical_mic/legacy_fig2c_comparators.yaml` | **代码路径已统一并通过真实模型 H100 smoke。** profiles 保留各 encoder 的 online tokenization、first-token pooling、mode、freeze epoch、ensemble 数和 optimizer 差异。MTR/MolFormer/PeptideCLM 现存 checkpoint 已严格匹配固定 revision；node002 MLM checkpoint 的 state schema 精确匹配。PeptideCLM fixed 与 node002 早期 7-member 变体不同，论文精确 ensemble 血缘仍未完全恢复。 |
 | Fig. 2c Evo-2 与 k-mer 消融 | 当前没有对应源代码；`Checkpoints/KMER_genome_text_learnable_emb` 下只有 2026 年的部分或失败日志 | **缺失。** 论文报告 R2 下降 11.6%，但当前 KMER 日志没有完整结束，仓库内也没有包含 k-mer 实现的 Python 文件。不能声称当前仓库能够复现该结果。 |
 | Fig. 2b 不使用 strain knowledge 的五折 molecular representation benchmark | canonical 模块为 `src/apexoracle/benchmarks/molecule_encoders/`，正式结果见 `experiments/fig2b_molecule_encoders/results_shared_5fold.md`；DLM 预训练代码仍位于外部 `/data2/tianang/projects/mdlm` | **正式修订版 / 高置信度。** 7-model × 5-fold 已在 10,886 个共享 molecule 上完成；旧 root/capsule source 副本由 legacy tag 和 migration audit 追溯。 |
 | Fig. 1b 严格 target-strain zero-shot 小分子分类 | canonical 入口 `scripts/reproduce/run_antibiotic_classification.py --mode strict-zero-shot`；checkpoint：`.../antibiotic_3_strain_compare/MDLM_fix_cls_sm_all_test_10_fold_ensembles` | **最终版 / 高置信度，已完成行为保持迁移。** 完整 held-out target-strain 数据不进入训练，但仍逐 epoch 用于 best-AUROC checkpoint selection。完整 ensemble 指标：E. coli `#004` 为 0.9360 AUROC / 0.5890 AUPRC；A. baumannii 17978 为 0.7262 / 0.3243；S. aureus RN4220 为 0.7679 / 0.1655。30 个 checkpoint 和 3 个完成日志网格完整；group 0 / ensemble 0 已在 H100 上与 capsule 做到 2,335 条 logit 逐值一致。 |
@@ -172,7 +176,9 @@
 - 11-cluster、3-cluster 与 strain-wise 的最终 MDLM 路径现在都应使用
   `scripts/reproduce/run_hierarchical_mic.py`。旧 `..._MDLM_cls_fix.py`、
   `..._MDLM_MTR_fix.py`、pooling 和预计算 feature 变体仅作为历史血缘记录，不再是活跃入口。
-- `..._ChemBERTa_MLM.py`、`..._ChemBERTa_MTR.py`、`..._MolFormer.py` 和 `..._PeptideCLM.py` 是 Fig. 2c 的 strain-wise encoder comparator。
+- Fig. 2c 的 ChemBERTa-MLM、ChemBERTa-MTR、MolFormer 和 PeptideCLM root drivers 已由
+  `legacy_fig2c_comparators.yaml` 的四个 profiles 替代；原文件只在
+  `legacy-code-snapshot-2026-07-17` 中保留。
 
 #### Molecule-only Fig. 2b benchmark
 
@@ -357,7 +363,8 @@ Strain count mapping 的演化顺序如下：
 - `PeptideCLM/`：打包进来的第三方 PeptideCLM tokenizer、example 和 notebook，用于 PeptideCLM comparator，但不是 ApexOracle 自有核心代码。必须保留其 README/LICENSE，并明确标注 vendored 来源。
 - `GPU_eye.py`、`run_full.py` 和故意占用 GPU 的 `run.py` 是非科学资源工具；已于 2026-07-19
   删除并由 legacy tag 保留。
-- `bash/PeptideCLM_benchmarking.sh`：PeptideCLM strain-wise benchmark 的历史 CESGA launcher。
+- `bash/PeptideCLM_benchmarking.sh` 是指向已迁移 root driver 的历史 CESGA launcher，已随 Fig. 2c
+  comparator 迁移删除；由 legacy tag 恢复。
 - `environment.yml`：名为 `cold_base` 的完整 Anaconda 环境导出，规模过大，不是最小可复现环境。发布清理时应替换为经过筛选的 environment 或 lockfile。
 - `Readme.md`：只有几行的过期说明，仍指向旧 mean-MIC 文件和 `fine_tune_on_DBAASP_SMILES_5_fold_mean_MIC.py`；必须重写，不能作为当前文档使用。
 
@@ -368,7 +375,10 @@ Strain count mapping 的演化顺序如下：
 - **已删除并由 legacy tag 保留：** 旧 DP/in-house/SM hierarchical drivers、11/3 species
   复制版本、strain MDLM root driver 以及 `*_cls_wo_padding*`、`*_mean_wo_padding*`、`*_eval.py`
   feature 变体。canonical 替代入口是 `scripts/reproduce/run_hierarchical_mic.py`。
-- **仍保留且不得当作重复版本删除：** `DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_strains_ChemBERTa_MLM.py`、`DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_strains_ChemBERTa_MTR.py`、`DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_strains_MolFormer.py`、`DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_strains_PeptideCLM.py`。它们是 Fig. 2c 的不同 encoder comparator。
+- **已迁移的 Fig. 2c comparator：** 四个 root driver 的不同语义没有被抹平，而是进入
+  `legacy_fig2c_comparators.yaml` profiles；root 副本已删除并由 legacy tag 恢复。逐文件 SHA、
+  node002 差异、checkpoint 证据和仍未解决的 PeptideCLM 血缘见
+  `experiments/hierarchical_mic/strain/fig2c_comparator_migration_audit.json`。
 - 较早的 genome-only、text-only 与 genome+text 文件仍作为未完成核验的 modality ablation
   血缘暂留；在建立对应统一入口前不得删除。
 - 早期 genome ensemble 的完整文件名：`MIC_with_genome_test_on_non_seen_species_3_species_5_ensemble.py` 和 `MIC_with_genome_test_on_non_seen_species_11_species_5_ensemble.py`。

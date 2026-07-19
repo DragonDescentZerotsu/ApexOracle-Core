@@ -18,11 +18,16 @@
 | `fig2b_dlm_mtr_dlm` | `/data2/tianang/projects/mdlm/Checkpoints_fangping/best.ckpt` | SHA-256 `f8df1fb5…d8ca` | `molecule_encoders/dlm_mtr_dlm/best.ckpt` | 已验证用于修订 benchmark |
 | `fig2b_dlm_mtr_dlm_small_candidate` | `node002:/data1/fangping/mdlm/outputs/openwebtext-train/2025.04.29/165523/checkpoints/best.ckpt` | SHA-256 `3c612c9c…6c9d6` | `molecule_encoders/dlm_mtr_dlm_small/best.ckpt` | 12-layer 容量匹配候选；尚未运行共同数据 benchmark |
 | `fig2b_apex_encoder` | `compare_APEX/APEX_ckpt/APEX_pretrained_encoder_state_dict_best.ckpt` | SHA-256 `a4b37338…b2b9` | `molecule_encoders/apex/APEX_pretrained_encoder_state_dict_best.ckpt` | 原实现和权重保持不变 |
-| `fig2b_chemberta_mtr` | `DeepChem/ChemBERTa-77M-MTR` | revision 待固定 | `molecule_encoders/chemberta_mtr` | 发布前待处理 |
-| `fig2b_chemberta_mlm` | `DeepChem/ChemBERTa-77M-MLM` | revision 待固定 | `molecule_encoders/chemberta_mlm` | 发布前待处理 |
+| `fig2b_chemberta_mtr` | `DeepChem/ChemBERTa-77M-MTR` | revision `66b895ca…04ca` | `molecule_encoders/chemberta_mtr` | 已用于 Fig. 2b/2c 重构；旧 run 未记录 revision |
+| `fig2b_chemberta_mlm` | `DeepChem/ChemBERTa-77M-MLM` | revision `ed8a5374…15ff` | `molecule_encoders/chemberta_mlm` | 已用于 Fig. 2b/2c 重构；旧 run 未记录 revision |
 | `fig2b_molformer` | `ibm/MoLFormer-XL-both-10pct` | revision `7b12d946…0314` | `molecule_encoders/molformer` | 已固定 |
-| `fig2b_peptideclm` | `aaronfeller/PeptideCLM-23M-all` | revision 待固定 | `molecule_encoders/peptideclm` | 发布前待处理 |
+| `fig2b_peptideclm` | `aaronfeller/PeptideCLM-23M-all` | revision `a0847d82…fdda` | `molecule_encoders/peptideclm` | 已用于 Fig. 2b/2c 重构；旧 run 未记录 revision |
 | `fig2c_strainwise_dlm_7ensemble` | `Checkpoints/.../MDLM_MTR_fix_7_fold_ensembles` | 21 个文件；代表文件 SHA-256 `9b097645…e24e` | `strainwise/dlm_7ensemble` | 3×7 网格与公共消费契约已确认；group 1 的 7 个文件额外含 frozen MDLM payload；其余 20 个 SHA-256 待登记 |
+
+Fig. 2c comparator 迁移使用上述固定 revision 来消除上游 `main` 漂移。三项新固定值均已与
+现存 legacy checkpoint 的 state-dict 结构核对；但 2025 年原始训练脚本没有写入 Hugging Face
+commit，因此这里只能称为“当前重构的固定复现 revision”，不能反向声称已证明旧 run 当时的
+精确 upstream commit。MolFormer 的 revision 此前已因兼容性问题固定。
 
 ## DLM-only 决策记录
 

@@ -17,6 +17,8 @@ heads、四路训练、评估、checkpoint selection 和 ensemble 现在只有�
 - 公共 fusion/head：`src/apexoracle/models/strain_fusion.py`
 - 公共 checkpoint loader：
   `src/apexoracle/models/hierarchical_mic_checkpoint.py`
+- Fig. 2c online encoder profiles：
+  `configs/hierarchical_mic/legacy_fig2c_comparators.yaml`
 
 旧的 `strainwise` package 路径只保留很薄的 import facade，用于已有调用兼容；不再包含
 第二套实现。
@@ -82,6 +84,34 @@ python scripts/reproduce/run_hierarchical_mic.py \
 
 用 `--dry-run` 只核对资源、split、group 名称和数据计数，不加载大型 embedding 或训练。
 
+### Fig. 2c molecular encoder comparator
+
+四个 strain-wise comparator 现在复用同一个 split、fusion、四路训练、评估和 checkpoint
+runner，只通过 `--molecule-encoder` 选择 online molecule backbone：
+
+```bash
+python scripts/reproduce/run_hierarchical_mic.py \
+  --config configs/hierarchical_mic/legacy_fig2c_comparators.yaml \
+  --protocol strain \
+  --molecule-encoder chemberta_mtr \
+  --test-group 0 \
+  --device 0 \
+  --acknowledge-dynamic-legacy-split
+```
+
+可选值为 `chemberta_mtr`、`chemberta_mlm`、`molformer` 和 `peptideclm`。profiles 保留各旧
+driver 的 raw-SMILES online tokenization、first-token pooling、hidden size、backbone mode、
+freeze epoch、ensemble 数、optimizer group 次序和 legacy checkpoint key；没有把四个模型强行
+改成同一训练行为。Hugging Face revision 已固定用于当前复现，但旧 run 没有记录 2025 年实际
+upstream commit，因此固定 revision 是经 checkpoint 兼容性验证的复现锚点，不是对旧 commit
+身份的绝对证明。
+
+PeptideCLM 需额外保留一项边界：本机较晚的 `fix` driver/checkpoint 为 eval mode、默认 25
+epochs 内始终冻结、单 member；node002 还保留一个 freeze 3 epochs、7 members 的较早 driver，
+但没有找到完整的 7-member checkpoint 网格。canonical profile 采用有可加载 checkpoint 支持的
+本机 fixed 版本，不声称已经恢复论文绘图所用的精确 PeptideCLM ensemble。逐项证据和数据
+SHA-256 见 `strain/fig2c_comparator_migration_audit.json`。
+
 ## Legacy 清理与恢复
 
 已被统一 runner 替代的 root-level DP/in-house/SM、species/phylum、pooling/eval 脚本及
@@ -89,9 +119,9 @@ capsule 内第二份 strain driver 已删除。它们仍可从 annotated tag
 `legacy-code-snapshot-2026-07-17` 恢复。
 精确的逐文件删除记录见 `legacy_cleanup.json`。
 
-以下文件不是同一模型的复制版本，因此本阶段没有删除：
+以下实验不是同一模型的复制版本：
 
-- Fig. 2c 的 ChemBERTa-MTR、ChemBERTa-MLM、MolFormer 和 PeptideCLM comparator；
+- Fig. 2c 的 ChemBERTa-MTR、ChemBERTa-MLM、MolFormer 和 PeptideCLM 已迁入显式 profiles；
 - 尚未独立迁移和核验的 genome-only、text-only 与早期 modality ablation 血缘。
 
 这一区分避免以“清理”为由丢失仍可能对应论文图表的不同实验功能。
