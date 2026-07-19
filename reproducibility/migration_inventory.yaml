@@ -1,5 +1,5 @@
 schema_version: 1
-last_updated: 2026-07-18
+last_updated: 2026-07-19
 
 entries:
   - id: fig2b_molecule_encoders
@@ -13,19 +13,28 @@ entries:
     status: migrated_and_formally_rerun
     evidence: experiments/fig2b_molecule_encoders/results_shared_5fold.md
 
-  - id: fig1a_fig2c_strainwise_dlm
+  - id: hierarchical_mic_holdouts
     source:
       - DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_strains_MDLM_MTR_fix.py
+      - DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_species_11_species_5_ensemble_MDLM_cls_fix.py
+      - node002:DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_species_3_species_5_ensemble_MDLM_cls_fix.py
     destination:
-      - src/apexoracle/data/strainwise.py
+      - src/apexoracle/data/hierarchical_mic.py
+      - src/apexoracle/data/hierarchical_mic_preparation.py
       - src/apexoracle/features/precomputed.py
       - src/apexoracle/models/strain_fusion.py
-      - src/apexoracle/models/strainwise_checkpoint.py
-      - src/apexoracle/evaluation/strainwise.py
-      - experiments/fig2c_strainwise
-    status: shared_core_batch_steps_evaluation_accumulation_scheduler_and_checkpoint_selection_extracted_driver_shell_transitional
-    evidence: experiments/fig2c_strainwise/checkpoint_validation_group0_ensemble0.json
-    deletion_allowed: false
+      - src/apexoracle/models/hierarchical_mic_checkpoint.py
+      - src/apexoracle/training/hierarchical_mic.py
+      - src/apexoracle/training/hierarchical_mic_runner.py
+      - src/apexoracle/evaluation/hierarchical_mic.py
+      - scripts/reproduce/run_hierarchical_mic.py
+      - configs/hierarchical_mic/legacy_mdlm.yaml
+      - experiments/hierarchical_mic
+    status: unified_runner_and_three_split_adapters_verified_legacy_duplicates_removed
+    evidence:
+      - experiments/hierarchical_mic/README.md
+      - experiments/hierarchical_mic/legacy_cleanup.json
+    deletion_allowed: true
 
   - id: fig1b_strict_zero_shot
     source:
@@ -56,9 +65,11 @@ entries:
     source:
       - DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_species_*.py
     destination:
-      - experiments/experimental_hierarchical_holdouts
-    status: evidence_incomplete_do_not_claim_reproduced
-    deletion_allowed: false
+      - src/apexoracle/data/hierarchical_mic_preparation.py
+      - src/apexoracle/training/hierarchical_mic_runner.py
+      - experiments/hierarchical_mic
+    status: codepath_migrated_historical_result_evidence_still_incomplete
+    deletion_allowed: true
 
   - id: superseded_root_scripts
     source:
@@ -69,5 +80,5 @@ entries:
       - bash/*.sh
     destination:
       - legacy-code-snapshot-2026-07-17
-    status: delete_only_after_replacement_entrypoints_are_verified
-    deletion_allowed: false
+    status: hierarchical_mic_duplicates_deleted_other_families_pending
+    deletion_allowed: true
