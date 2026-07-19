@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "audit_date": "2026-07-19",
+  "scope": "post-paper all-data synergy guidance classifier",
+  "canonical_config": "configs/synergy/legacy_guidance.yaml",
+  "canonical_runner": "scripts/reproduce/run_synergy_guidance.py",
+  "canonical_validator": "scripts/reproduce/validate_synergy_guidance_checkpoint.py",
+  "source_data": {
+    "path": "DataPrepare/Data/synergy_DBAASP_inhouse_Evo.csv",
+    "sha256": "a5742a7ed9bd5ff3a1aa37c49a8e5cc196c0ccb580f54242c63b5fdc1e35687b",
+    "raw_rows": 4342,
+    "eligible_before_token_filter": {
+      "genome_text": 2320,
+      "combined_text_route": 2789
+    },
+    "rows_after_token_filter": {
+      "genome_text": 2213,
+      "combined_text_route": 2635
+    },
+    "source_mutated": false
+  },
+  "legacy_source_candidates": {
+    "all_data_classification": {
+      "path": "synergy_Evo_train_new_reg_MDLM_one_base_model_all_data_classification.py",
+      "sha256": "b945e041b144f8e8ba329aed97f63160f20adb1ea9ed9f07e77fbf01483522af"
+    },
+    "all_data_classification_clean": {
+      "path": "synergy_Evo_train_new_reg_MDLM_one_base_model_all_data_classification_clean.py",
+      "sha256": "a4952fee926c7075b6e12c59fe97b2b16cc42f906268922277d1942aff1de70d"
+    },
+    "node002": "neither source candidate nor guidance checkpoints were found in node002:/data1/tianang/Projects/Synergy"
+  },
+  "shared_model_contract": {
+    "mdlm_checkpoint": "/data2/tianang/projects/mdlm/Checkpoints_fangping/last_reg_v1.ckpt",
+    "mdlm_checkpoint_sha256": "a509b94e3780a0848b3f799ccfe754ed07524169973b08d85fdbc597f0592615",
+    "mdlm_checkpoint_size_bytes": 1568403312,
+    "mdlm_mode": "eval_frozen",
+    "noise_input_probability": 0.0,
+    "fixed_input_length": 1024,
+    "base_mic_checkpoint_sha256": "f24faf670b804edebbd4d6530a42c1351b62040046e14ebded67335aefc9c3a4",
+    "fusion_lora_rank": 64,
+    "guidance_head": [24576, 3072, 128, 1],
+    "missing_genome_embedding_trainable": false,
+    "attention_call_order": {
+      "genome_text": "genome(first), text(first), genome(second), text(second)",
+      "text_only": "genome(first), genome(second), text(first), text(second)"
+    },
+    "dead_cpu_rng_draw_before_each_modality_step": true,
+    "row_group_order": "process-hash-dependent Python set iteration",
+    "checkpoint_selection": "strict improvement of training-set AUROC"
+  },
+  "observed_checkpoints": {
+    "guidance_40epoch": {
+      "path": "Checkpoints/genome_text_learnable_emb/guidance_noise_synergy/cls/synergy_noise_clsfier_best.ckpt",
+      "sha256": "c1e40581c88e3b32c86d775e739320d15f111580fb55e9319adc8c3549273bc8",
+      "size_bytes": 4105624322,
+      "stored_training_auroc": 0.8562198849415549,
+      "strict_load": true,
+      "h100_fixed_batch_logit": -2.625,
+      "h100_fixed_batch_loss": 0.06993627548217773,
+      "inline_legacy_max_abs_logit_difference": 0.0
+    },
+    "short_judger": {
+      "path": "Checkpoints/genome_text_learnable_emb/synergy_judger/cls/synergy_noise_clsfier_best.ckpt",
+      "sha256": "930cb9dc6d24256c1c9ee9496107a3acbbfac49c74cc67e76cd72afbf851058d",
+      "size_bytes": 4105624386,
+      "stored_training_auroc": 0.80646839141437,
+      "strict_load": true,
+      "h100_fixed_batch_logit": -2.0859375,
+      "h100_fixed_batch_loss": 0.11706328392028809,
+      "inline_legacy_max_abs_logit_difference": 0.0
+    }
+  },
+  "verified_checkpoint_schema": {
+    "top_level_keys": [
+      "AUROC",
+      "co_cross_attn_genome",
+      "co_cross_attn_text",
+      "learnable_embedding_weight",
+      "mdlm_model_state_dict",
+      "optimizer_state_dict",
+      "re_head_state_dict"
+    ],
+    "mdlm_state_keys": 131,
+    "genome_attention_state_keys": 28,
+    "text_attention_state_keys": 28,
+    "fusion_lora_rank": 64,
+    "head_dimensions": [24576, 3072, 128, 1],
+    "missing_genome_shape": [1, 8192]
+  },
+  "evidence_boundary": {
+    "verified_fact": "Both observed checkpoints strictly load into the canonical frozen MDLM, rank-64 fusion, and full guidance head and complete a real-sample H100 forward.",
+    "inference": "The two runs share the same clean online-MDLM behavior even though the surviving root source files and output directories crossed versions during development.",
+    "unresolved": "No exact historical source commit was retained for either checkpoint.",
+    "reproducibility_boundary": "The legacy process used Python set iteration to order strain blocks, but its PYTHONHASHSEED was not recorded; membership and transformation behavior are frozen, while exact historical row order cannot be claimed.",
+    "metric_warning": "Stored AUROC is calculated on the same data used for training; it is not held-out performance and is not the paper three-fold CV result."
+  }
+}

@@ -78,3 +78,45 @@ PYTHONHASHSEED=0 python scripts/reproduce/run_synergy_cv.py \
 genome+text 与 text-only forward 也均和 inline legacy 公式逐值完全一致。全部 22 个大型
 binary（1 个 base + 21 个 member）的 SHA-256 位于 `checkpoint_file_manifest.csv`。root legacy
 driver 暂时保留，直到 exact paper identity 冲突得到作者确认或明确决定归档为候选。
+
+## All-data guidance classifier（post-paper）
+
+Guidance classifier 已与上述论文候选 CV 明确分离。它读取
+`synergy_DBAASP_inhouse_Evo.csv`，把全部 eligible genome+text 数据作为一路训练集，并把全部
+eligible 数据再次作为 text-route 训练集；没有 held-out fold。过滤前两路分别为 2,320 和
+2,789 行，SELFIES token filter 后为 2,213 和 2,635 行，与现存两份日志完全一致。
+
+该路径使用外部 `/data2/tianang/projects/mdlm` 的 `last_reg_v1.ckpt` 在线编码两个分子，输入固定
+padding 到 1,024 token；MDLM 保持 eval/frozen，代码中的 `noise_input` 概率实际为 0。fusion
+使用 rank-64 LoRA，head 为完整训练的 `24576→3072→128→1`。checkpoint 按同一个训练集的
+AUROC 严格提升保存，因此其中的 0.8065/0.8562 不能解释为泛化指标。
+
+为保持训练随机轨迹，canonical step 继续消费旧脚本中那次结果恒为 false 的 CPU `torch.randn`
+调用，并保留两条 route 不同的 attention/dropout 调用顺序。旧脚本还通过 Python `set` 迭代
+拼接 strain block；历史进程没有记录 `PYTHONHASHSEED`，因此当前入口冻结成员和转换行为，但不
+声称跨进程恢复了历史逐行顺序。完整训练必须显式确认这一边界。
+
+两个已观察到的运行通过 profiles 分开：
+
+- `short_judger`：2 epochs，对应 `synergy_judger/cls`；
+- `guidance_40epoch`：40 epochs，对应 `guidance_noise_synergy/cls`。
+
+只读 dry-run 可在 base 环境执行：
+
+```bash
+python scripts/reproduce/run_synergy_guidance.py \
+  --profile guidance_40epoch --dry-run --local-files-only
+```
+
+完整 MDLM 训练/验证必须按项目约定使用 `mdlm` conda 环境，并显式确认这是 post-paper guidance：
+
+```bash
+conda run -n mdlm python scripts/reproduce/run_synergy_guidance.py \
+  --profile guidance_40epoch --device cuda:0 --local-files-only \
+  --confirm-post-paper-guidance --acknowledge-dynamic-legacy-order
+```
+
+canonical 默认写入 `results/synergy_guidance/<profile>`，不会覆盖历史 checkpoint 目录。两份
+4.1 GB checkpoint 均已严格加载，并在 H100 上完成真实样本 forward；完整 SHA-256、schema、
+固定批次值和 source-version 边界见 `guidance_checkpoint_audit.json`。prospective in-house
+screening 仍是独立的 regression ensemble consumer，不属于本 guidance 训练入口。

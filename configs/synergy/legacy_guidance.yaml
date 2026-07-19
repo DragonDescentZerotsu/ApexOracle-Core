@@ -1,0 +1,92 @@
+schema_version: 1
+status: historical_guidance_training_behavior_frozen
+
+data:
+  source: DataPrepare/Data/synergy_DBAASP_inhouse_Evo.csv
+  source_sha256: a5742a7ed9bd5ff3a1aa37c49a8e5cc196c0ccb580f54242c63b5fdc1e35687b
+  raw_rows: 4342
+  eligible_rows_before_token_filter:
+    genome_text: 2320
+    combined_text_route: 2789
+  rows_after_token_filter:
+    genome_text: 2213
+    combined_text_route: 2635
+  positive_label: FICI < 0.5
+  tokenizer:
+    model: ibm-research/materials.selfies-ted
+    revision: 55e83392264cb998f7aa5014847df29868aefeb8
+    eligibility_max_length: 512
+    model_fixed_length: 1024
+
+features:
+  genome: DataPrepare/Data/Genome_embs
+  genome_scale: 1.0e14
+  text_with_genome: DataPrepare/Data/Text_Description/ATCC/embeddings
+  text_without_genome: DataPrepare/Data/Text_Description/wo_ATCC/embeddings
+  text_scale: 1.0
+
+model:
+  mdlm_root_env: APEXORACLE_MDLM_DIR
+  mdlm_default_root: ../mdlm
+  mdlm_config: config
+  mdlm_checkpoint: Checkpoints_fangping/last_reg_v1.ckpt
+  mdlm_checkpoint_sha256: a509b94e3780a0848b3f799ccfe754ed07524169973b08d85fdbc597f0592615
+  mdlm_mode: eval_frozen
+  noise_input_probability: 0.0
+  base_mic_checkpoint: Checkpoints/genome_text_learnable_emb/guidance_regressor_pad_no_mask/noise_guidance_best_R2_all_peptide_epoch_100.pth
+  base_mic_checkpoint_sha256: f24faf670b804edebbd4d6530a42c1351b62040046e14ebded67335aefc9c3a4
+  molecule_dim: 768
+  genome_dim: 8192
+  text_dim: 4096
+  attention_heads: 4
+  fusion_lora:
+    rank: 64
+    alpha: 32
+    dropout: 0.1
+    targets:
+      - mol_to_genome_dim
+      - key_value_projection
+      - mha.out_proj
+      - ffn.0
+      - ffn.2
+  guidance_head:
+    dimensions: [24576, 3072, 128, 1]
+    dropout: 0.2
+    training: full_parameters
+  missing_genome_embedding_trainable: false
+
+training:
+  seed: 42
+  ensemble_members: 1
+  batch_size: 70
+  optimizer: Adam
+  learning_rate: 1.0e-5
+  weight_decay: 0.0
+  scheduler: CosineAnnealingLR
+  eta_min: 1.0e-10
+  loss: BCEWithLogitsLoss
+  loader_coordination: zip_longest_genome_then_text_two_steps
+  row_group_order: process_hash_dependent_python_set_iteration
+  dead_cpu_rng_draw_before_each_modality_step: true
+  checkpoint_selection: strict_training_AUROC_improvement
+  periodic_checkpoint_every_epochs: 10
+
+profiles:
+  short_judger:
+    epochs: 2
+    observed_output: Checkpoints/genome_text_learnable_emb/synergy_judger/cls
+    observed_best_checkpoint_sha256: 930cb9dc6d24256c1c9ee9496107a3acbbfac49c74cc67e76cd72afbf851058d
+    observed_best_training_auroc: 0.80646839141437
+  guidance_40epoch:
+    epochs: 40
+    observed_output: Checkpoints/genome_text_learnable_emb/guidance_noise_synergy/cls
+    observed_best_checkpoint_sha256: c1e40581c88e3b32c86d775e739320d15f111580fb55e9319adc8c3549273bc8
+    observed_best_training_auroc: 0.8562198849415549
+
+evidence_boundaries:
+  purpose: post_paper_all_data_guidance_classifier
+  validation_is_training_data: true
+  exact_source_commit_recovered: false
+  exact_historical_python_hash_order_recovered: false
+  root_driver_checkpoint_schema_matches_observed_files: partial_version_crossing
+  paper_cv_result_consumer: false

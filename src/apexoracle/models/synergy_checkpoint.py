@@ -18,6 +18,15 @@ LEGACY_LORA_TARGETS = (
     "ffn.0",
     "ffn.2",
 )
+GUIDANCE_CHECKPOINT_KEYS = {
+    "AUROC",
+    "optimizer_state_dict",
+    "mdlm_model_state_dict",
+    "re_head_state_dict",
+    "co_cross_attn_genome",
+    "co_cross_attn_text",
+    "learnable_embedding_weight",
+}
 
 
 @dataclass
@@ -107,3 +116,64 @@ def load_legacy_synergy_member(
         )
     )
     return float(state["AUROC"])
+
+
+def inspect_synergy_guidance_checkpoint(state: dict) -> dict:
+    if set(state) != GUIDANCE_CHECKPOINT_KEYS:
+        raise ValueError(
+            "synergy guidance checkpoint keys changed: "
+            f"expected={sorted(GUIDANCE_CHECKPOINT_KEYS)}, got={sorted(state)}"
+        )
+    genome_state = state["co_cross_attn_genome"]
+    text_state = state["co_cross_attn_text"]
+    genome_lora = next(
+        value for key, value in genome_state.items() if "lora_A" in key
+    )
+    text_lora = next(value for key, value in text_state.items() if "lora_A" in key)
+    head_state = state["re_head_state_dict"]
+    return {
+        "auroc": float(state["AUROC"]),
+        "mdlm_key_count": len(state["mdlm_model_state_dict"]),
+        "genome_attention_key_count": len(genome_state),
+        "text_attention_key_count": len(text_state),
+        "fusion_lora_rank": int(genome_lora.shape[0]),
+        "text_fusion_lora_rank": int(text_lora.shape[0]),
+        "head_dimensions": [
+            int(head_state["dense_1.weight"].shape[1]),
+            int(head_state["dense_1.weight"].shape[0]),
+            int(head_state["dense_2.weight"].shape[0]),
+            int(head_state["out_proj.weight"].shape[0]),
+        ],
+        "missing_genome_shape": list(state["learnable_embedding_weight"].shape),
+    }
+
+
+def load_synergy_guidance_checkpoint(
+    checkpoint_path: Path,
+    *,
+    molecule_encoder: nn.Module,
+    components: SynergyComponents,
+) -> dict:
+    state = torch.load(
+        checkpoint_path,
+        map_location="cpu",
+        weights_only=False,
+        mmap=True,
+    )
+    contract = inspect_synergy_guidance_checkpoint(state)
+    molecule_encoder.load_state_dict(state["mdlm_model_state_dict"], strict=True)
+    components.genome_attention.load_state_dict(
+        state["co_cross_attn_genome"], strict=True
+    )
+    components.text_attention.load_state_dict(
+        state["co_cross_attn_text"], strict=True
+    )
+    components.prediction_head.load_state_dict(
+        state["re_head_state_dict"], strict=True
+    )
+    components.missing_genome_embedding.data.copy_(
+        state["learnable_embedding_weight"].to(
+            components.missing_genome_embedding.device
+        )
+    )
+    return contract
