@@ -1,0 +1,54 @@
+schema_version: 1
+
+producer_boundary:
+  strategy: future_parent_repository_git_submodule
+  planned_submodule_path: external/evo2
+  repository: https://github.com/ArcInstitute/evo2.git
+  pinned_commit_candidate: afd0dae0a4bb25f3ca55f171fbdac4907b937afd
+  commit_object_verified_locally: true
+  exact_embedding_producer_commit_confirmed: false
+  current_checkout_clean: false
+  current_repository_action: do_not_add_submodule_or_refactor_extraction_here
+  note: The candidate is the current local Evo-2 HEAD, but no surviving extraction log proves that it produced the frozen tensors.
+
+consumer_contract:
+  root: DataPrepare/Data/Genome_embs
+  format: one_torch_tensor_per_file
+  extension: .pt
+  load_policy: torch_load_cpu_weights_only
+  dtype: torch.bfloat16
+  hidden_dimension: 8192
+  sequence_dimension: variable
+  fixed_scale_factor: 1.0e14
+  original_files_read_only: true
+  extraction_in_current_repository: false
+
+identity:
+  files: 567
+  total_bytes: 3437540485
+  paper_dataset_matched_files: 563
+  unmatched_ids: ["1041", "11696", "BAA-3170", "BAA-3197"]
+  file_manifest: experiments/evo2_genome_embeddings/file_manifest.csv
+  file_manifest_sha256: 0420058138fd0473f9c3c6d92a0dae0ebe4ffedc1924a14ab6038259f0aa7496
+
+paper_matching_inputs:
+  strain_mapping:
+    path: DataPrepare/Data/Evo_edition_4_MIC_data_handcrafted_no_ATCC_to_custom_ATCC_and_inhouse.json
+    sha256: 85b004fbc4df575b1b875601a9c3f6b655ed1e840f5033137aae527ea91ce6f9
+  amp_mic:
+    path: DataPrepare/Data/DBAASP_inhouse_AMP_SELFIES_token_MIC_Evo.csv
+    sha256: ac1a1967d9e94e169ffc23621f7e78c644753659bd08f7a8e10bb63b574930b2
+  small_molecule:
+    path: DataPrepare/Data/small_molecule/processed/small_molecule_Evo_binary_data_SELFIES.csv
+    sha256: d8e6391bfae3c35fe8d311461565df177fc75044cbc40204bf74f7ecf1fe7f27
+  synergy:
+    path: DataPrepare/Data/synergy_DBAASP_inhouse_Evo.csv
+    sha256: a5742a7ed9bd5ff3a1aa37c49a8e5cc196c0ccb580f54242c63b5fdc1e35687b
+
+reviewer_scaling_output:
+  matched_files: 563
+  csv_sha256: d08d26ba3f1c452836b18944da763ae4ece3be3dc2f784b35f9d92b7de5cfe5d
+  png_sha256: 0b79aa17768a107e7bd2b955a0734f0bb704bffa8c1d3f0777e24b630518e46a
+  abs_mean_median: 2.2325736552308637e-15
+  abs_mean_p05: 1.729886663738101e-15
+  abs_mean_p95: 3.0225778434981338e-15

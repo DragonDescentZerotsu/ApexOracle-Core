@@ -110,6 +110,22 @@ entries:
       - experiments/amp_data_pipeline/paper_data_reconstruction_audit.json
     deletion_allowed: true
 
+  - id: evo2_precomputed_genome_embeddings
+    source:
+      - DataPrepare/Data/Genome_embs
+      - /data2/tianang/projects/evo2
+    destination:
+      - src/apexoracle/data/genome_embeddings.py
+      - configs/data_pipeline/evo2_precomputed_embeddings.yaml
+      - experiments/evo2_genome_embeddings
+    status: read_only_consumer_contract_verified_extraction_out_of_scope
+    evidence:
+      - experiments/evo2_genome_embeddings/README.md
+      - experiments/evo2_genome_embeddings/consumer_audit.json
+      - experiments/evo2_genome_embeddings/file_manifest.csv
+    deletion_allowed: false
+    deletion_note: Precomputed tensors are paper data assets; extraction stays external and a future parent repository may pin Evo-2 as a submodule.
+
   - id: synergy_cv
     source:
       - synergy_Evo_train_new_reg_MDLM_one_base_model_classification.py
