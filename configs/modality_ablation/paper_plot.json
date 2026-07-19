@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "status": "paper_plot_reproduction_only",
+  "provenance": {
+    "notebook": "/Users/kirianozan/Documents/Study/Penn/projects/local_figs/figs.ipynb",
+    "cell_id": "8d84054140b51b7d",
+    "execution_count": 18,
+    "execution_started_utc": "2025-05-22T21:45:52.560389Z",
+    "execution_finished_utc": "2025-05-22T21:45:52.813568Z",
+    "paper_pdf": "ApexOracle_Nat_Biotech/modality-ablation.pdf",
+    "paper_pdf_sha256": "0392846c0dd00100235da36648e41515690e2d0d275d628d6e3155cad5b6ae57"
+  },
+  "chart": {
+    "holdout_order": [
+      "phylum-wise",
+      "species-wise",
+      "strain-wise"
+    ],
+    "series_order": [
+      "ApexOracle w/o text, w/o sm",
+      "ApexOracle w/o genome, w/o sm",
+      "ApexOracle w/o sm",
+      "ApexOracle"
+    ],
+    "base_colors": [
+      "#FADA00",
+      "#F7CFE1",
+      "#bacdff",
+      "#B49EDE"
+    ],
+    "markers": {
+      "ApexOracle w/o text, w/o sm": "o",
+      "ApexOracle w/o genome, w/o sm": "o",
+      "ApexOracle w/o sm": "o",
+      "ApexOracle": "*"
+    },
+    "marker_sizes": {
+      "ApexOracle w/o text, w/o sm": 11,
+      "ApexOracle w/o genome, w/o sm": 11,
+      "ApexOracle w/o sm": 11,
+      "ApexOracle": 18
+    },
+    "figure_size": [5, 3.8],
+    "title": "Modality ablation study"
+  }
+}

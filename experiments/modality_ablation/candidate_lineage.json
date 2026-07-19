@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "status": "exact_plot_values_frozen_training_lineage_unresolved",
+  "verified_facts": {
+    "plot_series": {
+      "ApexOracle w/o text, w/o sm": "genome-only candidate family",
+      "ApexOracle w/o genome, w/o sm": "text-only candidate family",
+      "ApexOracle w/o sm": "genome+text candidate family",
+      "ApexOracle": "full small-molecule-auxiliary candidate family"
+    },
+    "candidate_script_identity": "The nine genome-only, text-only, and genome+text candidate drivers have identical SHA-256 values on the local machine and node002.",
+    "candidate_scripts_sha256": {
+      "MIC_with_genome_test_on_non_seen_strains.py": "8fcd7b54656c577726a345f9b8c16f60840bd20c8daaff479ba39cd6454be7b0",
+      "MIC_with_genome_test_on_non_seen_species_3_species_5_ensemble.py": "f9e2b822540a0d96f2e8a512183fb3fb0cd08bae5d7c05f828dcf49432fcb69b",
+      "MIC_with_genome_test_on_non_seen_species_11_species_5_ensemble.py": "a9ab9f6483968c1a7a6c3ea1c800db17823460825e23fb90a971eec5b451149e",
+      "MIC_with_text_test_on_non_seen_strains.py": "fbe9b80f3d2958613cc82018752bbf42124fa792818ec272361ff615aa14b7b4",
+      "MIC_with_text_test_on_non_seen_species_3_species_5_ensemble.py": "ccddcbf210be548e0030afe6057169f561524c7b6f6be4d544c87e5b98e234bd",
+      "MIC_with_text_test_on_non_seen_species_11_species_5_ensemble.py": "c9f5b5fa7f4b095e66638482dfc88eb2fef3272c00c87833d590a7f35b78322c",
+      "MIC_with_text_genome_test_on_non_seen_strains.py": "b801b68d747c6fbb24f8640fb996a4a1360f6ecf761536a36b20c69e52172dc7",
+      "MIC_with_text_genome_test_on_non_seen_species_3_species_5_ensemble.py": "cf5f72ad201ec20f510d70abc5ba7d8ed6eb110225ecf76439ac84ab04f3e55e",
+      "MIC_with_text_genome_test_on_non_seen_species_11_species_5_ensemble.py": "0e7f6b9abfb9f6810ee5963914e0592240dd994403db40fffa9a560b3e56215f"
+    },
+    "exact_values_found_in_training_artifacts": false,
+    "local_checkpoint_group_counts": {
+      "genome/11_fold_ensembles": {"0": 5, "1": 13, "6": 1},
+      "genome/11_species/7_fold_ensembles": {"9": 7},
+      "genome/3_fold_ensembles": {"Fungi": 35, "Pseudomonadati": 25, "Bacillati": 25},
+      "genome/3_species/5_fold_ensembles": {"Pseudomonadati": 5},
+      "text/11_species/7_fold_ensembles": {"1": 7},
+      "genome_text/11_species/7_fold_ensembles": {"7": 7},
+      "genome_text/3_species/25_fold_ensembles": {"Fungi": 11, "Pseudomonadati": 25}
+    },
+    "node002_checkpoint_group_counts": {
+      "genome/11_fold_ensembles": {"0": 26, "2": 11, "7": 5, "10": 7},
+      "genome/11_species/7_fold_ensembles": {"7": 7, "8": 7},
+      "genome/3_species/5_fold_ensembles": {"Fungi": 4, "Bacillati": 5},
+      "text/11_species/7_fold_ensembles": {"8": 7, "9": 7, "10": 7},
+      "genome_text/11_species/7_fold_ensembles": {"0": 1, "2": 7, "3": 7, "4": 7, "6": 7, "8": 7, "9": 7},
+      "genome_text/3_species/5_fold_ensembles": {"Fungi": 5, "Pseudomonadati": 5, "Bacillati": 5},
+      "genome_text/strain_wize/7_fold_ensembles": {"0": 7, "1": 7}
+    }
+  },
+  "inferences": [
+    "The three no-small-molecule series most likely descend from the ChemBERTa-era genome-only, text-only, and genome+text driver families.",
+    "The local and node002 checkpoint sets are complementary historical remnants rather than a single complete final run."
+  ],
+  "unresolved": [
+    "No saved metric table, stdout log, W&B output, source file, or checkpoint filename contains all twelve final plotting values.",
+    "Checkpoint payload R2 is an individual-member best score and cannot recover the plotted ensemble R2 without exact held-out predictions and member selection.",
+    "The exact checkpoints and aggregation rule used for each plotted point remain unverified.",
+    "The old drivers write a filtered intermediate CSV in place and therefore must not be rerun as publication entrypoints."
+  ]
+}

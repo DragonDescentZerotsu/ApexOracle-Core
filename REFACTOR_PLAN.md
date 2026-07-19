@@ -278,12 +278,22 @@ genome+text 与 text-only 两路 inline legacy 公式逐值一致验证，fold 2
 checkpoint 与 Methods 在 LoRA rank、base epochs 及最终 mean 指标上存在未解决冲突；root
 legacy driver 暂不删除。
 
+Modality ablation 的绘图血缘已于 2026-07-19 冻结。最终 Mac notebook cell 中硬编码的四条
+曲线、三个 holdout 粒度和 12 个精确 R² 已迁移到
+`experiments/modality_ablation/paper_values.csv`，canonical 只读绘图入口为
+`scripts/reproduce/plot_modality_ablation.py`。本机与 node002 的九个候选 driver SHA-256
+完全一致，但两台机器的 checkpoint 仅为互补残片；代码、日志和 W&B output 均未找到完整
+最终指标表，checkpoint 内 `R2` 也只是单成员 best score，不能反推出 ensemble 曲线。因此本项
+状态为 `paper plot reproducible / training lineage unresolved`。旧训练 driver 暂留且不得运行，
+因为它们会原地覆盖过滤后的中间 CSV；本阶段没有修改任何原始或论文数据。
+
 #### 4.2 迁移前需要作者或原始结果进一步核验
 
 - phylum-wise 和 11-cluster species-wise：现存日志与论文数值或完整 fold 不完全一致；
 - fine-tuned Fig. 1b：现存日志不完整；
 - synergy CV：现存指标接近但不完全等于论文结果，且 LoRA rank 与 Methods 存在差异；
-- modality ablation：缺少能够精确连接附录图的最终指标表。
+- modality ablation：最终绘图值和图形入口已冻结，但缺少能够把这些值精确连接到 legacy
+  checkpoint、held-out predictions 和 ensemble 聚合过程的最终指标表。
 
 这些实验先进入 `experimental` 状态，不在 README 中声称已经完整复现。
 
