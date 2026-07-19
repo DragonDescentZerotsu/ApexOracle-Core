@@ -278,6 +278,20 @@ genome+text 与 text-only 两路 inline legacy 公式逐值一致验证，fold 2
 checkpoint 与 Methods 在 LoRA rank、base epochs 及最终 mean 指标上存在未解决冲突；root
 legacy driver 暂不删除。
 
+Synergy all-data guidance classifier 已于 2026-07-19 完成行为迁移。它不是论文三折 CV：
+使用 `synergy_DBAASP_inhouse_Evo.csv` 的全部 eligible strain 数据、在线 frozen MDLM
+`last_reg_v1.ckpt`、fusion LoRA rank 64，并直接按同一训练集 AUROC 选择 checkpoint。现存
+`synergy_judger/cls` 与 `guidance_noise_synergy/cls` 分别保留 2-epoch 和 40-epoch 日志/权重，
+但当前两个 root driver 与历史 checkpoint schema/输出目录之间存在版本交叉，精确 source commit
+未保存。本阶段以“代码行为 + 真实 checkpoint/log”双证据建立了独立 guidance runner：两条
+route 的 `2320→2213` / `2789→2635` 真实过滤计数、固定 1024-token online MDLM、每步一次
+dead CPU RNG draw、route-specific attention/dropout 调用顺序、rank-64 LoRA、对称 pair head、
+training-AUROC selection 和七键 checkpoint schema 均已冻结。两个真实 checkpoint 已严格加载
+并在 H100 上 forward，40-epoch 固定样本 canonical/inline legacy logit 差为 0。旧代码依赖
+Python `set` 的进程哈希行序，但历史 `PYTHONHASHSEED` 未记录；成员和转换行为已冻结，精确历史
+行序不作声明。两个已迁移 root driver 从工作树删除，由 `legacy-code-snapshot-2026-07-17` 恢复；
+prospective in-house screening 继续作为单独消费者，不与 classifier 训练合并。
+
 Modality ablation 的绘图血缘已于 2026-07-19 冻结。最终 Mac notebook cell 中硬编码的四条
 曲线、三个 holdout 粒度和 12 个精确 R² 已迁移到
 `experiments/modality_ablation/paper_values.csv`，canonical 只读绘图入口为
@@ -350,7 +364,8 @@ checkpoint 网格；canonical 采用有严格 checkpoint 证据的 fixed profile
 
 - [x] 已被 canonical 入口取代的 hierarchical MIC、Fig. 1b、sequence similarity、早期
   Fig. 2b 和 APEX 支持代码；
-- [ ] synergy、few-shot 与其余 in-house 副本：在 guidance/候选血缘迁移前暂留；
+- [ ] synergy、few-shot 与其余 in-house 副本：all-data classification guidance 两个副本已迁移
+  删除；CV 候选、regression、few-shot 和 screening 副本继续等待各自证据冻结；
 - [x] 已确认无消费者的 `_old.py`、debug、临时 notebook 和部分机器专用 launcher；
 - [x] `Fangping_correlation/`、`e3nn_playground/`；
 - [x] `GPU_eye.py`、`run.py`、`run_full.py` 等资源占用工具；
@@ -414,6 +429,16 @@ H100 checkpoint 两路 forward 与 1-member/1-epoch runner smoke 另行通过。
 真实 AAindex checksum、真实 checkpoint strict load 和固定 feature hash；另以 100-row、5-fold、
 1-epoch CPU cached runner 完成端到端 smoke。10-row 诊断会因部分 fold 没有 finite task R² 触发
 旧 runner 的 missing-best-summary 边界，本阶段为保持 selection 行为没有修改该语义。
+
+同日 all-data synergy guidance 新增行为测试，覆盖两条 route 的 tokenized Dataset/collate、
+alias merge 与完整 row membership、`g1→t1→g2→t2` / `g1→g2→t1→t2` 调用顺序、dead CPU RNG
+消耗、对称 forward、optimizer step 和七键 full-state checkpoint contract。真实数据 dry-run
+再次得到 `2320→2213` 与 `2789→2635`，输入及两份历史 checkpoint SHA-256 未变化；两个 4.1 GB
+checkpoint 的 H100 strict-load/forward 均通过，40-epoch fixed batch 与独立 inline legacy 公式
+逐值一致。完整训练默认写到 `results/`，不会覆盖历史产物，并要求显式确认 post-paper metric
+边界与动态 legacy row order。阶段收尾时全仓库回归为 119 passed / 5 skipped；本批 CUDA
+optimizer-step 已在宿主 H100 单独通过，两份 guidance checkpoint 的 independent inline legacy
+差异均为 0。
 
 ### 阶段 7：文档和发布
 

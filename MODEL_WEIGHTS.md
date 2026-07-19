@@ -29,6 +29,20 @@ Fig. 2c comparator 迁移使用上述固定 revision 来消除上游 `main` 漂�
 commit，因此这里只能称为“当前重构的固定复现 revision”，不能反向声称已证明旧 run 当时的
 精确 upstream commit。MolFormer 的 revision 此前已因兼容性问题固定。
 
+## Synergy 当前登记
+
+| Manifest ID | 当前来源 | 已固定身份 | 状态 |
+| --- | --- | --- | --- |
+| `synergy_mic_base_epoch_100` | `Checkpoints/.../guidance_regressor_pad_no_mask/noise_guidance_best_R2_all_peptide_epoch_100.pth` | SHA-256 `f24faf67…c3a4` | 三折候选与 guidance 共同 base；不是已确认的 Methods 13-epoch 权重 |
+| `synergy_three_fold_7ensemble_candidate` | `Checkpoints/.../MDLM_3_fold_ensembles_1_base_model_cls` | 21 个 member 的完整 manifest | 最接近论文的 CV 候选，但 rank/指标与 Methods 仍冲突 |
+| `synergy_guidance_mdlm_last_reg_v1` | `/data2/tianang/projects/mdlm/Checkpoints_fangping/last_reg_v1.ckpt` | SHA-256 `a509b94e…2615` | post-paper guidance 的 frozen online MDLM |
+| `synergy_guidance_40epoch` | `Checkpoints/.../guidance_noise_synergy/cls/synergy_noise_clsfier_best.ckpt` | SHA-256 `c1e40581…3bc8` | 严格加载及 H100 forward 已验证；保存的是训练 AUROC 0.8562 |
+| `synergy_short_judger_2epoch` | `Checkpoints/.../synergy_judger/cls/synergy_noise_clsfier_best.ckpt` | SHA-256 `930cb9dc…58d` | 严格加载及 H100 forward 已验证；保存的是训练 AUROC 0.8065 |
+
+两个 guidance classifier 都在完整训练数据上选择 checkpoint，没有 held-out validation，因此其
+stored AUROC 不能作为论文 benchmark 或泛化指标。它们服务于后续 guidance/judging consumer，
+与三折 CV checkpoint family 分开登记。
+
 ## DLM-only 决策记录
 
 2026-07-18，作者确认修订后的 Fig. 2b benchmark 使用 `best_2.ckpt`。该文件是 12-layer、hidden size 768 的纯 DLM checkpoint，不包含 MTR regression branch；正式五折运行从 `ema.shadow_params` 加载，五个 fold 均为 `missing_keys=[]`、`unexpected_keys=[]`。

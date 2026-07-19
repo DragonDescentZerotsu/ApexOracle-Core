@@ -240,6 +240,7 @@ weights:
     paper_label: Synergy candidate MIC base checkpoint
     tasks:
       - synergy_three_fold_candidate
+      - synergy_all_data_guidance_classifier
     decision_status: verified_driver_input_not_confirmed_exact_paper_base
     source:
       kind: local_repo_ignored_binary
@@ -293,5 +294,78 @@ weights:
     loader: scripts/reproduce/validate_synergy_checkpoint.py
     future_storage:
       relative_path: synergy/legacy_cv_candidate
+      download_uri: null
+      redistribution_status: to_review
+
+  synergy_guidance_mdlm_last_reg_v1:
+    paper_label: Post-paper synergy guidance MDLM encoder
+    tasks:
+      - synergy_all_data_guidance_classifier
+    decision_status: verified_frozen_encoder_not_a_paper_cv_weight
+    source:
+      kind: external_local_repo_ignored_binary
+      current_path: /data2/tianang/projects/mdlm/Checkpoints_fangping/last_reg_v1.ckpt
+      sha256: a509b94e3780a0848b3f799ccfe754ed07524169973b08d85fdbc597f0592615
+      size_bytes: 1568403312
+    model:
+      hidden_size: 768
+      stored_state_keys_in_guidance_checkpoint: 131
+      mode: eval_frozen
+      noise_input_probability: 0.0
+    loader: src/apexoracle/models/legacy_mdlm_encoder.py
+    future_storage:
+      relative_path: synergy/guidance/mdlm/last_reg_v1.ckpt
+      download_uri: null
+      redistribution_status: to_review
+
+  synergy_guidance_40epoch:
+    paper_label: Post-paper all-data synergy guidance classifier
+    tasks:
+      - synergy_all_data_guidance_classifier
+    decision_status: strict_load_and_real_forward_verified_post_paper_training_metric
+    source:
+      kind: local_repo_ignored_binary
+      current_path: Checkpoints/genome_text_learnable_emb/guidance_noise_synergy/cls/synergy_noise_clsfier_best.ckpt
+      sha256: c1e40581c88e3b32c86d775e739320d15f111580fb55e9319adc8c3549273bc8
+      size_bytes: 4105624322
+      stored_training_auroc: 0.8562198849415549
+    model:
+      fusion_lora_rank: 64
+      synergy_head: [24576, 3072, 128, 1]
+      mdlm_state_keys: 131
+      epochs: 40
+    interpretation:
+      held_out_metric: false
+      paper_cv_result: false
+      exact_source_commit: unresolved
+    loader: scripts/reproduce/validate_synergy_guidance_checkpoint.py
+    future_storage:
+      relative_path: synergy/guidance/guidance_40epoch_best.ckpt
+      download_uri: null
+      redistribution_status: to_review
+
+  synergy_short_judger_2epoch:
+    paper_label: Post-paper short all-data synergy judger
+    tasks:
+      - synergy_all_data_guidance_classifier
+    decision_status: strict_load_and_real_forward_verified_post_paper_training_metric
+    source:
+      kind: local_repo_ignored_binary
+      current_path: Checkpoints/genome_text_learnable_emb/synergy_judger/cls/synergy_noise_clsfier_best.ckpt
+      sha256: 930cb9dc6d24256c1c9ee9496107a3acbbfac49c74cc67e76cd72afbf851058d
+      size_bytes: 4105624386
+      stored_training_auroc: 0.80646839141437
+    model:
+      fusion_lora_rank: 64
+      synergy_head: [24576, 3072, 128, 1]
+      mdlm_state_keys: 131
+      epochs: 2
+    interpretation:
+      held_out_metric: false
+      paper_cv_result: false
+      exact_source_commit: unresolved
+    loader: scripts/reproduce/validate_synergy_guidance_checkpoint.py
+    future_storage:
+      relative_path: synergy/guidance/short_judger_2epoch_best.ckpt
       download_uri: null
       redistribution_status: to_review

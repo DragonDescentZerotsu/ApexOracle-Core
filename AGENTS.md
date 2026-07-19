@@ -154,9 +154,9 @@
 | Fig. 2b 不使用 strain knowledge 的五折 molecular representation benchmark | canonical 模块为 `src/apexoracle/benchmarks/molecule_encoders/`，正式结果见 `experiments/fig2b_molecule_encoders/results_shared_5fold.md`；DLM 预训练代码仍位于外部 `/data2/tianang/projects/mdlm` | **正式修订版 / 高置信度。** 7-model × 5-fold 已在 10,886 个共享 molecule 上完成；旧 root/capsule source 副本由 legacy tag 和 migration audit 追溯。 |
 | Fig. 1b 严格 target-strain zero-shot 小分子分类 | canonical 入口 `scripts/reproduce/run_antibiotic_classification.py --mode strict-zero-shot`；checkpoint：`.../antibiotic_3_strain_compare/MDLM_fix_cls_sm_all_test_10_fold_ensembles` | **最终版 / 高置信度，已完成行为保持迁移。** 完整 held-out target-strain 数据不进入训练，但仍逐 epoch 用于 best-AUROC checkpoint selection。完整 ensemble 指标：E. coli `#004` 为 0.9360 AUROC / 0.5890 AUPRC；A. baumannii 17978 为 0.7262 / 0.3243；S. aureus RN4220 为 0.7679 / 0.1655。30 个 checkpoint 和 3 个完成日志网格完整；group 0 / ensemble 0 已在 H100 上与 capsule 做到 2,335 条 logit 逐值一致。 |
 | Fig. 1b fine-tuned ApexOracle | 同一入口的 `--mode fine-tune --fold N`；checkpoint：`MDLM_fix_cls_10_fold_ensembles` | **代码路径已统一 / 历史结果证据不完整。** 该模式保留目标 strain 上的五折 KFold fine-tuning，但现存 checkpoint 只有 77/150，14 个日志中只有 6 个包含最终汇总。`--mode molecule-only` 对应旧 `wo_SAND`，完整保留仅用 DLM molecule embedding 的对照；它不是 strict zero-shot ApexOracle。 |
-| Synergy 二分类结果 | `synergy_Evo_train_new_reg_MDLM_one_base_model_classification.py`；checkpoint：`.../strain_wise_synergy/MDLM_3_fold_ensembles_1_base_model_cls` | **可能的最终版 / 中等置信度。** 使用 `synergistic_pairs_Evo.csv`、strain-wise 三折划分、单个完整 MIC base checkpoint、FICI 二分类和 7 个 ensemble。现存三个 fold 的 AUROC/AUPRC 分别为 0.6690/0.6159、0.7614/0.6853、0.8489/0.9307，未加权平均约为 0.7598/0.7440，与论文 0.7539/0.7454 接近但不完全相同。论文写 LoRA rank 64，而该 CV 脚本对 fusion 使用 1024、对 head 使用 256；rank 64 出现在后续 all-data noisy classifier 中，因此需要作者进一步确认精确版本。 |
+| Synergy 二分类结果 | canonical 入口 `scripts/reproduce/run_synergy_cv.py`；配置 `configs/synergy/legacy_cv.yaml`；checkpoint：`.../strain_wise_synergy/MDLM_3_fold_ensembles_1_base_model_cls` | **行为迁移完成 / paper identity 仍为候选。** 使用 `synergistic_pairs_Evo.csv`、strain-wise 三折划分、单个完整 MIC base checkpoint、FICI 二分类和 7 个 ensemble。现存三个 fold的 AUROC/AUPRC 未加权平均约为 0.7598/0.7440，与论文 0.7539/0.7454 接近但不完全相同。真实 checkpoint 证明 fusion LoRA rank 为 1024，和 Methods 的 rank 64 冲突；旧 root driver 因此暂留作候选血缘。 |
 | Synergy 或 guidance 之前使用的完整数据 MIC base model | `train_on_all_data.py`；checkpoint 家族 `Checkpoints/genome_text_learnable_emb/guidance_regressor_pad_no_mask`，尤其是 `noise_guidance_best_R2_all_peptide_epoch_100.pth` | 这是最终 synergy 和 noisy guidance 脚本共同使用的最匹配 base model。`train_on_all_data.py` 本身保存到 `all_AMP_SM_data_train/MDLM_MTR_fix_cls_wo_pad`；路径和命名在开发过程中发生过变化，重构时必须保留实际 checkpoint 来源。 |
-| Noisy synergy/peptide guidance classifier | `synergy_Evo_train_new_reg_MDLM_one_base_model_all_data_classification.py` 和后续较干净的 `..._all_data_classification_clean.py` | **论文后实现支持。** `clean` 版本使用 rank-64 LoRA，并在 `.../synergy_judger/cls` 下保存 noisy synergy classifier。它们是 all-data guidance head，不是论文三折 synergy benchmark。`DataPrepare/MDLM/label_pep_nonpep.py` 用于准备 peptide/non-peptide 标签。 |
+| All-data synergy guidance classifier | canonical 入口 `scripts/reproduce/run_synergy_guidance.py`；配置 `configs/synergy/legacy_guidance.yaml`；checkpoint 位于 `.../synergy_judger/cls` 与 `.../guidance_noise_synergy/cls` | **论文后 guidance / 已完成行为迁移。** 两个 profile 分别对应 2 和 40 epochs，均使用 frozen online MDLM、rank-64 fusion LoRA 和完整训练的 `24576→3072→128→1` head。两份 checkpoint 均已严格加载并通过 H100 真实样本 forward。stored AUROC 来自训练集，不能作为论文 CV 或泛化指标。 |
 | Guided molecule generation、remasking sampler 和 256-step 三阶段 guidance | 不在当前仓库；分析脚本指向 `/data2/tianang/projects/discrete-diffusion-guidance` | **外部依赖 / 缺失。** 当前仓库包含 predictor、保存的输出或图片以及 similarity 分析，但不包含实际生成 ApexOracle-3/12/23 的 sampler。论文参数为 256 steps、MIC target 1、sigma 从 0.5 线性降到 0.2、`t_on=0.55`、`t_off=0.45`，两个阶段的 guidance strength 为 15。 |
 | Fig. 3（TeX 中使用文件 `Fig4.pdf`）guided/unguided 预测和最终验证分子 | `DataPrepare/Morgan_fingerprint_sim_generation*.py` 中的生成结果分析、`synergy_Evo_train_on_DBAASP_screen_inhouse_pairs.py` 中的筛选逻辑，以及 `paper_figs/` 下的 PDF | 当前只剩部分派生分析。候选生成和最终选择流程依赖外部代码或已经不完整；湿实验结果也没有在本仓库形成计算复现流程。 |
 | 附录 modality ablation | 最终绘图值：`experiments/modality_ablation/paper_values.csv`；绘图入口：`scripts/reproduce/plot_modality_ablation.py`；候选训练血缘为较早的 genome-only、text-only、genome+text 脚本家族及对应 checkpoint | **绘图终版 / 高置信度；训练血缘 / 中低置信度。** Mac 最终 notebook 的 12 个硬编码 R² 已逐项冻结，可重建论文图；现存 checkpoint 与这些 ensemble 数值仍无法精确连接。 |
@@ -233,7 +233,9 @@
 
 - `synergy_train.py`、`synergy_train_simple.py`、`synergy_train_no_pretrain.py` 和 `synergy_train_no_old_cls_emb.py` 是早期 ChemBERTa 或原型实验，属于**历史版本**。
 - `synergy_Evo_train.py` 和 `synergy_Evo_train_new_reg.py` 引入 Evo/text mapping 和修改后的 regression。`synergy_Evo_train_new_reg_MDLM.py` 将 molecule feature 切换为 DLM。`..._one_base_model.py` 从一个 MIC base 初始化全部 fold，但仍然预测连续 FICI。论文最终任务是二分类，因此论文结果血缘应优先使用 `..._one_base_model_classification.py`。
-- `..._one_base_model_all_data_train.py` 在组合 synergy 数据上训练而不进行 CV。`..._all_data_classification.py` 和 `_clean.py` 为 guidance 训练 noisy all-data classifier；`_clean.py` 是较新的可读版本。
+- `..._one_base_model_all_data_train.py` 在组合 synergy 数据上训练连续 FICI 且不进行 CV，尚未
+  迁移。两个 all-data classification root driver 已迁入 `run_synergy_guidance.py` 的
+  `short_judger` 与 `guidance_40epoch` profiles 并从工作树删除；原文件由 legacy tag 恢复。
 - `synergy_Evo_train_on_DBAASP_test_on_inhouse.py` 和 `_classification.py` 用于测试向 prospective in-house pair 的迁移。`_few_shot.py`、`_classification_few_shot.py`、`_inner_prod.py`、`_no_lora.py` 和 `_w_pred_MIC.py` 是后续 few-shot 架构变体，属于**论文后代码**，不能与论文 DBAASP 三折指标混用。
 - `synergy_Evo_train_on_DBAASP_screen_inhouse_pairs.py` 筛选 prospective in-house pair，目标 strain 硬编码为 BAA-3170。`synergy_Evo_test_inhouse_MDLM.py` 加载 all-data synergy 模型并测试处理后的 in-house 数据。这些服务于后续发现工作，不是论文核心 CV。
 
@@ -242,6 +244,20 @@
 - **已由代码、数据、checkpoint 和日志验证的事实：** 候选 classification driver 的动态过滤得到 2,732 行 eligible pair；`PYTHONHASHSEED=0` 时三个 fold 的四路过滤前/后行数均逐项匹配旧日志。现存 21 个 checkpoint 构成完整 `3×7` 网格且结构一致，active fusion LoRA rank 为 1024，synergy head 为完整参数训练的 `24576→3072→128→1`，代码里构造的 rank-256 head LoRA config 未实际使用。候选 driver 加载的是 100-epoch base checkpoint，不是仓库中另存的 13-epoch checkpoint。
 - **根据现有证据作出的推断：** 该 family 是当前最接近论文 synergy 结果的完整候选，但三个 fold 日志的未加权均值 `0.7598/0.7440` 与论文 `0.7539/0.7454` 不完全一致，因此不能称为精确 paper run。
 - **仍待作者确认的事项：** Methods 写 fusion LoRA rank 64 和 base training 13 epochs，并把融合维度写为 `12,294→3,073`；候选 checkpoint 分别证明 rank 1024、实际加载 100-epoch base 和真实维度 `12,288→3,072`。旧日志也未记录独立进程的 `PYTHONHASHSEED`，seed-0 strain membership 只能作为确定性候选。
+- **已由 all-data guidance 日志、checkpoint 和 H100 验证的事实：** post-paper guidance 使用
+  `synergy_DBAASP_inhouse_Evo.csv`，两条训练 route 的 token filter 计数为 `2320→2213` 和
+  `2789→2635`；frozen online MDLM 为 `last_reg_v1.ckpt`，输入固定 1024，实际 noise 概率为 0，
+  fusion LoRA rank 64。`short_judger` 与 `guidance_40epoch` 两份 4.1 GB checkpoint 均为 131-key
+  MDLM + 两个 28-key attention + `24576→3072→128→1` head，严格加载和真实样本 H100 forward
+  通过；40-epoch canonical 与 inline legacy logit 最大绝对差为 0。
+- **已由源码和测试验证的 guidance 隐式行为：** 每个 modality step 在 online MDLM 前消费一次
+  结果恒为 false 的 CPU `torch.randn`；genome+text attention 顺序为 `g1→t1→g2→t2`，
+  text-only 为 `g1→g2→t1→t2`。两者都会改变后续 dropout/DataLoader 的随机轨迹，canonical
+  实现已原样冻结。all-data strain block 继续按 Python `set` 进程哈希顺序拼接；历史
+  `PYTHONHASHSEED` 未记录，因此不能声称恢复了精确历史行序。
+- **guidance 指标边界：** 两份 checkpoint 的 0.8065 与 0.8562 是同一训练数据上的 AUROC，
+  不是 held-out 结果，也不属于论文三折 CV。现存两个 root source 与历史输出目录/schema 有
+  版本交叉，精确 source commit 未恢复；证据见 `experiments/synergy/guidance_checkpoint_audit.json`。
 - **已完成的重构验收：** 1 个 base 与 21 个 member 的逐文件 SHA-256 已登记；`fold_0/ensemble_0` 在 H100 上严格加载后，genome+text 和 text-only 两路均与 inline legacy 公式逐值一致。统一 runner 的 fold 2、1 member、1 epoch 真实数据 smoke 成功写出 checkpoint、175 条预测、metrics 和 summary；临时 2.24 GB 输出已删除。该 smoke 指标不作为论文结果。
 
 #### Modality ablation 绘图与训练血缘审计（2026-07-19）
@@ -386,7 +402,11 @@ Strain count mapping 的演化顺序如下：
   `fine_tune_on_DBAASP_SMILES_5_fold_compare_SSL.py` 及同家族四个早期/all-data/in-house driver。
   `fix_ChemBERTa_MLM_mean_emb_on_DBAASP_SMILES_5_fold_mean_MIC.py` 仍作为可选 pooling
   comparator provenance 保留。
-- Synergy 副本：`synergy_Evo_train_new_reg_MDLM_one_base_model.py`、`synergy_Evo_train_new_reg_MDLM_one_base_model_all_data_train.py`、`synergy_Evo_train_new_reg_MDLM_one_base_model_all_data_classification_clean.py`、`synergy_Evo_train_on_DBAASP_test_on_inhouse_classification.py`、`synergy_Evo_train_on_DBAASP_test_on_inhouse_few_shot.py`、`synergy_Evo_train_on_DBAASP_test_on_inhouse_classification_few_shot.py`、`synergy_Evo_train_on_DBAASP_test_on_inhouse_classification_few_shot_inner_prod.py`、`synergy_Evo_train_on_DBAASP_test_on_inhouse_classification_few_shot_no_lora.py`、`synergy_Evo_train_on_DBAASP_test_on_inhouse_classification_few_shot_w_pred_MIC.py`。
+- Synergy 尚未迁移的副本：`synergy_Evo_train_new_reg_MDLM_one_base_model.py`、
+  `synergy_Evo_train_new_reg_MDLM_one_base_model_all_data_train.py`、
+  `synergy_Evo_train_on_DBAASP_test_on_inhouse_classification.py` 及 five-shot/few-shot 变体。
+  两个 all-data classification guidance driver 已迁移并删除；精确 SHA 与 checkpoint 证据见
+  `experiments/synergy/guidance_checkpoint_audit.json`。
 - 生成分子的 fingerprint 变体：`DataPrepare/Morgan_fingerprint_sim_generation_SM_rediscover.py`。
 - `DataPrepare/__init__.py`、`compare_APEX/__init__.py`、`PeptideCLM/__init__.py` 和 `PeptideCLM/tokenizer/__init__.py` 只是 package marker，不包含实验逻辑。
 - 第三方 PeptideCLM 文件：`PeptideCLM/example_training_script.py`、`PeptideCLM/tokenizer/my_tokenizers.py`、`PeptideCLM/All_CycPeptMPDB_Predictions.ipynb`、`PeptideCLM/CycPeptMPDB_clustering_and_analysis.ipynb`。它们属于上游 comparator 或 tutorial bundle，不属于 ApexOracle pipeline。
