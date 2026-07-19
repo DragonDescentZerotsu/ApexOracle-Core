@@ -1,0 +1,71 @@
+schema_version: 1
+dependency:
+  package: PepLink
+  version: 0.1.1
+  pypi: https://pypi.org/project/PepLink/0.1.1/
+  repository: https://github.com/DragonDescentZerotsu/PepLink
+  tag: v0.1.1
+  git_commit: cec2a02427766e4ba95806924801af31bdcc9939
+  license: MIT
+  artifacts:
+    wheel_sha256: 78cefef15e4027f3d65e7865abaa3f403ef32b70a36c4b3ec7f943deafd1f532
+    sdist_sha256: 70687d40923b36e4d181f61b75f098d54d67e2897dcca80600c7d4832a6a67a9
+
+integration:
+  strategy: optional_pypi_dependency_and_documented_repository_link
+  git_submodule: false
+  rationale: PepLink has an independent release lifecycle and public Python API; a submodule would couple source checkout without improving package installation.
+  apexoracle_adapter: src/apexoracle/data/peplink_adapter.py
+  new_data_policy: use_peplink_0.1.1_fragment_normalization
+  paper_reproduction_policy: consume_frozen_paper_csv_by_sha256
+
+paper_inputs:
+  dbaasp_json:
+    path: DataPrepare/Data/all_peptides_data.json
+    sha256: 927ea275f40cdc2f79acdae6a87b0efc13ae5b7acee3901a50d2005a8f187ce0
+  amino_acid_mapping:
+    path: DataPrepare/Data/all_aa_smiles_new_handcrafted.csv
+    sha256: 42fe91726f2d6a8fb951d7ef7d27298f3151bb45bc5fa222c5d7d9d9e5777544
+    peplink_bundled_mapping_sha256: 42fe91726f2d6a8fb951d7ef7d27298f3151bb45bc5fa222c5d7d9d9e5777544
+  correction_input:
+    path: DataPrepare/Data/DBAASP_id_wo_PubChem_SMILES_w_DBAASP_smiles.csv
+    rows: 179
+    sha256: 0b70f558ac24a1634e43f4139efca6bff58971f17a263ce0a163ce17ee113f96
+  correction_output:
+    path: DataPrepare/Data/DBAASP_id_wo_PubChem_SMILES_w_DBAASP_smiles_remaked.csv
+    rows: 179
+    sha256: 6238110a5a8f1ea9152e4d4458e210f9b0282e68cb218f218cdb64c6b512f6d8
+  final_dbaasp_mic:
+    path: DataPrepare/Data/DBAASP_id_bact_name_SMILES_MIC_Evo.csv
+    rows: 105547
+    sha256: ebbe1b32a45460a2f88f112192627f80f9f7391c1d17dfc2ebf007fe6f6ef2aa
+  final_merged_mic:
+    path: DataPrepare/Data/DBAASP_inhouse_AMP_SMILES_MIC_Evo.csv
+    rows: 121265
+    sha256: af35bb4be1e08d6c95047dd3f05fc24c70568d40373d246fced6d150b19fd079
+  final_token_cache:
+    path: DataPrepare/Data/DBAASP_inhouse_AMP_SELFIES_token_MIC_Evo.csv
+    rows: 120955
+    sha256: ac1a1967d9e94e169ffc23621f7e78c644753659bd08f7a8e10bb63b574930b2
+
+legacy_correction_contract:
+  monomer_action: reconstruct_with_peplink_core
+  non_monomer_action: preserve_dbaasp_offered_smiles
+  preserve_offered_smiles_for_ids: [20478, 20637, 21675, 21676, 21677, 21678, 21751, 21770]
+  expected_scope:
+    total: 179
+    peplink_reconstructed: 169
+    preserved_special: 8
+    preserved_non_monomer: 2
+  peplink_v0.1.1_comparison:
+    exact_smiles: 177
+    fragment_parent_equivalent: 2
+    exceptions:
+      - dbaasp_id: 19000
+        paper_mic_rows: 2
+        token_cache_rows: 2
+        difference: legacy_output_contains_two_disconnected_fragments_removed_by_peplink_fragment_parent
+      - dbaasp_id: 21769
+        paper_mic_rows: 7
+        token_cache_rows: 7
+        difference: legacy_output_contains_disconnected_methane_removed_by_peplink_fragment_parent

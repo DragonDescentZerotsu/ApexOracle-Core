@@ -75,6 +75,23 @@ entries:
       - experiments/sequence_similarity/legacy_cleanup.json
     deletion_allowed: true
 
+  - id: peplink_external_dependency
+    source:
+      - DataPrepare/aa_seq_to_smiles.py
+      - DataPrepare/correct_SMILES_offered_by_DBAASP.py
+      - https://github.com/DragonDescentZerotsu/PepLink
+    destination:
+      - PyPI:PepLink==0.1.1
+      - src/apexoracle/data/peplink_adapter.py
+      - configs/data_pipeline/peplink_v0.1.1.yaml
+      - experiments/amp_data_pipeline
+    status: external_release_pinned_and_paper_compatibility_audited
+    evidence:
+      - experiments/amp_data_pipeline/README.md
+      - experiments/amp_data_pipeline/peplink_compatibility_audit.json
+    deletion_allowed: false
+    deletion_note: Legacy aa_seq_to_smiles remains until all in-repository callers and MIC/data-build scripts are migrated to the external package.
+
   - id: synergy_cv
     source:
       - synergy_Evo_train_new_reg_MDLM_one_base_model_classification.py

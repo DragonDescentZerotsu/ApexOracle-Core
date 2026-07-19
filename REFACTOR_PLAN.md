@@ -238,6 +238,16 @@ tracked drivers/manifests 已删除并由 legacy tag 保留。详见
 当前下一项高置信度迁移改为 AMP/PepLink 最终数据处理血缘；fine-tune 完整正式结果、
 synergy CV 和 modality ablation 继续保留证据边界。
 
+PepLink 外部依赖边界已于 2026-07-19 完成。作者维护的独立仓库
+`DragonDescentZerotsu/PepLink` 已发布 PyPI `PepLink==0.1.1`，tag `v0.1.1` 和 commit
+`cec2a02427766e4ba95806924801af31bdcc9939`。ApexOracle 不使用 submodule，也不复制其
+2,300 行 chemistry core；仅保留 optional dependency、公开 API adapter 和版本/data SHA
+manifest。独立 PepLink 测试为 22 passed。179 条历史 structure correction 中 177 条输出
+逐字符串相同，另 2 条是 v0.1.1 明确移除 legacy 游离 fragment，全部 179 条均为 fragment
+parent equivalent。论文复现继续消费 frozen paper CSV；新数据使用 v0.1.1 normalization。
+旧 `DataPrepare/aa_seq_to_smiles.py` 暂不删除，因为尚有未迁移的 MIC/synergy data driver
+import 它。下一子阶段为 MIC parsing、in-house merge 与 SELFIES/token filtering。
+
 #### 4.2 迁移前需要作者或原始结果进一步核验
 
 - phylum-wise 和 11-cluster species-wise：现存日志与论文数值或完整 fold 不完全一致；

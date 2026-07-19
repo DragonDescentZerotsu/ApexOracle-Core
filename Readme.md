@@ -10,6 +10,10 @@
 - hierarchical MIC（strain/species/phylum）和 Fig. 1b 三菌株抗生素分类的行为保持重构。
 - ApexOracle-3/12/23 sequence-similarity 分析的 cache、alignment 和输出等价重构。
 
+PepLink 作为独立发布的 peptide↔SMILES 工具，不复制进本仓库。ApexOracle 固定可选依赖
+`PepLink==0.1.1` 并通过薄 adapter 调用；外部依赖决策和 179 条历史 structure correction
+兼容性审计见 `experiments/amp_data_pipeline/README.md`。
+
 ## Lead peptide sequence similarity
 
 ```bash
