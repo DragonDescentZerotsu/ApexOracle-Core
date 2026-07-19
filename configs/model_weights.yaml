@@ -128,12 +128,16 @@ weights:
     paper_label: ChemBERTa MTR
     tasks:
       - fig2b_shared_molecule_encoder_benchmark
-    decision_status: upstream_model_confirmed_revision_not_yet_pinned
+      - fig2c_strainwise_encoder_comparison
+      - modality_ablation_encoder
+    decision_status: revision_pinned_for_reproduction_legacy_run_revision_not_logged
     source:
       kind: huggingface_hub
       model_id: DeepChem/ChemBERTa-77M-MTR
-      revision: null
-    loader: scripts/reproduce_fig2b_baselines_online_5fold.py
+      revision: 66b895cab8adebea0cb59a8effa66b2020f204ca
+    loader:
+      - scripts/reproduce_fig2b_baselines_online_5fold.py
+      - scripts/reproduce/run_hierarchical_mic.py
     future_storage:
       relative_path: molecule_encoders/chemberta_mtr
       distribution_strategy: pinned_upstream_or_mirror_after_license_review
@@ -142,12 +146,15 @@ weights:
     paper_label: ChemBERTa MLM
     tasks:
       - fig2b_shared_molecule_encoder_benchmark
-    decision_status: upstream_model_confirmed_revision_not_yet_pinned
+      - fig2c_strainwise_encoder_comparison
+    decision_status: revision_pinned_for_reproduction_legacy_run_revision_not_logged
     source:
       kind: huggingface_hub
       model_id: DeepChem/ChemBERTa-77M-MLM
-      revision: null
-    loader: scripts/reproduce_fig2b_baselines_online_5fold.py
+      revision: ed8a5374f2024ec8da53760af91a33fb8f6a15ff
+    loader:
+      - scripts/reproduce_fig2b_baselines_online_5fold.py
+      - scripts/reproduce/run_hierarchical_mic.py
     future_storage:
       relative_path: molecule_encoders/chemberta_mlm
       distribution_strategy: pinned_upstream_or_mirror_after_license_review
@@ -156,12 +163,15 @@ weights:
     paper_label: MolFormer
     tasks:
       - fig2b_shared_molecule_encoder_benchmark
+      - fig2c_strainwise_encoder_comparison
     decision_status: upstream_model_and_revision_confirmed
     source:
       kind: huggingface_hub
       model_id: ibm/MoLFormer-XL-both-10pct
       revision: 7b12d946c181a37f6012b9dc3b002275de070314
-    loader: scripts/reproduce_fig2b_baselines_online_5fold.py
+    loader:
+      - scripts/reproduce_fig2b_baselines_online_5fold.py
+      - scripts/reproduce/run_hierarchical_mic.py
     future_storage:
       relative_path: molecule_encoders/molformer
       distribution_strategy: pinned_upstream_or_mirror_after_license_review
@@ -170,12 +180,15 @@ weights:
     paper_label: PeptideCLM
     tasks:
       - fig2b_shared_molecule_encoder_benchmark
-    decision_status: upstream_model_confirmed_revision_not_yet_pinned
+      - fig2c_strainwise_encoder_comparison
+    decision_status: revision_pinned_for_reproduction_legacy_run_revision_not_logged
     source:
       kind: huggingface_hub
       model_id: aaronfeller/PeptideCLM-23M-all
-      revision: null
-    loader: scripts/reproduce_fig2b_baselines_online_5fold.py
+      revision: a0847d8231d236645a2c4f629590118716c6fdda
+    loader:
+      - scripts/reproduce_fig2b_baselines_online_5fold.py
+      - scripts/reproduce/run_hierarchical_mic.py
     future_storage:
       relative_path: molecule_encoders/peptideclm
       distribution_strategy: pinned_upstream_or_mirror_after_license_review

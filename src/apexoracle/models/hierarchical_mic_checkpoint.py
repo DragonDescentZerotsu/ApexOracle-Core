@@ -82,12 +82,25 @@ def inspect_checkpoint_contract(checkpoint: dict) -> dict:
     optional_payloads = {}
     if "ChemBERTa_state_dict" in checkpoint:
         backbone_state = checkpoint["ChemBERTa_state_dict"]
-        optional_payloads["ChemBERTa_state_dict"] = {
-            "interpretation": "historically_misnamed_mdlm_backbone_state_dict",
-            "key_count": len(backbone_state),
-            "vocab_embedding_shape": list(
+        if "backbone.vocab_embed.embedding" in backbone_state:
+            interpretation = "historically_misnamed_mdlm_backbone_state_dict"
+            vocabulary_shape = list(
                 backbone_state["backbone.vocab_embed.embedding"].shape
-            ),
+            )
+        elif "embeddings.word_embeddings.weight" in backbone_state:
+            interpretation = "online_huggingface_molecule_encoder_state_dict"
+            vocabulary_shape = list(
+                backbone_state["embeddings.word_embeddings.weight"].shape
+            )
+        else:
+            raise ValueError(
+                "Unrecognized ChemBERTa_state_dict payload; it is neither the "
+                "archived MDLM backbone nor a supported online HF encoder"
+            )
+        optional_payloads["ChemBERTa_state_dict"] = {
+            "interpretation": interpretation,
+            "key_count": len(backbone_state),
+            "vocab_embedding_shape": vocabulary_shape,
         }
     return {
         "molecule_dim": molecule_dim,

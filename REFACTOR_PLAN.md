@@ -287,6 +287,44 @@ Modality ablation 的绘图血缘已于 2026-07-19 冻结。最终 Mac notebook 
 状态为 `paper plot reproducible / training lineage unresolved`。旧训练 driver 暂留且不得运行，
 因为它们会原地覆盖过滤后的中间 CSV；本阶段没有修改任何原始或论文数据。
 
+2026-07-19 追加核验纠正了此前过于宽泛的“训练血缘未恢复”表述：四条 modality 曲线的
+分子 encoder 均已由本机/node002 同源 driver 和真实 checkpoint 验证为
+`DeepChem/ChemBERTa-77M-MTR`。三条无 small-molecule auxiliary task 的曲线依次来自
+genome-only、text-only 和 genome+text driver；完整曲线来自对应 `DP_inhouse_SM_*`
+driver。抽查的四类 checkpoint 均包含 55-key、`600 x 384` word embedding、3-layer 的真实
+ChemBERTa state。仍未恢复的是“最终 12 个绘图点 -> 精确 member checkpoint -> held-out
+prediction -> ensemble 聚合”的逐点链路；因此后续应写为
+`encoder/driver family identified; exact plotted ensemble lineage unresolved`，不得再写成
+模型家族未知。旧 full driver 可从 node002 和 `legacy-code-snapshot-2026-07-17` 恢复。
+
+#### 4.1.1 Fig. 2c molecular encoder comparator 统一迁移（已完成）
+
+状态（2026-07-19）：**代码迁移与验证完成。** 迁移范围为 strain-wise ChemBERTa-MTR、
+ChemBERTa-MLM、MolFormer 和 PeptideCLM 四个复制 driver。已由源码验证的差异必须进入配置：
+
+- 四者均使用 online tokenizer/model 和 first-token pooling，不能误接到 MDLM 预计算 feature；
+- ChemBERTa-MLM 与 MolFormer 默认保持 backbone train mode，冻结 3 epochs 后解冻；
+- ChemBERTa-MTR 与 PeptideCLM 显式保持 backbone eval mode，`freeze_epochs` 分别为 3000 和
+  5000，在默认 25 epochs 内不会解冻；
+- legacy 默认 ensemble 数分别为 1、7、7、1，batch size 均为 70，backbone optimizer group
+  均使用 `3e-6` 和 `0.1 x weight_decay`；
+- tokenizer、model revision、hidden size、checkpoint 目录和 payload key 必须由 encoder profile
+  明确声明，不能用统一默认值覆盖。
+
+上述差异现已通过 `configs/hierarchical_mic/legacy_fig2c_comparators.yaml` 接入现有 hierarchical
+MIC split/fusion/evaluation outer runner。新增测试覆盖 raw-SMILES Dataset/collate、first-token
+forward/logit/loss、optimizer group 顺序、freeze/unfreeze、八键 online checkpoint payload 与 loader
+识别。四个固定 revision 均已在 H100 上完成真实 CUDA forward；MLM 与 MolFormer 还完成解冻后
+backward。MTR、MolFormer、PeptideCLM 的现存 checkpoint encoder payload 已严格加载，node002
+MLM checkpoint schema 与固定 revision 精确一致；真实数据 dry-run 成功。
+
+四个 root 复制 driver 已从工作树删除，由 `legacy-code-snapshot-2026-07-17` 恢复。迁移只读取
+原始 CSV、embedding 与 checkpoint，迁移前后四个源数据 SHA-256 保持一致。PeptideCLM 仍有明确
+证据边界：本机 fixed 单 member 与 node002 早期 7-member driver 行为不同，且后者没有完整
+checkpoint 网格；canonical 采用有严格 checkpoint 证据的 fixed profile，不声称论文精确 ensemble
+血缘已恢复。完整审计见
+`experiments/hierarchical_mic/strain/fig2c_comparator_migration_audit.json`。
+
 #### 4.2 迁移前需要作者或原始结果进一步核验
 
 - phylum-wise 和 11-cluster species-wise：现存日志与论文数值或完整 fold 不完全一致；
@@ -330,7 +368,8 @@ loss 和 per-task R² 已迁入 `src/apexoracle/benchmarks/molecule_encoders/`�
 `strict=True` 加载，固定四序列的 legacy/canonical `(4,128)` feature SHA-256 完全相同；三个
 Fig. 2b runner、两个 Fig. 2b capsule builder 和 zero-shot capsule source builder 均已切换到
 canonical source。`compare_APEX/aaindex1.csv` 与 checkpoint 继续作为被 Git 忽略的 paper
-assets 保留。modality、synergy 和 Fig. 2c comparator driver 因证据边界仍暂留。
+  assets 保留。modality 与 synergy driver 因证据边界仍暂留；Fig. 2c comparator 已在下一阶段
+  迁入 profiles 并删除 root 复制 driver。
 
 `PeptideCLM/` 不作为自有核心代码维护。优先改为明确版本的外部依赖；如果必须 vendor，则只保留必要文件并完整保留上游 README、LICENSE 和来源说明。
 

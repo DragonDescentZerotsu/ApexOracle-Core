@@ -22,6 +22,7 @@ from .feature_cache import FeatureCache
 class HFEncoderSpec:
     name: str
     model_name: str
+    revision: str
     trust_remote_code: bool = False
     tokenizer_kind: str = "auto"
     pooling: str = "first_token"
@@ -32,19 +33,23 @@ HF_ENCODERS = {
     "chemberta_mtr": HFEncoderSpec(
         name="chemberta_mtr",
         model_name="DeepChem/ChemBERTa-77M-MTR",
+        revision="66b895cab8adebea0cb59a8effa66b2020f204ca",
     ),
     "chemberta_mlm": HFEncoderSpec(
         name="chemberta_mlm",
         model_name="DeepChem/ChemBERTa-77M-MLM",
+        revision="ed8a5374f2024ec8da53760af91a33fb8f6a15ff",
     ),
     "molformer": HFEncoderSpec(
         name="molformer",
         model_name="ibm/MoLFormer-XL-both-10pct",
+        revision="7b12d946c181a37f6012b9dc3b002275de070314",
         trust_remote_code=True,
     ),
     "peptideclm": HFEncoderSpec(
         name="peptideclm",
         model_name="aaronfeller/PeptideCLM-23M-all",
+        revision="a0847d8231d236645a2c4f629590118716c6fdda",
         tokenizer_kind="vendored_peptideclm",
     ),
 }
@@ -65,6 +70,7 @@ def load_hf_tokenizer(spec: HFEncoderSpec, repo_root: Path):
 
     return AutoTokenizer.from_pretrained(
         spec.model_name,
+        revision=spec.revision,
         trust_remote_code=spec.trust_remote_code,
     )
 
@@ -119,6 +125,7 @@ def extract_hf_features(
     )
     model = AutoModel.from_pretrained(
         spec.model_name,
+        revision=spec.revision,
         trust_remote_code=spec.trust_remote_code,
     )
     torch_device = torch.device(device)

@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 from dataclasses import dataclass
+from functools import partial
 import json
 import logging
 import os
@@ -28,12 +29,18 @@ from tqdm import tqdm
 import yaml
 
 from apexoracle.data.hierarchical_mic import (
+    OnlineMoleculeStrainDataset,
+    OnlineMoleculeTextOnlyDataset,
     StrainEmbeddingDataset,
     TextOnlyStrainEmbeddingDataset,
     collate_genome_text_classification,
     collate_genome_text_regression,
     collate_text_classification,
     collate_text_regression,
+    collate_online_genome_text_classification,
+    collate_online_genome_text_regression,
+    collate_online_text_classification,
+    collate_online_text_regression,
 )
 from apexoracle.data.hierarchical_mic_preparation import (
     HoldoutSplit,
@@ -56,6 +63,12 @@ from apexoracle.features.precomputed import (
     load_text_only_embeddings,
 )
 from apexoracle.models.strain_fusion import FirstTokenAttentionGenome, RegressionHead
+from apexoracle.models.hf_molecule_encoder import (
+    HFMoleculeEncoderConfig,
+    load_legacy_molecule_encoder,
+    load_legacy_tokenizer,
+    unfreeze_legacy_molecule_encoder,
+)
 from apexoracle.training.hierarchical_mic import (
     build_legacy_cosine_scheduler,
     hierarchical_mic_batch_forward,
@@ -77,6 +90,13 @@ class HierarchicalMicPaths:
     peptide_embeddings: Path
     small_molecule_embeddings: Path
     output_dir: Path
+    mic_records: Path = Path(
+        "DataPrepare/Data/DBAASP_inhouse_AMP_SELFIES_token_MIC_Evo.csv"
+    )
+    small_molecule_records: Path = Path(
+        "DataPrepare/Data/small_molecule/processed/"
+        "small_molecule_Evo_binary_data_SELFIES.csv"
+    )
 
     @classmethod
     def from_config(
@@ -100,17 +120,35 @@ class HierarchicalMicPaths:
             text_only_embeddings=resolve(values["text_only_embeddings"]),
             peptide_embeddings=resolve(values["peptide_embeddings"]),
             small_molecule_embeddings=resolve(values["small_molecule_embeddings"]),
+            mic_records=resolve(
+                values.get(
+                    "mic_records",
+                    "DataPrepare/Data/DBAASP_inhouse_AMP_SELFIES_token_MIC_Evo.csv",
+                )
+            ),
+            small_molecule_records=resolve(
+                values.get(
+                    "small_molecule_records",
+                    "DataPrepare/Data/small_molecule/processed/"
+                    "small_molecule_Evo_binary_data_SELFIES.csv",
+                )
+            ),
             output_dir=output,
         )
 
-    def required_inputs(self) -> tuple[Path, ...]:
-        return (
+    def required_inputs(
+        self, *, include_precomputed_molecule_embeddings: bool = True
+    ) -> tuple[Path, ...]:
+        shared = (
             self.genome_embeddings,
             self.atcc_text_embeddings,
             self.text_only_embeddings,
-            self.peptide_embeddings,
-            self.small_molecule_embeddings,
+            self.mic_records,
+            self.small_molecule_records,
         )
+        if not include_precomputed_molecule_embeddings:
+            return shared
+        return shared + (self.peptide_embeddings, self.small_molecule_embeddings)
 
 
 @dataclass(frozen=True)
@@ -140,6 +178,7 @@ class HierarchicalMicConfig:
     genome_embedding_scale: float
     text_embedding_scale: float
     paths: HierarchicalMicPaths
+    molecule_encoder: HFMoleculeEncoderConfig | None = None
 
     @classmethod
     def load(
@@ -148,6 +187,7 @@ class HierarchicalMicConfig:
         repo_root: Path,
         *,
         holdout_protocol: str,
+        molecule_encoder_name: str | None = None,
         epochs: int | None = None,
         weight_decay: float | None = None,
         output_dir: Path | None = None,
@@ -164,12 +204,61 @@ class HierarchicalMicConfig:
         outputs = raw["outputs"]
         if holdout_protocol not in outputs:
             raise ValueError(f"No output path configured for {holdout_protocol}")
+        encoder_profile = None
+        encoder_profiles = raw.get("molecule_encoders")
+        if encoder_profiles is not None:
+            if molecule_encoder_name is None:
+                available = ", ".join(sorted(encoder_profiles))
+                raise ValueError(
+                    "This config requires --molecule-encoder; available: " + available
+                )
+            if molecule_encoder_name not in encoder_profiles:
+                raise ValueError(f"Unknown molecule encoder: {molecule_encoder_name}")
+            encoder_profile = encoder_profiles[molecule_encoder_name]
+        elif molecule_encoder_name is not None:
+            raise ValueError(
+                "--molecule-encoder was provided for a config without encoder profiles"
+            )
+
+        output_path = (
+            str(encoder_profile["output"])
+            if encoder_profile is not None
+            else outputs[holdout_protocol]
+        )
         paths = HierarchicalMicPaths.from_config(
             repo_root,
             raw["paths"],
-            output_path=outputs[holdout_protocol],
+            output_path=output_path,
             output_override=output_dir,
         )
+        molecule_encoder = None
+        if encoder_profile is not None:
+            molecule_encoder = HFMoleculeEncoderConfig(
+                name=molecule_encoder_name,
+                model_name=str(encoder_profile["model_name"]),
+                revision=str(encoder_profile["revision"]),
+                hidden_size=int(encoder_profile["hidden_size"]),
+                tokenizer_kind=str(encoder_profile.get("tokenizer_kind", "auto")),
+                trust_remote_code=bool(
+                    encoder_profile.get("trust_remote_code", False)
+                ),
+                initial_mode=str(encoder_profile["initial_mode"]),
+                pooling=str(encoder_profile.get("pooling", "first_token")),
+                max_length=int(encoder_profile.get("max_length", 512)),
+                optimizer_learning_rate=float(
+                    encoder_profile["optimizer_learning_rate"]
+                ),
+                optimizer_weight_decay_multiplier=float(
+                    encoder_profile["optimizer_weight_decay_multiplier"]
+                ),
+                checkpoint_state_key=str(encoder_profile["checkpoint_state_key"]),
+            )
+
+        def training_value(name: str):
+            if encoder_profile is not None and name in encoder_profile:
+                return encoder_profile[name]
+            return training[name]
+
         config = cls(
             protocol_family=str(raw["protocol_family"]),
             holdout_protocol=holdout_protocol,
@@ -187,7 +276,11 @@ class HierarchicalMicConfig:
                     else repo_root / holdout["tree"]
                 )
             ),
-            molecule_embedding_dim=int(model["molecule_embedding_dim"]),
+            molecule_embedding_dim=int(
+                model["molecule_embedding_dim"]
+                if molecule_encoder is None
+                else molecule_encoder.hidden_size
+            ),
             genome_embedding_dim=int(model["genome_embedding_dim"]),
             text_embedding_dim=int(model["text_embedding_dim"]),
             attention_heads=int(model["attention_heads"]),
@@ -195,18 +288,19 @@ class HierarchicalMicConfig:
             head_hidden_dims=tuple(int(value) for value in model["head_hidden_dims"]),
             head_dropout=float(model["head_dropout"]),
             regression_targets=int(model["regression_targets"]),
-            ensembles_per_group=int(training["ensembles_per_group"]),
+            ensembles_per_group=int(training_value("ensembles_per_group")),
             ensemble_seeds=tuple(int(seed) for seed in training["ensemble_seeds"]),
             epochs=int(training["epochs"] if epochs is None else epochs),
-            batch_size=int(training["batch_size"]),
+            batch_size=int(training_value("batch_size")),
             learning_rate=float(training["learning_rate"]),
             weight_decay=float(
                 training["weight_decay"] if weight_decay is None else weight_decay
             ),
             scheduler_eta_min=float(training["scheduler_eta_min"]),
-            freeze_epochs=int(training["freeze_epochs"]),
+            freeze_epochs=int(training_value("freeze_epochs")),
             genome_embedding_scale=float(training["genome_embedding_scale"]),
             text_embedding_scale=float(training["text_embedding_scale"]),
+            molecule_encoder=molecule_encoder,
             paths=paths,
         )
         config.validate()
@@ -255,6 +349,8 @@ class HierarchicalMicConfig:
                 "Legacy head dimensions must be "
                 f"({expected_first_hidden}, 128), got {self.head_hidden_dims}"
             )
+        if self.molecule_encoder is not None:
+            self.molecule_encoder.validate()
 
 
 @dataclass
@@ -274,8 +370,9 @@ class RuntimeFeatures:
     genome_embeddings: Mapping[str, torch.Tensor]
     atcc_text_embeddings: Mapping[str, torch.Tensor]
     text_only_embeddings: Mapping[str, torch.Tensor]
-    peptide_embeddings: Mapping[Any, torch.Tensor]
-    small_molecule_embeddings: Mapping[Any, torch.Tensor]
+    peptide_embeddings: Mapping[Any, torch.Tensor] | None
+    small_molecule_embeddings: Mapping[Any, torch.Tensor] | None
+    tokenizer: Any | None = None
 
     @property
     def all_text_embeddings(self) -> dict[str, torch.Tensor]:
@@ -294,6 +391,7 @@ class HoldoutLoaders:
 
 @dataclass
 class ModelBundle:
+    molecule_encoder: nn.Module | None
     genome_attention: nn.Module
     text_attention: nn.Module
     regression_head: nn.Module
@@ -394,9 +492,10 @@ def prepare_holdout_frames(
 
 
 def load_runtime_features(
-    config: HierarchicalMicConfig, device: torch.device
+    config: HierarchicalMicConfig, device: torch.device, repo_root: Path
 ) -> RuntimeFeatures:
     paths = config.paths
+    online = config.molecule_encoder is not None
     return RuntimeFeatures(
         genome_embeddings=load_all_embeddings(
             paths.genome_embeddings,
@@ -416,8 +515,17 @@ def load_runtime_features(
             device,
             "text (without corresponding genome)",
         ),
-        peptide_embeddings=torch.load(paths.peptide_embeddings),
-        small_molecule_embeddings=torch.load(paths.small_molecule_embeddings),
+        peptide_embeddings=(
+            None if online else torch.load(paths.peptide_embeddings)
+        ),
+        small_molecule_embeddings=(
+            None if online else torch.load(paths.small_molecule_embeddings)
+        ),
+        tokenizer=(
+            load_legacy_tokenizer(config.molecule_encoder, repo_root)
+            if online
+            else None
+        ),
     )
 
 
@@ -428,95 +536,167 @@ def build_holdout_loaders(
     batch_size: int,
 ) -> tuple[HoldoutLoaders, int, int]:
     all_text_embeddings = features.all_text_embeddings
-    common = (None, features.peptide_embeddings, features.small_molecule_embeddings)
-    genome_text_train = StrainEmbeddingDataset(
-        frames.genome_text_train,
-        common[0],
-        features.genome_embeddings,
-        features.atcc_text_embeddings,
-        "peptide genome-text training set",
-        common[1],
-        common[2],
-    )
-    genome_text_test = StrainEmbeddingDataset(
-        frames.genome_text_test,
-        common[0],
-        features.genome_embeddings,
-        features.atcc_text_embeddings,
-        "peptide genome-text test set",
-        common[1],
-        common[2],
-    )
-    text_only_train = TextOnlyStrainEmbeddingDataset(
-        frames.text_only_train,
-        common[0],
-        all_text_embeddings,
-        "peptide text-only training set",
-        common[1],
-        common[2],
-    )
-    text_only_test = TextOnlyStrainEmbeddingDataset(
-        frames.text_only_test,
-        common[0],
-        all_text_embeddings,
-        "peptide text-only test set",
-        common[1],
-        common[2],
-    )
-
-    genome_auxiliary = None
-    if frames.small_molecule_genome_text_train is not None:
-        genome_auxiliary = StrainEmbeddingDataset(
-            frames.small_molecule_genome_text_train,
+    online = features.tokenizer is not None
+    if online:
+        tokenizer = features.tokenizer
+        genome_text_train = OnlineMoleculeStrainDataset(
+            frames.genome_text_train,
+            tokenizer,
+            features.genome_embeddings,
+            features.atcc_text_embeddings,
+            "peptide genome-text training set",
+        )
+        genome_text_test = OnlineMoleculeStrainDataset(
+            frames.genome_text_test,
+            tokenizer,
+            features.genome_embeddings,
+            features.atcc_text_embeddings,
+            "peptide genome-text test set",
+        )
+        text_only_train = OnlineMoleculeTextOnlyDataset(
+            frames.text_only_train,
+            tokenizer,
+            all_text_embeddings,
+            "peptide text-only training set",
+        )
+        text_only_test = OnlineMoleculeTextOnlyDataset(
+            frames.text_only_test,
+            tokenizer,
+            all_text_embeddings,
+            "peptide text-only test set",
+        )
+        pad_token_id = tokenizer.pad_token_id
+        genome_regression_collate = partial(
+            collate_online_genome_text_regression,
+            pad_token_id=pad_token_id,
+        )
+        text_regression_collate = partial(
+            collate_online_text_regression,
+            pad_token_id=pad_token_id,
+        )
+        genome_classification_collate = partial(
+            collate_online_genome_text_classification,
+            pad_token_id=pad_token_id,
+        )
+        text_classification_collate = partial(
+            collate_online_text_classification,
+            pad_token_id=pad_token_id,
+        )
+    else:
+        common = (
+            None,
+            features.peptide_embeddings,
+            features.small_molecule_embeddings,
+        )
+        genome_text_train = StrainEmbeddingDataset(
+            frames.genome_text_train,
             common[0],
             features.genome_embeddings,
             features.atcc_text_embeddings,
-            "small-molecule genome-text training set",
+            "peptide genome-text training set",
             common[1],
             common[2],
         )
-    text_auxiliary = None
-    if frames.small_molecule_text_only_train is not None:
-        text_auxiliary = TextOnlyStrainEmbeddingDataset(
-            frames.small_molecule_text_only_train,
+        genome_text_test = StrainEmbeddingDataset(
+            frames.genome_text_test,
+            common[0],
+            features.genome_embeddings,
+            features.atcc_text_embeddings,
+            "peptide genome-text test set",
+            common[1],
+            common[2],
+        )
+        text_only_train = TextOnlyStrainEmbeddingDataset(
+            frames.text_only_train,
             common[0],
             all_text_embeddings,
-            "small-molecule text-only training set",
+            "peptide text-only training set",
             common[1],
             common[2],
         )
+        text_only_test = TextOnlyStrainEmbeddingDataset(
+            frames.text_only_test,
+            common[0],
+            all_text_embeddings,
+            "peptide text-only test set",
+            common[1],
+            common[2],
+        )
+        genome_regression_collate = collate_genome_text_regression
+        text_regression_collate = collate_text_regression
+        genome_classification_collate = collate_genome_text_classification
+        text_classification_collate = collate_text_classification
+
+    genome_auxiliary = None
+    if frames.small_molecule_genome_text_train is not None:
+        if online:
+            genome_auxiliary = OnlineMoleculeStrainDataset(
+                frames.small_molecule_genome_text_train,
+                features.tokenizer,
+                features.genome_embeddings,
+                features.atcc_text_embeddings,
+                "small-molecule genome-text training set",
+            )
+        else:
+            genome_auxiliary = StrainEmbeddingDataset(
+                frames.small_molecule_genome_text_train,
+                common[0],
+                features.genome_embeddings,
+                features.atcc_text_embeddings,
+                "small-molecule genome-text training set",
+                common[1],
+                common[2],
+            )
+    text_auxiliary = None
+    if frames.small_molecule_text_only_train is not None:
+        if online:
+            text_auxiliary = OnlineMoleculeTextOnlyDataset(
+                frames.small_molecule_text_only_train,
+                features.tokenizer,
+                all_text_embeddings,
+                "small-molecule text-only training set",
+            )
+        else:
+            text_auxiliary = TextOnlyStrainEmbeddingDataset(
+                frames.small_molecule_text_only_train,
+                common[0],
+                all_text_embeddings,
+                "small-molecule text-only training set",
+                common[1],
+                common[2],
+            )
 
     loaders = HoldoutLoaders(
         genome_text_train=DataLoader(
             genome_text_train,
             batch_size=batch_size,
             shuffle=True,
-            collate_fn=collate_genome_text_regression,
+            collate_fn=genome_regression_collate,
         ),
         genome_text_test=DataLoader(
             genome_text_test,
             batch_size=batch_size,
             shuffle=False,
-            collate_fn=collate_genome_text_regression,
+            collate_fn=genome_regression_collate,
         ),
         text_only_train=DataLoader(
             text_only_train,
             batch_size=batch_size,
             shuffle=True,
-            collate_fn=collate_text_regression,
+            collate_fn=text_regression_collate,
         ),
         text_only_test=DataLoader(
             text_only_test,
             batch_size=batch_size,
             shuffle=False,
-            collate_fn=collate_text_regression,
+            collate_fn=text_regression_collate,
         ),
         small_molecule_genome_text_train=(
             DataLoader(
                 genome_auxiliary,
                 batch_size=batch_size,
                 shuffle=True,
-                collate_fn=collate_genome_text_classification,
+                collate_fn=genome_classification_collate,
             )
             if genome_auxiliary is not None
             else [None]
@@ -526,7 +706,7 @@ def build_holdout_loaders(
                 text_auxiliary,
                 batch_size=batch_size,
                 shuffle=True,
-                collate_fn=collate_text_classification,
+                collate_fn=text_classification_collate,
             )
             if text_auxiliary is not None
             else [None]
@@ -552,6 +732,14 @@ def build_model_bundle(
             f"got genome={genome_dim}, text={text_dim}; expected "
             f"genome={config.genome_embedding_dim}, text={config.text_embedding_dim}"
         )
+    molecule_encoder = (
+        None
+        if config.molecule_encoder is None
+        else load_legacy_molecule_encoder(
+            config.molecule_encoder,
+            device=device,
+        )
+    )
     genome_attention = FirstTokenAttentionGenome(
         config.molecule_embedding_dim,
         genome_dim,
@@ -614,12 +802,24 @@ def build_model_bundle(
             "weight_decay": config.weight_decay,
         }
     )
+    if molecule_encoder is not None:
+        optimizer.add_param_group(
+            {
+                "params": molecule_encoder.parameters(),
+                "lr": config.molecule_encoder.optimizer_learning_rate,
+                "weight_decay": (
+                    config.weight_decay
+                    * config.molecule_encoder.optimizer_weight_decay_multiplier
+                ),
+            }
+        )
     scheduler = build_legacy_cosine_scheduler(
         optimizer,
         num_epochs=config.epochs,
         min_lr=config.scheduler_eta_min,
     )
     return ModelBundle(
+        molecule_encoder=molecule_encoder,
         genome_attention=genome_attention,
         text_attention=text_attention,
         regression_head=regression_head,
@@ -672,6 +872,7 @@ def evaluate_holdout(
                 result = hierarchical_mic_batch_forward(
                     genome_batch,
                     device=device,
+                    molecule_encoder=model.molecule_encoder,
                     genome_attention=model.genome_attention,
                     text_attention=model.text_attention,
                     prediction_head=model.regression_head,
@@ -692,6 +893,7 @@ def evaluate_holdout(
                 result = hierarchical_mic_batch_forward(
                     text_batch,
                     device=device,
+                    molecule_encoder=model.molecule_encoder,
                     genome_attention=model.genome_attention,
                     text_attention=model.text_attention,
                     prediction_head=model.regression_head,
@@ -725,6 +927,7 @@ def _train_regression_batch(
     result = hierarchical_mic_optimizer_step(
         batch,
         device=device,
+        molecule_encoder=model.molecule_encoder,
         genome_attention=model.genome_attention,
         text_attention=model.text_attention,
         prediction_head=model.regression_head,
@@ -759,6 +962,7 @@ def _train_classification_batch(
     result = hierarchical_mic_optimizer_step(
         batch,
         device=device,
+        molecule_encoder=model.molecule_encoder,
         genome_attention=model.genome_attention,
         text_attention=model.text_attention,
         prediction_head=model.classification_head,
@@ -996,6 +1200,12 @@ def run_holdout(
             )
         ):
             raise AssertionError("Legacy evaluation requires train-mode modules")
+        if model.molecule_encoder is not None:
+            expected_training = config.molecule_encoder.initial_mode == "train"
+            if model.molecule_encoder.training != expected_training:
+                raise AssertionError(
+                    "Online molecule encoder mode differs from its legacy profile"
+                )
 
         tracker = LegacyBestMetricTracker()
         for epoch in tqdm(
@@ -1003,6 +1213,8 @@ def run_holdout(
             desc=f" Training ensemble {ensemble + 1}/{config.ensembles_per_group} ",
             leave=False,
         ):
+            if epoch == config.freeze_epochs and model.molecule_encoder is not None:
+                unfreeze_legacy_molecule_encoder(model.molecule_encoder)
             if epoch == 0:
                 initial, initial_metrics = evaluate_holdout(
                     loaders,
@@ -1065,6 +1277,12 @@ def run_holdout(
                         genome_attention=model.genome_attention,
                         text_attention=model.text_attention,
                         missing_genome_embedding=model.missing_genome_embedding,
+                        molecule_encoder=model.molecule_encoder,
+                        molecule_encoder_state_key=(
+                            None
+                            if config.molecule_encoder is None
+                            else config.molecule_encoder.checkpoint_state_key
+                        ),
                     ),
                     config.paths.output_dir
                     / checkpoint_filename(config, split, group, ensemble),
@@ -1141,18 +1359,35 @@ def configure_logging(output_dir: Path, group_label: str) -> None:
 
 
 def validate_paths(config: HierarchicalMicConfig, repo_root: Path) -> None:
-    missing = [path for path in config.paths.required_inputs() if not path.exists()]
+    missing = [
+        path
+        for path in config.paths.required_inputs(
+            include_precomputed_molecule_embeddings=(
+                config.molecule_encoder is None
+            )
+        )
+        if not path.exists()
+    ]
     if config.holdout_tree is not None and not config.holdout_tree.exists():
         missing.append(config.holdout_tree)
     preparation_inputs = (
-        repo_root / "DataPrepare/Data/DBAASP_inhouse_AMP_SELFIES_token_MIC_Evo.csv",
-        repo_root
-        / "DataPrepare/Data/small_molecule/processed/small_molecule_Evo_binary_data_SELFIES.csv",
         repo_root
         / "DataPrepare/Data/Evo_edition_4_MIC_data_handcrafted_no_ATCC_to_custom_ATCC_and_inhouse.json",
         repo_root / "DataPrepare/Data/Genome/old_to_new_NCBI_taxonomy.json",
     )
     missing.extend(path for path in preparation_inputs if not path.exists())
+    if (
+        config.molecule_encoder is not None
+        and config.molecule_encoder.tokenizer_kind == "vendored_peptideclm"
+    ):
+        missing.extend(
+            path
+            for path in (
+                repo_root / "PeptideCLM/tokenizer/new_vocab.txt",
+                repo_root / "PeptideCLM/tokenizer/new_splits.txt",
+            )
+            if not path.exists()
+        )
     if missing:
         formatted = "\n".join(f"  - {path}" for path in missing)
         raise FileNotFoundError(
@@ -1169,7 +1404,35 @@ def dry_run_report(
     repo_root: Path,
 ) -> dict[str, Any]:
     frames = prepare_holdout_frames(prepared, split, group)
-    counts = holdout_record_counts(prepared, split, group)
+    if config.molecule_encoder is None:
+        counts = holdout_record_counts(prepared, split, group)
+    else:
+        tokenizer = load_legacy_tokenizer(config.molecule_encoder, repo_root)
+
+        def online_count(frame: pd.DataFrame) -> dict[str, int]:
+            retained = sum(
+                len(
+                    tokenizer(
+                        value,
+                        return_tensors="pt",
+                        padding=False,
+                        truncation=False,
+                    )["input_ids"].squeeze(0)
+                )
+                <= config.molecule_encoder.max_length
+                for value in frame["SMILES"]
+            )
+            return {
+                "before_length_filter": len(frame),
+                "after_length_filter": retained,
+            }
+
+        counts = {
+            "genome_text_train": online_count(frames.genome_text_train),
+            "genome_text_test": online_count(frames.genome_text_test),
+            "text_only_train": online_count(frames.text_only_train),
+            "text_only_test": online_count(frames.text_only_test),
+        }
     return {
         "status": "dry_run_ok",
         "runner": "apexoracle.training.hierarchical_mic_runner",
@@ -1185,6 +1448,11 @@ def dry_run_report(
         "ensembles": config.ensembles_per_group,
         "epochs": config.epochs,
         "batch_size": config.batch_size,
+        "molecule_encoder": (
+            "precomputed_mdlm"
+            if config.molecule_encoder is None
+            else config.molecule_encoder.name
+        ),
         "record_counts": counts,
         "auxiliary_before_length_filter": {
             "genome_text": (
@@ -1204,6 +1472,8 @@ def dry_run_report(
             "text_only_embeddings": str(config.paths.text_only_embeddings),
             "peptide_embeddings": str(config.paths.peptide_embeddings),
             "small_molecule_embeddings": str(config.paths.small_molecule_embeddings),
+            "mic_records": str(config.paths.mic_records),
+            "small_molecule_records": str(config.paths.small_molecule_records),
             "output_dir": str(config.paths.output_dir),
         },
     }
@@ -1222,6 +1492,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--device", type=int, default=0)
     parser.add_argument("--epochs", type=int)
     parser.add_argument("--weight-decay", type=float)
+    parser.add_argument(
+        "--molecule-encoder",
+        choices=["chemberta_mtr", "chemberta_mlm", "molformer", "peptideclm"],
+        help="Select a Fig. 2c online encoder profile when using the comparator config.",
+    )
     parser.add_argument("--output-dir", type=Path)
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument(
@@ -1253,12 +1528,17 @@ def main(argv: Sequence[str] | None = None) -> dict[str, Any] | None:
         config_path,
         repo_root,
         holdout_protocol=args.protocol,
+        molecule_encoder_name=args.molecule_encoder,
         epochs=args.epochs,
         weight_decay=args.weight_decay,
         output_dir=output_dir,
     )
     validate_paths(config, repo_root)
-    prepared = prepare_hierarchical_mic_data(repo_root)
+    prepared = prepare_hierarchical_mic_data(
+        repo_root,
+        mic_data_path=config.paths.mic_records,
+        small_molecule_data_path=config.paths.small_molecule_records,
+    )
     split = build_holdout_split(
         prepared,
         repo_root,
@@ -1296,7 +1576,7 @@ def main(argv: Sequence[str] | None = None) -> dict[str, Any] | None:
     )
     LOGGER.info("Start")
     LOGGER.info("Current test group: %s", split.group_names[args.test_group])
-    features = load_runtime_features(config, device)
+    features = load_runtime_features(config, device, repo_root)
     metrics = run_holdout(
         config,
         prepared,

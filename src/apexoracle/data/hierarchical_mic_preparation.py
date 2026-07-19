@@ -62,7 +62,12 @@ def _group_records(records: np.ndarray) -> dict[str, np.ndarray]:
     return {name: records[np.where(records[:, 1] == name)[0]] for name in names}
 
 
-def prepare_hierarchical_mic_data(repo_root: Path) -> PreparedHierarchicalMicData:
+def prepare_hierarchical_mic_data(
+    repo_root: Path,
+    *,
+    mic_data_path: Path | None = None,
+    small_molecule_data_path: Path | None = None,
+) -> PreparedHierarchicalMicData:
     """Reproduce common legacy filtering without choosing a holdout strategy."""
 
     data_root = repo_root / "DataPrepare" / "Data"
@@ -78,11 +83,17 @@ def prepare_hierarchical_mic_data(repo_root: Path) -> PreparedHierarchicalMicDat
         )
     )
 
-    mic_frame = pd.read_csv(data_root / "DBAASP_inhouse_AMP_SELFIES_token_MIC_Evo.csv")
+    mic_frame = pd.read_csv(
+        mic_data_path
+        if mic_data_path is not None
+        else data_root / "DBAASP_inhouse_AMP_SELFIES_token_MIC_Evo.csv"
+    )
     columns = mic_frame.columns.tolist()
     all_mic_records = mic_frame.values
     small_molecule_records = pd.read_csv(
-        data_root
+        small_molecule_data_path
+        if small_molecule_data_path is not None
+        else data_root
         / "small_molecule"
         / "processed"
         / "small_molecule_Evo_binary_data_SELFIES.csv"

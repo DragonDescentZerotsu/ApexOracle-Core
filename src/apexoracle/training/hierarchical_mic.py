@@ -45,6 +45,7 @@ def hierarchical_mic_batch_forward(
     batch: dict,
     *,
     device: torch.device,
+    molecule_encoder: nn.Module | None = None,
     genome_attention: nn.Module,
     text_attention: nn.Module,
     prediction_head: nn.Module,
@@ -57,11 +58,18 @@ def hierarchical_mic_batch_forward(
     """Compute one legacy batch without changing optimizer or module modes."""
 
     labels = batch["label"].to(device)
-    molecule_embedding = batch["mol_emb"].to(device)
     text_embeddings = batch["padded_text_embeddings"]
     text_attention_mask = batch["text_attn_masks"]
 
     with torch.amp.autocast("cuda", enabled=autocast_enabled):
+        if molecule_encoder is None:
+            molecule_embedding = batch["mol_emb"].to(device)
+        else:
+            outputs = molecule_encoder(
+                input_ids=batch["input_ids"].to(device),
+                attention_mask=batch["attention_mask"].to(device),
+            )
+            molecule_embedding = outputs.last_hidden_state[:, 0, :]
         if has_genome:
             fused = fuse_genome_text_embeddings(
                 molecule_embedding,
@@ -98,6 +106,7 @@ def hierarchical_mic_optimizer_step(
     batch: dict,
     *,
     device: torch.device,
+    molecule_encoder: nn.Module | None = None,
     genome_attention: nn.Module,
     text_attention: nn.Module,
     prediction_head: nn.Module,
@@ -123,6 +132,7 @@ def hierarchical_mic_optimizer_step(
     result = hierarchical_mic_batch_forward(
         batch,
         device=device,
+        molecule_encoder=molecule_encoder,
         genome_attention=genome_attention,
         text_attention=text_attention,
         prediction_head=prediction_head,
@@ -135,6 +145,8 @@ def hierarchical_mic_optimizer_step(
     scaler.scale(result.loss).backward()
     if epoch >= freeze_epochs:
         scaler.unscale_(optimizer)
+        if molecule_encoder is not None:
+            torch.nn.utils.clip_grad_norm_(molecule_encoder.parameters(), max_norm=1.0)
         if not has_genome:
             torch.nn.utils.clip_grad_norm_([missing_genome_embedding], max_norm=1.0)
         torch.nn.utils.clip_grad_norm_(genome_attention.parameters(), max_norm=1.0)
@@ -155,10 +167,12 @@ def legacy_hierarchical_checkpoint_payload(
     genome_attention: nn.Module,
     text_attention: nn.Module,
     missing_genome_embedding: nn.Parameter,
+    molecule_encoder: nn.Module | None = None,
+    molecule_encoder_state_key: str | None = None,
 ) -> dict:
     """Build the exact seven-key payload written by the current legacy driver."""
 
-    return {
+    payload = {
         "R2": r2,
         "optimizer_state_dict": optimizer.state_dict(),
         "re_head_state_dict": regression_head.state_dict(),
@@ -167,6 +181,13 @@ def legacy_hierarchical_checkpoint_payload(
         "co_cross_attn_text": text_attention.state_dict(),
         "learnable_embedding_weight": missing_genome_embedding,
     }
+    if molecule_encoder is not None:
+        if not molecule_encoder_state_key:
+            raise ValueError(
+                "molecule_encoder_state_key is required when saving an online encoder"
+            )
+        payload[molecule_encoder_state_key] = molecule_encoder.state_dict()
+    return payload
 
 
 # Compatibility names used by the audited legacy driver and earlier tests.

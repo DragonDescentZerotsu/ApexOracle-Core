@@ -1,0 +1,123 @@
+schema_version: 1
+protocol_family: paper_legacy_hierarchical_mic_holdouts
+status: fig2c_online_encoder_migration_validated
+
+model:
+  # Replaced by each selected encoder profile at runtime.
+  molecule_embedding_dim: 768
+  genome_embedding_dim: 8192
+  text_embedding_dim: 4096
+  attention_heads: 4
+  attention_dropout: 0.1
+  head_hidden_dims: [3072, 128]
+  head_dropout: 0.2
+  regression_targets: 1
+  missing_genome_embedding: learned_1_by_8192_parameter
+
+training:
+  ensemble_seeds: [42, 2024, 2025, 2077, 2012, 1973, 2002]
+  ensembles_per_group: 7
+  epochs: 25
+  batch_size: 70
+  optimizer: Adam
+  learning_rate: 1.0e-5
+  weight_decay: 0.0
+  scheduler: CosineAnnealingLR
+  scheduler_eta_min: 1.0e-10
+  freeze_epochs: 3
+  loader_coordination: zip_longest_fill_none_total_max_loader_length
+  evaluation_fusion_head_mode: train
+  regression_loss: MSELoss
+  auxiliary_classification_loss: BCEWithLogitsLoss
+  checkpoint_selection: highest_held_out_group_r2
+  mic_transform: -log10(MIC/10)
+  genome_embedding_scale: 1.0e14
+  text_embedding_scale: 1.0
+  optimizer_step_frequency: once_per_nonempty_modality_batch
+  amp: cuda_autocast_with_grad_scaler
+
+molecule_encoders:
+  chemberta_mtr:
+    model_name: DeepChem/ChemBERTa-77M-MTR
+    revision: 66b895cab8adebea0cb59a8effa66b2020f204ca
+    hidden_size: 384
+    tokenizer_kind: auto
+    trust_remote_code: false
+    pooling: first_token
+    max_length: 512
+    initial_mode: eval
+    freeze_epochs: 3000
+    ensembles_per_group: 1
+    batch_size: 70
+    optimizer_learning_rate: 3.0e-6
+    optimizer_weight_decay_multiplier: 0.1
+    checkpoint_state_key: ChemBERTa_state_dict
+    output: Checkpoints/genome_text_learnable_emb/strain_wise_w_SM_b_attn/ChemBERTa_eval_1_fold_ensembles
+
+  chemberta_mlm:
+    model_name: DeepChem/ChemBERTa-77M-MLM
+    revision: ed8a5374f2024ec8da53760af91a33fb8f6a15ff
+    hidden_size: 384
+    tokenizer_kind: auto
+    trust_remote_code: false
+    pooling: first_token
+    max_length: 512
+    initial_mode: train
+    freeze_epochs: 3
+    ensembles_per_group: 7
+    batch_size: 70
+    optimizer_learning_rate: 3.0e-6
+    optimizer_weight_decay_multiplier: 0.1
+    checkpoint_state_key: ChemBERTa_state_dict
+    output: Checkpoints/genome_text_learnable_emb/strain_wise_w_SM_b_attn/ChemBERTa_MLM_7_fold_ensembles
+
+  molformer:
+    model_name: ibm/MoLFormer-XL-both-10pct
+    revision: 7b12d946c181a37f6012b9dc3b002275de070314
+    hidden_size: 768
+    tokenizer_kind: auto
+    trust_remote_code: true
+    pooling: first_token
+    max_length: 512
+    initial_mode: train
+    freeze_epochs: 3
+    ensembles_per_group: 7
+    batch_size: 70
+    optimizer_learning_rate: 3.0e-6
+    optimizer_weight_decay_multiplier: 0.1
+    checkpoint_state_key: ChemBERTa_state_dict
+    output: Checkpoints/genome_text_learnable_emb/strain_wise_w_SM_b_attn/MolFormer_7_fold_ensembles
+
+  peptideclm:
+    model_name: aaronfeller/PeptideCLM-23M-all
+    revision: a0847d8231d236645a2c4f629590118716c6fdda
+    hidden_size: 768
+    tokenizer_kind: vendored_peptideclm
+    trust_remote_code: false
+    pooling: first_token
+    max_length: 512
+    initial_mode: eval
+    freeze_epochs: 5000
+    ensembles_per_group: 1
+    batch_size: 70
+    optimizer_learning_rate: 3.0e-6
+    optimizer_weight_decay_multiplier: 0.1
+    checkpoint_state_key: ChemBERTa_state_dict
+    output: Checkpoints/genome_text_learnable_emb/strain_wise_w_SM_b_attn/PeptideCLM_fix_1_fold_ensembles
+
+paths:
+  genome_embeddings: DataPrepare/Data/Genome_embs
+  atcc_text_embeddings: DataPrepare/Data/Text_Description/ATCC/embeddings
+  text_only_embeddings: DataPrepare/Data/Text_Description/wo_ATCC/embeddings
+  peptide_embeddings: DataPrepare/Data/Pep_emb_dict.pt
+  small_molecule_embeddings: DataPrepare/Data/SM_emb_dict.pt
+  mic_records: DataPrepare/Data/DBAASP_inhouse_AMP_SMILES_MIC_Evo.csv
+  small_molecule_records: DataPrepare/Data/small_molecule/processed/small_molecule_Evo_binary_data.csv
+
+outputs:
+  strain: Checkpoints/genome_text_learnable_emb/strain_wise_w_SM_b_attn/fig2c_comparator
+
+holdouts:
+  strain:
+    adapter: legacy_within_species_three_fold
+    group_names: [fold 1, fold 2, fold 3]
