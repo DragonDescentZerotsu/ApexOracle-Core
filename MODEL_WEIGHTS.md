@@ -33,23 +33,13 @@ commit，因此这里只能称为“当前重构的固定复现 revision”，�
 
 | Manifest ID | 当前来源 | 已固定身份 | 状态 |
 | --- | --- | --- | --- |
-| `synergy_mic_base_epoch_100` | `Checkpoints/.../guidance_regressor_pad_no_mask/noise_guidance_best_R2_all_peptide_epoch_100.pth` | SHA-256 `f24faf67…c3a4` | 三折候选与 guidance 共同 base；不是已确认的 Methods 13-epoch 权重 |
+| `synergy_mic_base_epoch_100` | `Checkpoints/.../guidance_regressor_pad_no_mask/noise_guidance_best_R2_all_peptide_epoch_100.pth` | SHA-256 `f24faf67…c3a4` | 三折候选加载的 base；不是已确认的 Methods 13-epoch 权重 |
 | `synergy_three_fold_7ensemble_candidate` | `Checkpoints/.../MDLM_3_fold_ensembles_1_base_model_cls` | 21 个 member 的完整 manifest | 最接近论文的 CV 候选，但 rank/指标与 Methods 仍冲突 |
-| `synergy_guidance_mdlm_last_reg_v1` | `/data2/tianang/projects/mdlm/Checkpoints_fangping/last_reg_v1.ckpt` | SHA-256 `a509b94e…2615` | post-paper guidance 的 frozen online MDLM |
-| `synergy_guidance_40epoch` | `Checkpoints/.../guidance_noise_synergy/cls/synergy_noise_clsfier_best.ckpt` | SHA-256 `c1e40581…3bc8` | 严格加载及 H100 forward 已验证；保存的是训练 AUROC 0.8562 |
-| `synergy_short_judger_2epoch` | `Checkpoints/.../synergy_judger/cls/synergy_noise_clsfier_best.ckpt` | SHA-256 `930cb9dc…58d` | 严格加载及 H100 forward 已验证；保存的是训练 AUROC 0.8065 |
-| `synergy_prospective_screening_regression_ensembles` | `Checkpoints/.../MDLM_train_on_DBAASP_test_on_inhouse_reg` | 两组各 7 个 member，完整 SHA-256 见 screening audit | post-paper producer/consumer 均已迁移；真实全 route 训练 smoke、member strict load 和筛选 forward 已验证，不是论文 CV |
 
-两个 guidance classifier 都在完整训练数据上选择 checkpoint，没有 held-out validation，因此其
-stored AUROC 不能作为论文 benchmark 或泛化指标。它们服务于后续 guidance/judging consumer，
-与三折 CV checkpoint family 分开登记。
-
-Prospective screening 的 `fixed_epoch` 与 `best_test` 两组权重也分开登记。前者固定保存 epoch 6
-权重，但 checkpoint 中的 `R2` 字段仍是截至当时在 in-house test 上观察到的 best R²；后者直接
-按该 in-house test R² 选权。因此两组都不应被解释为独立泛化证据，它们只用于恢复历史筛选流程。
-canonical producer 为 `scripts/reproduce/run_synergy_regression.py`，完整 source/log/data/selection
-血缘见 `experiments/synergy/regression_producer_audit.json`。历史 `PYTHONHASHSEED` 未记录，故不
-声称能够逐 tensor 重建 2025 年的 14 个 checkpoint。
+作者于 2026-07-19 将本仓库范围收缩为只复现论文已汇报结果，因此 post-paper all-data
+guidance、prospective regression 和 screening 权重不再由本发布 manifest 管理；本次只从 Git
+登记和代码中移除这些条目，没有删除本地 checkpoint 二进制。清理范围与恢复位置见
+`reproducibility/synergy_paper_only_cleanup_2026-07-19.json`。
 
 ## DLM-only 决策记录
 
