@@ -94,6 +94,11 @@
   `init_scale=128` 并要求 gradients 全部有限；默认 `65536` 会让这个小型合成 fixture 的两侧
   同时 overflow 并跳过 step，因此不能用该 overflow case 宣称参数更新已验证。正式 driver
   继续使用历史默认动态 GradScaler。
+- outer-loop helper 已覆盖 epoch-0 baseline 与逐 epoch evaluation、不同长度 DataLoader 的
+  `zip_longest(fillvalue=None)` 顺序、CosineAnnealingLR 序列、prediction/loss 分区、species
+  插入顺序、`len <= 1` 分区指标的 `-1000` sentinel、strict `>` best-metric tracker 和七键
+  checkpoint payload。评估 helper 不切换 module mode，因此 held-out-fold selection 继续受到
+  train-mode dropout 影响；这是经测试冻结的历史行为，不是推荐的新评估协议。
 
 ### 根据现有证据作出的推断
 
@@ -106,10 +111,10 @@
   backbone 一并写入 checkpoint；“不在 optimizer 中”只能证明没有被下游训练更新。
 - 三个历史 fold 的精确 `PYTHONHASHSEED` / membership 仍未恢复。当前正式数值继续以保存的
   checkpoint 和完整日志为准，不以候选 split 重新训练后覆盖。
-- strain-wise 的单批次 regression/auxiliary classification 已模块化；外层 epoch/DataLoader
-  协调、scheduler、evaluation 和 checkpoint selection 尚未完全模块化。其余 20 个 checkpoint
-  的 SHA-256 与逐文件固定批次验证也尚待完成。在此之前不得删除 legacy driver 或 comparator
-  副本。
+- strain-wise 的单批次 regression/auxiliary classification、loader 协调、scheduler、
+  evaluation accumulation 和 checkpoint selection 已模块化；outer loop shell、日志、输出路径
+  和完全独立的 config-driven runner 尚未脱离 legacy driver。其余 20 个 checkpoint 的 SHA-256
+  与逐文件固定批次验证也尚待完成。在此之前不得删除 legacy driver 或 comparator 副本。
 
 ## 代码库审计：论文、代码与数据血缘
 

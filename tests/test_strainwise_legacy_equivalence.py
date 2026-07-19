@@ -2,9 +2,11 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import importlib.util
+import itertools
 import json
 import logging
 from pathlib import Path
+from types import SimpleNamespace
 
 import numpy as np
 import pandas as pd
@@ -40,12 +42,21 @@ from apexoracle.features.precomputed import (
     load_text_only_embeddings,
 )
 from apexoracle.evaluation.strainwise import (
+    LegacyBestMetricTracker,
+    StrainwisePredictionAccumulator,
     calculate_r2,
     ensemble_predictions,
     specieswise_metrics,
+    summarize_partition_or_sentinel,
     summarize_predictions,
 )
-from apexoracle.training.strainwise import strainwise_optimizer_step
+from apexoracle.training.strainwise import (
+    build_legacy_cosine_scheduler,
+    legacy_zip_longest_loaders,
+    legacy_strainwise_checkpoint_payload,
+    strainwise_batch_forward,
+    strainwise_optimizer_step,
+)
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
@@ -423,6 +434,143 @@ def test_specieswise_metrics_match_legacy_reference_operations():
                 assert actual_value == expected_value
 
 
+def test_prediction_accumulator_preserves_legacy_partitions_and_order():
+    accumulator = StrainwisePredictionAccumulator()
+    genome_result = SimpleNamespace(
+        loss=torch.tensor(0.25),
+        labels=torch.tensor([0.0, 1.0]),
+        logits=torch.tensor([0.2, 0.8]),
+        strain_names=["ATCC-A", "original-b"],
+    )
+    text_result = SimpleNamespace(
+        loss=torch.tensor(0.5),
+        labels=torch.tensor([2.0]),
+        logits=torch.tensor(1.5),
+        strain_names=["original-c"],
+    )
+    atcc_map = {"ATCC-A": "Species A"}
+    original_map = {"original-b": "Species B", "original-c": "Species A"}
+    accumulator.add_batch(
+        genome_result,
+        has_genome=True,
+        atcc_id_to_species=atcc_map,
+        original_strain_to_species=original_map,
+        baseline_mean=0.75,
+    )
+    accumulator.add_batch(
+        text_result,
+        has_genome=False,
+        atcc_id_to_species=atcc_map,
+        original_strain_to_species=original_map,
+        baseline_mean=1.25,
+    )
+
+    assert accumulator.losses == [0.25, 0.5]
+    assert accumulator.labels == [0.0, 1.0, 2.0]
+    assert accumulator.predictions == pytest.approx([0.2, 0.8, 1.5])
+    assert accumulator.genome_text_losses == [0.25]
+    assert accumulator.genome_text_labels == [0.0, 1.0]
+    assert accumulator.genome_text_predictions == pytest.approx([0.2, 0.8])
+    assert accumulator.text_only_losses == [0.5]
+    assert accumulator.text_only_labels == [2.0]
+    assert accumulator.text_only_predictions == [1.5]
+    assert accumulator.baseline_predictions == [0.75, 0.75, 1.25]
+    assert list(accumulator.species_predictions) == ["Species A", "Species B"]
+    assert accumulator.species_labels == {
+        "Species A": [0.0, 2.0],
+        "Species B": [1.0],
+    }
+    assert accumulator.species_predictions["Species A"] == pytest.approx([0.2, 1.5])
+    assert accumulator.species_predictions["Species B"] == pytest.approx([0.8])
+
+
+def test_partition_summary_preserves_legacy_sentinel_rule():
+    assert summarize_partition_or_sentinel([1.0], [1.1]) == {
+        "r2": -1000,
+        "spearman": -1000,
+        "pearson": -1000,
+    }
+    labels = [0.0, 1.0, 2.0]
+    predictions = [0.1, 0.9, 2.2]
+    assert summarize_partition_or_sentinel(labels, predictions) == summarize_predictions(
+        labels, predictions
+    )
+
+
+def test_best_metric_tracker_preserves_strict_improvement_and_list_identity():
+    tracker = LegacyBestMetricTracker()
+    first_predictions = [0.1, 0.2]
+    assert tracker.update(
+        r2=0.4, spearman=0.5, pearson=0.6, predictions=first_predictions
+    )
+    assert tracker.best_predictions is first_predictions
+    tied_predictions = [9.0, 9.0]
+    assert not tracker.update(
+        r2=0.4, spearman=0.4, pearson=0.7, predictions=tied_predictions
+    )
+    assert tracker.best_r2 == 0.4
+    assert tracker.best_spearman == 0.5
+    assert tracker.best_pearson == 0.7
+    assert tracker.best_predictions is first_predictions
+
+
+def test_checkpoint_payload_preserves_legacy_keys_and_parameter_identity():
+    components = _make_training_components()
+    payload = legacy_strainwise_checkpoint_payload(
+        r2=0.42,
+        optimizer=components.optimizer,
+        regression_head=components.regression_head,
+        classification_head=components.classification_head,
+        genome_attention=components.genome_attention,
+        text_attention=components.text_attention,
+        missing_genome_embedding=components.missing_genome_embedding,
+    )
+    assert list(payload) == [
+        "R2",
+        "optimizer_state_dict",
+        "re_head_state_dict",
+        "cls_head_state_dict",
+        "co_cross_attn_genome",
+        "co_cross_attn_text",
+        "learnable_embedding_weight",
+    ]
+    assert payload["R2"] == 0.42
+    assert (
+        payload["learnable_embedding_weight"]
+        is components.missing_genome_embedding
+    )
+
+
+def test_loader_orchestration_matches_legacy_zip_longest_order():
+    loaders = (["g0", "g1"], ["t0"], [], ["s0", "s1", "s2"])
+    iterator, total = legacy_zip_longest_loaders(*loaders)
+    assert total == 3
+    assert list(iterator) == list(itertools.zip_longest(*loaders, fillvalue=None))
+
+
+def test_cosine_scheduler_matches_legacy_learning_rate_sequence():
+    legacy_parameter = torch.nn.Parameter(torch.tensor(1.0))
+    shared_parameter = torch.nn.Parameter(torch.tensor(1.0))
+    legacy_optimizer = torch.optim.Adam([legacy_parameter], lr=1e-5)
+    shared_optimizer = torch.optim.Adam([shared_parameter], lr=1e-5)
+    legacy_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
+        legacy_optimizer, T_max=5, eta_min=1e-10
+    )
+    shared_scheduler = build_legacy_cosine_scheduler(
+        shared_optimizer, num_epochs=5, min_lr=1e-10
+    )
+    legacy_lrs = []
+    shared_lrs = []
+    for _ in range(5):
+        legacy_optimizer.step()
+        shared_optimizer.step()
+        legacy_scheduler.step()
+        shared_scheduler.step()
+        legacy_lrs.append(legacy_scheduler.get_last_lr())
+        shared_lrs.append(shared_scheduler.get_last_lr())
+    assert shared_lrs == legacy_lrs
+
+
 @dataclass
 class _TrainingComponents:
     genome_attention: FirstTokenAttentionGenome
@@ -621,6 +769,70 @@ def test_all_four_optimizer_steps_match_legacy_operations():
                         atol=0,
                         msg=name,
                     )
+
+
+def test_evaluation_forward_matches_legacy_without_changing_train_mode():
+    for has_genome in (True, False):
+        legacy_components = _make_training_components()
+        shared_components = _make_training_components()
+        batch = _training_batch(has_genome=has_genome, classification=False)
+        before = {
+            name: parameter.detach().clone()
+            for name, parameter in _named_training_parameters(
+                shared_components
+            ).items()
+        }
+
+        torch.manual_seed(808)
+        with torch.no_grad():
+            labels = batch["label"]
+            molecule = batch["mol_emb"]
+            text = batch["padded_text_embeddings"]
+            text_mask = batch["text_attn_masks"]
+            if has_genome:
+                genome = batch["padded_genome_embeddings"]
+                genome_mask = batch["genome_attn_masks"]
+            else:
+                genome = legacy_components.missing_genome_embedding[:, None, :].expand(
+                    molecule.shape[0], 1, -1
+                )
+                genome_mask = torch.from_numpy(np.array([1]))[None, :].expand(
+                    molecule.shape[0], -1
+                )
+            genome_output = legacy_components.genome_attention(
+                molecule, genome, 1 - genome_mask
+            )
+            text_output = legacy_components.text_attention(
+                molecule, text, 1 - text_mask
+            )
+            fused = torch.cat(
+                (genome_output.reshape(-1, 8), text_output.reshape(-1, 4)), dim=1
+            )
+            legacy_logits = legacy_components.regression_head(fused).squeeze()
+            legacy_loss = torch.nn.MSELoss()(legacy_logits, labels.squeeze())
+
+        torch.manual_seed(808)
+        with torch.no_grad():
+            shared_result = strainwise_batch_forward(
+                batch,
+                device=torch.device("cpu"),
+                genome_attention=shared_components.genome_attention,
+                text_attention=shared_components.text_attention,
+                prediction_head=shared_components.regression_head,
+                criterion=torch.nn.MSELoss(),
+                missing_genome_embedding=shared_components.missing_genome_embedding,
+                has_genome=has_genome,
+                reshape_outputs=True,
+                autocast_enabled=False,
+            )
+        torch.testing.assert_close(shared_result.logits, legacy_logits, rtol=0, atol=0)
+        torch.testing.assert_close(shared_result.loss, legacy_loss, rtol=0, atol=0)
+        assert shared_components.genome_attention.training
+        assert shared_components.text_attention.training
+        assert shared_components.regression_head.training
+        for name, parameter in _named_training_parameters(shared_components).items():
+            torch.testing.assert_close(parameter, before[name], rtol=0, atol=0)
+            assert parameter.grad is None
 
 
 @pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA is not visible")

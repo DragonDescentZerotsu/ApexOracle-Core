@@ -128,9 +128,10 @@ ChemBERTa MLM mean-pooling 作为可选消融，不与论文主 comparator 混�
 执行进度（2026-07-18）：Fig. 1a / Fig. 2c strain-wise 路径已经抽取
 strain mapping、precomputed feature loader、四种 collate、cross-attention、prediction
 head、指标、严格 checkpoint loader，以及四条单批次 forward/loss/backward/optimizer-step，
-并由 legacy driver 实际调用。当前仍是过渡状态：外层 epoch/DataLoader 协调、scheduler、
-evaluation 和 checkpoint selection 尚保留在原 driver 中，因此本阶段的全仓库验收标准
-尚未满足，也不允许删除 legacy driver。
+并由 legacy driver 实际调用。epoch-0 baseline、逐 epoch evaluation、不同长度 loader 协调、
+cosine scheduler、prediction accumulation、best-metric tracker 与 checkpoint payload 也已经
+抽取。当前仍是过渡状态：outer loop shell、日志、输出路径和完整 config-driven runner 尚未
+脱离原 driver，因此本阶段的全仓库验收标准尚未满足，也不允许删除 legacy driver。
 
 验收标准：论文主实验不再复制共享模型和数据逻辑；公共模块具备单元测试。
 
@@ -193,7 +194,9 @@ APEX 输入转换规则：
   `experiments/fig2c_strainwise/`。
 - legacy driver 的训练循环保持不变，并在进入主程序后显式切换到共享 Dataset、collate、
   feature loader、fusion 和 head。四条单批次 optimizer-step 路径也已迁移；测试逐项比较
-  logits、loss、gradient 和 Adam 更新后的参数，而不是只检查 shape。外层训练控制流仍保持原样。
+  logits、loss、gradient 和 Adam 更新后的参数，而不是只检查 shape。后续 outer-loop helper
+  又覆盖 epoch-0/逐 epoch evaluation、prediction 分区、loader `zip_longest`、scheduler 序列、
+  strict best-metric selection 和七键 checkpoint payload；driver shell 与日志仍保持原样。
 - 21 个历史 checkpoint 的 `3 × 7` 网格和实际消费的 fusion/head contract 已全部扫描。
   group 0/2 的 14 个文件只保存 fusion/head；group 1 的 7 个文件额外保存一个名称错误的
   `ChemBERTa_state_dict`，其结构实际是 12-layer/768 MDLM backbone。三个 group 的 optimizer
