@@ -184,12 +184,14 @@ APEX 输入转换规则：
 
 - Fig. 1a / Fig. 2c strain-wise、species-wise 和 phylum-wise DLM ensemble：统一入口
   `scripts/reproduce/run_hierarchical_mic.py`，旧 root drivers 由 legacy tag 追溯。
-- Fig. 1b strict target-strain zero-shot：`antibiotic_3_strain_compare_MDLM_fix_cls_wo_pad_all_test.py`。
+- Fig. 1b 三菌株分类：统一入口
+  `scripts/reproduce/run_antibiotic_classification.py`，旧 root drivers 由 legacy tag 追溯。
 - AMP/PepLink 最终数据处理血缘。
 - ApexOracle-3/12/23 sequence similarity 流程。
 - reviewer 的 Evo-2 embedding scaling 分析脚本。
 
-状态（2026-07-19）：三个 hierarchical holdout 已完成单一 runner 的行为保持迁移。
+状态（2026-07-19）：三个 hierarchical holdout 和 Fig. 1b 三菌株分类均已完成单一 runner
+的行为保持迁移。
 
 - 共享实现位于 `src/apexoracle/{data,features,models,training,evaluation}`；唯一入口为
   `scripts/reproduce/run_hierarchical_mic.py`，实验契约和审计材料位于
@@ -208,8 +210,22 @@ APEX 输入转换规则：
 - group 0 / ensemble 0 已在 H100 上完成两次独立固定批次严格加载与推理，结果一致；其余
   checkpoint 已完成结构扫描，但剩余 20 个 SHA-256 和逐文件推理仍待补齐。
 
-因此 hierarchical MIC 项当前状态是 `unified runner complete / legacy duplicates removed`；
-strict zero-shot、sequence similarity 和其余高置信度入口尚未开始迁移。
+因此 hierarchical MIC 项当前状态是 `unified runner complete / legacy duplicates removed`。
+
+Fig. 1b 三菌株分类也已完成统一迁移。canonical 入口为
+`scripts/reproduce/run_antibiotic_classification.py`，通过 `--mode strict-zero-shot`、
+`fine-tune` 或 `molecule-only` 显式选择三种旧协议。共享数据/fold adapter、feature loader、
+fusion/head、四路训练、metrics、best-AUROC selection、checkpoint schema 和 ensemble runner
+已经抽取；旧 root drivers 和两份机器专用 launcher 已删除并由 legacy tag 保留。
+
+行为验证包括：真实数据 dry-run 与旧日志计数逐项一致；11 项 CPU 测试；H100 上四路合成
+batch 的一轮训练/评估 smoke；以及 strict zero-shot group 0 / ensemble 0 的 2,335 条真实
+checkpoint logit 与 capsule 在 batch size 70 下逐值完全一致。30 个 strict checkpoint 和
+150 个 molecule-only checkpoint 网格完整；fine-tune 仅存 77/150 个 checkpoint，因此仍按
+证据不完整处理。详见 `experiments/fig1b_antibiotic_classification/`。
+
+当前下一项高置信度迁移是 sequence similarity；fine-tune 完整正式结果、synergy CV 和
+modality ablation 继续保留证据边界，不因代码入口统一而声称已完整复现。
 
 #### 4.2 迁移前需要作者或原始结果进一步核验
 
@@ -265,6 +281,14 @@ cross-attention、regression head、split mutation 语义和两类 checkpoint �
 保持不变。这里仅表示
 strain/species/phylum 的共享子路径通过本批验收，
 不等同于阶段 6 的全仓库验证已经完成。
+
+同日 Fig. 1b 三菌株分类新增 11 项 CPU 测试和 1 项 H100 集成测试，覆盖目标 frame、
+512-token 后 KFold、molecule ID 导出、full-fusion/molecule-only forward、optimizer step、
+module mode、AUROC/AUPRC、best tracker 的 AUPRC 保存顺序、两种 checkpoint schema 和文件名。
+strict group 0 / ensemble 0 的真实 checkpoint 又与 capsule 在 batch size 70 下完成 2,335 条
+logit 逐值一致验证。全仓库当前为 50 passed / 3 skipped；三个 skipped 均为沙箱内不可见 CUDA
+时跳过的测试，其中本批新增 CUDA test 已在宿主 H100 单独通过。阶段 6 仍未整体完成，因为
+其余未迁移实验尚无对应 smoke/checkpoint 验证。
 
 ### 阶段 7：文档和发布
 

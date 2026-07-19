@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "cleanup_date": "2026-07-19",
+  "recovery_tag": "legacy-code-snapshot-2026-07-17",
+  "canonical_entrypoint": "scripts/reproduce/run_antibiotic_classification.py",
+  "canonical_config": "configs/antibiotic_classification/legacy_three_strain.yaml",
+  "deletion_gate": {
+    "shared_runner_implemented": true,
+    "real_data_dry_run_matches_legacy_logs": true,
+    "unit_equivalence_tests_pass": true,
+    "cuda_one_epoch_four_route_smoke_pass": true,
+    "historical_checkpoint_inference_exact_match": true,
+    "checkpoint_grid_audited": true
+  },
+  "deleted_files": [
+    {
+      "path": "antibiotic_3_strain_compare.py",
+      "git_blob": "d10e0d46bfde5bec0696943c25d700e234555427",
+      "reason": "historical pre-MDLM ChemBERTa driver; not the final Fig. 1b implementation"
+    },
+    {
+      "path": "antibiotic_3_strain_compare_MDLM_fix_cls_wo_pad.py",
+      "git_blob": "2286fe82df2ae7b926380d671fa6e0014b773f26",
+      "reason": "fine-tune duplicate replaced by unified mode=fine-tune"
+    },
+    {
+      "path": "antibiotic_3_strain_compare_MDLM_fix_cls_wo_pad_all_test.py",
+      "git_blob": "0fcd2e27ba24546da4f3c9c5c87d41453a2d25e6",
+      "reason": "strict zero-shot final driver replaced by unified mode=strict-zero-shot"
+    },
+    {
+      "path": "antibiotic_3_strain_compare_MDLM_fix_cls_wo_pad_wo_SAND.py",
+      "git_blob": "d1be4390f07f67b329c6b7245a44d7c92f767f92",
+      "reason": "molecule-only duplicate replaced by unified mode=molecule-only"
+    },
+    {
+      "path": "bash/3-strain-compare-CESGA.sh",
+      "git_blob": "cbb5e4c5c6f456da35314cdd19895f396d23c021",
+      "reason": "machine-specific launcher targeting deleted legacy driver"
+    },
+    {
+      "path": "bash/3_strain_compare.sh",
+      "git_blob": "c67d0cc2fe2bb339d9ad8805035954532b7ef2c4",
+      "reason": "machine-specific launcher targeting deleted legacy driver"
+    }
+  ],
+  "retained_noncanonical_provenance": [
+    {
+      "path": "capsule/data/source/antibiotic_3_strain_compare_MDLM_fix_cls_wo_pad_all_test.py",
+      "role": "capsule provenance snapshot; not imported by canonical runner"
+    },
+    {
+      "path": "capsule/code/reproduce_zero_shot_antibiotic_classification.py",
+      "role": "self-contained low-memory capsule inference reference used in exact validation"
+    }
+  ]
+}

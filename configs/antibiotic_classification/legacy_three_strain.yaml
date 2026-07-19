@@ -1,0 +1,87 @@
+schema_version: 1
+protocol_family: paper_legacy_three_strain_antibiotic_classification
+status: unified_runner_behavior_frozen
+
+targets:
+  - strain: "#004"
+    display_name: E. coli BW25113
+    strain_modality: genome_text
+  - strain: "17978"
+    display_name: A. baumannii ATCC 17978
+    strain_modality: genome_text
+  - strain: Staphylococcus aureus RN4220
+    display_name: Staphylococcus aureus RN4220
+    strain_modality: text_only
+
+model:
+  molecule_embedding_dim: 768
+  genome_embedding_dim: 8192
+  text_embedding_dim: 4096
+  attention_heads: 4
+  attention_dropout: 0.1
+  fusion_head_hidden_dims: [3072, 128]
+  molecule_only_head_hidden_dims: [384, 128]
+  head_dropout: 0.2
+  missing_genome_embedding: learned_1_by_8192_parameter
+
+training:
+  ensembles: 10
+  ensemble_seeds: [42, 2024, 2025, 2077, 2012, 1973, 2002, 2001, 2020, 2019]
+  epochs: 25
+  batch_size: 70
+  optimizer: Adam
+  learning_rate: 1.0e-5
+  weight_decay: 0.0
+  scheduler: CosineAnnealingLR
+  scheduler_eta_min: 1.0e-10
+  freeze_epochs: 3000
+  genome_embedding_scale: 1.0e14
+  text_embedding_scale: 1.0
+  amp: cuda_autocast_with_grad_scaler
+  regression_loss: MSELoss
+  classification_loss: BCEWithLogitsLoss
+  checkpoint_selection: strict_highest_held_target_auroc
+  held_target_selection_disclosure: held_target_is_used_each_epoch
+  mic_transform: -log10(MIC/10)
+  fold_split: sklearn_KFold_shuffle_true_random_state_42_after_512_token_filter
+
+modes:
+  strict-zero-shot:
+    model: strain_fusion
+    target_training: false
+    folds: null
+    selection_modes:
+      genome_attention: eval
+      text_attention: eval
+      regression_head: eval
+      classification_head: train
+    evidence: complete_3_targets_by_10_ensembles
+  fine-tune:
+    model: strain_fusion
+    target_training: true
+    folds: 5
+    selection_modes:
+      genome_attention: eval
+      text_attention: eval
+      regression_head: eval
+      classification_head: train
+    evidence: historical_logs_and_checkpoints_incomplete
+  molecule-only:
+    model: molecule_only_head
+    target_training: true
+    folds: 5
+    selection_modes:
+      classification_head: eval
+    evidence: complete_checkpoint_grid_but_not_strict_zero_shot_apexoracle
+
+paths:
+  genome_embeddings: DataPrepare/Data/Genome_embs
+  atcc_text_embeddings: DataPrepare/Data/Text_Description/ATCC/embeddings
+  text_only_embeddings: DataPrepare/Data/Text_Description/wo_ATCC/embeddings
+  peptide_embeddings: DataPrepare/Data/Pep_emb_dict_cls_wo_pad_eval.pt
+  small_molecule_embeddings: DataPrepare/Data/SM_emb_dict_cls_wo_pad_eval.pt
+
+outputs:
+  strict-zero-shot: Checkpoints/genome_text_learnable_emb/antibiotic_3_strain_compare/MDLM_fix_cls_sm_all_test_10_fold_ensembles
+  fine-tune: Checkpoints/genome_text_learnable_emb/antibiotic_3_strain_compare/MDLM_fix_cls_10_fold_ensembles
+  molecule-only: Checkpoints/genome_text_learnable_emb/antibiotic_3_strain_compare/MDLM_fix_cls_wo_sand_10_fold_ensembles
