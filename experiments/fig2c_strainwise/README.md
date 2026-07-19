@@ -6,8 +6,10 @@ driver 为仓库根目录的
 现阶段其外层训练控制流保持不变，但 Dataset、四种 collate、cross-attention 和
 regression/classification head 已切换到 `src/apexoracle/` 的共享实现。
 四条单批次训练路径（regression/classification × genome+text/text-only）也已切换到
-共享 forward、loss、backward、gradient clipping 和 optimizer-step 实现；外层 epoch、
-DataLoader 协调、scheduler 和 checkpoint selection 仍保留在 legacy driver。
+共享 forward、loss、backward、gradient clipping 和 optimizer-step 实现。epoch-0 baseline、
+逐 epoch evaluation、不同长度 DataLoader 的 `zip_longest` 协调、cosine scheduler、prediction
+accumulation、partition sentinel、best-metric tracker 和 checkpoint payload 也已抽取；legacy
+driver 当前只保留 outer loop shell、日志和文件写入位置。
 
 ## 已由代码、日志和真实 checkpoint 验证的事实
 
@@ -37,6 +39,13 @@ DataLoader 协调、scheduler 和 checkpoint selection 仍保留在 legacy drive
   合成 scale `128` 验证了 genome+text regression，logits、loss、有限 gradients 和 Adam
   更新后的参数逐位一致。合成小模型在默认初始 scale `65536` 下两侧都会 overflow 并跳过
   step，因此该 case 不能作为参数更新证据；正式 driver 的历史默认动态 scaler 未被修改。
+- evaluation helper 不调用 `eval()`；原 driver 在初始和逐 epoch 评估期间继续保持模块
+  `train()` mode，因此 dropout 仍参与 held-out-fold checkpoint selection。accumulator 保留
+  genome+text/text-only loss 与预测分区、species 首次出现顺序、epoch-0 train-mean baseline，
+  以及分区样本数不超过 1 时返回 `-1000` 的历史规则。
+- loader orchestration 仍以最长 loader 为迭代长度并用 `None` 填充较短 loader；scheduler
+  在四类训练 batch 全部处理后每个 epoch 调用一次。best R²、Spearman 和 Pearson 使用严格
+  `>`，R² 相等时不会替换 best predictions 或 checkpoint。
 
 ## 根据现有证据作出的推断
 
@@ -88,7 +97,8 @@ python scripts/reproduce/validate_fig2c_strainwise_checkpoint.py \
 ## 仍待完成
 
 - 为其余 20 个 ensemble checkpoint 登记 SHA-256；公共 contract 扫描已经完成。
-- 将外层 epoch/DataLoader 协调、scheduler、evaluation 和 checkpoint-selection 拆为
-  受测试函数；单批次 regression 与 auxiliary classification optimizer step 已完成。
+- 建立完全脱离根目录 legacy driver 的 config-driven runner；当前共享 helper 已覆盖
+  DataLoader 协调、scheduler、evaluation accumulation 和 checkpoint selection，但 outer loop
+  shell、日志与输出路径仍在 legacy driver。
 - 在完成上述迁移及旧 checkpoint 等价检查后，才删除根目录中的重复 comparator 和
   pooling/eval 脚本。

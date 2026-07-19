@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import itertools
 
 import torch
 import torch.nn as nn
@@ -19,6 +20,25 @@ class StrainwiseBatchResult:
     logits: torch.Tensor
     labels: torch.Tensor
     strain_names: list[str]
+
+
+def legacy_zip_longest_loaders(*loaders):
+    """Return the historical longest-loader iterator and tqdm total."""
+
+    return itertools.zip_longest(*loaders, fillvalue=None), max(
+        len(loader) for loader in loaders
+    )
+
+
+def build_legacy_cosine_scheduler(
+    optimizer: torch.optim.Optimizer,
+    *,
+    num_epochs: int,
+    min_lr: float = 1e-10,
+):
+    return torch.optim.lr_scheduler.CosineAnnealingLR(
+        optimizer, T_max=num_epochs, eta_min=min_lr
+    )
 
 
 def strainwise_batch_forward(
@@ -124,3 +144,26 @@ def strainwise_optimizer_step(
     scaler.step(optimizer)
     scaler.update()
     return result
+
+
+def legacy_strainwise_checkpoint_payload(
+    *,
+    r2: float,
+    optimizer: torch.optim.Optimizer,
+    regression_head: nn.Module,
+    classification_head: nn.Module,
+    genome_attention: nn.Module,
+    text_attention: nn.Module,
+    missing_genome_embedding: nn.Parameter,
+) -> dict:
+    """Build the exact seven-key payload written by the current legacy driver."""
+
+    return {
+        "R2": r2,
+        "optimizer_state_dict": optimizer.state_dict(),
+        "re_head_state_dict": regression_head.state_dict(),
+        "cls_head_state_dict": classification_head.state_dict(),
+        "co_cross_attn_genome": genome_attention.state_dict(),
+        "co_cross_attn_text": text_attention.state_dict(),
+        "learnable_embedding_weight": missing_genome_embedding,
+    }

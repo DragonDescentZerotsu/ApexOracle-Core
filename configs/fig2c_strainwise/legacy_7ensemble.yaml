@@ -27,6 +27,9 @@ training:
   weight_decay: 0.0
   scheduler: CosineAnnealingLR
   scheduler_eta_min: 1.0e-10
+  scheduler_step: once_after_all_four_training_loader_batches_per_epoch
+  loader_coordination: zip_longest_fill_none_total_max_loader_length
+  evaluation_module_mode: train
   freeze_epochs: 5000
   regression_loss: MSELoss
   auxiliary_classification_loss: BCEWithLogitsLoss

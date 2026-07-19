@@ -23,7 +23,7 @@ entries:
       - src/apexoracle/models/strainwise_checkpoint.py
       - src/apexoracle/evaluation/strainwise.py
       - experiments/fig2c_strainwise
-    status: shared_core_and_single_batch_optimizer_steps_extracted_outer_loop_transitional
+    status: shared_core_batch_steps_evaluation_accumulation_scheduler_and_checkpoint_selection_extracted_driver_shell_transitional
     evidence: experiments/fig2c_strainwise/checkpoint_validation_group0_ensemble0.json
     deletion_allowed: false
 
