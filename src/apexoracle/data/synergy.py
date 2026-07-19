@@ -51,13 +51,6 @@ class SynergyFold:
     text_only_test: pd.DataFrame
 
 
-@dataclass(frozen=True)
-class SynergyAllDataRoutes:
-    genome_text: pd.DataFrame
-    combined_text: pd.DataFrame
-    strain_order: tuple[str, ...]
-
-
 def filter_synergy_token_lengths(
     table: pd.DataFrame,
     *,
@@ -111,15 +104,6 @@ def synergy_label(fici: float) -> float:
     """Paper label: FICI < 0.5 is positive synergy."""
 
     return 1.0 if float(fici) < 0.5 else 0.0
-
-
-def synergy_regression_target(fici: float) -> float:
-    """Legacy continuous target: ``-log10(FICI / 10)``."""
-
-    value = float(fici)
-    if value <= 0:
-        raise ValueError("FICI must be positive for the legacy log transform")
-    return float(-np.log10(value / 10.0))
 
 
 def _parse_atcc_id(name: str) -> str:
@@ -378,44 +362,3 @@ def build_legacy_synergy_folds(prepared: PreparedSynergyData) -> list[SynergyFol
             )
         )
     return folds
-
-
-def build_legacy_synergy_all_data_routes(
-    prepared: PreparedSynergyData,
-) -> SynergyAllDataRoutes:
-    """Preserve the all-data driver's alias merge and set-ordered row blocks."""
-
-    species_groups = {
-        species: list(strains)
-        for species, strains in prepared.species_to_strains.items()
-    }
-    repeated_species: list[str] = []
-    strain_for_train: list[str] = []
-    for species, corresponding_strains in species_groups.items():
-        if species in repeated_species:
-            continue
-        merged_strains = corresponding_strains
-        if species in prepared.taxonomy_aliases:
-            repeated_species.append(prepared.taxonomy_aliases[species])
-            aliases = species_groups.get(prepared.taxonomy_aliases[species])
-            if aliases is not None:
-                merged_strains.extend(aliases)
-        strain_for_train.extend(merged_strains)
-
-    standard_names = set(prepared.standard_strain_groups)
-    all_names = set(prepared.all_strain_groups)
-    genome_names = set(strain_for_train) & standard_names
-    text_names = set(strain_for_train) & all_names
-    return SynergyAllDataRoutes(
-        genome_text=_concat_groups(
-            prepared.standard_strain_groups,
-            genome_names,
-            SYNERGY_COLUMNS,
-        ),
-        combined_text=_concat_groups(
-            prepared.all_strain_groups,
-            text_names,
-            SYNERGY_COLUMNS,
-        ),
-        strain_order=tuple(strain_for_train),
-    )

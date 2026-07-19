@@ -139,6 +139,16 @@ entries:
     status: blocked_on_exact_version_and_lora_rank_confirmation
     deletion_allowed: false
 
+  - id: synergy_non_paper_variants
+    source:
+      - legacy-code-snapshot-2026-07-17
+      - e9a68d57e4b0b235906530d3ed389c66771141ce
+    destination:
+      - reproducibility/synergy_paper_only_cleanup_2026-07-19.json
+    status: removed_from_release_worktree_by_author_scope_decision
+    deletion_allowed: true
+    deletion_note: Source code, configs, derived audits, and dedicated tests were removed; original data, checkpoints, logs, and existing results were not modified.
+
   - id: phylum_and_species_holdouts
     source:
       - DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_species_*.py

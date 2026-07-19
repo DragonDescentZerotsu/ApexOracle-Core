@@ -278,57 +278,23 @@ genome+text 与 text-only 两路 inline legacy 公式逐值一致验证，fold 2
 checkpoint 与 Methods 在 LoRA rank、base epochs 及最终 mean 指标上存在未解决冲突；root
 legacy driver 暂不删除。
 
-Synergy all-data guidance classifier 已于 2026-07-19 完成行为迁移。它不是论文三折 CV：
-使用 `synergy_DBAASP_inhouse_Evo.csv` 的全部 eligible strain 数据、在线 frozen MDLM
-`last_reg_v1.ckpt`、fusion LoRA rank 64，并直接按同一训练集 AUROC 选择 checkpoint。现存
-`synergy_judger/cls` 与 `guidance_noise_synergy/cls` 分别保留 2-epoch 和 40-epoch 日志/权重，
-但当前两个 root driver 与历史 checkpoint schema/输出目录之间存在版本交叉，精确 source commit
-未保存。本阶段以“代码行为 + 真实 checkpoint/log”双证据建立了独立 guidance runner：两条
-route 的 `2320→2213` / `2789→2635` 真实过滤计数、固定 1024-token online MDLM、每步一次
-dead CPU RNG draw、route-specific attention/dropout 调用顺序、rank-64 LoRA、对称 pair head、
-training-AUROC selection 和七键 checkpoint schema 均已冻结。两个真实 checkpoint 已严格加载
-并在 H100 上 forward，40-epoch 固定样本 canonical/inline legacy logit 差为 0。旧代码依赖
-Python `set` 的进程哈希行序，但历史 `PYTHONHASHSEED` 未记录；成员和转换行为已冻结，精确历史
-行序不作声明。两个已迁移 root driver 从工作树删除，由 `legacy-code-snapshot-2026-07-17` 恢复；
-prospective in-house screening 继续作为单独消费者，不与 classifier 训练合并。
+作者于 2026-07-19 进一步确认发布范围只覆盖论文中实际汇报的结果。论文 synergy 部分只汇报
+2,732 个 eligible pair、strain-wise 三折、每折 7-member ensemble 的二分类结果（mean AUROC
+`0.7539`、mean AUPRC `0.7454`）；正文和 Methods 没有 few-shot 结果。因此本阶段停止维护并从
+工作树删除 early prototype、continuous-FICI、in-house evaluation、few-shot、all-data guidance、
+prospective regression 和 BAA-3170 screening 的 root/canonical 源码、配置、专项测试与审计副本。
+共享模块同时删除仅由这些路径消费的 tokenized dataset、regression target、online MDLM encoder、
+guidance step 和 screening loader，避免留下无消费者的发布 API。
 
-Prospective BAA-3170 synergy screening 随后进入独立迁移。只读审计冻结了 5,918,520 行 SMILES
-pair、5,949,525 行 sequence pair、3,441-entry molecule cache、BAA-3170 genome/text embedding、
-两组各 7 个 regression member 以及两份历史筛选输出的 SHA-256。审计发现旧结果不是原始 row
-order：4-rank `DistributedSampler` 的 stride predictions 按 rank block 拼接后未逆置换，之后又
-用这些位置切多 31,005 行的未过滤 sequence 表。canonical runner 将四个 rank 的 stride frame
-和各自 batch=320 边界逐项复现，同时只允许输出到 `results/` 或其他非数据路径。真实
-1,280-row × 7-member H100 验证中，第一个完整 rank batch 的 110 条入选记录与历史 CSV 在 ID、
-sequence 和 FICI 上完全一致，最大绝对差 0。该路径明确属于 post-paper prospective screening，
-不属于论文三折 CV；修正 pair-ID 对齐的新结果尚未生成。旧 screening root driver 已由 canonical
-入口取代并删除，仍可从 `legacy-code-snapshot-2026-07-17` 恢复；checkpoint producer 和其他
-in-house evaluation/few-shot driver 尚未迁移。
-
-本 screening 批新增 5 项 CPU 测试，覆盖两个 profile、安全输出边界、FICI 反变换、4-rank
-stride/rank-block gather 和 sequence positional selection；阶段收尾全仓库为 124 passed / 5
-skipped。另以宿主 H100 完成 fixed-epoch 全 7 member 的 1,280-row 验证和 inhouse-best member
-smoke。所有大输入、14 个 checkpoint 和两份历史输出只读核验，原文件 SHA-256 未变化。
-
-Prospective regression producer 迁移于 2026-07-19 启动。已由 legacy source 和完整日志验证：
-`synergy_Evo_train_on_DBAASP_test_on_inhouse.py` 使用 4,285 行 DBAASP pair 作为训练来源、57 行
-in-house pair 作为 held-out test；embedding/mapping 过滤后训练 route 为 2,263 行 genome+text 与
-包含全部 2,732 行的 combined-text，test 只有 57 行 genome+text。SELFIES 512-token 过滤后为
-`2175/2597/38`，与日志逐项一致。每个 epoch 通过 `zip_longest` 交替执行两条训练 route，因此
-2,263 个 genome 样本会再次进入 text-only 分支；该重复训练属于历史行为，不能去重。模型从
-100-epoch MIC base 初始化，使用 rank-64 fusion LoRA、完整 `24576→3072→128→1` regression
-head、MSE 和 `-log10(FICI/10)` target，默认 7 members × 8 epochs。
-
-旧 producer 同时保存两种权重：`best_test` 由仅 38 行 in-house test 的 R² 严格提升选择；
-`fixed_epoch` 保存 epoch index 5 结束后的当前参数，但 payload 中的 `R2` 字段仍是截至该时刻的
-best-test R²，而不一定是当前参数的 R²。该 test-selected profile 存在直接使用 prospective
-in-house test 选模型的 leakage，不得作为独立泛化指标；`fixed_epoch` 才是历史 screening 的
-默认 profile。数据 block 拼接仍依赖未记录的 Python `set` 顺序，所以 canonical 将保留动态
-顺序并要求显式确认，不声称恢复历史逐 batch 随机轨迹。canonical regression runner、配置、
-六键 full-state checkpoint contract 和 7 项专项测试现已完成；真实 dry-run 核验了全部输入哈希
-及 `2175/2597/38` 计数，H100 上又完成 full-route、1-member、1-epoch smoke，选出 R²
-`-1.077654` 并写出 3,716,621,204-byte checkpoint。该 smoke 只验证执行链，不声称重建历史
-tensor。旧 1,835 行 producer 已由 canonical 取代并删除，可从 legacy tag 以相同 SHA-256 恢复。
-阶段收尾全仓库为 131 passed / 5 skipped；原始数据、日志和 14 个历史 checkpoint 未修改。
+这次 paper-only 清理不删除或改写任何原始数据、checkpoint、日志或已有结果。legacy/root 源码可
+从 `legacy-code-snapshot-2026-07-17` 恢复；此前完成的 post-paper canonical 迁移可从 merge commit
+`e9a68d57e4b0b235906530d3ed389c66771141ce` 恢复。逐文件 SHA-256 和恢复命令登记于
+`reproducibility/synergy_paper_only_cleanup_2026-07-19.json`。唯一继续保留的 root synergy
+driver 是论文三折候选 `synergy_Evo_train_new_reg_MDLM_one_base_model_classification.py`，因为其
+checkpoint 与 Methods 的 LoRA rank、base epoch 和 aggregate 指标冲突尚未解决；在精确论文
+血缘确认前，不能用 canonical runner 的存在作为理由删除该候选证据。
+清理后全仓库测试为 111 passed / 4 skipped；减少的测试仅对应已删除的 post-paper guidance、
+regression 和 screening 路径。JSON/YAML 解析、核心 synergy 模块编译和引用扫描均通过。
 
 Modality ablation 的绘图血缘已于 2026-07-19 冻结。最终 Mac notebook cell 中硬编码的四条
 曲线、三个 holdout 粒度和 12 个精确 R² 已迁移到
