@@ -179,3 +179,46 @@ weights:
     future_storage:
       relative_path: molecule_encoders/peptideclm
       distribution_strategy: pinned_upstream_or_mirror_after_license_review
+
+  fig2c_strainwise_dlm_7ensemble:
+    paper_label: ApexOracle strain-wise DLM ensemble
+    tasks:
+      - fig1a_strain_wise_generalization
+      - fig2c_strain_wise_encoder_result
+    decision_status: final_metrics_verified_checkpoint_family_has_two_historical_variants
+    source:
+      kind: local_repo_ignored_binary_family
+      current_path: Checkpoints/genome_text_learnable_emb/strain_wise_w_SM_b_attn/MDLM_MTR_fix_7_fold_ensembles
+      file_pattern: genome_text_learnable_emb_Strain_wise_best_R2_group_{0,1,2}_ensemble_{0..6}.pth
+      file_count: 21
+      checkpoint_variants:
+        fusion_and_heads_only:
+          groups: [0, 2]
+          file_count: 14
+        with_saved_frozen_mdlm_backbone:
+          groups: [1]
+          file_count: 7
+          legacy_key: ChemBERTa_state_dict
+          actual_payload: 12_layer_768_hidden_mdlm_backbone_131_keys
+          optimizer_includes_backbone: false
+          historical_online_feature_usage: not_confirmed
+      representative_validation:
+        file: genome_text_learnable_emb_Strain_wise_best_R2_group_0_ensemble_0.pth
+        size_bytes: 9084185130
+        sha256: 9b097645b3fe0ba41d3d044e264f68d745647b09b6c9342c7664264fea15e24e
+        strict_load: true
+        repeated_gpu_prediction_check: passed
+      remaining_file_sha256_status: pending
+    model:
+      molecule_embedding_dim: 768
+      genome_embedding_dim: 8192
+      text_embedding_dim: 4096
+      regression_head: [12288, 3072, 128, 1]
+      attention_heads: 4
+      members_per_fold: 7
+      folds: 3
+    loader: scripts/reproduce/validate_fig2c_strainwise_checkpoint.py
+    future_storage:
+      relative_path: strainwise/dlm_7ensemble
+      download_uri: null
+      redistribution_status: to_review

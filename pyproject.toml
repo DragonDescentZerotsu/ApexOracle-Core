@@ -17,7 +17,13 @@ dependencies = [
 
 [project.optional-dependencies]
 test = ["pytest>=7"]
-benchmark = ["torch>=2.1", "transformers>=4.40", "pyyaml>=6"]
+benchmark = [
+  "torch>=2.1",
+  "transformers>=4.40",
+  "pyyaml>=6",
+  "scipy>=1.9",
+  "tqdm>=4.64",
+]
 
 [project.scripts]
 apexoracle-build-fig2b-data = "apexoracle.benchmarks.molecule_encoders.protocol:main"

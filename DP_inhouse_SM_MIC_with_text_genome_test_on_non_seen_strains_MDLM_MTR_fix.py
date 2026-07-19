@@ -28,6 +28,7 @@ from collections import OrderedDict
 
 import torch.nn.functional as F
 import ast
+import sys
 
 current_directory = Path(__file__).parent
 # current_directory = Path('/data2/tianang/projects/Synergy')
@@ -919,6 +920,63 @@ def merge_dict(dict_1, dict_2):
     return  merged_dict
 
 
+# Transitional release refactor: retain the original definitions above as an
+# executable reference, while making the historical driver consume the shared
+# package implementations. This keeps the training loop and checkpoint protocol
+# unchanged and allows tensor-by-tensor equivalence tests during migration.
+LegacySMILESDatasetWithGenomeAndText = SMILESDataset_with_genome_and_text
+LegacySMILESDatasetWithTextOnly = SMILESDataset_with_text_only
+legacy_collate_fn = collate_fn
+legacy_collate_fn_text_only = collate_fn_text_only
+legacy_collate_fn_cls = collate_fn_cls
+legacy_collate_fn_text_only_cls = collate_fn_text_only_cls
+LegacyRegressionHead = RegressionHead
+LegacyFirstTokenAttentionGenome = FirstTokenAttention_genome
+legacy_get_embedded_genome_IDs = get_embedded_genome_IDs
+legacy_get_original_strain_name_with_genome_embedding = get_original_strain_name_with_genome_embedding
+legacy_load_all_genome_embeddings = load_all_genome_embeddings
+legacy_load_text_wo_genome_embeddings = load_text_wo_genome_embeddings
+legacy_exclude_wrong_species_ATCC_map = exclude_wrong_species_ATCC_map
+legacy_get_ATCC_ID_to_species_name_map = get_ATCC_ID_to_species_name_map
+legacy_get_original_strain_ID_to_species_name_map = get_original_strain_ID_to_species_name_map
+legacy_merge_dict = merge_dict
+legacy_calculate_r2 = calculate_r2
+
+if __name__ == "__main__":
+    sys.path.insert(0, str(current_directory / "src"))
+    from apexoracle.data.strainwise import (  # noqa: E402
+        SMILESDataset_with_genome_and_text,
+        SMILESDataset_with_text_only,
+        collate_fn,
+        collate_fn_cls,
+        collate_fn_text_only,
+        collate_fn_text_only_cls,
+    )
+    from apexoracle.models.strain_fusion import (  # noqa: E402
+        FirstTokenAttention_genome,
+        RegressionHead,
+    )
+    from apexoracle.features.precomputed import (  # noqa: E402
+        get_embedded_genome_IDs,
+        load_all_genome_embeddings,
+        load_text_wo_genome_embeddings,
+    )
+    from apexoracle.data.strain_mapping import (  # noqa: E402
+        exclude_wrong_species_ATCC_map,
+        get_ATCC_ID_to_species_name_map,
+        get_original_strain_ID_to_species_name_map,
+        get_original_strain_name_with_genome_embedding,
+        merge_dict,
+    )
+    from apexoracle.evaluation.strainwise import (  # noqa: E402
+        calculate_r2,
+        ensemble_predictions,
+        specieswise_metrics,
+        summarize_predictions,
+    )
+    from apexoracle.training.strainwise import strainwise_optimizer_step  # noqa: E402
+
+
 if __name__ == '__main__':
     # TODO: hyperparameters
     parser = argparse.ArgumentParser(
@@ -1481,18 +1539,10 @@ if __name__ == '__main__':
                         t_r2 = calculate_r2(t_test_all_labels, t_test_all_preds)
                         r2_train_mean = calculate_r2(test_all_labels, train_mean_as_test_predict)
 
-                        r2_MSE_spearman_pearson_species_wise = {}
-                        for _speceis_name in species_wise_test_preds_dict.keys():
-                            r2_species = calculate_r2(species_wise_test_labels_dict[_speceis_name], species_wise_test_preds_dict[_speceis_name])
-                            MSE_specise = np.mean((np.array(species_wise_test_labels_dict[_speceis_name]) - np.array(species_wise_test_preds_dict[_speceis_name])) ** 2)
-                            if len(species_wise_test_labels_dict[_speceis_name]) > 1:
-                                spearman_species = spearmanr(species_wise_test_labels_dict[_speceis_name],
-                                                             species_wise_test_preds_dict[_speceis_name])[0]
-                                pearson_species = pearsonr(species_wise_test_labels_dict[_speceis_name],
-                                                           species_wise_test_preds_dict[_speceis_name])[0]
-                            else:
-                                spearman_species = pearson_species = None
-                            r2_MSE_spearman_pearson_species_wise[_speceis_name] = [r2_species, MSE_specise, spearman_species, pearson_species]
+                        r2_MSE_spearman_pearson_species_wise = specieswise_metrics(
+                            species_wise_test_labels_dict,
+                            species_wise_test_preds_dict,
+                        )
 
                         logger.info(f'\n Test species wise R2, MSE, Spearman, Pearson:')
                         for species_name, metrics in r2_MSE_spearman_pearson_species_wise.items():
@@ -1532,42 +1582,27 @@ if __name__ == '__main__':
 
                 for gt_batch, t_batch, SM_gt_batch, SM_t_batch in tqdm(itertools.zip_longest(gt_train_loader, t_train_loader, SM_gt_train_loader, SM_t_train_loader, fillvalue=None), desc=f" Ensemble {ensemble + 1}/{num_ensembles} Epoch {epoch + 1}/{num_epochs} | training", leave=False, total=max(len(gt_train_loader), len(t_train_loader), len(SM_gt_train_loader), len(SM_t_train_loader))):
                     if gt_batch is not None:
-                        # input_ids = gt_batch['input_ids'].to(device)
-                        # attention_mask = gt_batch['attention_mask'].to(device)
-                        labels = gt_batch['label'].to(device)
-                        padded_genome_embeddings = gt_batch['padded_genome_embeddings']  # .to(torch.float)
-                        genome_attn_masks = gt_batch['genome_attn_masks']
-                        padded_text_embeddings = gt_batch['padded_text_embeddings']  # .to(torch.float)
-                        text_attn_masks = gt_batch['text_attn_masks']
-                        strain_names = gt_batch['strain_names']
-                        mol_cls_embedding = gt_batch['mol_emb'].to(device)
-
-                        optimizer.zero_grad()
-
-                        with torch.amp.autocast('cuda', enabled=True):
-                            # outputs = mdlm_model(input_ids=input_ids, attention_mask=attention_mask)
-                            #
-                            # mol_cls_embedding = outputs[:, 0, :]
-                            mol_cls_embedding_genome = co_cross_attn_genome(mol_cls_embedding, padded_genome_embeddings, 1 - genome_attn_masks)
-                            mol_cls_embedding_text = co_cross_attn_text(mol_cls_embedding, padded_text_embeddings, 1 - text_attn_masks)
-                            mol_cls_embedding = torch.cat((mol_cls_embedding_genome.reshape(-1, 8192), mol_cls_embedding_text.reshape(-1, 4096)), dim=1)
-                            logits = reg_head(mol_cls_embedding).squeeze()
-                            loss = criterion(logits, labels.squeeze())
-
-                        # loss.backward()
-                        # optimizer.step()
-
-                        scaler.scale(loss).backward()
-                        # 对模型参数的梯度进行裁剪，例如设置最大范数为 1.0
-                        if epoch >= freeze_epochs:
-                            # 将梯度 unscale 到正常范围
-                            scaler.unscale_(optimizer)
-                            # torch.nn.utils.clip_grad_norm_(mdlm_model.parameters(), max_norm=1.0)
-                            torch.nn.utils.clip_grad_norm_(co_cross_attn_genome.parameters(), max_norm=1.0)
-                            # torch.nn.utils.clip_grad_norm_(co_cross_attn_text.parameters(), max_norm=1.0)
-                            torch.nn.utils.clip_grad_norm_(reg_head.parameters(), max_norm=1.0)
-                        scaler.step(optimizer)
-                        scaler.update()
+                        batch_result = strainwise_optimizer_step(
+                            gt_batch,
+                            device=device,
+                            genome_attention=co_cross_attn_genome,
+                            text_attention=co_cross_attn_text,
+                            prediction_head=reg_head,
+                            legacy_regression_head_for_clipping=reg_head,
+                            criterion=criterion,
+                            missing_genome_embedding=learnable_embedding_weight,
+                            optimizer=optimizer,
+                            scaler=scaler,
+                            has_genome=True,
+                            reshape_outputs=True,
+                            autocast_enabled=True,
+                            epoch=epoch,
+                            freeze_epochs=freeze_epochs,
+                        )
+                        labels = batch_result.labels
+                        logits = batch_result.logits
+                        loss = batch_result.loss
+                        strain_names = batch_result.strain_names
 
                         train_batch_losses.append(loss.item())
                         gt_train_batch_losses.append(loss.item())
@@ -1592,46 +1627,27 @@ if __name__ == '__main__':
                                 species_wise_train_labels_dict[_speceis_name].append(label)
 
                     if t_batch is not None:
-                        # input_ids = t_batch['input_ids'].to(device)
-                        # attention_mask = t_batch['attention_mask'].to(device)
-                        labels = t_batch['label'].to(device)
-                        # padded_genome_embeddings = t_batch['padded_genome_embeddings']  # .to(torch.float)
-                        # genome_attn_masks = t_batch['genome_attn_masks']
-                        padded_text_embeddings = t_batch['padded_text_embeddings']  # .to(torch.float)
-                        text_attn_masks = t_batch['text_attn_masks']
-                        strain_names = t_batch['strain_names']
-                        mol_cls_embedding = t_batch['mol_emb'].to(device)
-
-                        optimizer.zero_grad()
-
-                        with torch.amp.autocast('cuda', enabled=True):
-                            # outputs = mdlm_model(input_ids=input_ids, attention_mask=attention_mask)
-                            #
-                            # mol_cls_embedding = outputs[:, 0, :]
-                            padded_genome_embeddings = learnable_embedding_weight[:, None, :].expand(mol_cls_embedding.shape[0], 1, -1)
-                            genome_attn_masks = torch.from_numpy(np.array([1]))[None, :].expand(mol_cls_embedding.shape[0], -1).to(device)
-                            mol_cls_embedding_genome = co_cross_attn_genome(mol_cls_embedding, padded_genome_embeddings, 1 - genome_attn_masks)
-                            # 把 learnable embedding 的 batch 纬 expand 作为 genome embedding 的替换
-                            # mol_cls_embedding_genome = learnable_embedding_weight.expand(mol_cls_embedding.shape[0], -1)
-                            mol_cls_embedding_text = co_cross_attn_text(mol_cls_embedding, padded_text_embeddings, 1 - text_attn_masks)
-                            mol_cls_embedding = torch.cat((mol_cls_embedding_genome.reshape(-1, 8192), mol_cls_embedding_text.reshape(-1, 4096)), dim=1)
-                            logits = reg_head(mol_cls_embedding).squeeze()
-                            loss = criterion(logits, labels.squeeze())
-
-                        # loss.backward()
-                        # optimizer.step()
-
-                        scaler.scale(loss).backward()
-                        # 对模型参数的梯度进行裁剪，例如设置最大范数为 1.0
-                        if epoch >= freeze_epochs:
-                            # 将梯度 unscale 到正常范围
-                            scaler.unscale_(optimizer)
-                            # torch.nn.utils.clip_grad_norm_(mdlm_model.parameters(), max_norm=1.0)
-                            torch.nn.utils.clip_grad_norm_([learnable_embedding_weight], max_norm=1.0)
-                            torch.nn.utils.clip_grad_norm_(co_cross_attn_genome.parameters(), max_norm=1.0)
-                            torch.nn.utils.clip_grad_norm_(reg_head.parameters(), max_norm=1.0)
-                        scaler.step(optimizer)
-                        scaler.update()
+                        batch_result = strainwise_optimizer_step(
+                            t_batch,
+                            device=device,
+                            genome_attention=co_cross_attn_genome,
+                            text_attention=co_cross_attn_text,
+                            prediction_head=reg_head,
+                            legacy_regression_head_for_clipping=reg_head,
+                            criterion=criterion,
+                            missing_genome_embedding=learnable_embedding_weight,
+                            optimizer=optimizer,
+                            scaler=scaler,
+                            has_genome=False,
+                            reshape_outputs=True,
+                            autocast_enabled=True,
+                            epoch=epoch,
+                            freeze_epochs=freeze_epochs,
+                        )
+                        labels = batch_result.labels
+                        logits = batch_result.logits
+                        loss = batch_result.loss
+                        strain_names = batch_result.strain_names
 
                         train_batch_losses.append(loss.item())
                         t_train_batch_losses.append(loss.item())
@@ -1656,41 +1672,26 @@ if __name__ == '__main__':
                                 species_wise_train_labels_dict[_speceis_name].append(label)
 
                     if SM_gt_batch is not None:
-                        # input_ids = SM_gt_batch['input_ids'].to(device)
-                        # attention_mask = SM_gt_batch['attention_mask'].to(device)
-                        labels = SM_gt_batch['label'].to(device)
-                        padded_genome_embeddings = SM_gt_batch['padded_genome_embeddings']  # .to(torch.float)
-                        genome_attn_masks = SM_gt_batch['genome_attn_masks']
-                        padded_text_embeddings = SM_gt_batch['padded_text_embeddings']  # .to(torch.float)
-                        text_attn_masks = SM_gt_batch['text_attn_masks']
-                        strain_names = SM_gt_batch['strain_names']
-                        mol_cls_embedding = SM_gt_batch['mol_emb'].to(device)
-
-                        optimizer.zero_grad()
-
-                        with torch.amp.autocast('cuda', enabled=True):
-                            # outputs = mdlm_model(input_ids=input_ids, attention_mask=attention_mask)
-                            #
-                            # mol_cls_embedding = outputs[:, 0, :]
-                            mol_cls_embedding_genome = co_cross_attn_genome(mol_cls_embedding, padded_genome_embeddings, 1 - genome_attn_masks)
-                            mol_cls_embedding_text = co_cross_attn_text(mol_cls_embedding, padded_text_embeddings, 1 - text_attn_masks)
-                            mol_cls_embedding = torch.cat((mol_cls_embedding_genome, mol_cls_embedding_text), dim=1)
-                            logits = cls_head(mol_cls_embedding).squeeze()
-                            loss = cls_criterion(logits, labels.squeeze())
-
-                        # loss.backward()
-                        # optimizer.step()
-
-                        scaler.scale(loss).backward()
-                        # 对模型参数的梯度进行裁剪，例如设置最大范数为 1.0
-                        if epoch >= freeze_epochs:
-                            # 将梯度 unscale 到正常范围
-                            scaler.unscale_(optimizer)
-                            # torch.nn.utils.clip_grad_norm_(mdlm_model.parameters(), max_norm=1.0)
-                            torch.nn.utils.clip_grad_norm_(co_cross_attn_genome.parameters(), max_norm=1.0)
-                            torch.nn.utils.clip_grad_norm_(reg_head.parameters(), max_norm=1.0)
-                        scaler.step(optimizer)
-                        scaler.update()
+                        batch_result = strainwise_optimizer_step(
+                            SM_gt_batch,
+                            device=device,
+                            genome_attention=co_cross_attn_genome,
+                            text_attention=co_cross_attn_text,
+                            prediction_head=cls_head,
+                            legacy_regression_head_for_clipping=reg_head,
+                            criterion=cls_criterion,
+                            missing_genome_embedding=learnable_embedding_weight,
+                            optimizer=optimizer,
+                            scaler=scaler,
+                            has_genome=True,
+                            reshape_outputs=False,
+                            autocast_enabled=True,
+                            epoch=epoch,
+                            freeze_epochs=freeze_epochs,
+                        )
+                        labels = batch_result.labels
+                        logits = batch_result.logits
+                        loss = batch_result.loss
 
                         cls_train_batch_losses.append(loss.item())
                         cls_gt_train_batch_losses.append(loss.item())
@@ -1701,46 +1702,26 @@ if __name__ == '__main__':
                         cls_gt_train_all_preds.extend(logits.detach().cpu().flatten().tolist())
 
                     if SM_t_batch is not None:
-                        # input_ids = SM_t_batch['input_ids'].to(device)
-                        # attention_mask = SM_t_batch['attention_mask'].to(device)
-                        labels = SM_t_batch['label'].to(device)
-                        # padded_genome_embeddings = t_batch['padded_genome_embeddings']  # .to(torch.float)
-                        # genome_attn_masks = t_batch['genome_attn_masks']
-                        padded_text_embeddings = SM_t_batch['padded_text_embeddings']  # .to(torch.float)
-                        text_attn_masks = SM_t_batch['text_attn_masks']
-                        strain_names = SM_t_batch['strain_names']
-                        mol_cls_embedding = SM_t_batch['mol_emb'].to(device)
-
-                        optimizer.zero_grad()
-
-                        with torch.amp.autocast('cuda', enabled=True):
-                            # outputs = mdlm_model(input_ids=input_ids, attention_mask=attention_mask)
-                            #
-                            # mol_cls_embedding = outputs[:, 0, :]
-                            padded_genome_embeddings = learnable_embedding_weight[:, None, :].expand(mol_cls_embedding.shape[0], 1, -1)
-                            genome_attn_masks = torch.from_numpy(np.array([1]))[None, :].expand(mol_cls_embedding.shape[0], -1).to(device)
-                            mol_cls_embedding_genome = co_cross_attn_genome(mol_cls_embedding, padded_genome_embeddings, 1 - genome_attn_masks)
-                            # 把 learnable embedding 的 batch 纬 expand 作为 genome embedding 的替换
-                            # mol_cls_embedding_genome = learnable_embedding_weight.expand(mol_cls_embedding.shape[0], -1)
-                            mol_cls_embedding_text = co_cross_attn_text(mol_cls_embedding, padded_text_embeddings, 1 - text_attn_masks)
-                            mol_cls_embedding = torch.cat((mol_cls_embedding_genome, mol_cls_embedding_text), dim=1)
-                            logits = cls_head(mol_cls_embedding).squeeze()
-                            loss = cls_criterion(logits, labels.squeeze())
-
-                        # loss.backward()
-                        # optimizer.step()
-
-                        scaler.scale(loss).backward()
-                        # 对模型参数的梯度进行裁剪，例如设置最大范数为 1.0
-                        if epoch >= freeze_epochs:
-                            # 将梯度 unscale 到正常范围
-                            scaler.unscale_(optimizer)
-                            # torch.nn.utils.clip_grad_norm_(mdlm_model.parameters(), max_norm=1.0)
-                            torch.nn.utils.clip_grad_norm_([learnable_embedding_weight], max_norm=1.0)
-                            torch.nn.utils.clip_grad_norm_(co_cross_attn_genome.parameters(), max_norm=1.0)
-                            torch.nn.utils.clip_grad_norm_(reg_head.parameters(), max_norm=1.0)
-                        scaler.step(optimizer)
-                        scaler.update()
+                        batch_result = strainwise_optimizer_step(
+                            SM_t_batch,
+                            device=device,
+                            genome_attention=co_cross_attn_genome,
+                            text_attention=co_cross_attn_text,
+                            prediction_head=cls_head,
+                            legacy_regression_head_for_clipping=reg_head,
+                            criterion=cls_criterion,
+                            missing_genome_embedding=learnable_embedding_weight,
+                            optimizer=optimizer,
+                            scaler=scaler,
+                            has_genome=False,
+                            reshape_outputs=False,
+                            autocast_enabled=True,
+                            epoch=epoch,
+                            freeze_epochs=freeze_epochs,
+                        )
+                        labels = batch_result.labels
+                        logits = batch_result.logits
+                        loss = batch_result.loss
 
                         cls_train_batch_losses.append(loss.item())
                         cls_t_train_batch_losses.append(loss.item())
@@ -1763,16 +1744,10 @@ if __name__ == '__main__':
                 t_spearman_train = spearmanr(t_train_all_labels, t_train_all_preds)[0]
                 t_pearson_train = pearsonr(t_train_all_labels, t_train_all_preds)[0]
 
-                r2_MSE_spearman_pearson_species_wise = {}
-                for _speceis_name in species_wise_train_preds_dict.keys():
-                    r2_species = calculate_r2(species_wise_train_labels_dict[_speceis_name], species_wise_train_preds_dict[_speceis_name])
-                    MSE_specise = np.mean((np.array(species_wise_train_labels_dict[_speceis_name]) - np.array(species_wise_train_preds_dict[_speceis_name])) ** 2)
-                    if len(species_wise_train_labels_dict[_speceis_name]) > 1:
-                        spearman_species = spearmanr(species_wise_train_labels_dict[_speceis_name], species_wise_train_preds_dict[_speceis_name])[0]
-                        pearson_species = pearsonr(species_wise_train_labels_dict[_speceis_name], species_wise_train_preds_dict[_speceis_name])[0]
-                    else:
-                        spearman_species = pearson_species = None
-                    r2_MSE_spearman_pearson_species_wise[_speceis_name] = [r2_species, MSE_specise, spearman_species, pearson_species]
+                r2_MSE_spearman_pearson_species_wise = specieswise_metrics(
+                    species_wise_train_labels_dict,
+                    species_wise_train_preds_dict,
+                )
 
                 logger.info(f'\n Train species wise R2, MSE, Spearman, Pearson:')
                 for species_name, metrics in r2_MSE_spearman_pearson_species_wise.items():
@@ -1896,16 +1871,10 @@ if __name__ == '__main__':
                     t_spearman_test = spearmanr(t_test_all_labels, t_test_all_preds)[0] if len(t_test_all_labels) > 1 else -1000
                     t_pearson_test = pearsonr(t_test_all_labels, t_test_all_preds)[0] if len(t_test_all_labels) > 1 else -1000
 
-                    r2_MSE_spearman_pearson_species_wise = {}
-                    for _speceis_name in species_wise_test_preds_dict.keys():
-                        r2_species = calculate_r2(species_wise_test_labels_dict[_speceis_name], species_wise_test_preds_dict[_speceis_name])
-                        MSE_specise = np.mean((np.array(species_wise_test_labels_dict[_speceis_name]) - np.array(species_wise_test_preds_dict[_speceis_name])) ** 2)
-                        if len(species_wise_test_labels_dict[_speceis_name]) > 1:
-                            spearman_species = spearmanr(species_wise_test_labels_dict[_speceis_name], species_wise_test_preds_dict[_speceis_name])[0]
-                            pearson_species = pearsonr(species_wise_test_labels_dict[_speceis_name], species_wise_test_preds_dict[_speceis_name])[0]
-                        else:
-                            spearman_species = pearson_species = None
-                        r2_MSE_spearman_pearson_species_wise[_speceis_name] = [r2_species, MSE_specise, spearman_species, pearson_species]
+                    r2_MSE_spearman_pearson_species_wise = specieswise_metrics(
+                        species_wise_test_labels_dict,
+                        species_wise_test_preds_dict,
+                    )
 
                     if r2_test > best_R2_test:
                         best_R2_test = r2_test
@@ -1969,11 +1938,11 @@ if __name__ == '__main__':
                     test_predictions_of_ensembles.append(best_test_prdictions)
         # print(f'\n len of ensembled test predictions: {len(test_predictions_of_ensembles)}')
         logger.info(f'\n len of ensembled test predictions: {len(test_predictions_of_ensembles)}')
-        test_predictions_of_ensembles = np.array(test_predictions_of_ensembles)
-        ensembled_predictions = np.mean(test_predictions_of_ensembles, axis=0)
-        ensembled_R2 = calculate_r2(test_all_labels, ensembled_predictions)
-        ensembled_spearman = spearmanr(test_all_labels, ensembled_predictions)[0]
-        ensembled_pearson = pearsonr(test_all_labels, ensembled_predictions)[0]
+        ensembled_predictions = ensemble_predictions(test_predictions_of_ensembles)
+        ensemble_metrics = summarize_predictions(test_all_labels, ensembled_predictions)
+        ensembled_R2 = ensemble_metrics["r2"]
+        ensembled_spearman = ensemble_metrics["spearman"]
+        ensembled_pearson = ensemble_metrics["pearson"]
 
         # print(f'\n Ensemble R2 of {args.test_group}: {ensembled_R2:.4f}')
         # print(f' Ensemble spearman of {args.test_group}: {ensembled_spearman:.4f}')

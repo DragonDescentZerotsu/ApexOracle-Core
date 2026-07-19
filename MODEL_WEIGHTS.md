@@ -22,6 +22,7 @@
 | `fig2b_chemberta_mlm` | `DeepChem/ChemBERTa-77M-MLM` | revision 待固定 | `molecule_encoders/chemberta_mlm` | 发布前待处理 |
 | `fig2b_molformer` | `ibm/MoLFormer-XL-both-10pct` | revision `7b12d946…0314` | `molecule_encoders/molformer` | 已固定 |
 | `fig2b_peptideclm` | `aaronfeller/PeptideCLM-23M-all` | revision 待固定 | `molecule_encoders/peptideclm` | 发布前待处理 |
+| `fig2c_strainwise_dlm_7ensemble` | `Checkpoints/.../MDLM_MTR_fix_7_fold_ensembles` | 21 个文件；代表文件 SHA-256 `9b097645…e24e` | `strainwise/dlm_7ensemble` | 3×7 网格与公共消费契约已确认；group 1 的 7 个文件额外含 frozen MDLM payload；其余 20 个 SHA-256 待登记 |
 
 ## DLM-only 决策记录
 

@@ -91,7 +91,9 @@ ChemBERTa MLM mean-pooling 作为可选消融，不与论文主 comparator 混�
 - [x] 确认 reviewer 对 Fig. 2b 的核心要求是相同数据和相同划分。
 - [x] 核验当前 Git 仓库状态和 GitHub 远程仓库状态。
 - [x] 定位 MDLM 仓库中的 DLM MLM-only 代码、配置和候选权重；精确论文 checkpoint 仍按证据等级记录。
-- [ ] 生成待保留、待迁移和待删除的机器可读清单。
+- [x] 生成待保留、待迁移和待删除的机器可读清单：
+  `reproducibility/migration_inventory.yaml`。清单中的删除权限默认关闭，只有替代入口和
+  checkpoint 等价验证完成后才允许改变。
 
 验收标准：任何删除或迁移都能从审计记录、Git tag 或清单中解释其原因。
 
@@ -122,6 +124,13 @@ ChemBERTa MLM mean-pooling 作为可选消融，不与论文主 comparator 混�
 - [x] 建立 `configs/model_weights.yaml` 统一登记权重当前位置、SHA-256、消费实验和计划迁移路径；实际权重解析器与集中搬迁仍待实现。
 - [ ] 将硬编码路径迁移到 CLI 参数或 YAML 配置。
 - [ ] 统一预测输出格式，至少包含 sample ID、fold、label、prediction 和模型元数据。
+
+执行进度（2026-07-18）：Fig. 1a / Fig. 2c strain-wise 路径已经抽取
+strain mapping、precomputed feature loader、四种 collate、cross-attention、prediction
+head、指标、严格 checkpoint loader，以及四条单批次 forward/loss/backward/optimizer-step，
+并由 legacy driver 实际调用。当前仍是过渡状态：外层 epoch/DataLoader 协调、scheduler、
+evaluation 和 checkpoint selection 尚保留在原 driver 中，因此本阶段的全仓库验收标准
+尚未满足，也不允许删除 legacy driver。
 
 验收标准：论文主实验不再复制共享模型和数据逻辑；公共模块具备单元测试。
 
@@ -177,6 +186,28 @@ APEX 输入转换规则：
 - ApexOracle-3/12/23 sequence similarity 流程。
 - reviewer 的 Evo-2 embedding scaling 分析脚本。
 
+状态（2026-07-18）：strain-wise DLM ensemble 已完成第一批行为保持迁移。
+
+- 共享实现位于 `src/apexoracle/{data,features,models,evaluation}`；稳定的过渡入口为
+  `scripts/reproduce/run_fig2c_strainwise.py`，实验契约和审计材料位于
+  `experiments/fig2c_strainwise/`。
+- legacy driver 的训练循环保持不变，并在进入主程序后显式切换到共享 Dataset、collate、
+  feature loader、fusion 和 head。四条单批次 optimizer-step 路径也已迁移；测试逐项比较
+  logits、loss、gradient 和 Adam 更新后的参数，而不是只检查 shape。外层训练控制流仍保持原样。
+- 21 个历史 checkpoint 的 `3 × 7` 网格和实际消费的 fusion/head contract 已全部扫描。
+  group 0/2 的 14 个文件只保存 fusion/head；group 1 的 7 个文件额外保存一个名称错误的
+  `ChemBERTa_state_dict`，其结构实际是 12-layer/768 MDLM backbone。三个 group 的 optimizer
+  均不包含该 backbone 参数；是否在 group 1 的 forward 中在线使用仍待旧源码确认。
+- 历史 split 同时依赖无序 `set` 和原地 taxonomy-alias list mutation；日志没有记录三个独立
+  Python 进程的 `PYTHONHASHSEED`。本机与 node002 的 driver、核心数据和文件名清单已经核验
+  一致，因此当前只能提供 `PYTHONHASHSEED=0` 的确定性候选 manifest，不能声称恢复了 2025 年
+  checkpoint 的精确 strain membership。过渡入口要求显式确认这一限制。
+- group 0 / ensemble 0 已在 H100 上完成两次独立固定批次严格加载与推理，结果一致；其余
+  checkpoint 已完成结构扫描，但剩余 20 个 SHA-256 和逐文件推理仍待补齐。
+
+因此 strain-wise 项当前状态是 `shared core extracted / training loop transitional`；
+strict zero-shot、sequence similarity 和其余高置信度入口尚未开始迁移。
+
 #### 4.2 迁移前需要作者或原始结果进一步核验
 
 - phylum-wise 和 11-cluster species-wise：现存日志与论文数值或完整 fold 不完全一致；
@@ -221,6 +252,16 @@ APEX 输入转换规则：
 - [ ] 密钥、绝对路径、超大文件和未跟踪实验产物扫描。
 
 本阶段默认不重新训练全部论文实验。Fig. 2b 公平 benchmark 是例外：完成代码和数据协议验证后，需要正式重新训练并将其作为 reviewer 要求的新结果。
+
+执行记录（2026-07-18）：strain-wise 第一批迁移新增了 legacy/shared 逐项等价测试，覆盖四种
+collate、Dataset lookup、MIC label transform、feature filename parsing/loading、strain mapping、
+cross-attention、regression head、split mutation 语义和两类 checkpoint 顶层 payload。代表性
+9.08 GB checkpoint 已通过 H100 固定批次验证。后续单批次训练测试又覆盖四种 modality/task
+组合，并逐参数验证 gradient、历史 clipping 目标和 Adam step 后的参数一致性；H100 上另以
+有限合成 GradScaler scale 验证 CUDA autocast 路径逐位一致。正式 driver 的默认动态 scaler
+保持不变。这里仅表示
+strain-wise 子路径通过本批验收，
+不等同于阶段 6 的全仓库验证已经完成。
 
 ### 阶段 7：文档和发布
 
