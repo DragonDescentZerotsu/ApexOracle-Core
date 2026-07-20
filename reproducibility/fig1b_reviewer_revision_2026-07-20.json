@@ -21,7 +21,32 @@
     "remaining_members_launched": 45,
     "local_gpus": [0, 2, 3],
     "node002_gpus": [0, 1, 2, 3, 4, 5, 6, 7],
-    "output_subdirectory": "results/fig1b_revision/full_ensemble_reconstruction"
+    "output_subdirectory": "results/fig1b_revision/full_ensemble_reconstruction",
+    "status_check": {
+      "node002_first_wave_checkpoints_present": 8,
+      "local_first_wave_checkpoints_present": 3,
+      "completed_prediction_tables": 0,
+      "node002_epoch_progress": "all eight first-wave members reached epoch 3/25",
+      "local_epoch_progress": "all three first-wave members reached epoch 7/25",
+      "twelve_second_node002_gpu_sample": "all eight GPUs sustained 86-100% SM utilization",
+      "zero_utilization_explanation": "transient validation and 9 GB checkpoint serialization intervals; processes and tmux panes remained live",
+      "node002_io_wait": "approximately 0% during vmstat sampling"
+    },
+    "schedule_rebalance": {
+      "reason": "H100 epoch throughput was materially higher than A100 throughput",
+      "moved_to_local_h100": "group 1 fold 4 ensemble members 1-8",
+      "large_checkpoints_transferred": false,
+      "transfer_contract": "sync prediction CSV/JSON only; node002 queue skips when the valid JSON exists"
+    },
+    "storage_projection": {
+      "checkpoint_size_bytes": 9084193417,
+      "node002_free_bytes_at_check": 6078575149056,
+      "node002_current_reconstruction_usage": "69 GiB",
+      "node002_worst_case_additional_checkpoints": 32,
+      "node002_worst_case_checkpoint_bytes": 290694189344,
+      "node002_worst_case_fraction_of_free_space": 0.04783,
+      "assessment": "capacity safe; temporary write bursts occur when multiple best checkpoints update together"
+    }
   },
   "mac_notebook_restore": {
     "status": "completed",

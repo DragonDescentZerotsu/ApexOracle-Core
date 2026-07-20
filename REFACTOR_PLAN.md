@@ -405,6 +405,10 @@ metrics 完全一致；group 1 当前动态 hash split 多 5 条，继续按既�
   结果使用每个 outer fold 的完整 10-member ensemble。RN4220 fold 4 member 0 已按冻结协议补训，
   其余 45 个缺失成员已分派到本机 3 张空闲 H100 和 node002 8 张空闲 A100；新产物写入独立
   `results/fig1b_revision/full_ensemble_reconstruction/`，不覆盖历史 checkpoint；
+  运行一小时后的持续采样确认 11 张卡均正常计算，node002 单次 0% utilization 是验证和 9 GB
+  checkpoint 写盘间隙。由于 H100 约完成 7 epochs、A100 约完成 3 epochs，node002 八条队列的
+  最后一个未启动任务（group 1 fold 4 members 1--8）已追加到 H100 后续队列；完成 prediction
+  会同步到 node002，使原队列跳过对应任务，从而缩短尾部耗时且不移动大型权重；
 - Fig. 1b reviewer 修订已重新开启为独立补实验阶段：三个 strict zero-shot ensemble 的样本级
   预测和三个 Chemprop baseline 的 15 个共同-fold 运行均已完成。strict zero-shot 的 5,000 次
   paired bootstrap/randomization/Holm 结果显示只在 E. coli AUROC 上显著优于 baseline；
