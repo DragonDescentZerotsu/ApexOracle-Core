@@ -830,10 +830,12 @@ def run_training(
     genome_dim: int,
     text_dim: int,
     device: torch.device,
+    ensemble_indices: Sequence[int] | None = None,
 ) -> dict[str, Any]:
+    selected_ensembles = normalize_ensemble_indices(config, ensemble_indices)
     predictions_by_member = []
     final_evaluation: ClassificationEvaluation | None = None
-    for ensemble in range(config.ensembles):
+    for ensemble in selected_ensembles:
         seed = config.ensemble_seeds[ensemble]
         torch.manual_seed(seed)
         if torch.cuda.is_available():
@@ -892,7 +894,9 @@ def run_training(
             )
         if tracker.best_predictions is not None:
             predictions_by_member.append(tracker.best_predictions)
-    if final_evaluation is None or len(predictions_by_member) != config.ensembles:
+    if final_evaluation is None or len(predictions_by_member) != len(
+        selected_ensembles
+    ):
         raise RuntimeError(
             "Training did not produce one selected prediction per ensemble"
         )
@@ -909,9 +913,33 @@ def run_training(
         "target_group": group,
         "target_strain": TARGET_STRAINS[group],
         "fold": fold,
-        "ensembles": config.ensembles,
+        "ensembles": len(selected_ensembles),
+        "ensemble_indices": list(selected_ensembles),
         "metrics": metrics,
     }
+
+
+def normalize_ensemble_indices(
+    config: AntibioticClassificationConfig,
+    ensemble_indices: Sequence[int] | None,
+) -> tuple[int, ...]:
+    """Resolve an optional subset without changing legacy ensemble numbering."""
+
+    selected = (
+        tuple(range(config.ensembles))
+        if ensemble_indices is None
+        else tuple(int(index) for index in ensemble_indices)
+    )
+    if not selected:
+        raise ValueError("At least one ensemble index is required")
+    if len(set(selected)) != len(selected):
+        raise ValueError(f"Duplicate ensemble indices: {selected}")
+    invalid = [index for index in selected if index < 0 or index >= config.ensembles]
+    if invalid:
+        raise ValueError(
+            f"Ensemble indices must be in [0, {config.ensembles - 1}]: {invalid}"
+        )
+    return selected
 
 
 def load_checkpoint_into_model(
@@ -983,18 +1011,20 @@ def evaluate_checkpoints(
     device: torch.device,
     checkpoint_dir: Path,
     results_dir: Path,
+    ensemble_indices: Sequence[int] | None = None,
 ) -> dict[str, Any]:
+    selected_ensembles = normalize_ensemble_indices(config, ensemble_indices)
     predictions_by_member = []
     reference: ClassificationEvaluation | None = None
     checkpoint_metrics = []
-    for ensemble in range(config.ensembles):
-        model: FullFusionModel | MoleculeOnlyModel
-        if config.full_fusion:
-            model = build_full_fusion_model(
-                config, genome_dim=genome_dim, text_dim=text_dim, device=device
-            )
-        else:
-            model = build_molecule_only_model(config, device=device)
+    model: FullFusionModel | MoleculeOnlyModel
+    if config.full_fusion:
+        model = build_full_fusion_model(
+            config, genome_dim=genome_dim, text_dim=text_dim, device=device
+        )
+    else:
+        model = build_molecule_only_model(config, device=device)
+    for ensemble in selected_ensembles:
         path = checkpoint_dir / checkpoint_filename(config.mode, group, ensemble, fold)
         checkpoint_metrics.append(
             load_checkpoint_into_model(config, model, path, device=device)
@@ -1014,9 +1044,6 @@ def evaluate_checkpoints(
         ):
             raise RuntimeError("Checkpoint evaluations produced different target order")
         predictions_by_member.append(evaluation.logits)
-        del model
-        if device.type == "cuda":
-            torch.cuda.empty_cache()
     if reference is None:
         raise RuntimeError("No checkpoints were evaluated")
     predictions = ensemble_classification_predictions(predictions_by_member)
@@ -1026,17 +1053,20 @@ def evaluate_checkpoints(
     prediction_path = (
         results_dir / f"antibiotic_classification_{config.mode}_{token}.csv"
     )
-    pd.DataFrame(
-        {
-            "molecule_id": reference.molecule_ids,
-            "target_strain": TARGET_STRAINS[group],
-            "label": reference.labels,
-            "prediction": predictions,
-            "group": group,
-            "fold": fold,
-            "mode": config.mode,
-        }
-    ).to_csv(prediction_path, index=False)
+    prediction_columns = {
+        "molecule_id": reference.molecule_ids,
+        "target_strain": TARGET_STRAINS[group],
+        "label": reference.labels,
+        "prediction": predictions,
+        "group": group,
+        "fold": fold,
+        "mode": config.mode,
+    }
+    for ensemble, member_predictions in zip(
+        selected_ensembles, predictions_by_member, strict=True
+    ):
+        prediction_columns[f"prediction_ensemble_{ensemble}"] = member_predictions
+    pd.DataFrame(prediction_columns).to_csv(prediction_path, index=False)
     report = {
         "mode": config.mode,
         "target_group": group,
@@ -1047,7 +1077,8 @@ def evaluate_checkpoints(
             "train" if config.full_fusion else "eval"
         ),
         "num_examples": len(reference.labels),
-        "ensembles": config.ensembles,
+        "ensembles": len(selected_ensembles),
+        "ensemble_indices": list(selected_ensembles),
         "metrics": metrics,
         "checkpoint_stored_metrics": checkpoint_metrics,
         "predictions": str(prediction_path),
@@ -1179,6 +1210,16 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--device", type=int, default=0)
     parser.add_argument("--epochs", type=int)
     parser.add_argument("--ensembles", type=int)
+    parser.add_argument(
+        "--ensemble-index",
+        type=int,
+        action="append",
+        dest="ensemble_indices",
+        help=(
+            "Evaluate or train only this original zero-based ensemble member; "
+            "repeat the option to select multiple members."
+        ),
+    )
     parser.add_argument("--weight-decay", type=float)
     parser.add_argument("--output-dir", type=Path)
     parser.add_argument("--dry-run", action="store_true")
@@ -1252,6 +1293,7 @@ def main(argv: Sequence[str] | None = None) -> dict[str, Any]:
             device=device,
             checkpoint_dir=checkpoint_dir,
             results_dir=results_dir,
+            ensemble_indices=args.ensemble_indices,
         )
     configure_logging(config.paths.output_dir, group=args.test_group, fold=args.fold)
     return run_training(
@@ -1262,6 +1304,7 @@ def main(argv: Sequence[str] | None = None) -> dict[str, Any]:
         genome_dim=genome_dim,
         text_dim=text_dim,
         device=device,
+        ensemble_indices=args.ensemble_indices,
     )
 
 

@@ -236,6 +236,24 @@
 - full-fusion 的 held-target selection 中 classification head 历史上未调用 `eval()`，dropout
   仍然开启；checkpoint 的 AUPRC 又在 AUROC 改善保存之后才更新。这两项不理想行为均由
   canonical runner 和测试明确冻结，不得在无新实验的情况下“修正”。
+- **2026-07-20 reviewer 修订运行：** strict zero-shot 的 30 个 checkpoint 已全部完成确定性
+  H100 推理并导出样本级预测；三个目标的 AUROC/AUPRC 分别为
+  `0.93504/0.58738`、`0.72408/0.32098`、`0.76741/0.16562`。统一 Chemprop baseline 与
+  paired bootstrap/randomization/Holm 入口已经实现，完整 OOF 仍在运行。
+- **baseline 血缘纠正：** 当前 Fig. 1b 对 A. baumannii 使用的 `0.756/0.266` 是 Liu 2023
+  的 no-RDKit ablation；该论文 RDKit 主模型约为 `0.792/0.337`。修订比较应使用主模型协议，
+  原数值仅保留为历史绘图事实。
+- **Chemprop eligibility 边界：** E. coli 的 `ce_2244` 含 RDKit 拒绝的异常铝配位价态；
+  既有 KFold 不重排，配对比较时从两方同时排除并登记。S. aureus 中同结构已被原 512-token
+  过滤排除。
+
+#### node002 非破坏性同步（2026-07-20）
+
+- 旧目录 `/data1/tianang/Projects/Synergy` 保持原位且未修改；源码/config 936 个文件已做
+  SHA-256，11,340 个非源码资产只登记路径、大小和 mtime。snapshot 位于
+  `/data1/tianang/Projects/_legacy_manifests/Synergy_legacy_2026-07-20`，扫描错误为 0。
+- 重构代码运行副本为 `/data1/tianang/Projects/Synergy_release`；reviewer 补实验输出统一写到
+  `/data1/tianang/Projects/ApexOracle_revision_runs`，不得写回旧 checkpoint/data 目录。
 
 #### Synergy 与后续 in-house 实验
 

@@ -1,0 +1,58 @@
+schema_version: 1
+protocol: fig1b_common_outer_folds_chemprop_sensitivity
+description: >-
+  使用 ApexOracle fine-tune 的固定五折 test membership；每个 outer-train
+  内再按标签分层划出 12.5% validation，outer test 不参与 checkpoint 选择。
+
+tokenized_records: DataPrepare/Data/small_molecule/processed/small_molecule_Evo_binary_data_SELFIES.csv
+max_token_length: 512
+outer_folds: 5
+outer_seed: 42
+validation_fraction_of_outer_train: 0.125
+validation_seed: 4200
+
+chemprop:
+  version: 1.5.2
+  epochs: 30
+  batch_size: 50
+  init_lr: 1.0e-4
+  max_lr: 1.0e-3
+  final_lr: 1.0e-4
+  features_generator: rdkit_2d_normalized
+  no_features_scaling: true
+  checkpoint_metric: auc
+  reported_metrics: [prc-auc]
+
+targets:
+  - group: 0
+    strain: "#004"
+    display_name: E. coli BW25113
+    records: DataPrepare/Data/small_molecule/processed/cell~Escherichia_coli_BW25113~#004.csv
+    profile: stokes2020
+  - group: 1
+    strain: "17978"
+    display_name: A. baumannii ATCC 17978
+    records: DataPrepare/Data/small_molecule/processed/chem_bio_relative_growth~Acinetobacter_baumannii_ATCC_17978.csv
+    profile: liu2023
+  - group: 2
+    strain: Staphylococcus aureus RN4220
+    display_name: S. aureus RN4220
+    records: DataPrepare/Data/small_molecule/processed/nature_1_positive~Staphylococcus_aureus_RN4220.csv
+    profile: wong2024
+
+profiles:
+  stokes2020:
+    depth: 5
+    dropout: 0.35
+    ffn_num_layers: 1
+    hidden_size: 1600
+  liu2023:
+    depth: 3
+    dropout: 0.0
+    ffn_num_layers: 2
+    hidden_size: 300
+  wong2024:
+    depth: 5
+    dropout: 0.35
+    ffn_num_layers: 3
+    hidden_size: 1600

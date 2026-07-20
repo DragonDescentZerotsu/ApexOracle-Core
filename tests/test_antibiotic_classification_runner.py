@@ -14,6 +14,7 @@ from apexoracle.training.antibiotic_classification_runner import (
     build_full_fusion_model,
     evaluate_target,
     load_checkpoint_into_model,
+    normalize_ensemble_indices,
 )
 
 
@@ -79,6 +80,18 @@ def _small_config(tmp_path: Path) -> AntibioticClassificationConfig:
         evidence="synthetic_test",
         paths=paths,
     )
+
+
+def test_ensemble_subset_keeps_original_member_numbers(tmp_path):
+    config = _small_config(tmp_path)
+    object.__setattr__(config, "ensembles", 3)
+    object.__setattr__(config, "ensemble_seeds", (42, 2024, 2025))
+    assert normalize_ensemble_indices(config, None) == (0, 1, 2)
+    assert normalize_ensemble_indices(config, [2, 0]) == (2, 0)
+    with pytest.raises(ValueError, match="Duplicate"):
+        normalize_ensemble_indices(config, [1, 1])
+    with pytest.raises(ValueError, match="must be in"):
+        normalize_ensemble_indices(config, [3])
 
 
 def _batch(*, device: torch.device, has_genome: bool, classification: bool) -> dict:

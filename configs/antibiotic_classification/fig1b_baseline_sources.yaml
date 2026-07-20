@@ -1,0 +1,32 @@
+schema_version: 1
+sources:
+  stokes2020:
+    publication: Stokes et al., Cell 2020
+    doi: 10.1016/j.cell.2020.01.021
+    code_and_models: https://doi.org/10.5281/zenodo.6527883
+    downloaded_archive_md5: dc1d77c8cc59f2cc4915bb45d8c4c7bf
+    historical_chemprop_commit: 3ce99db967b1bb3f9fb13cc9eaf8d604760314ca
+    commit_status: inferred_from_training_date_not_recorded_by_publication
+    implementation_note: architecture_and_hyperparameters_replayed_with_chemprop_1.5.2
+    published_auroc: 0.896
+    published_auprc: null
+  liu2023:
+    publication: Liu et al., Nature Chemical Biology 2023
+    doi: 10.1038/s41589-023-01349-8
+    repository: https://github.com/GaryLiu152/chemprop_abaucin
+    revision: 85f37d7adee00cedb96160fc54de67b912863c82
+    repository_license: not_declared
+    implementation_note: architecture_and_hyperparameters_replayed_with_chemprop_1.5.2
+    published_main_model_auroc_mean: 0.792
+    published_main_model_auprc_mean: 0.337
+    published_no_rdkit_ablation_auroc_mean: 0.756
+    published_no_rdkit_ablation_auprc_mean: 0.266
+  wong2024:
+    publication: Wong et al., Nature 2024
+    doi: 10.1038/s41586-023-06887-8
+    repository: https://github.com/felixjwong/antibioticsai
+    revision: 83403d483def9aa6a90df850b3d0454b3030cf47
+    reported_chemprop_revision: 9c8ff4074bd89b93f43a21adc49b458b0cab9e7f
+    repository_license: MIT
+    implementation_note: architecture_and_hyperparameters_replayed_with_chemprop_1.5.2
+    published_auprc: 0.364

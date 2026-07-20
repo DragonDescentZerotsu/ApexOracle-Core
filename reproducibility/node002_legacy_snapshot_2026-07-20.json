@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "created_date": "2026-07-20",
+  "host": "node002",
+  "legacy_root": "/data1/tianang/Projects/Synergy",
+  "legacy_root_modified": false,
+  "snapshot_root": "/data1/tianang/Projects/_legacy_manifests/Synergy_legacy_2026-07-20",
+  "release_clone": "/data1/tianang/Projects/Synergy_release",
+  "revision_run_root": "/data1/tianang/Projects/ApexOracle_revision_runs",
+  "release_initial_commit": "4db6dc153e812c6ee712aca96427cf041a38ce60",
+  "release_initial_tree": "eb85a48404c6e8a6b366800f51906436b1f58761",
+  "source_files": {
+    "count": 936,
+    "bytes": 14290245,
+    "sha256_manifest_sha256": "6fec3dee7817e5d8ba04900e8253e0af58e382fdcc4670882b0119da92332c46"
+  },
+  "non_source_assets": {
+    "count": 11340,
+    "bytes": 4229049429285,
+    "inventory_sha256": "8a70bdb6b489c35ac935f98581938c6b9ca5ef8c78025118a7db1bd9ddfb0053",
+    "inventory_fields": [
+      "relative_path",
+      "size_bytes",
+      "mtime_ns"
+    ],
+    "content_copied": false
+  },
+  "source_archive": {
+    "filename": "legacy_source.tar.gz",
+    "sha256": "e5662585ecf795a0054c261aa7c6948973e374947bf6db5b44a656588045abf5"
+  },
+  "top_level_summary_sha256": "508e2b8a34bc69a00f93220f3a6c301f564fe82d7735d6ad972b7c8b5b4ffc00",
+  "scan_errors": 0,
+  "interpretation": "The old directory remains the immutable operational archive; the release clone and revision-run root receive all new code and outputs."
+}

@@ -62,4 +62,39 @@ python scripts/audit/audit_antibiotic_classification_checkpoints.py \
 
 - fine-tune 结果证据不完整，不应从现存 77 个 checkpoint 推断完整五折正式结果。
 - 本阶段没有重新训练 30 个 strict zero-shot ensemble；保留并验证的是原行为和已有 checkpoint 推理。
-- group 1/2 的其余 29 个 strict checkpoint 已完成文件网格审计，尚未逐文件做 H100 推理；高置信度正式日志数值保持不变。
+- strict checkpoint 的历史训练时 dropout prediction 仍不可逐 bit 恢复；当前 30 个 checkpoint
+  已完成的是统一 `eval()` 契约下的确定性推理。
+
+## Reviewer 修订：三菌株统一 AUPRC 与显著性（执行中）
+
+Reviewer 要求 Fig. 1b 对三个菌株一致报告 AUPRC，并为“优于 baseline”的表述提供统计检验。
+本阶段新增两个彼此分离的入口：
+
+- `scripts/reproduce/run_fig1b_chemprop_baselines.py`：按三个原论文的 Chemprop/RDKit
+  结构，在 ApexOracle 的固定 outer folds 上训练 baseline；outer-train 内部另划 validation，
+  outer test 不参与 checkpoint 选择。
+- `scripts/reproduce/analyze_fig1b_significance.py`：对同一样本上的预测执行分层 paired
+  bootstrap 95% CI 和双侧 prediction-swap randomization test，并在同一指标族内做 Holm 校正。
+
+已验证事实：
+
+- strict zero-shot 的全部 30 个 checkpoint 已在 H100 上完成确定性 ensemble inference，样本级
+  预测分别覆盖 2,335、7,684、39,311 个样本；AUROC/AUPRC 为
+  `0.93504/0.58738`、`0.72408/0.32098`、`0.76741/0.16562`。
+- Liu 2023 主模型使用 RDKit descriptors，公开十折结果约为 AUROC/AUPRC
+  `0.792/0.337`；当前 Fig. 1b 的 `0.756/0.266` 实际对应该论文的 no-RDKit ablation，
+  不能继续标成主 baseline。
+- E. coli 有 1 个 MDLM 可处理、但 RDKit 因异常铝配位价态拒绝的 SMILES。固定 KFold
+  membership 不重排；该样本只在配对统计时从双方同时排除，并写入 exclusions。
+- node002 的隔离环境固定为 Chemprop 1.5.2、RDKit 2025.03.5；PyTorch 2.7 加载受信任的
+  Chemprop 1.x checkpoint 时显式设置 `TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD=1`，不改权重内容。
+
+当前运行状态：node002 的 8 张 A100 正在并行补三个 baseline 的其余 folds；本机 H100 正在
+导出 fine-tune 历史 checkpoint 的样本级预测，并补 RN4220 完全缺失的 fold 4。正式统计、
+绘图和文稿数值必须等待全部 OOF 预测汇总后再更新，不能使用单 fold smoke 数值。
+
+node002 运行环境是
+`/data1/tianang/Projects/.venvs/fig1b-chemprop-v1`：Python 3.12.7、Chemprop 1.5.2、
+RDKit 2025.03.5、PyTorch 2.7.1+cu126、Pandas 2.2.2、scikit-learn 1.8.0。
+该 venv 使用 `--system-site-packages` 继承 node002 的 CUDA PyTorch；Chemprop 与新版 Pandas
+不兼容的旧 RDKit 2023 已在 venv 内由 RDKit 2025.03.5 覆盖，未修改 conda base。
