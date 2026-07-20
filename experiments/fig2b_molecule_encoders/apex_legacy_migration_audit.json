@@ -1,20 +1,28 @@
 {
-  "schema_version": 1,
-  "status": "strictly_equivalent_support_code_migration",
+  "schema_version": 2,
+  "status": "strictly_equivalent_support_code_and_asset_migration",
   "legacy_sources": {
     "compare_APEX/APEX_models.py": "b46fcbc61499492b0b6145f9cbc8bd150a5585c786a402d06b5ac0524e3a8a9a",
     "compare_APEX/utils.py": "b4e107ec50cdf5656c89d47da834e1b112aa3762b865c10da79271cc9e92b088",
     "compare_APEX/fine_tune_on_DBAASP_SMILES.py": "c3f69f98947e8d6e696ab0eab17b68f2c9622b948a47ebe2eb2d801ebfa78447"
   },
   "paper_assets": {
-    "compare_APEX/aaindex1.csv": {
+    "resources/reference/apex/aaindex1.csv": {
+      "legacy_path": "compare_APEX/aaindex1.csv",
       "sha256": "478510fa4ee5e23c871558789a3f8450c20615b82dc294794a24bfe55e2bfaef",
-      "redistribution": "ignored_local_asset"
+      "redistribution": "ignored_local_asset_installed_from_official_APEX_source"
     },
-    "compare_APEX/APEX_ckpt/APEX_pretrained_encoder_state_dict_best.ckpt": {
+    "weights/molecule_encoders/apex/APEX_pretrained_encoder_state_dict_best.ckpt": {
+      "legacy_path": "compare_APEX/APEX_ckpt/APEX_pretrained_encoder_state_dict_best.ckpt",
+      "manifest_id": "fig2b_apex_encoder",
       "sha256": "a4b37338b1a26aff64c97b9aa3bbabf6874edf5805415e082f2e3bdf28d1b2b9",
       "redistribution": "ignored_local_weight"
     }
+  },
+  "legacy_archive": {
+    "path": "/data2/tianang/projects/ApexOracle_legacy_assets/compare_APEX_archive_2026-07-20",
+    "bytes": 195404088,
+    "historical_checkpoint_and_wandb_files_deleted": 0
   },
   "fixed_batch": {
     "sequences": ["ACDEFGHIK", "AXD", "A repeated 60 times", "C"],

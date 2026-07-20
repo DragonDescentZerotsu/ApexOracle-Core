@@ -1,12 +1,12 @@
 schema_version: 1
-last_updated: 2026-07-19
+last_updated: 2026-07-20
 
 storage_policy:
   manifest_role: canonical_weight_registry
   binaries_tracked_in_git: false
   local_root_env: APEXORACLE_WEIGHTS_DIR
   default_local_root: weights
-  migration_status: planned_not_moved
+  migration_status: apex_encoder_migrated_other_weights_pending
   release_requirement: every_local_file_requires_sha256_size_and_download_uri
 
 weights:
@@ -109,10 +109,10 @@ weights:
     paper_label: APEX
     tasks:
       - fig2b_shared_molecule_encoder_benchmark
-    decision_status: original_implementation_and_checkpoint_preserved
+    decision_status: original_implementation_checkpoint_migrated_and_verified
     source:
       kind: local_repo_ignored_binary
-      current_path: compare_APEX/APEX_ckpt/APEX_pretrained_encoder_state_dict_best.ckpt
+      current_path: weights/molecule_encoders/apex/APEX_pretrained_encoder_state_dict_best.ckpt
       sha256: a4b37338b1a26aff64c97b9aa3bbabf6874edf5805415e082f2e3bdf28d1b2b9
       size_bytes: 4873912
     model:

@@ -159,7 +159,7 @@
 | Fig. 1b 严格 target-strain zero-shot 小分子分类 | canonical 入口 `scripts/reproduce/run_antibiotic_classification.py --mode strict-zero-shot`；checkpoint：`.../antibiotic_3_strain_compare/MDLM_fix_cls_sm_all_test_10_fold_ensembles` | **最终版 / 高置信度，已完成行为保持迁移。** 完整 held-out target-strain 数据不进入训练，但仍逐 epoch 用于 best-AUROC checkpoint selection。完整 ensemble 指标：E. coli `#004` 为 0.9360 AUROC / 0.5890 AUPRC；A. baumannii 17978 为 0.7262 / 0.3243；S. aureus RN4220 为 0.7679 / 0.1655。30 个 checkpoint 和 3 个完成日志网格完整；group 0 / ensemble 0 已在 H100 上与 capsule 做到 2,335 条 logit 逐值一致。 |
 | Fig. 1b fine-tuned ApexOracle | 同一入口的 `--mode fine-tune --fold N`；checkpoint：`MDLM_fix_cls_10_fold_ensembles` | **代码路径已统一 / 历史结果证据不完整。** 合并本机与 node002 后恢复 104/150 个 checkpoint 和 10/15 个完整 fold ensemble；E. coli 五折 AUROC `0.96114` 与绘图 `0.962` 接近，其余目标仍不完整。作者决定不再追查旧产物，只要求 canonical 代码正确运行。`--mode molecule-only` 对应旧 `wo_SAND`。 |
 | Synergy 二分类结果 | canonical 入口 `scripts/reproduce/run_synergy_cv.py`；配置 `configs/synergy/legacy_cv.yaml`；checkpoint：`.../strain_wise_synergy/MDLM_3_fold_ensembles_1_base_model_cls` | **论文高置信度复现候选 / 重构完成。** 使用 `synergistic_pairs_Evo.csv`、strain-wise 三折、单个完整 MIC base 和 7-member ensemble。现存 mean AUROC/AUPRC `0.7598/0.7440` 与论文 `0.7539/0.7454` 的绝对差为 `0.0059/0.0014`；作者确认接受为论文实现的高置信度复现候选。它不是精确原始 checkpoint 声明；rank 1024/100-epoch base 与 Methods rank 64/13 epochs 的差异继续披露。root driver 已归档删除。 |
-| Synergy 候选使用的完整数据 MIC base model | `train_on_all_data.py`；checkpoint 家族 `Checkpoints/genome_text_learnable_emb/guidance_regressor_pad_no_mask`，尤其是 `noise_guidance_best_R2_all_peptide_epoch_100.pth` | 这是现存三折候选 driver 实际加载的最匹配 base model，但 Methods 写 13 epochs，而该文件来自 100-epoch run，精确论文身份仍未解决。 |
+| Synergy 候选使用的完整数据 MIC base model | 外部 MDLM producer `/data2/tianang/projects/mdlm/guaidance_regressor_all_data_pad_no_mask.py`；checkpoint `Checkpoints/genome_text_learnable_emb/guidance_regressor_pad_no_mask/noise_guidance_best_R2_all_peptide_epoch_100.pth` | 这是现存三折候选实际加载的最匹配 base model，但 Methods 写 13 epochs，而该文件来自 100-epoch run，精确论文身份仍未解决。历史 `train_on_all_data.py` 不是该权重的 producer，已按 SHA 归档删除。 |
 | Guided molecule generation、remasking sampler 和 256-step 三阶段 guidance | 不在当前仓库；分析脚本指向 `/data2/tianang/projects/discrete-diffusion-guidance` | **外部依赖 / 缺失。** 当前仓库包含 predictor、保存的输出或图片以及 similarity 分析，但不包含实际生成 ApexOracle-3/12/23 的 sampler。论文参数为 256 steps、MIC target 1、sigma 从 0.5 线性降到 0.2、`t_on=0.55`、`t_off=0.45`，两个阶段的 guidance strength 为 15。 |
 | Fig. 3（TeX 中使用文件 `Fig4.pdf`）guided/unguided 预测和最终验证分子 | `DataPrepare/Morgan_fingerprint_sim_generation*.py` 中的派生分析和外部 guidance 仓库 | **复现链仍不完整。** 实际 guided sampler、候选生成和湿实验选择链尚未形成自包含流程；论文后 BAA-3170 prospective synergy screening 不是该论文结果，已按 paper-only 决策移出当前工作树。 |
 | 附录 modality ablation | 最终绘图值：`experiments/modality_ablation/paper_values.csv`；绘图入口：`scripts/reproduce/plot_modality_ablation.py`；候选血缘审计：`experiments/modality_ablation/candidate_lineage.json` | **论文图可复现 / 代码收尾完成。** Mac 最终 notebook 的 12 个 R² 已逐项冻结；现存 checkpoint 仍无法精确连接到 ensemble 数值，因此不支持训练重跑。15 个会原地覆盖中间 CSV 的 legacy driver 已按哈希归档删除，原始数据未修改。 |
@@ -189,8 +189,11 @@
 - `fine_tune_on_DBAASP_SMILES_5_fold_mean_MIC.py`、三个 `*_compare*`、all-data 和 in-house
   ChemBERTa driver 均为历史版本，已于 2026-07-19 从工作树删除；由
   `legacy-code-snapshot-2026-07-17` tag 恢复。
-- ChemBERTa-MTR、ChemBERTa-MLM、MolFormer 和 PeptideCLM 应优先使用 `fix_*_on_DBAASP_SMILES_5_fold_mean_MIC.py`。`fix_ChemBERTa_MLM_mean_emb_*` 是 mean-pooling 消融；当前论文图中的 ChemBERTa-MLM bar 使用 first-token 版本。
-- DLM/MTR benchmark 源代码位于外部 `mdlm` 项目；capsule 中的副本只是审计快照，不能视为第二套 canonical 实现。
+- ChemBERTa-MTR、ChemBERTa-MLM、MolFormer、PeptideCLM 和 APEX 统一使用
+  `scripts/reproduce_fig2b_baselines_online_5fold.py`。五个 root `fix_*` 只通过
+  `legacy-code-snapshot-2026-07-17` 和清理 manifest 追溯；未汇报的 mean-pooling 变体不再位于发布入口。
+- DLM/MTR benchmark 源代码位于外部 `mdlm` 项目；当前仓库只维护 canonical thin runner，
+  不再保留 capsule 内第二份外部原始 driver。
 - **已由 checkpoint 和日志验证的事实：** `/data2/tianang/projects/mdlm/Checkpoints_fangping/best.ckpt` 是 24-layer、hidden size 1024、global step 800046 的 checkpoint，并含有 `backbone.regression.*` 四个 209-descriptor regression 参数，因此属于 MTR+DLM 家族；当前 `capsule_fig2` 将它用于 `mdlm_dlm_mtr` 是有模型结构依据的。
 - **已由 checkpoint 验证的事实：** `best_1.ckpt`、`best_2.ckpt`、`best_3.ckpt`、`1-314000.ckpt`、`2-471000.ckpt` 和 `4-750000.ckpt` 均为 12-layer、hidden size 768 的纯 DLM checkpoint，不含 `backbone.regression.*`。DLM-only 的基础训练实现位于外部仓库的 `diffusion.py`、`models/dit.py` 和相关配置；`DBAASP_MLM_MDLM.py` 是其下游五折 MIC head 代码家族。
 - **根据现有证据作出的推断：** `wandb/run-20250421_231424-s58d1559/files/output.log` 的五个 fold 最佳 mean R2 为 0.4132、0.3529、0.4400、0.4134、0.4222，均值约 0.4083，与论文 DLM MLM bar 对应。结合运行时间，最可能使用的是当时已存在的 `best_2.ckpt`；旧日志没有保存实际 checkpoint 路径，因此仍需用新 benchmark 在共享数据协议下核验，不能把 `best_2.ckpt` 记为已完全确认的论文终版。
@@ -215,11 +218,12 @@
 - **随机性边界：** 原训练脚本没有显式设置 PyTorch seed，本次没有额外添加 seed；每个任务在 `metrics.json` 中记录了 `initial_torch_seed`。因此正式表是一轮忠实的 stochastic rerun，不应声称跨硬件逐 bit 可复现。固定 `random_state=42` 的是共同 molecule-level 五折 membership。
 - **MolFormer 兼容性固定：** 正式运行使用本地完整缓存的 `ibm/MoLFormer-XL-both-10pct` revision `7b12d946c181a37f6012b9dc3b002275de070314`。Hugging Face 当前 `main` revision 依赖本环境不存在的 `transformers.masking_utils`；固定历史 revision 只恢复原兼容代码和已有权重，没有改变模型结构、checkpoint 或训练超参数。
 - **运行环境事实：** 正式任务中 GPU 1 曾达到 88°C 并触发 software thermal slowdown，因此未完成的任务被重新分配到其他健康 GPU；GPU driver 本身正常。最终纳入汇总的所有 fold 都是完整从 epoch 1 跑到 200 且退出码为 0 的任务。
-- 历史 `compare_APEX` 的最终 driver、早期/debug driver、trainer、model、utils 和 launcher 已于
-  2026-07-19 删除并由 legacy tag 追溯。实际消费的 APEX encoder、AAindex loader、token adapter、
-  masked loss 和 R² 已迁入 `src/apexoracle/benchmarks/molecule_encoders/`；真实 checkpoint
-  严格加载，固定批 feature 与 legacy 逐字节相同。`compare_APEX` 路径下只保留被 Git 忽略的
-  `aaindex1.csv` 和本地 checkpoint data assets。
+- 历史 `compare_APEX` 的源码已由 legacy tag 追溯。实际消费的 APEX encoder、AAindex loader、
+  token adapter、masked loss 和 R² 已迁入 `src/apexoracle/benchmarks/molecule_encoders/`；最佳
+  checkpoint 已迁至 `${APEXORACLE_WEIGHTS_DIR:-weights}/molecule_encoders/apex/` 并由 manifest
+  ID 解析，AAindex 位于 ignored `resources/reference/apex/`。其余历史 checkpoint 和 265 个
+  W&B 文件完整迁到 `/data2/tianang/projects/ApexOracle_legacy_assets/compare_APEX_archive_2026-07-20`，
+  没有删除。
 
 #### 小分子抗生素分类
 
@@ -397,7 +401,9 @@ Strain count mapping 的演化顺序如下：
   被任何论文入口引用；已于 2026-07-19 从工作树删除并由 legacy tag 保留。
 - `e3nn_playground/` 的 4 个教程文件没有被 ApexOracle import；已于 2026-07-19 删除并由
   legacy tag 保留。
-- `PeptideCLM/`：打包进来的第三方 PeptideCLM tokenizer、example 和 notebook，用于 PeptideCLM comparator，但不是 ApexOracle 自有核心代码。必须保留其 README/LICENSE，并明确标注 vendored 来源。
+- PeptideCLM runtime 只保留在 `src/apexoracle/vendor/peptideclm_tokenizer/`：SMILES SPE tokenizer、
+  vocab、merges、MIT LICENSE 和来源说明。旧教程、notebook、clustered dataset 与未使用 tokenizer
+  已删除；代表性 token IDs/masks/decode 与旧实现逐项一致。
 - `GPU_eye.py`、`run_full.py` 和故意占用 GPU 的 `run.py` 是非科学资源工具；已于 2026-07-19
   删除并由 legacy tag 保留。
 - `bash/PeptideCLM_benchmarking.sh` 是指向已迁移 root driver 的历史 CESGA launcher，已随 Fig. 2c
@@ -421,25 +427,25 @@ Strain count mapping 的演化顺序如下：
   数据哈希；发布工作树只保留冻结数值、绘图配置、绘图入口和测试。
 - **已删除的 Fig. 2b 历史副本：** `fine_tune_on_DBAASP_SMILES_5_fold_compare_pre_SSL.py`、
   `fine_tune_on_DBAASP_SMILES_5_fold_compare_SSL.py` 及同家族四个早期/all-data/in-house driver。
-  `fix_ChemBERTa_MLM_mean_emb_on_DBAASP_SMILES_5_fold_mean_MIC.py` 仍作为可选 pooling
-  comparator provenance 保留。
+  五个 root `fix_*` 和 mean-pooling diagnostic。全部由 2026-07-20 清理 manifest 和 legacy tag
+  恢复，主发布入口只含论文汇报的七个模型。
 - **已删除的非论文 Synergy 副本：** early/prototype、continuous-FICI、all-data、in-house、
   few-shot、guidance、prospective regression/screening 代码均由 paper-only 清理 manifest 追溯；
   当前只保留论文三折 classification 候选及 canonical CV 入口。
 - 生成分子的 fingerprint 变体：`DataPrepare/Morgan_fingerprint_sim_generation_SM_rediscover.py`。
-- `DataPrepare/__init__.py`、`compare_APEX/__init__.py`、`PeptideCLM/__init__.py` 和 `PeptideCLM/tokenizer/__init__.py` 只是 package marker，不包含实验逻辑。
-- 第三方 PeptideCLM 文件：`PeptideCLM/example_training_script.py`、`PeptideCLM/tokenizer/my_tokenizers.py`、`PeptideCLM/All_CycPeptMPDB_Predictions.ipynb`、`PeptideCLM/CycPeptMPDB_clustering_and_analysis.ipynb`。它们属于上游 comparator 或 tutorial bundle，不属于 ApexOracle pipeline。
+- 已删除的 `compare_APEX/__init__.py`、`PeptideCLM/__init__.py` 和旧 tokenizer marker 不包含实验逻辑；
+  精确文件身份记录在 cleanup manifest。
 
 ### Capsule 与审稿复现历史
 
-- `capsule/` 是大型本地 staging capsule，包含三个 inference-only 路径：最终 strain-wise Fig. 1a/Fig. 2c DLM ensemble、Fig. 1b strict zero-shot classification 和 Fig. 2b cached benchmark。其规模约 157 GB，主要因为 strain-wise checkpoint 和 genome/text embedding 很大。该目录自己的 `AGENTS.md` 记录了详细 resource manifest 和 T4 显存说明。
-- `capsule_fig2/` 是实际受存储限制的 Code Ocean capsule，只包含 **Fig. 2b**，约 212 MB。`code/run` 重新加载 frozen feature cache 和五个 regression head，不进行训练或 backbone feature extraction。
-- `capsule*/data/source/` 中曾 tracked 的 24 份重复 provenance snapshot 已于 2026-07-19
-  删除；resource builder 现在从 canonical module 生成 source bundle，历史副本由 legacy tag 保留。
-- `capsule/code/reproduce_non_seen_strains_mdlm_mtr_fix.py` 重新评估最终 3-group × 7-ensemble strain-wise 结果；旧资源打包脚本已在 unified runner 完成后删除并由 legacy tag 保留。`prepare_zero_shot_antibiotic_classification_resources.py` 和 `reproduce_zero_shot_antibiotic_classification.py` 对 3-group × 10-ensemble strict zero-shot 结果执行同样操作。`prepare_fig2b_mic_regression_resources.py` 和 `reproduce_fig2b_mic_regression.py` 构建或运行 cached Fig. 2b 路径。`capsule/code/run` 在三种模式之间分派。
-- `capsule_fig2/code/prepare_fig2b_mic_regression_resources.py`、`reproduce_fig2b_mic_regression.py`
-  和 `code/run` 是只保留 Fig. 2b 的精简 capsule；builder 已改为复制 canonical APEX modules，
-  不再依赖被删除的 `compare_APEX` Python 目录。
+- 从未上传的 `capsule/` 本地 staging 曾占 168,375,793,924 bytes、含 2,968 个派生文件；确认
+  当前代码无消费者后已于 2026-07-20 删除。没有删除其来源数据或主 checkpoint，代码由 canonical
+  runner 和 legacy tag 追溯。
+- `capsule_fig2/` 已重构为约 256 KB 的正式共享 benchmark 审计包。`code/run` 从冻结的 35-fold
+  指标重新计算七模型 mean R²/sample SD，并验证 10,886 个 molecule 的 fold 覆盖；不再携带
+  feature cache、head checkpoint、mean-pooling diagnostic 或 root legacy driver。
+- `capsule_fig2/code/prepare_fig2b_mic_regression_resources.py` 只打包 canonical modules、配置、
+  实验 README、migration audit 和最终小型指标文件。
 - 审稿阶段的 `scripts/`：
   - `reproduce_fig2b_mdlm_cached_5fold.py`：使用外部 `mdlm` cache 或评估 DLM feature。
   - `reproduce_fig2b_baselines_online_5fold.py`：在线提取 baseline feature 并训练或评估 head。
@@ -447,7 +453,8 @@ Strain count mapping 的演化顺序如下：
   - `reproduce_fig2b_baselines_cached_5fold.py`：基于 cache 的 baseline evaluation。
   - `reproduce_fig2b_apex_original_5fold.py`：APEX reproduction driver。
   - `sweep_fig2b_cached_baseline_seeds.py`：用于诊断或协调 Fig. 2b 差异的 seed sweep。
-- Capsule 的派生 Fig. 2b 指标不能精确匹配当前论文图中的每一个值，而且包含一个当前图中未绘制的 ChemBERTa-MLM mean-pooling 结果。应把 capsule 保留为审稿复现产物，不能用它悄悄替代原始论文结果来源。
+- 当前 `capsule_fig2` 精确审计修订后的正式共同数据汇总；它验证已保存指标，不替代 35-fold
+  训练，也不声称从模型权重重新生成预测。
 
 ### 已知复现缺口与不一致
 

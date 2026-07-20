@@ -430,6 +430,12 @@ metrics 完全一致；group 1 当前动态 hash split 多 5 条，继续按既�
 - [x] `Fangping_correlation/`、`e3nn_playground/`；
 - [x] `GPU_eye.py`、`run.py`、`run_full.py` 等资源占用工具；
 - [x] tracked capsule 重复源码；W&B 本地日志、缓存和旧结果继续由 `.gitignore` 排除；
+- [x] 根目录 `train_on_all_data.py` 和五个 `fix_*` Fig. 2b driver：逐文件 SHA、用途和恢复点已
+  冻结，canonical consumers 验证后删除；
+- [x] `compare_APEX/`：最佳 checkpoint 与 AAindex 已迁到 canonical ignored 资源位置，其余
+  checkpoint/W&B 完整外移到 legacy archive；
+- [x] `PeptideCLM/`：精简为 `src/apexoracle/vendor/peptideclm_tokenizer/` 并完成 token 等价验证；
+- [x] 未上传的 168 GB `capsule/` 派生 staging 删除；`capsule_fig2/` 改为正式 35-fold 轻量审计包；
 - [ ] 仍服务于外部 DLM preprocessing 的机器专用 shell，以及证据未冻结的 launcher。
 
 执行进度（2026-07-19）：已完成第一批发布清理，共删除 59 个 tracked 文件、未删除任何数据、
@@ -440,13 +446,15 @@ checkpoint 或结果。范围包括 11 个 `Fangping_correlation` 旁支文件�
 
 删除 `compare_APEX` 源码前，实际消费的 APEX encoder、AAindex loader、23-token adapter、masked
 loss 和 per-task R² 已迁入 `src/apexoracle/benchmarks/molecule_encoders/`。真实 checkpoint
-`strict=True` 加载，固定四序列的 legacy/canonical `(4,128)` feature SHA-256 完全相同；三个
-Fig. 2b runner、两个 Fig. 2b capsule builder 和 zero-shot capsule source builder 均已切换到
-canonical source。`compare_APEX/aaindex1.csv` 与 checkpoint 继续作为被 Git 忽略的 paper
-  assets 保留。synergy 与 modality root driver 随后都已在证据冻结和恢复点登记后删除；Fig. 2c
-  comparator 也已迁入 profiles 并删除 root 复制 driver。
+`strict=True` 加载，固定四序列的 legacy/canonical `(4,128)` feature SHA-256 完全相同。2026-07-20
+最佳 checkpoint 已迁到统一 `weights/` 根并通过 manifest ID 解析，AAindex 改为 ignored reference
+asset；其余历史 checkpoint 与 W&B 完整外移，未删除。synergy、modality 和 Fig. 2c root driver
+均已在证据冻结和恢复点登记后删除。
 
-`PeptideCLM/` 不作为自有核心代码维护。优先改为明确版本的外部依赖；如果必须 vendor，则只保留必要文件并完整保留上游 README、LICENSE 和来源说明。
+执行进度（2026-07-20）：上述 pre-generation root cleanup 已完成，精确 SHA、迁移路径、删除边界
+和恢复点见 `reproducibility/pre_generation_cleanup_2026-07-20.json`。本阶段没有修改论文原始数据，
+没有删除训练 checkpoint。PeptideCLM 只 vendor 必需 tokenizer 资源并保留 MIT LICENSE；APEX
+AAindex 因非营利研究许可边界保持为 ignored 本地 reference asset。
 
 验收标准：根目录不再堆积实验副本；每个保留脚本都能对应公开文档中的明确任务。
 

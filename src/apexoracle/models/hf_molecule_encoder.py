@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import sys
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -44,15 +43,9 @@ def load_legacy_tokenizer(config: HFMoleculeEncoderConfig, repo_root: Path):
 
     config.validate()
     if config.tokenizer_kind == "vendored_peptideclm":
-        if str(repo_root) not in sys.path:
-            sys.path.insert(0, str(repo_root))
-        from PeptideCLM.tokenizer.my_tokenizers import SMILES_SPE_Tokenizer
+        from apexoracle.vendor.peptideclm_tokenizer import load_tokenizer
 
-        tokenizer_root = repo_root / "PeptideCLM" / "tokenizer"
-        return SMILES_SPE_Tokenizer(
-            tokenizer_root / "new_vocab.txt",
-            tokenizer_root / "new_splits.txt",
-        )
+        return load_tokenizer()
 
     from transformers import AutoTokenizer
 

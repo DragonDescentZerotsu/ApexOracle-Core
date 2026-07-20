@@ -33,8 +33,10 @@ index 23、平均 AAindex embedding 或更换原 `512→256` regression head。
 checkpoint 以 `strict=True` 加载，固定四序列的 legacy/canonical `(4,128)` feature SHA-256
 均为 `dd1ac1a9f359f60b55a83910cdd198b5aeca00788b2d5a8c6aa691d956643cb3`。三个 Fig. 2b
 runner 和 capsule resource builder 已切换到 canonical module；详细证据见
-`apex_legacy_migration_audit.json`。`compare_APEX/aaindex1.csv` 和 checkpoint 仍是 Git 忽略的
-本地 paper assets，不属于被删除的源码。
+`apex_legacy_migration_audit.json`。2026-07-20，checkpoint 已迁至统一 ignored `weights/` 根并通过
+`fig2b_apex_encoder` manifest ID 加载；AAindex 位于 ignored
+`resources/reference/apex/aaindex1.csv`，其上游许可和安装说明见同目录 README。其余历史 checkpoint
+与 W&B 记录完整迁入项目外 legacy archive，没有删除。
 
 ## 数据准备
 

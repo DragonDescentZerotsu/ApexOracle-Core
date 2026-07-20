@@ -14,12 +14,14 @@ if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
 from apexoracle.benchmarks.molecule_encoders.data import load_shared_benchmark
+from apexoracle.benchmarks.molecule_encoders.assets import apex_aaindex_path
 from apexoracle.benchmarks.molecule_encoders.encoders import (
     HF_ENCODERS,
     extract_apex_features,
     extract_hf_features,
 )
 from apexoracle.benchmarks.molecule_encoders.feature_cache import save_feature_cache
+from apexoracle.resources import resolve_weight
 
 
 def parse_args() -> argparse.Namespace:
@@ -33,11 +35,17 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--device", default="cpu")
     parser.add_argument("--batch-size", type=int, default=128)
-    parser.add_argument("--apex-root", type=Path, default=Path("compare_APEX"))
+    parser.add_argument(
+        "--apex-aaindex",
+        type=Path,
+        default=None,
+        help="Override the canonical local APEX aaindex1.csv asset.",
+    )
     parser.add_argument(
         "--apex-checkpoint",
         type=Path,
-        default=Path("compare_APEX/APEX_ckpt/APEX_pretrained_encoder_state_dict_best.ckpt"),
+        default=None,
+        help="Override the fig2b_apex_encoder manifest entry.",
     )
     return parser.parse_args()
 
@@ -46,10 +54,14 @@ def main() -> int:
     args = parse_args()
     benchmark = load_shared_benchmark(args.data_dir)
     if args.encoder == "apex":
+        aaindex = args.apex_aaindex or apex_aaindex_path(REPO_ROOT)
+        checkpoint = args.apex_checkpoint or resolve_weight(
+            "fig2b_apex_encoder", repo_root=REPO_ROOT
+        )
         cache = extract_apex_features(
             benchmark,
-            apex_root=args.apex_root,
-            checkpoint_path=args.apex_checkpoint,
+            aaindex_path=aaindex,
+            checkpoint_path=checkpoint,
             device=args.device,
             batch_size=args.batch_size,
         )

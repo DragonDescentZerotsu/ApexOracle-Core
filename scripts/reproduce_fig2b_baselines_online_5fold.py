@@ -42,12 +42,15 @@ from apexoracle.benchmarks.molecule_encoders.apex_model import (
     ApexEncoder,
     load_aaindex_embedding,
 )
+from apexoracle.benchmarks.molecule_encoders.assets import apex_aaindex_path
 from apexoracle.benchmarks.molecule_encoders.legacy_training import (
     LegacyMaskedMSELoss,
     finite_mean_or_nan,
     legacy_r2_per_task,
 )
 from apexoracle.benchmarks.molecule_encoders.protocol import DEFAULT_TARGET_COLUMNS
+from apexoracle.resources import resolve_weight
+from apexoracle.vendor.peptideclm_tokenizer import load_tokenizer as load_peptideclm_tokenizer
 
 
 DEFAULT_OUTPUT_DIR = REPO_ROOT / "Checkpoints" / "fig2b_baselines_online_5fold"
@@ -76,22 +79,14 @@ MODEL_SPECS = {
         kind="hf_smiles",
         hf_model="DeepChem/ChemBERTa-77M-MTR",
         hf_revision="66b895cab8adebea0cb59a8effa66b2020f204ca",
-        source_script="fix_ChemBERTa_on_DBAASP_SMILES_5_fold_mean_MIC.py",
+        source_script="legacy-code-snapshot-2026-07-17:fix_ChemBERTa_on_DBAASP_SMILES_5_fold_mean_MIC.py",
     ),
     "chemberta_mlm": ModelSpec(
         name="chemberta_mlm",
         kind="hf_smiles",
         hf_model="DeepChem/ChemBERTa-77M-MLM",
         hf_revision="ed8a5374f2024ec8da53760af91a33fb8f6a15ff",
-        source_script="fix_ChemBERTa_MLM_on_DBAASP_SMILES_5_fold_mean_MIC.py",
-    ),
-    "chemberta_mlm_mean": ModelSpec(
-        name="chemberta_mlm_mean",
-        kind="hf_smiles",
-        hf_model="DeepChem/ChemBERTa-77M-MLM",
-        hf_revision="ed8a5374f2024ec8da53760af91a33fb8f6a15ff",
-        pooling="mean",
-        source_script="fix_ChemBERTa_MLM_mean_emb_on_DBAASP_SMILES_5_fold_mean_MIC.py",
+        source_script="legacy-code-snapshot-2026-07-17:fix_ChemBERTa_MLM_on_DBAASP_SMILES_5_fold_mean_MIC.py",
     ),
     "molformer": ModelSpec(
         name="molformer",
@@ -101,14 +96,14 @@ MODEL_SPECS = {
         # Newer main revisions require a newer Transformers masking API.
         hf_revision="7b12d946c181a37f6012b9dc3b002275de070314",
         trust_remote_code=True,
-        source_script="fix_MolFormer_on_DBAASP_SMILES_5_fold_mean_MIC.py",
+        source_script="legacy-code-snapshot-2026-07-17:fix_MolFormer_on_DBAASP_SMILES_5_fold_mean_MIC.py",
     ),
     "peptideclm": ModelSpec(
         name="peptideclm",
         kind="peptideclm",
         hf_model="aaronfeller/PeptideCLM-23M-all",
         hf_revision="a0847d8231d236645a2c4f629590118716c6fdda",
-        source_script="fix_PeptideCLM_on_DBAASP_SMILES_5_fold_mean_MIC.py",
+        source_script="legacy-code-snapshot-2026-07-17:fix_PeptideCLM_on_DBAASP_SMILES_5_fold_mean_MIC.py",
     ),
     "apex": ModelSpec(
         name="apex",
@@ -116,7 +111,7 @@ MODEL_SPECS = {
         hidden_dim_1=512,
         hidden_dim_2=256,
         data_path=APEX_DATA,
-        source_script="compare_APEX/APEX_fix_train_DBAASP_MIC_5_fold_mean.py",
+        source_script="legacy-code-snapshot-2026-07-17:compare_APEX/APEX_fix_train_DBAASP_MIC_5_fold_mean.py",
     ),
 }
 
@@ -273,10 +268,7 @@ class HFRegressionModel(nn.Module):
 
 
 def get_peptideclm_tokenizer():
-    from PeptideCLM.tokenizer.my_tokenizers import SMILES_SPE_Tokenizer
-
-    pepclm_path = REPO_ROOT / "PeptideCLM"
-    return SMILES_SPE_Tokenizer(pepclm_path / "tokenizer" / "new_vocab.txt", pepclm_path / "tokenizer" / "new_splits.txt")
+    return load_peptideclm_tokenizer()
 
 
 def get_pad_token_id(tokenizer) -> int:
@@ -342,9 +334,7 @@ def build_apex_components(
     shared_dir: Path | None = None,
 ):
     word2idx, _ = build_apex_vocabulary()
-    emb, _ = load_aaindex_embedding(
-        REPO_ROOT / "compare_APEX" / "aaindex1.csv", word2idx
-    )
+    emb, _ = load_aaindex_embedding(apex_aaindex_path(REPO_ROOT), word2idx)
     if shared_dir is None:
         data = pd.read_csv(spec.data_path)
     else:
@@ -362,7 +352,10 @@ def build_apex_components(
     backbone = ApexEncoder(
         emb, np.shape(emb)[1], num_rnn_layers=3, hidden_dim=128
     )
-    checkpoint = torch.load(REPO_ROOT / "compare_APEX" / "APEX_ckpt" / "APEX_pretrained_encoder_state_dict_best.ckpt", map_location="cpu")
+    checkpoint = torch.load(
+        resolve_weight("fig2b_apex_encoder", repo_root=REPO_ROOT),
+        map_location="cpu",
+    )
     backbone.load_state_dict(checkpoint)
     backbone.to(device)
     for param in backbone.parameters():

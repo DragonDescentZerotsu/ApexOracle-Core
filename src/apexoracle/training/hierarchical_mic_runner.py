@@ -1444,11 +1444,13 @@ def validate_paths(config: HierarchicalMicConfig, repo_root: Path) -> None:
         config.molecule_encoder is not None
         and config.molecule_encoder.tokenizer_kind == "vendored_peptideclm"
     ):
+        from apexoracle.vendor.peptideclm_tokenizer import RESOURCE_ROOT
+
         missing.extend(
             path
             for path in (
-                repo_root / "PeptideCLM/tokenizer/new_vocab.txt",
-                repo_root / "PeptideCLM/tokenizer/new_splits.txt",
+                RESOURCE_ROOT / "new_vocab.txt",
+                RESOURCE_ROOT / "new_splits.txt",
             )
             if not path.exists()
         )
