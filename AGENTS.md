@@ -236,6 +236,40 @@
 - full-fusion 的 held-target selection 中 classification head 历史上未调用 `eval()`，dropout
   仍然开启；checkpoint 的 AUPRC 又在 AUROC 改善保存之后才更新。这两项不理想行为均由
   canonical runner 和测试明确冻结，不得在无新实验的情况下“修正”。
+- **2026-07-20 reviewer 修订运行：** strict zero-shot 的 30 个 checkpoint 已全部完成确定性
+  H100 推理并导出样本级预测；三个目标的 AUROC/AUPRC 分别为
+  `0.93504/0.58738`、`0.72408/0.32098`、`0.76741/0.16562`。统一 Chemprop baseline 的
+  15 个 fold 已全部完成，pooled OOF AUROC/AUPRC 为 E. coli `0.85711/0.50752`、
+  A. baumannii `0.77750/0.31967`、RN4220 `0.92848/0.32873`。
+- **已由 5,000 次配对统计验证的事实：** strict zero-shot 相对 baseline 的 Holm 校正结果为：
+  E. coli AUPRC 差 `+0.07986`、`p=0.4167`，AUROC 差 `+0.07791`、`p=0.01360`；
+  A. baumannii AUPRC 差 `+0.00132`、`p=0.9660`，AUROC 差 `-0.05342`、`p=0.03059`；
+  RN4220 AUPRC/AUROC 差 `-0.16311/-0.16107`，两者 `p=0.00060`。因此旧的普遍优势表述
+  不成立，修订稿必须按菌株和指标分别陈述。
+- **baseline 血缘纠正：** 当前 Fig. 1b 对 A. baumannii 使用的 `0.756/0.266` 是 Liu 2023
+  的 no-RDKit ablation；该论文 RDKit 主模型约为 `0.792/0.337`。修订比较应使用主模型协议，
+  原数值仅保留为历史绘图事实。
+- **Chemprop eligibility 边界：** E. coli 的 `ce_2244` 与 RN4220 的 `na_20640` 是同一条
+  RDKit 拒绝的异常铝配位结构；既有 KFold 不重排，配对比较时从双方同时排除并登记。
+- **fine-tune sensitivity 已完成：** 为避免混用残缺 ensemble，每个 outer fold 固定只使用
+  `ensemble_0`。14/15 个 fold 复用历史 checkpoint；RN4220 fold 4 以
+  `PYTHONHASHSEED=0`、ensemble seed 42 按旧 25-epoch 协议补训。pooled OOF AUPRC/AUROC
+  分别为 E. coli `0.66655/0.95529`、A. baumannii `0.35294/0.77698`、RN4220
+  `0.34518/0.92278`。相对 common-fold baseline，Holm 校正后只有 E. coli AUPRC
+  (`p=0.03539`) 和 AUROC (`p=0.00180`) 显著更高；其余四项均不显著。该结果是
+  单模型/折 sensitivity，不是旧完整 ensemble 的恢复。
+- **Fig. 1b 文稿同步已完成：** Mac canonical notebook、三菌株统一 AUPRC panel、论文 Fig. 1、
+  caption、Results、Methods 和 reviewer response 已同步；最终 TeX 完整编译为 28 页。修改前
+  快照与前后 SHA-256 记录在
+  `reproducibility/fig1b_reviewer_revision_2026-07-20.json`。
+
+#### node002 非破坏性同步（2026-07-20）
+
+- 旧目录 `/data1/tianang/Projects/Synergy` 保持原位且未修改；源码/config 936 个文件已做
+  SHA-256，11,340 个非源码资产只登记路径、大小和 mtime。snapshot 位于
+  `/data1/tianang/Projects/_legacy_manifests/Synergy_legacy_2026-07-20`，扫描错误为 0。
+- 重构代码运行副本为 `/data1/tianang/Projects/Synergy_release`；reviewer 补实验输出统一写到
+  `/data1/tianang/Projects/ApexOracle_revision_runs`，不得写回旧 checkpoint/data 目录。
 
 #### Synergy 与后续 in-house 实验
 

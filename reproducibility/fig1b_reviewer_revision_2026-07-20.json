@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "date": "2026-07-20",
+  "scope": "Fig. 1b common-fold AUPRC and paired-significance reviewer revision",
+  "protocol": {
+    "outer_folds": "5-fold molecule-level KFold, shuffle=true, random_state=42",
+    "baseline_selection": "12.5% stratified validation subset drawn only from each outer training fold",
+    "fine_tune_sensitivity": "exactly ensemble_0 in every outer fold",
+    "fine_tune_checkpoint_sources": "14 historical checkpoints plus one retrained RN4220 fold-4 checkpoint",
+    "retrained_environment": {
+      "PYTHONHASHSEED": 0,
+      "ensemble_seed": 42,
+      "epochs": 25
+    },
+    "inference": "deterministic eval-mode checkpoint inference",
+    "statistics": "5000 class-stratified paired bootstrap resamples and 5000 paired prediction-swap randomizations; Holm correction across three strains within each mode and metric"
+  },
+  "paired_sample_counts": {
+    "ecoli_bw25113": {
+      "total": 2334,
+      "positive": 120,
+      "excluded_molecule_ids": ["ce_2244"]
+    },
+    "abaumannii_atcc17978": {
+      "total": 7684,
+      "positive": 480,
+      "excluded_molecule_ids": []
+    },
+    "saureus_rn4220": {
+      "total": 39310,
+      "positive": 512,
+      "excluded_molecule_ids": ["na_20640"]
+    }
+  },
+  "ignored_runtime_artifacts": {
+    "retrained_checkpoint": {
+      "path": "results/fig1b_revision/fine_tune_retrained/group_2_fold_4_member_0/genome_text_learnable_emb_SM_outer_SM_best_AUROC_group_2_ensemble_0_fold_4.pth",
+      "sha256": "68a34004a4992c0bfff3733a9e5e7135ebed79bfbf15dd38e6eca7d2199d6a87"
+    },
+    "retrained_log": {
+      "path": "results/fig1b_revision/fine_tune_retrained/group_2_fold_4_member_0/log_group_2_fold_4.log",
+      "sha256": "6ba04beab1a5d018a106ba618d2c175c9734e9f133f4ba08bb2f4b0b00c67e9a"
+    },
+    "fine_tune_oof_summary": {
+      "path": "results/fig1b_revision/apexoracle_fine_tune_oof/summary.json",
+      "sha256": "c5bf4647381369fecc110cbbdd20ccfff8f15f9152839a34e80f310cec7f1792"
+    },
+    "significance_report": {
+      "path": "results/fig1b_revision/significance.json",
+      "sha256": "912de74c72960b99495e4a441e1dcb75b338dd7390625ac47b3468025c676e83"
+    },
+    "canonical_panel_pdf": {
+      "path": "results/fig1b_revision/fig1b_revised_auprc.pdf",
+      "sha256": "52d56a16ba773e99d67abe8ef62ba5f9c24a73a7ead8252227c45d2f03e511a4"
+    },
+    "mac_rendered_panel_pdf": {
+      "path": "results/fig1b_revision/fig1b_revised_auprc_mac.pdf",
+      "sha256": "14d0d9682335ba31e804dfcd7e5af630ba6b5a382f470317d16f0545aec025c6"
+    }
+  },
+  "paper_files": {
+    "directory": "/data2/tianang/projects/ApexOracle_cleaned/docs/ApexOracle_Nat_Biotech",
+    "backup_directory": "/data2/tianang/projects/ApexOracle_cleaned/docs/ApexOracle_Nat_Biotech/.revision_backups/fig1b_2026-07-20_preupdate",
+    "before_sha256": {
+      "Fig1.pdf": "c720fd48f09575bd79bdd7df592d33d5497e16ed341c5cf914bafc96a5eb5941",
+      "sn-article.tex": "fd3579ba11f3c84d66df875c6d54f12c768eb17e6af151ce6471ede4eeb53157",
+      "Response to reviewers letter.docx": "5e9952fa74514bde43687bbba9dfa64bac3bf039c60760d4e29058f1b8ffeaff"
+    },
+    "after_sha256": {
+      "Fig1.pdf": "e8971c526f93ea7e69ef499799baf2218750cb7216102a3ce2c6dfb7dbfd9319",
+      "sn-article.tex": "3dc3a6a2c5a4eb1a5c039598bf955506647c829d724c8b79cfa168a775f4183a",
+      "Response to reviewers letter.docx": "11d09d9357c2521fb79f6fbfdb1bdf396fc4c71505dc20df9025ffa7c9200f0e",
+      "sn-article.pdf": "ab84775342631be30a4df5225d1698fadba3f02e9b268785b97c118dba7459c8"
+    },
+    "compiled_pages": 28
+  },
+  "mac_plot_files": {
+    "canonical_notebook": "/Users/kirianozan/Documents/Study/Penn/projects/local_figs/figs.ipynb",
+    "notebook_cell_id": "220739609a526f79",
+    "backup_directory": "/Users/kirianozan/Documents/Study/Penn/projects/local_figs/.revision_backups/fig1b_2026-07-20_preupdate",
+    "before_notebook_sha256": "0a2a30aeb18d52c0874c7a0a8a50ba760fefa3d52009b8e59520ab1f3137918b",
+    "after_notebook_sha256": "435b727d3da8104b6b4b049f3c13bb9576c6520bd728780df95d28c631395708",
+    "panel_pdf": "/Users/kirianozan/Documents/Study/Penn/Synergy/paper_figs/3-strain-antibiotics.pdf",
+    "panel_pdf_sha256": "14d0d9682335ba31e804dfcd7e5af630ba6b5a382f470317d16f0545aec025c6",
+    "panel_csv": "/Users/kirianozan/Documents/Study/Penn/Synergy/paper_figs/fig1b_revised_auprc.csv",
+    "panel_csv_sha256": "6f5893bd081c7f709aa6029573bccc8b9350556b138ea8ea47e47cda4f5f5334"
+  }
+}
