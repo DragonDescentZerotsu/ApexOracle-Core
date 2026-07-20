@@ -87,6 +87,7 @@ class AntibioticClassificationPaths:
     genome_embeddings: Path
     atcc_text_embeddings: Path
     text_only_embeddings: Path
+    small_molecule_records: Path
     peptide_embeddings: Path
     small_molecule_embeddings: Path
     output_dir: Path
@@ -96,6 +97,7 @@ class AntibioticClassificationPaths:
             self.genome_embeddings,
             self.atcc_text_embeddings,
             self.text_only_embeddings,
+            self.small_molecule_records,
             self.peptide_embeddings,
             self.small_molecule_embeddings,
         )
@@ -198,6 +200,9 @@ class AntibioticClassificationConfig:
                 genome_embeddings=resolve(raw["paths"]["genome_embeddings"]),
                 atcc_text_embeddings=resolve(raw["paths"]["atcc_text_embeddings"]),
                 text_only_embeddings=resolve(raw["paths"]["text_only_embeddings"]),
+                small_molecule_records=resolve(
+                    raw["paths"]["small_molecule_records"]
+                ),
                 peptide_embeddings=resolve(raw["paths"]["peptide_embeddings"]),
                 small_molecule_embeddings=resolve(
                     raw["paths"]["small_molecule_embeddings"]
@@ -1133,8 +1138,6 @@ def validate_paths(config: AntibioticClassificationConfig, repo_root: Path) -> N
     preparation_inputs = (
         repo_root / "DataPrepare/Data/DBAASP_inhouse_AMP_SELFIES_token_MIC_Evo.csv",
         repo_root
-        / "DataPrepare/Data/small_molecule/processed/small_molecule_Evo_binary_data_SELFIES.csv",
-        repo_root
         / "DataPrepare/Data/Evo_edition_4_MIC_data_handcrafted_no_ATCC_to_custom_ATCC_and_inhouse.json",
         repo_root / "DataPrepare/Data/Genome/old_to_new_NCBI_taxonomy.json",
     )
@@ -1212,7 +1215,9 @@ def main(argv: Sequence[str] | None = None) -> dict[str, Any]:
     if not config.target_training and args.fold is not None:
         raise SystemExit("--fold is not valid for strict-zero-shot")
     validate_paths(config, repo_root)
-    prepared = prepare_hierarchical_mic_data(repo_root)
+    prepared = prepare_hierarchical_mic_data(
+        repo_root, small_molecule_data_path=config.paths.small_molecule_records
+    )
     frames = prepare_antibiotic_classification_frames(prepared, args.test_group)
     if args.dry_run:
         report = dry_run_report(

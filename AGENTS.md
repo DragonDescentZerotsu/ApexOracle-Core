@@ -279,7 +279,7 @@
 | 模态 | 论文来源和数量 | 最终本地训练数据 | 需要注意的区别 |
 | --- | --- | --- | --- |
 | AMP MIC | DBAASP 下载于 2024-09-27：16,408 个 peptide、5,630 个 strain、105,547 条 MIC；in-house：1,642 个 peptide、11 个 strain、15,718 条 MIC；论文合并后为 17,988 个 peptide、5,632 个 strain、121,265 条 MIC | 化学结构终版：`DataPrepare/Data/DBAASP_inhouse_AMP_SMILES_MIC_Evo.csv`，121,265 行；token cache 终版：`DBAASP_inhouse_AMP_SELFIES_token_MIC_Evo.csv`，120,955 行 | 论文数量是 tokenizer、长度和 UNK 过滤之前的数量。训练脚本通常读取 120,955 行 token 文件，然后继续根据 genome/text embedding 可用性和 token 长度过滤。标签在单位和操作符处理后转换为 `-log10(MIC/10)`。 |
-| 小分子抗生素二分类 | 共 49,331 个 molecule-strain pair：RN4220 39,312；BW25113 2,335；ATCC 17978 7,684 | `small_molecule/processed/small_molecule_Evo_binary_data.csv` 有 49,331 行；tokenized `..._SELFIES.csv` 有 49,330 行 | SELFIES token 过滤损失 1 行。内部标准 strain 名为 `Staphylococcus aureus RN4220`、`#004`（BW25113）和 `17978`。当前仓库没有把三篇论文原始数据完整合并到此文件的全流程脚本。 |
+| 小分子抗生素二分类 | 共 49,331 个 molecule-strain pair：RN4220 39,312；BW25113 2,335；ATCC 17978 7,684 | `small_molecule/processed/small_molecule_Evo_binary_data.csv` 有 49,331 行；tokenized `..._SELFIES.csv` 有 49,330 行 | 三个来源的历史转换规则已从 `DataCheck.ipynb` 恢复，并由 canonical 只读 builder 逐字节复现两份冻结输出。SELFIES token filter 仅因 UNK 排除 `na_12751`。 |
 | Genome | 除 MG1665、UMNK88、PA14、USA300 来自 NCBI 外，其余来自 ATCC | FASTA 位于 `DataPrepare/Data/Genome`；最终 tensor 位于 `Genome_embs`；最终名称映射为 `Evo_edition_4_MIC_data_handcrafted_no_ATCC_to_custom_ATCC_and_inhouse.json` | 当前训练和评估实际匹配到 563 个 embedding。仓库缺少 Evo-2 提取代码。论文方法为：11,000 nt window、10,000 nt step、Evo-2-40B 第 46 层、每个 window 按长度求均值、window 之间不 pooling，并使用固定 `1e14` 缩放。 |
 | Strain text | Qwen2.5-Max，版本 `qwen-max-0125`，基于文献检索生成描述 | 文本和 tensor 位于 `Text_Description/ATCC` 与 `Text_Description/wo_ATCC` | 最终模型使用 Me-LLaMA3-8B 倒数第二层的 token embedding，不做 mean pooling；精确 strain 名会替换为 “this strain”。`Get_text_embedding_wo_genome.py` 是本地 canonical embedding 脚本。 |
 | Synergy | 论文为 2,732 个通过筛选的 unique molecule-synergy-strain pair，其中 88% 为 AMP-small molecule、12% 为 AMP-AMP；FICI < 0.5 标为 1 | 原始扩充表 `synergistic_pairs_Evo.csv` 有 4,285 行；后续组合表 `synergy_DBAASP_inhouse_Evo.csv` 有 4,342 行 | 论文中的 2,732 是 molecule、strain 和 embedding 过滤后的 eligible/curated 子集，不是当前原始表行数。最终 CV 脚本动态过滤 `synergistic_pairs_Evo.csv`；当前没有保存不可变的 2,732 行快照，这是一个复现缺口。 |
@@ -313,12 +313,35 @@ Strain count mapping 的演化顺序如下：
 - `try.py`：为缺少 PubChem SMILES 的 DBAASP peptide 补结构的早期原型，输出缺失结构的中间 CSV。
 - `correct_SMILES_offered_by_DBAASP.py`：重建 DBAASP 提供的 peptide structure 以保留 stereochemistry，并更新 merged SMILES/Evo MIC 文件。它晚于 `try.py`，属于最终化学结构清理血缘。
 - `concentration_unit_transfer.py`：最早的 MIC 单位转换原型。`concentration_unit_transfer_new.py` 面向 19-task wide table；`concentration_unit_transfer_all_bact.py` 扩展到全部 bacteria 并计算 mean；历史最终 long-format 行为现由 `src/apexoracle/data/amp_mic.py` 和只读入口 `scripts/prepare_data/build_amp_mic_dataset.py` 取代。
-- `APEX_in_house_to_SMILES.py`：把 in-house APEX 表转换为早期 wide SMILES 格式。`APEX_in_house_to_SMILES_merge_w_DBAASP.py` 合并该早期格式。最终 long-format、merge 和 AMP token filter 现由 `src/apexoracle/data/amp_training_data.py` 与 `scripts/prepare_data/build_amp_training_dataset.py` 取代；`convert_EVO_smiles_MIC_to_SELFIES_token_SM.py` 仍是尚未迁移的小分子二分类转换器。
+- `APEX_in_house_to_SMILES.py`：把 in-house APEX 表转换为早期 wide SMILES 格式。`APEX_in_house_to_SMILES_merge_w_DBAASP.py` 合并该早期格式。最终 long-format、merge 和 AMP token filter 现由 `src/apexoracle/data/amp_training_data.py` 与 `scripts/prepare_data/build_amp_training_dataset.py` 取代。小分子二分类转换已迁移至 `src/apexoracle/data/small_molecule_antibiotics.py` 与 `scripts/prepare_data/build_small_molecule_antibiotic_dataset.py`；旧 converter 已由 legacy tag 保留后删除。
 - **2026-07-19 已验证事实：** canonical MIC 重建得到相同 105,547 行，ID/strain/SMILES 精确一致，MIC 最大绝对误差 `4.55e-13`，没有记录超出 `1e-12` tolerance。历史 structure correction 是先用旧 SMILES 分子量换算 MIC、再原地替换展示 SMILES；新实现通过 179 条只用于分子量的 override 显式复现，不覆盖任何原始文件。frozen in-house long table 合并后的 121,265 行 CSV 和固定 IBM tokenizer revision 后的 120,955 行 token cache 均逐字节一致；310 行仅因超过 1024 tokens 排除，invalid/UNK 为 0。PepLink 新建 in-house structure 与 legacy 只差 terminal `[OH]`/canonical `O`，归一化后 15,718/15,718 行一致。
 - `DBAASP_SELFIES_Token_see.py` 和 `debug_notebook.py`：只用于 tokenizer vocabulary 检查。`debug.py` 把小分子 SELFIES 导出给外部 `mdlm` 项目。
 - `bacteria_get.py`：统计 DBAASP JSON 中 strain/species 出现次数和 activity unit 变体，为 mapping 构建提供探索性支持。
 - `canonical-peptide-check.py`：检查 canonical peptide 内容。`smiles_to_peptide.py` 把 peptide-like SMILES 反向转换为 D/L residue sequence，并被 peptide/non-peptide 标签脚本复用。
 - `DataCheck.ipynb`：大型探索性数据检查 notebook，不是确定性的 build step。
+
+#### 三菌株小分子二分类数据入口（2026-07-19）
+
+- **已由代码和真实数据验证的事实：** 三个 raw source 的历史转换单元保存在
+  `DataPrepare/DataCheck.ipynb`。E. coli 使用 `Activity == Active`；A. baumannii 使用
+  `Mean < mean - sample std (ddof=1)`；S. aureus 直接复制 `ACTIVITY`。三个 block 的冻结顺序为
+  E. coli、A. baumannii、S. aureus，分别为 2,335/120、7,684/480 和 39,312/512
+  （总行数/阳性数）。
+- **已由完整只读重算验证的事实：** canonical builder 生成的 49,331 行 merge CSV 与现有论文
+  文件逐字节一致，SHA-256 为
+  `4dabc0f8ac808d33ede3eacb47bacf7b55b2a900fcf78fd3d45a89c2037f3dc2`。固定 tokenizer
+  revision 后，49,330 行 token cache 也逐字节一致，SHA-256 为
+  `d8e6391bfae3c35fe8d311461565df177fc75044cbc40204bf74f7ecf1fe7f27`。
+  唯一过滤记录 `na_12751` 含 UNK token；invalid SMILES 与超长记录均为 0。
+- **根据现有证据作出的推断：** 当前冻结 merge 的 block 顺序来自当时 notebook 所见的目录
+  遍历顺序；由于输出与完整重算逐字节相同，该顺序已被明确固化为 paper contract，但不应把
+  未排序目录遍历本身视为推荐协议。
+- **发布边界：** 原 notebook 会遍历 processed 目录并原地写回 merge 输出，旧 converter 也有
+  硬编码绝对路径、未固定 revision 和允许覆盖输出的问题。canonical CLI 明确列出三个输入，
+  拒绝输入输出同路径及覆盖既有输出。训练 runner 从 versioned config 显式读取 frozen token table；
+  不在训练时重建或修改论文数据。完整 manifest 与审计见
+  `configs/data_pipeline/small_molecule_antibiotics_paper.yaml` 和
+  `experiments/small_molecule_antibiotics/`。
 
 #### Genome 与 text
 
