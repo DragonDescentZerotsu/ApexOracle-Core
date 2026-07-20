@@ -1,6 +1,12 @@
 {
   "schema_version": 1,
-  "status": "exact_plot_values_frozen_training_lineage_unresolved",
+  "status": "paper_plot_reproducible_training_lineage_archived",
+  "release_cleanup": {
+    "legacy_drivers_removed": true,
+    "cleanup_manifest": "experiments/modality_ablation/legacy_cleanup.json",
+    "recovery_tag": "legacy-code-snapshot-2026-07-17",
+    "original_data_modified": false
+  },
   "verified_facts": {
     "plot_series": {
       "ApexOracle w/o text, w/o sm": "genome-only candidate family",

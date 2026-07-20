@@ -29,6 +29,6 @@
   ],
   "preserved_boundaries": [
     "Four Fig. 2c alternative molecular-encoder comparator drivers remain because they implement different models.",
-    "Genome-only, text-only, and early modality-ablation families remain until independently migrated and verified."
+    "Genome-only, text-only, and early modality-ablation families were independently audited and archived in experiments/modality_ablation/legacy_cleanup.json."
   ]
 }

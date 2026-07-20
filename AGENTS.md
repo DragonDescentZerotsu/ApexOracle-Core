@@ -112,7 +112,7 @@
 - 被统一 runner 替代的 root DP/in-house/SM/pooling/eval 脚本、capsule 中第二份 strain
   driver 和旧打包脚本已删除；完整恢复点为 `legacy-code-snapshot-2026-07-17`。Fig. 2c 的四个
   online encoder comparator 也已迁入同一 runner 的显式 profiles 并删除 root 复制 driver；
-  尚未迁移的 modality ablation 训练血缘继续保留。
+  modality ablation 的 15 个无消费者/会覆盖数据的 legacy driver 也已独立审计并归档删除。
 
 ### 根据现有证据作出的推断
 
@@ -158,7 +158,7 @@
 | Synergy 候选使用的完整数据 MIC base model | `train_on_all_data.py`；checkpoint 家族 `Checkpoints/genome_text_learnable_emb/guidance_regressor_pad_no_mask`，尤其是 `noise_guidance_best_R2_all_peptide_epoch_100.pth` | 这是现存三折候选 driver 实际加载的最匹配 base model，但 Methods 写 13 epochs，而该文件来自 100-epoch run，精确论文身份仍未解决。 |
 | Guided molecule generation、remasking sampler 和 256-step 三阶段 guidance | 不在当前仓库；分析脚本指向 `/data2/tianang/projects/discrete-diffusion-guidance` | **外部依赖 / 缺失。** 当前仓库包含 predictor、保存的输出或图片以及 similarity 分析，但不包含实际生成 ApexOracle-3/12/23 的 sampler。论文参数为 256 steps、MIC target 1、sigma 从 0.5 线性降到 0.2、`t_on=0.55`、`t_off=0.45`，两个阶段的 guidance strength 为 15。 |
 | Fig. 3（TeX 中使用文件 `Fig4.pdf`）guided/unguided 预测和最终验证分子 | `DataPrepare/Morgan_fingerprint_sim_generation*.py` 中的派生分析和外部 guidance 仓库 | **复现链仍不完整。** 实际 guided sampler、候选生成和湿实验选择链尚未形成自包含流程；论文后 BAA-3170 prospective synergy screening 不是该论文结果，已按 paper-only 决策移出当前工作树。 |
-| 附录 modality ablation | 最终绘图值：`experiments/modality_ablation/paper_values.csv`；绘图入口：`scripts/reproduce/plot_modality_ablation.py`；候选训练血缘为较早的 genome-only、text-only、genome+text 脚本家族及对应 checkpoint | **绘图终版 / 高置信度；训练血缘 / 中低置信度。** Mac 最终 notebook 的 12 个硬编码 R² 已逐项冻结，可重建论文图；现存 checkpoint 与这些 ensemble 数值仍无法精确连接。 |
+| 附录 modality ablation | 最终绘图值：`experiments/modality_ablation/paper_values.csv`；绘图入口：`scripts/reproduce/plot_modality_ablation.py`；候选血缘审计：`experiments/modality_ablation/candidate_lineage.json` | **论文图可复现 / 代码收尾完成。** Mac 最终 notebook 的 12 个 R² 已逐项冻结；现存 checkpoint 仍无法精确连接到 ensemble 数值，因此不支持训练重跑。15 个会原地覆盖中间 CSV 的 legacy driver 已按哈希归档删除，原始数据未修改。 |
 | Attention 或耐药基因解释 | `DataPrepare/ATCC_genome_annotation_get.py`、`DataPrepare/resistant_gene_check.py`、`DataPrepare/train_genome_mcr_check.py`，以及大型训练脚本中的 attention 输出 | 属于探索或审稿支持代码；不存在自包含的最终 attention figure 流程。 |
 | ApexOracle-3/12/23 sequence similarity 表 | `scripts/reproduce/run_sequence_similarity.py`；`src/apexoracle/evaluation/sequence_similarity/` | **canonical / 已验证。** 实现 Methods 中的 Biopython global alignment、BLOSUM62、gap-open 10、gap-extension 0.5、exact-match PID 和 cyclic exhaustive rotations。ApexOracle-3/23 全量输出与历史 CSV 逐字节一致；ApexOracle-12 的论文数值已复算，但旧 full CSV 未保存且 top hit 有四个 complete ties。 |
 | 审稿回复中的 Evo-2 embedding 缩放说明 | `scripts/plot_evo2_genome_embedding_abs_mean_distribution.py` | **审稿阶段 / 高置信度。** 生成支持固定 `1e14` 缩放因子的 CSV、PNG 和 PDF，统计范围为 563 个实际匹配的 embedding。 |
@@ -167,8 +167,9 @@
 
 #### 分层 MIC 回归
 
-- `MIC_with_genome.py`、`MIC_with_genome_no_AMP.py`、`MIC_with_genome_test_on_non_seen_species.py`、`MIC_with_genome_test_on_non_seen_species_3_species.py`、`MIC_with_genome_test_on_non_seen_species_5_fold.py`、`MIC_with_genome_test_on_non_seen_species_{3,11}_species_5_ensemble.py`、`MIC_with_genome_test_on_non_seen_strains.py` 和 `MIC_with_genome_test_on_non_seen_pep_&_non_seen_species.py` 是早期 genome-only/ChemBERTa 原型及划分实验，属于**历史版本**。
-- `MIC_with_text_test_on_non_seen_{strains,species_3_species_5_ensemble,species_11_species_5_ensemble}.py` 是 text-only 消融；`MIC_with_text_genome_test_on_non_seen_*.py` 是早期双模态版本。它们属于 modality ablation 血缘，而不是最终 DLM 模型。
+- 早期 `MIC_with_genome*`、`MIC_with_text_test*` 和 `MIC_with_text_genome*` 共 15 个文件属于
+  genome-only/text-only/genome+text modality ablation 候选或更早 prototype；它们已经按
+  `experiments/modality_ablation/legacy_cleanup.json` 归档删除，只在 legacy tag 中保留。
 - `DP_inhouse_MIC_with_text_genome_test_on_non_seen_*.py` 和同模型的
   `DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_*.py` 曾构成论文时期的复制脚本家族；
   其 hierarchical MIC 版本现已由统一 runner 替代并从工作树删除，只在 legacy tag 中保留。
@@ -267,9 +268,11 @@
   best held-out score，不是绘图使用的 ensemble R²。
 - **根据现有证据作出的推断：** 三条 w/o sm 曲线最可能来自较早的 ChemBERTa-era modality
   driver 家族，但现有证据不足以指定每个点使用的精确 group/member、预测文件和聚合过程。
-- **仍待确认的事项：** 完整训练血缘尚未恢复，因此当前支持级别是
-  `paper plot reproducible / training lineage unresolved`。旧 driver 会原地写过滤后的中间 CSV，
-  在建立只读替代入口前不得运行或删除。
+- **仍待确认但不再阻塞代码收尾的事项：** 完整训练血缘尚未恢复，因此当前支持级别是
+  `paper plot reproducible / legacy training rerun unavailable`。15 个旧 driver 均会原地写过滤后的
+  中间 CSV，已在不运行的前提下登记哈希并归档删除；受保护 CSV 的清理前后 SHA-256 一致。
+- **已由清理后验证确认的事实：** canonical 入口成功生成 1-page PDF/PNG，冻结值、绘图配置和
+  受保护 CSV 哈希未变化；全仓库为 111 passed / 4 skipped。
 
 ### 论文时期训练使用的最终数据
 
@@ -386,9 +389,9 @@ Strain count mapping 的演化顺序如下：
   `legacy_fig2c_comparators.yaml` profiles；root 副本已删除并由 legacy tag 恢复。逐文件 SHA、
   node002 差异、checkpoint 证据和仍未解决的 PeptideCLM 血缘见
   `experiments/hierarchical_mic/strain/fig2c_comparator_migration_audit.json`。
-- 较早的 genome-only、text-only 与 genome+text 文件仍作为未完成核验的 modality ablation
-  血缘暂留；在建立对应统一入口前不得删除。
-- 早期 genome ensemble 的完整文件名：`MIC_with_genome_test_on_non_seen_species_3_species_5_ensemble.py` 和 `MIC_with_genome_test_on_non_seen_species_11_species_5_ensemble.py`。
+- **已删除的 modality ablation legacy driver：** 9 个论文候选 family 文件和 6 个更早 prototype
+  均由 `experiments/modality_ablation/legacy_cleanup.json` 记录文件名、SHA-256、恢复 tag 和受保护
+  数据哈希；发布工作树只保留冻结数值、绘图配置、绘图入口和测试。
 - **已删除的 Fig. 2b 历史副本：** `fine_tune_on_DBAASP_SMILES_5_fold_compare_pre_SSL.py`、
   `fine_tune_on_DBAASP_SMILES_5_fold_compare_SSL.py` 及同家族四个早期/all-data/in-house driver。
   `fix_ChemBERTa_MLM_mean_emb_on_DBAASP_SMILES_5_fold_mean_MIC.py` 仍作为可选 pooling
