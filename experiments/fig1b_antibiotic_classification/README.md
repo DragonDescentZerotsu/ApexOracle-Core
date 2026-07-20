@@ -131,6 +131,11 @@ Liu 使用论文报告的 no-RDKit ablation，不采用其 RDKit 增强主模型
 `results/fig1b_revision/full_ensemble_reconstruction/` 和
 `results/fig1b_revision/baselines_full_ensemble_no_rdkit/`，不覆盖历史 checkpoint 或原始数据。
 
+这里的完整 fine-tune 网格是 `3 strains × 5 outer folds × 10 members = 150 checkpoints`，
+不是 strict zero-shot 的 `3 × 10 = 30`。两台机器共恢复 104 个历史 checkpoint，另补完
+RN4220 fold 4 member 0 后已有 105 个，因此本轮只训练剩余 45 个 member。监控中的待补完成数
+只计算这 45 个新任务；例如 `0/45` 不表示已有 105 个资产不存在。
+
 一次性查看本机、node001 和 node002 的合并状态：
 
 ```bash

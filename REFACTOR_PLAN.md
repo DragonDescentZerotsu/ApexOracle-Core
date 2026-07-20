@@ -413,7 +413,8 @@ metrics 完全一致；group 1 当前动态 hash split 多 5 条，继续按既�
   88°C，并同时出现 NVIDIA hardware/software thermal slowdown。当前账号没有权限把 350W power
   limit 下调，因此该 worker 在首个 epoch 完成前终止；未完成目录已明确标记，node002 原队列仍是
   这四个成员的权威执行者。GPU1 不再计入可用训练资源；
-- 新增只读监控入口 `scripts/reproduce/monitor_fig1b_revision.py`。它合并本机与 node002 的 45 个
+- 新增只读监控入口 `scripts/reproduce/monitor_fig1b_revision.py`。它合并本机、node001 与 node002
+  的 45 个
   缺失 member、当前 epoch、15 个 Chemprop fold、GPU 温度/利用率/热降频、checkpoint 占用和
   磁盘余量，并按活跃 worker 的实测 epoch 时间动态估计 Apex 阶段 ETA。17:00 快照为
   `62/1125` epoch units、吞吐量外推约 15.6 小时；这是 Apex 阶段的动态粗估，不包含尚未开始且

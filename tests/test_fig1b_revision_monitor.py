@@ -27,3 +27,5 @@ def test_expected_reconstruction_grid_has_45_unique_members() -> None:
     assert "1:2:1" in MONITOR.EXPECTED_TASKS
     assert "2:4:9" in MONITOR.EXPECTED_TASKS
     assert "0:0:0" not in MONITOR.EXPECTED_TASKS
+    assert MONITOR.FINE_TUNE_GRID_SIZE == 150
+    assert MONITOR.AVAILABLE_BEFORE_CURRENT_RUN == 105

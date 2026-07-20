@@ -17,7 +17,9 @@
   "full_ensemble_reconstruction": {
     "historical_checkpoints_recovered": 104,
     "expected_checkpoints": 150,
+    "expected_grid_formula": "3 strains * 5 outer folds * 10 ensemble members; strict zero-shot is the separate 3 * 10 grid",
     "rn4220_fold4_member0_retrained": true,
+    "available_before_45_member_run": 105,
     "remaining_members_launched": 45,
     "local_gpus": [0, 2, 3],
     "node001_gpus": [0, 1, 2, 3, 4, 5, 6, 7],

@@ -25,6 +25,8 @@ EXPECTED_TASKS = {
     *(f"2:{fold}:{member}" for fold in (3, 4) for member in range(1, 10)),
 }
 EPOCHS_PER_TASK = 25
+FINE_TUNE_GRID_SIZE = 3 * 5 * 10
+AVAILABLE_BEFORE_CURRENT_RUN = FINE_TUNE_GRID_SIZE - len(EXPECTED_TASKS)
 
 
 def _elapsed_seconds(value: str) -> int | None:
@@ -247,7 +249,10 @@ def render(
     lines = [
         f"Fig. 1b reviewer 实验监控  {datetime.now().isoformat(timespec='seconds')}",
         "",
-        f"Apex 缺失 ensemble: 完成 {complete}/45；epoch 进度 "
+        f"Apex fine-tune checkpoint 网格: "
+        f"{AVAILABLE_BEFORE_CURRENT_RUN + complete}/{FINE_TUNE_GRID_SIZE} 可用 "
+        f"（本轮待补 member 完成 {complete}/{len(EXPECTED_TASKS)}）",
+        f"本轮待补 member epoch 进度: "
         f"{epoch_units}/{total_units} ({epoch_units / total_units:.1%})",
         (
             f"Apex 粗略 ETA: {eta_hours:.1f} 小时（按当前活跃 worker 的实测速度）"
