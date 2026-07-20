@@ -1,8 +1,8 @@
-# Synergy 三折 CV（experimental）
+# Synergy 三折 CV（论文高置信度复现候选）
 
-本目录迁移论文时期的 strain-wise synergy 二分类候选实现。当前状态是
-`protocol frozen / model behavior migrated / exact paper identity unresolved`，不能把现存
-checkpoint 的结果直接写成已经精确复现论文数值。
+本目录迁移论文时期的 strain-wise synergy 二分类实现。作者于 2026-07-19 接受现存完整运行为
+论文实现的高置信度复现候选，synergy 重构阶段至此完成。这里的“高置信度”不表示找回了论文
+原始 checkpoint：任务协议、数据规模和性能水平已复现，但精确 checkpoint 身份仍未知。
 
 安装本模块依赖：`pip install -e '.[synergy]'`。验收环境使用 PyTorch 2.6.0、PEFT 0.15.1、
 Transformers 4.49.0 和 SELFIES 2.1.1。
@@ -37,14 +37,15 @@ Transformers 4.49.0 和 SELFIES 2.1.1。
 - 三个现存日志的 ensemble AUROC/AUPRC 为 `0.6690/0.6159`、`0.7614/0.6853`、
   `0.8489/0.9307`，未加权均值约为 `0.7598/0.7440`。
 
-## 根据现有证据作出的推断
+## 结论与作者确认
 
 该 driver 和 checkpoint family 是当前最接近论文 synergy 结果的完整实现，因为任务定义、
 2,732 行 eligible 数据、三折 strain-wise 协议、7-member ensemble 和 base checkpoint 血缘均
-吻合。但是，现存 mean 指标与论文 `0.7539/0.7454` 并不完全相同，因此只能标为高相关候选，
-不能标为精确 paper run。
+吻合。现存 mean `0.7598/0.7440` 与论文 `0.7539/0.7454` 的绝对差分别为 `0.0059/0.0014`。
+作者确认将其作为论文实现的高置信度复现候选，不再以寻找逐文件相同的原始 checkpoint 作为
+synergy 重构阻塞项。
 
-## 仍待作者确认或进一步实验核验
+## 保留的证据边界
 
 - Methods 写 fusion LoRA rank 64，而候选 CV checkpoint 的 tensor shape 明确证明 rank 1024。
 - Methods 写 base model 训练 13 epochs，而候选 driver 明确加载的 checkpoint 来自一份完整
@@ -77,7 +78,8 @@ PYTHONHASHSEED=0 python scripts/reproduce/run_synergy_cv.py \
 的 `0.8054/0.9011` 只验证执行路径，不是论文结果。`fold_0/ensemble_0` 真实 checkpoint 的
 genome+text 与 text-only forward 也均和 inline legacy 公式逐值完全一致。全部 22 个大型
 binary（1 个 base + 21 个 member）的 SHA-256 位于 `checkpoint_file_manifest.csv`。root legacy
-driver 暂时保留，直到 exact paper identity 冲突得到作者确认或明确决定归档为候选。
+driver 已在作者接受该候选后从发布工作树删除，可由 `legacy-code-snapshot-2026-07-17` 恢复；
+发布入口只保留 canonical runner。
 
 ## Paper-only 范围
 

@@ -136,8 +136,13 @@ entries:
       - synergy_Evo_train_new_reg_MDLM_one_base_model_classification.py
     destination:
       - experiments/synergy
-    status: blocked_on_exact_version_and_lora_rank_confirmation
-    deletion_allowed: false
+    status: paper_high_confidence_reproduction_candidate_migrated_and_complete
+    evidence:
+      - experiments/synergy/README.md
+      - experiments/synergy/checkpoint_family_audit.json
+      - experiments/synergy/checkpoint_file_manifest.csv
+    deletion_allowed: true
+    deletion_note: Canonical behavior and checkpoint evidence are frozen; the legacy root driver is recoverable from legacy-code-snapshot-2026-07-17 and is not an exact-original-checkpoint claim.
 
   - id: synergy_non_paper_variants
     source:

@@ -154,7 +154,7 @@
 | Fig. 2b 不使用 strain knowledge 的五折 molecular representation benchmark | canonical 模块为 `src/apexoracle/benchmarks/molecule_encoders/`，正式结果见 `experiments/fig2b_molecule_encoders/results_shared_5fold.md`；DLM 预训练代码仍位于外部 `/data2/tianang/projects/mdlm` | **正式修订版 / 高置信度。** 7-model × 5-fold 已在 10,886 个共享 molecule 上完成；旧 root/capsule source 副本由 legacy tag 和 migration audit 追溯。 |
 | Fig. 1b 严格 target-strain zero-shot 小分子分类 | canonical 入口 `scripts/reproduce/run_antibiotic_classification.py --mode strict-zero-shot`；checkpoint：`.../antibiotic_3_strain_compare/MDLM_fix_cls_sm_all_test_10_fold_ensembles` | **最终版 / 高置信度，已完成行为保持迁移。** 完整 held-out target-strain 数据不进入训练，但仍逐 epoch 用于 best-AUROC checkpoint selection。完整 ensemble 指标：E. coli `#004` 为 0.9360 AUROC / 0.5890 AUPRC；A. baumannii 17978 为 0.7262 / 0.3243；S. aureus RN4220 为 0.7679 / 0.1655。30 个 checkpoint 和 3 个完成日志网格完整；group 0 / ensemble 0 已在 H100 上与 capsule 做到 2,335 条 logit 逐值一致。 |
 | Fig. 1b fine-tuned ApexOracle | 同一入口的 `--mode fine-tune --fold N`；checkpoint：`MDLM_fix_cls_10_fold_ensembles` | **代码路径已统一 / 历史结果证据不完整。** 该模式保留目标 strain 上的五折 KFold fine-tuning，但现存 checkpoint 只有 77/150，14 个日志中只有 6 个包含最终汇总。`--mode molecule-only` 对应旧 `wo_SAND`，完整保留仅用 DLM molecule embedding 的对照；它不是 strict zero-shot ApexOracle。 |
-| Synergy 二分类结果 | canonical 入口 `scripts/reproduce/run_synergy_cv.py`；配置 `configs/synergy/legacy_cv.yaml`；checkpoint：`.../strain_wise_synergy/MDLM_3_fold_ensembles_1_base_model_cls` | **行为迁移完成 / paper identity 仍为候选。** 使用 `synergistic_pairs_Evo.csv`、strain-wise 三折划分、单个完整 MIC base checkpoint、FICI 二分类和 7 个 ensemble。现存三个 fold的 AUROC/AUPRC 未加权平均约为 0.7598/0.7440，与论文 0.7539/0.7454 接近但不完全相同。真实 checkpoint 证明 fusion LoRA rank 为 1024，和 Methods 的 rank 64 冲突；旧 root driver 因此暂留作候选血缘。 |
+| Synergy 二分类结果 | canonical 入口 `scripts/reproduce/run_synergy_cv.py`；配置 `configs/synergy/legacy_cv.yaml`；checkpoint：`.../strain_wise_synergy/MDLM_3_fold_ensembles_1_base_model_cls` | **论文高置信度复现候选 / 重构完成。** 使用 `synergistic_pairs_Evo.csv`、strain-wise 三折、单个完整 MIC base 和 7-member ensemble。现存 mean AUROC/AUPRC `0.7598/0.7440` 与论文 `0.7539/0.7454` 的绝对差为 `0.0059/0.0014`；作者确认接受为论文实现的高置信度复现候选。它不是精确原始 checkpoint 声明；rank 1024/100-epoch base 与 Methods rank 64/13 epochs 的差异继续披露。root driver 已归档删除。 |
 | Synergy 候选使用的完整数据 MIC base model | `train_on_all_data.py`；checkpoint 家族 `Checkpoints/genome_text_learnable_emb/guidance_regressor_pad_no_mask`，尤其是 `noise_guidance_best_R2_all_peptide_epoch_100.pth` | 这是现存三折候选 driver 实际加载的最匹配 base model，但 Methods 写 13 epochs，而该文件来自 100-epoch run，精确论文身份仍未解决。 |
 | Guided molecule generation、remasking sampler 和 256-step 三阶段 guidance | 不在当前仓库；分析脚本指向 `/data2/tianang/projects/discrete-diffusion-guidance` | **外部依赖 / 缺失。** 当前仓库包含 predictor、保存的输出或图片以及 similarity 分析，但不包含实际生成 ApexOracle-3/12/23 的 sampler。论文参数为 256 steps、MIC target 1、sigma 从 0.5 线性降到 0.2、`t_on=0.55`、`t_off=0.45`，两个阶段的 guidance strength 为 15。 |
 | Fig. 3（TeX 中使用文件 `Fig4.pdf`）guided/unguided 预测和最终验证分子 | `DataPrepare/Morgan_fingerprint_sim_generation*.py` 中的派生分析和外部 guidance 仓库 | **复现链仍不完整。** 实际 guided sampler、候选生成和湿实验选择链尚未形成自包含流程；论文后 BAA-3170 prospective synergy screening 不是该论文结果，已按 paper-only 决策移出当前工作树。 |
@@ -237,14 +237,17 @@
   删除只作用于 Git 跟踪的源码、配置、专项测试和派生审计；原始数据、checkpoint、日志和结果
   未修改。逐文件哈希与恢复点见
   `reproducibility/synergy_paper_only_cleanup_2026-07-19.json`。
-- `synergy_Evo_train_new_reg_MDLM_one_base_model_classification.py` 继续保留，因为它是当前最接近
-  论文结果的原始候选，而 LoRA rank、base epoch 与 aggregate 指标冲突尚未解决。
+- 作者确认将本机完整 CV 结果作为论文高置信度复现候选后，最后一个 root classification driver
+  已登记 SHA-256 并删除；canonical runner 是唯一发布入口，旧文件由 legacy tag 恢复。
 
 #### Synergy CV 重构阶段审计（2026-07-19）
 
 - **已由代码、数据、checkpoint 和日志验证的事实：** 候选 classification driver 的动态过滤得到 2,732 行 eligible pair；`PYTHONHASHSEED=0` 时三个 fold 的四路过滤前/后行数均逐项匹配旧日志。现存 21 个 checkpoint 构成完整 `3×7` 网格且结构一致，active fusion LoRA rank 为 1024，synergy head 为完整参数训练的 `24576→3072→128→1`，代码里构造的 rank-256 head LoRA config 未实际使用。候选 driver 加载的是 100-epoch base checkpoint，不是仓库中另存的 13-epoch checkpoint。
-- **根据现有证据作出的推断：** 该 family 是当前最接近论文 synergy 结果的完整候选，但三个 fold 日志的未加权均值 `0.7598/0.7440` 与论文 `0.7539/0.7454` 不完全一致，因此不能称为精确 paper run。
-- **仍待作者确认的事项：** Methods 写 fusion LoRA rank 64 和 base training 13 epochs，并把融合维度写为 `12,294→3,073`；候选 checkpoint 分别证明 rank 1024、实际加载 100-epoch base 和真实维度 `12,288→3,072`。旧日志也未记录独立进程的 `PYTHONHASHSEED`，seed-0 strain membership 只能作为确定性候选。
+- **作者确认的决定：** 该 family 作为论文实现的高置信度复现候选，synergy 重构阶段完成。三个 fold 日志的未加权均值 `0.7598/0.7440` 与论文 `0.7539/0.7454` 的绝对差为 `0.0059/0.0014`；不再为追求逐文件相同的历史 checkpoint 阻塞发布。
+- **已由 node002 只读核验的事实：** `node002:/data1/tianang/Projects/Synergy` 只有六个较早的
+  ChemBERTa/Evo synergy prototype；不存在新的 MDLM one-base classification driver、
+  `strain_wise_synergy` 目录或 `MDLM_3_fold_ensembles_1_base_model_cls` checkpoint family。
+- **仍须披露但不阻塞的限制：** Methods 写 fusion LoRA rank 64 和 base training 13 epochs，并把融合维度写为 `12,294→3,073`；候选 checkpoint 分别证明 rank 1024、实际加载 100-epoch base 和真实维度 `12,288→3,072`。旧日志也未记录独立进程的 `PYTHONHASHSEED`，因此不能声称逐 bit 或精确原始 run 复现。
 - **已完成的重构验收：** 1 个 base 与 21 个 member 的逐文件 SHA-256 已登记；`fold_0/ensemble_0` 在 H100 上严格加载后，genome+text 和 text-only 两路均与 inline legacy 公式逐值一致。统一 runner 的 fold 2、1 member、1 epoch 真实数据 smoke 成功写出 checkpoint、175 条预测、metrics 和 summary；临时 2.24 GB 输出已删除。该 smoke 指标不作为论文结果。
 - **已由范围审计验证的事实：** 论文正文和 Methods 不包含 few-shot synergy 结果；paper-only
   清理后，共享 synergy 模块仅保留 CV 路径的消费者。全仓库为 111 passed / 4 skipped；

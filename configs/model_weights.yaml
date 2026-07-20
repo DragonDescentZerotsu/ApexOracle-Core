@@ -240,7 +240,7 @@ weights:
     paper_label: Synergy candidate MIC base checkpoint
     tasks:
       - synergy_three_fold_candidate
-    decision_status: verified_driver_input_not_confirmed_exact_paper_base
+    decision_status: accepted_high_confidence_paper_candidate_base_exact_identity_unresolved
     source:
       kind: local_repo_ignored_binary
       current_path: Checkpoints/genome_text_learnable_emb/guidance_regressor_pad_no_mask/noise_guidance_best_R2_all_peptide_epoch_100.pth
@@ -266,7 +266,7 @@ weights:
     paper_label: Synergy strain-wise three-fold ensemble candidate
     tasks:
       - synergy_three_fold_candidate
-    decision_status: complete_candidate_family_metrics_differ_from_paper
+    decision_status: accepted_high_confidence_paper_reproduction_candidate
     source:
       kind: local_repo_ignored_binary_family
       current_path: Checkpoints/genome_text_learnable_emb/strain_wise_synergy/MDLM_3_fold_ensembles_1_base_model_cls
@@ -290,6 +290,8 @@ weights:
       paper_mean_auroc: 0.7539
       paper_mean_auprc: 0.7454
       exact_paper_identity: unresolved
+      author_acceptance: high_confidence_reproduction_candidate
+      refactor_stage_complete: true
     loader: scripts/reproduce/validate_synergy_checkpoint.py
     future_storage:
       relative_path: synergy/legacy_cv_candidate

@@ -1,5 +1,5 @@
 schema_version: 1
-status: experimental_protocol_frozen_model_evidence_incomplete
+status: paper_high_confidence_reproduction_candidate_complete
 
 data:
   source: DataPrepare/Data/synergistic_pairs_Evo.csv
@@ -72,3 +72,5 @@ evidence_boundaries:
   verified_candidate_fusion_lora_rank: 1024
   verified_candidate_base_checkpoint_training_epochs: 100
   exact_paper_run_confirmed: false
+  author_acceptance: high_confidence_paper_reproduction_candidate
+  refactor_stage_complete: true
