@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "status": "completed",
+  "scope": "pre-generation root and packaging cleanup",
+  "recovery": {
+    "legacy_tag": "legacy-code-snapshot-2026-07-17",
+    "legacy_commit": "a68707c23699e7d79b9b0096f106d845459fd9fd",
+    "pre_cleanup_head": "fb277376dca29036377e486627ab13b0f1b93ecf"
+  },
+  "verified_facts": {
+    "original_paper_data_modified": false,
+    "paper_checkpoint_deleted": false,
+    "train_on_all_data_checkpoint_consumers_in_current_code": 0,
+    "capsule_runtime_consumers_in_current_code": 0,
+    "apex_checkpoint_copy_sha256_verified": true,
+    "apex_aaindex_copy_sha256_verified": true,
+    "peptideclm_representative_tokenization_equivalent": true,
+    "fig2b_compact_capsule_verified_models_times_folds": 35
+  },
+  "root_drivers": [
+    {
+      "path": "train_on_all_data.py",
+      "bytes": 114935,
+      "sha256": "b897e66ea7fe09c83447d893523e8cde0e463fd39d6beb112a941f5c09fe93a7",
+      "function": "historical all-data strain-aware MIC training driver with an unsafe in-place intermediate CSV write",
+      "checkpoint_output": "Checkpoints/genome_text_learnable_emb/all_AMP_SM_data_train/MDLM_MTR_fix_cls_wo_pad/all_data_best_R2_epoch_{n}.pth",
+      "checkpoint_action": "retained unchanged",
+      "actual_guidance_producer": "/data2/tianang/projects/mdlm/guaidance_regressor_all_data_pad_no_mask.py",
+      "action": "delete driver; recover through legacy tag"
+    },
+    {
+      "path": "fix_ChemBERTa_on_DBAASP_SMILES_5_fold_mean_MIC.py",
+      "bytes": 19680,
+      "sha256": "02607e0712793e6b416f7d4f29cc892ac3c311d843c2b6b0020e105ae9071c20",
+      "action": "delete; superseded by canonical Fig. 2b runner"
+    },
+    {
+      "path": "fix_ChemBERTa_MLM_on_DBAASP_SMILES_5_fold_mean_MIC.py",
+      "bytes": 19591,
+      "sha256": "f33f98e6a06c0350768fe8517dbceff1204c472ed4576e8ede4037dd6c5df1c7",
+      "action": "delete; superseded by canonical Fig. 2b runner"
+    },
+    {
+      "path": "fix_ChemBERTa_MLM_mean_emb_on_DBAASP_SMILES_5_fold_mean_MIC.py",
+      "bytes": 20859,
+      "sha256": "e428af1f0117d1afd0fa950e86a556b8826a6849292c4a00989b6019fcb1b38c",
+      "action": "delete; non-reported pooling diagnostic retained only in legacy tag"
+    },
+    {
+      "path": "fix_MolFormer_on_DBAASP_SMILES_5_fold_mean_MIC.py",
+      "bytes": 19640,
+      "sha256": "2fc74fa4c10b61ed01130a34c137c21ad03bdbe791e931e9fdb909cde96dc456",
+      "action": "delete; superseded by canonical Fig. 2b runner"
+    },
+    {
+      "path": "fix_PeptideCLM_on_DBAASP_SMILES_5_fold_mean_MIC.py",
+      "bytes": 20004,
+      "sha256": "18237b5dd667caa2bd8bb562afc649aeee8cc87072bab97d0428746dffa8be2c",
+      "action": "delete; superseded by canonical Fig. 2b runner"
+    }
+  ],
+  "apex_migration": {
+    "checkpoint": {
+      "old_path": "compare_APEX/APEX_ckpt/APEX_pretrained_encoder_state_dict_best.ckpt",
+      "new_path": "weights/molecule_encoders/apex/APEX_pretrained_encoder_state_dict_best.ckpt",
+      "manifest_id": "fig2b_apex_encoder",
+      "bytes": 4873912,
+      "sha256": "a4b37338b1a26aff64c97b9aa3bbabf6874edf5805415e082f2e3bdf28d1b2b9"
+    },
+    "aaindex": {
+      "old_path": "compare_APEX/aaindex1.csv",
+      "new_local_path": "resources/reference/apex/aaindex1.csv",
+      "bytes": 64823,
+      "sha256": "478510fa4ee5e23c871558789a3f8450c20615b82dc294794a24bfe55e2bfaef",
+      "git_policy": "ignored local asset; install from official APEX repository after accepting its non-profit research license"
+    },
+    "historical_records": {
+      "old_directory_bytes": 195404088,
+      "old_file_count": 278,
+      "wandb_file_count": 265,
+      "wandb_bytes": 115815547,
+      "archive_path": "/data2/tianang/projects/ApexOracle_legacy_assets/compare_APEX_archive_2026-07-20",
+      "archive_bytes_verified": 195404088,
+      "action": "moved the complete directory to an external legacy archive; deleted nothing"
+    }
+  },
+  "peptideclm_migration": {
+    "old_bundle_bytes": 1209610,
+    "old_tokenizer_sha256": "753dd37948caaa3ebeceedf8cfc5313477ae3fb1717f522df7a01ae1a39582e9",
+    "new_path": "src/apexoracle/vendor/peptideclm_tokenizer",
+    "vocabulary_sha256": "96af9b4e0aa1fee93a9123720c1a46f977269ecc4ff81ac1cd4e0385b8f4aa2e",
+    "merges_sha256": "90446eadc9a1d8722be58b6b8e31c2756e0d321cd448cb5fae7538a33e3e3af4",
+    "license_sha256": "c00a634e11cb8746d4e18c087128cbf3e2a626a157cbe0aa8fa805dd5e9706fb",
+    "excluded": [
+      "training example",
+      "two analysis notebooks",
+      "untracked clustered_data/all_clusters.csv",
+      "unused atomwise tokenizer classes"
+    ]
+  },
+  "capsules": {
+    "capsule": {
+      "bytes": 168375793924,
+      "file_count": 2968,
+      "uploaded": false,
+      "current_code_dependency_count": 0,
+      "action": "delete complete local staging directory"
+    },
+    "capsule_fig2": {
+      "old_generated_data_bytes": 221603460,
+      "new_complete_capsule_size_bound_bytes": 300000,
+      "new_generated_file_count": 24,
+      "new_role": "compact audit of the formal 10,886-molecule shared benchmark",
+      "reported_models": 7,
+      "folds_per_model": 5,
+      "excluded_model": "chemberta_mlm_mean",
+      "action": "retain code; replace old generated data with compact canonical audit resources"
+    }
+  },
+  "inferences": [
+    "train_on_all_data.py is a historical all-data trainer but is not the producer of the currently consumed guidance checkpoint family",
+    "the full capsule is redundant because current canonical runners and the retained Fig. 2b audit capsule cover its code-level roles without depending on its copied binaries"
+  ],
+  "pending_author_confirmation": []
+}

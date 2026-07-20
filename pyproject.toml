@@ -34,6 +34,7 @@ data-preparation = [
 ]
 benchmark = [
   "torch>=2.1",
+  "SmilesPE>=0.0.3",
   "transformers>=4.40",
   "pyyaml>=6",
   "scipy>=1.9",
@@ -63,6 +64,9 @@ apexoracle-build-kmer-embeddings = "apexoracle.features.kmer_cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+"apexoracle.vendor.peptideclm_tokenizer" = ["LICENSE", "README.md", "new_vocab.txt", "new_splits.txt"]
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]

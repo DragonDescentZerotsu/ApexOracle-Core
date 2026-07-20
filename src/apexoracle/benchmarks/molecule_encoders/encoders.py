@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import hashlib
-import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Optional
@@ -57,15 +56,9 @@ HF_ENCODERS = {
 
 def load_hf_tokenizer(spec: HFEncoderSpec, repo_root: Path):
     if spec.tokenizer_kind == "vendored_peptideclm":
-        peptideclm_root = repo_root / "PeptideCLM"
-        if str(repo_root) not in sys.path:
-            sys.path.insert(0, str(repo_root))
-        from PeptideCLM.tokenizer.my_tokenizers import SMILES_SPE_Tokenizer
+        from apexoracle.vendor.peptideclm_tokenizer import load_tokenizer
 
-        return SMILES_SPE_Tokenizer(
-            str(peptideclm_root / "tokenizer/new_vocab.txt"),
-            str(peptideclm_root / "tokenizer/new_splits.txt"),
-        )
+        return load_tokenizer()
     from transformers import AutoTokenizer
 
     return AutoTokenizer.from_pretrained(
@@ -186,7 +179,7 @@ def _torch_load(path: Path):
 def extract_apex_features(
     benchmark: SharedBenchmarkData,
     *,
-    apex_root: Path,
+    aaindex_path: Path,
     checkpoint_path: Path,
     device: str,
     batch_size: int,
@@ -195,7 +188,7 @@ def extract_apex_features(
 
     import torch
 
-    apex_root = Path(apex_root).resolve()
+    aaindex_path = Path(aaindex_path).resolve()
     checkpoint_path = Path(checkpoint_path).resolve()
     from apexoracle.benchmarks.molecule_encoders.apex_model import (
         ApexEncoder,
@@ -203,9 +196,7 @@ def extract_apex_features(
     )
 
     legacy_vocabulary, _ = build_apex_vocabulary()
-    legacy_embedding, _ = load_aaindex_embedding(
-        apex_root / "aaindex1.csv", legacy_vocabulary
-    )
+    legacy_embedding, _ = load_aaindex_embedding(aaindex_path, legacy_vocabulary)
     embedding = np.asarray(legacy_embedding)
     vocabulary, _ = build_apex_vocabulary()
     token_ids, _ = encode_apex_sequences(
@@ -229,17 +220,15 @@ def extract_apex_features(
     matrix = np.ascontiguousarray(np.concatenate(features, axis=0), dtype=np.float32)
     if matrix.shape[0] != len(benchmark):
         raise RuntimeError("APEX did not return one feature row per shared molecule")
-    try:
-        checkpoint_reference = str(checkpoint_path.relative_to(apex_root))
-    except ValueError:
-        checkpoint_reference = checkpoint_path.name
     return FeatureCache(
         encoder_name="apex",
         features=matrix,
         molecule_ids=benchmark.molecule_ids,
         metadata={
-            "checkpoint_reference": checkpoint_reference,
+            "checkpoint_reference": str(checkpoint_path),
             "checkpoint_sha256": _sha256(checkpoint_path),
+            "aaindex_reference": str(aaindex_path),
+            "aaindex_sha256": _sha256(aaindex_path),
             "pooling": "APEX pretrained encoder output",
             "encoder_mode": "eval",
             "max_length": 52,

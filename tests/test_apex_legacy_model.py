@@ -16,19 +16,21 @@ from apexoracle.benchmarks.molecule_encoders.apex_model import (
     ApexEncoder,
     load_aaindex_embedding,
 )
+from apexoracle.benchmarks.molecule_encoders.assets import APEX_AAINDEX_RELATIVE_PATH
 from apexoracle.benchmarks.molecule_encoders.legacy_training import (
     LegacyMaskedMSELoss,
     finite_mean_or_nan,
     legacy_r2_per_task,
 )
+from apexoracle.resources import resolve_weight
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-AAINDEX = REPO_ROOT / "compare_APEX/aaindex1.csv"
-CHECKPOINT = (
-    REPO_ROOT
-    / "compare_APEX/APEX_ckpt/APEX_pretrained_encoder_state_dict_best.ckpt"
-)
+AAINDEX = REPO_ROOT / APEX_AAINDEX_RELATIVE_PATH
+try:
+    CHECKPOINT = resolve_weight("fig2b_apex_encoder", repo_root=REPO_ROOT)
+except FileNotFoundError:
+    CHECKPOINT = REPO_ROOT / "weights/molecule_encoders/apex/APEX_pretrained_encoder_state_dict_best.ckpt"
 
 
 def _inline_legacy_forward(model: ApexEncoder, token_ids: torch.Tensor) -> torch.Tensor:

@@ -8,7 +8,7 @@ if [[ "${1:-}" == "fig2b" || "${1:-}" == "fig2b-mic" || "${1:-}" == "fig2b_mic" 
   shift
 fi
 
-python "${SCRIPT_DIR}/reproduce_fig2b_mic_regression.py" \
+python3 "${SCRIPT_DIR}/reproduce_fig2b_mic_regression.py" \
   --data-root "${CAPSULE_DIR}/data" \
   --results-dir "${CAPSULE_DIR}/results" \
   "$@"

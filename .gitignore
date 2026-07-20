@@ -28,18 +28,13 @@ DataPrepare/Data/inhouse_synergy/*
 !DataPrepare/Data/inhouse_synergy/*.py
 DataPrepare/MDLM/Data/
 
-# Capsule 只保留源码快照；资源由发布流程单独管理
-capsule/data/*
-!capsule/data/source/
+# Fig. 2b audit capsule 的 data 由发布流程单独生成
 capsule_fig2/data/*
-!capsule_fig2/data/source/
-capsule/results/
 capsule_fig2/results/
 
 # 模型、特征缓存和大型二进制产物
 weights/
 Checkpoints/
-compare_APEX/APEX_ckpt/
 *.pt
 *.pth
 *.ckpt

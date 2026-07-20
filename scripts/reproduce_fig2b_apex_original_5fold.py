@@ -20,7 +20,6 @@ from tqdm import tqdm
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-APEX_ROOT = REPO_ROOT / "compare_APEX"
 SRC_ROOT = REPO_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
@@ -33,10 +32,12 @@ from apexoracle.benchmarks.molecule_encoders.apex_model import (  # noqa: E402
     ApexEncoder,
     load_aaindex_embedding,
 )
+from apexoracle.benchmarks.molecule_encoders.assets import apex_aaindex_path  # noqa: E402
 from apexoracle.benchmarks.molecule_encoders.legacy_training import (  # noqa: E402
     LegacyMaskedMSELoss,
     legacy_r2_per_task,
 )
+from apexoracle.resources import resolve_weight  # noqa: E402
 
 
 class AAseqsDataset(Dataset):
@@ -152,7 +153,7 @@ def save_head(
                 "backbone_eval_mode_during_validation": True,
                 "head_training_mode_during_validation": True,
                 "validation_batch_size": args.batch_size,
-                "source_protocol": "compare_APEX/APEX_fix_train_DBAASP_MIC_5_fold_mean.py",
+                "source_protocol": "legacy-code-snapshot-2026-07-17:compare_APEX/APEX_fix_train_DBAASP_MIC_5_fold_mean.py",
             },
             "eval_rng_state": eval_rng_state,
         },
@@ -181,13 +182,13 @@ def main() -> None:
 
     max_len = 52
     word2idx, _ = build_apex_vocabulary()
-    emb, _ = load_aaindex_embedding(APEX_ROOT / "aaindex1.csv", word2idx)
+    emb, _ = load_aaindex_embedding(apex_aaindex_path(REPO_ROOT), word2idx)
     emb_size = np.shape(emb)[1]
     data = pd.read_csv(args.data_path)
     dataset = AAseqsDataset(data, max_len, word2idx)
     kf = KFold(n_splits=5, shuffle=True, random_state=42)
     criterion = LegacyMaskedMSELoss()
-    pretrained_path = APEX_ROOT / "APEX_ckpt/APEX_pretrained_encoder_state_dict_best.ckpt"
+    pretrained_path = resolve_weight("fig2b_apex_encoder", repo_root=REPO_ROOT)
 
     fold_results = []
     for fold, (train_idx, test_idx) in enumerate(kf.split(dataset)):
@@ -291,7 +292,7 @@ def main() -> None:
 
     metrics = {
         "model": "apex",
-        "source_script": "compare_APEX/APEX_fix_train_DBAASP_MIC_5_fold_mean.py",
+        "source_script": "legacy-code-snapshot-2026-07-17:compare_APEX/APEX_fix_train_DBAASP_MIC_5_fold_mean.py",
         "num_examples": int(len(dataset)),
         "original_length": int(dataset.original_length),
         "best_mean_R2_across_folds": float(np.mean([item["best_r2_mean"] for item in fold_results])),

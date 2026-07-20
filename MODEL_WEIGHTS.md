@@ -6,7 +6,8 @@
 
 - 权重二进制不进入 Git；Git 只保存 manifest、下载说明、校验和与许可信息。
 - 未来统一的本地根目录为 `${APEXORACLE_WEIGHTS_DIR:-weights}`。
-- `future_storage.relative_path` 是权重迁移后的稳定相对路径；当前 `migration_status` 仍是 `planned_not_moved`，因此现阶段训练继续读取 `current_path` 或上游 Hugging Face model ID。
+- `future_storage.relative_path` 是权重迁移后的稳定相对路径。APEX encoder 已迁移并由 manifest
+  resolver 加载；其余本地权重仍读取已登记的 `current_path`。
 - 每个本地 checkpoint 在发布前必须具备 SHA-256、文件大小、稳定下载 URI、许可或再分发结论和至少一个加载 smoke test。
 - 第三方 Hugging Face 权重不应默认复制再分发。优先固定 revision 并从上游下载；只有许可允许且确有离线发布需要时才镜像到统一存储。
 
@@ -17,7 +18,7 @@
 | `fig2b_dlm_only` | `/data2/tianang/projects/mdlm/Checkpoints_fangping/best_2.ckpt` | SHA-256 `fbbcc65…75e59` | `molecule_encoders/dlm_only/best_2.ckpt` | 作者已确认用于修订 benchmark；原论文精确身份仍是高置信度推断 |
 | `fig2b_dlm_mtr_dlm` | `/data2/tianang/projects/mdlm/Checkpoints_fangping/best.ckpt` | SHA-256 `f8df1fb5…d8ca` | `molecule_encoders/dlm_mtr_dlm/best.ckpt` | 已验证用于修订 benchmark |
 | `fig2b_dlm_mtr_dlm_small_candidate` | `node002:/data1/fangping/mdlm/outputs/openwebtext-train/2025.04.29/165523/checkpoints/best.ckpt` | SHA-256 `3c612c9c…6c9d6` | `molecule_encoders/dlm_mtr_dlm_small/best.ckpt` | 12-layer 容量匹配候选；尚未运行共同数据 benchmark |
-| `fig2b_apex_encoder` | `compare_APEX/APEX_ckpt/APEX_pretrained_encoder_state_dict_best.ckpt` | SHA-256 `a4b37338…b2b9` | `molecule_encoders/apex/APEX_pretrained_encoder_state_dict_best.ckpt` | 原实现和权重保持不变 |
+| `fig2b_apex_encoder` | `weights/molecule_encoders/apex/APEX_pretrained_encoder_state_dict_best.ckpt` | SHA-256 `a4b37338…b2b9` | `molecule_encoders/apex/APEX_pretrained_encoder_state_dict_best.ckpt` | 已迁移；通过 manifest ID 加载并严格验证 |
 | `fig2b_chemberta_mtr` | `DeepChem/ChemBERTa-77M-MTR` | revision `66b895ca…04ca` | `molecule_encoders/chemberta_mtr` | 已用于 Fig. 2b/2c 重构；旧 run 未记录 revision |
 | `fig2b_chemberta_mlm` | `DeepChem/ChemBERTa-77M-MLM` | revision `ed8a5374…15ff` | `molecule_encoders/chemberta_mlm` | 已用于 Fig. 2b/2c 重构；旧 run 未记录 revision |
 | `fig2b_molformer` | `ibm/MoLFormer-XL-both-10pct` | revision `7b12d946…0314` | `molecule_encoders/molformer` | 已固定 |
