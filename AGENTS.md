@@ -258,6 +258,17 @@
   `0.34518/0.92278`。相对 common-fold baseline，Holm 校正后只有 E. coli AUPRC
   (`p=0.03539`) 和 AUROC (`p=0.00180`) 显著更高；其余四项均不显著。该结果是
   单模型/折 sensitivity，不是旧完整 ensemble 的恢复。
+- **2026-07-20 指标口径诊断：** 当前 fine-tune sensitivity 不是旧论文柱子的等价重算。
+  旧图使用历史 multi-member ensemble 的 fold-level 汇总并硬编码混合指标；当前使用每折固定
+  `ensemble_0` 的 pooled OOF。RN4220 旧 AUPRC `0.408` 与现存前三折 10-member ensemble
+  均值 `0.40730` 一致；A. baumannii 仅恢复两折，均值 `0.45595`，不能验证旧图 `0.4344`。
+  因此当前 `0.34518/0.35294` 的下降应标为协议口径差异，不是已证实的重构行为漂移。
+- **Fig. 1b 绘图入口：** canonical 实现为 `src/apexoracle/evaluation/fig1b_plot.py`，Mac
+  canonical notebook 为 `/Users/kirianozan/Documents/Study/Penn/projects/local_figs/figs.ipynb`
+  的 cell `220739609a526f79`。另一份
+  `/Users/kirianozan/Documents/Study/Penn/Synergy/paper_figs/figs.ipynb` 是三 cell 的旧副本，
+  从未包含当前 Fig. 1b cell。图上使用 Fig. 3a 风格 bracket，显示 paired prediction-swap
+  test 的 Holm-adjusted p；fine-tuned legend 明确标注 `1 model/fold`。
 - **Fig. 1b 文稿同步已完成：** Mac canonical notebook、三菌株统一 AUPRC panel、论文 Fig. 1、
   caption、Results、Methods 和 reviewer response 已同步；最终 TeX 完整编译为 28 页。修改前
   快照与前后 SHA-256 记录在

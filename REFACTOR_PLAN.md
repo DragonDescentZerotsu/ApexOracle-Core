@@ -412,6 +412,10 @@ metrics 完全一致；group 1 当前动态 hash split 多 5 条，继续按既�
   硬编码柱高推断显著性。Mac notebook、Fig. 1、论文 Results/Methods/caption 和回复信均已
   同步，28 页 TeX 完整编译通过；前后文件哈希已进入 reproducibility manifest。本阶段最终
   全仓库回归为 138 passed，`compileall` 和 `git diff --check` 均通过。
+- Fig. 1b 旧柱子与当前 sensitivity 的指标口径诊断已完成：旧值来自不完整历史
+  10-member ensemble 的 fold-level 汇总，而当前是 5-fold single-member pooled OOF；两者不得
+  作为行为等价复现互相替代。绘图 legend 已显式标注 `1 model/fold`，并加入 Fig. 3a 风格的
+  Holm-adjusted paired-test p-value brackets。
 - synergy CV 已作为论文高置信度复现候选完成；rank/base epoch 差异保留为 provenance 限制，
   不再是代码迁移阻塞项；
 - modality ablation：最终绘图值和图形入口已冻结，但缺少能够把这些值精确连接到 legacy

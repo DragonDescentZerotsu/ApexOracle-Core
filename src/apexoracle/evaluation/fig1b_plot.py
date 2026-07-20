@@ -17,7 +17,7 @@ TARGET_LABELS = {
     2: r"$\it{S.\ aureus}$ RN4220",
 }
 MODE_LABELS = {
-    "fine_tune_vs_baseline": "ApexOracle, fine-tuned",
+    "fine_tune_vs_baseline": "ApexOracle, fine-tuned (1 model/fold)",
     "strict_zero_shot_vs_baseline": "ApexOracle, zero-shot",
 }
 BASELINE_LABEL = "Chemprop baseline (common folds)"
@@ -50,6 +50,10 @@ def build_plot_rows(report: dict[str, Any]) -> pd.DataFrame:
                     "value": item["candidate"],
                     "ci_low": item["candidate_95ci"][0],
                     "ci_high": item["candidate_95ci"][1],
+                    "comparison_family": family,
+                    "holm_p": item.get(
+                        "holm_adjusted_p_within_family_and_metric"
+                    ),
                 }
             )
             baseline_references.append(item)
@@ -69,9 +73,53 @@ def build_plot_rows(report: dict[str, Any]) -> pd.DataFrame:
                 "value": baseline_reference["baseline"],
                 "ci_low": baseline_reference["baseline_95ci"][0],
                 "ci_high": baseline_reference["baseline_95ci"][1],
+                "comparison_family": None,
+                "holm_p": None,
             }
         )
     return pd.DataFrame(rows)
+
+
+def format_adjusted_p(p_value: float) -> str:
+    """Format the Holm-adjusted paired-test p value shown above a bracket."""
+
+    if p_value < 1e-4:
+        return r"Holm $p < 0.0001$"
+    return rf"Holm $p = {p_value:.4f}$"
+
+
+def draw_significance(
+    axis,
+    *,
+    x1: float,
+    x2: float,
+    y_top: float,
+    text: str,
+    drop: float = 0.012,
+    text_offset: float = 0.008,
+) -> float:
+    """Draw a Fig. 3a-style significance bracket and return its text top."""
+
+    axis.plot(
+        [x1, x1, x2, x2],
+        [y_top - drop, y_top, y_top, y_top - drop],
+        color="#222222",
+        linewidth=1.1,
+        solid_capstyle="butt",
+        clip_on=False,
+        zorder=4,
+    )
+    text_y = y_top + text_offset
+    axis.text(
+        (x1 + x2) / 2,
+        text_y,
+        text,
+        ha="center",
+        va="bottom",
+        fontsize=8,
+        color="#222222",
+    )
+    return text_y
 
 
 def plot_rows(frame: pd.DataFrame, output_prefix: Path) -> None:
@@ -84,7 +132,8 @@ def plot_rows(frame: pd.DataFrame, output_prefix: Path) -> None:
     groups = list(TARGET_LABELS)
     width = 0.24
     x = np.arange(len(groups), dtype=float)
-    fig, axis = plt.subplots(figsize=(9.5, 5.0))
+    fig, axis = plt.subplots(figsize=(10.4, 5.4))
+    method_positions: dict[tuple[int, str], float] = {}
     for method_index, (method, color) in enumerate(zip(methods, colors, strict=True)):
         subset = frame[frame["method"] == method].set_index("group").loc[groups]
         values = subset["value"].to_numpy(dtype=float)
@@ -95,6 +144,12 @@ def plot_rows(frame: pd.DataFrame, output_prefix: Path) -> None:
             )
         )
         positions = x + (method_index - 1) * width
+        method_positions.update(
+            {
+                (group, method): float(position)
+                for group, position in zip(groups, positions)
+            }
+        )
         bars = axis.bar(
             positions,
             values,
@@ -112,15 +167,46 @@ def plot_rows(frame: pd.DataFrame, output_prefix: Path) -> None:
             padding=5,
             fontsize=9,
         )
+
+    annotation_tops = []
+    # Match the bracket convention used in the Fig. 3a plotting code. The
+    # shorter zero-shot comparison is drawn first; the wider fine-tune
+    # comparison is stacked above it. These are paired prediction-swap tests,
+    # not independent-sample tests.
+    family_levels = (
+        ("strict_zero_shot_vs_baseline", 0),
+        ("fine_tune_vs_baseline", 1),
+    )
+    for group in groups:
+        group_frame = frame[frame["group"] == group]
+        local_top = float(group_frame["ci_high"].max())
+        for family, level in family_levels:
+            candidate = group_frame[
+                group_frame["comparison_family"] == family
+            ]
+            if len(candidate) != 1 or pd.isna(candidate.iloc[0]["holm_p"]):
+                continue
+            method = str(candidate.iloc[0]["method"])
+            y_top = local_top + 0.045 + 0.085 * level
+            annotation_tops.append(
+                draw_significance(
+                    axis,
+                    x1=method_positions[(group, method)],
+                    x2=method_positions[(group, BASELINE_LABEL)],
+                    y_top=y_top,
+                    text=format_adjusted_p(float(candidate.iloc[0]["holm_p"])),
+                )
+            )
     axis.set_xticks(x, [TARGET_LABELS[group] for group in groups])
     axis.tick_params(axis="both", labelsize=9)
     axis.set_ylabel("AUPRC", fontsize=10)
-    axis.set_title("Small-molecule antibiotic classification", fontsize=12, pad=48)
+    axis.set_title("Small-molecule antibiotic classification", fontsize=12, pad=54)
     axis.grid(axis="y", linestyle="--", alpha=0.3)
     axis.set_axisbelow(True)
     axis.spines[["top", "right", "bottom"]].set_visible(False)
     axis.tick_params(axis="x", length=0)
-    upper = min(1.0, float(frame["ci_high"].max()) + 0.14)
+    plotted_top = max(annotation_tops, default=float(frame["ci_high"].max()))
+    upper = min(1.0, plotted_top + 0.055)
     axis.set_ylim(0, upper)
     axis.legend(
         frameon=False,

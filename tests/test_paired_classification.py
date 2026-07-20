@@ -13,7 +13,7 @@ from apexoracle.evaluation.paired_classification import (
     percentile_interval,
 )
 from apexoracle.evaluation.fig1b_results import assemble_config, combine_fold_sources
-from apexoracle.evaluation.fig1b_plot import build_plot_rows
+from apexoracle.evaluation.fig1b_plot import build_plot_rows, format_adjusted_p
 
 
 def test_paired_resampling_detects_a_clear_ordering():
@@ -86,12 +86,19 @@ def test_fig1b_plot_rows_require_all_groups_and_keep_one_baseline_per_group():
                     "candidate_95ci": [candidate - 0.1, candidate + 0.1],
                     "baseline": 0.5,
                     "baseline_95ci": [0.4, 0.6],
+                    "holm_adjusted_p_within_family_and_metric": 0.01234,
                 }
             )
     frame = build_plot_rows({"results": results})
     assert len(frame) == 9
     assert frame.groupby("group").size().tolist() == [3, 3, 3]
     assert (frame["method"] == "Chemprop baseline (common folds)").sum() == 3
+    assert frame["holm_p"].notna().sum() == 6
+
+
+def test_fig1b_plot_formats_holm_adjusted_p_values():
+    assert format_adjusted_p(0.0353929) == r"Holm $p = 0.0354$"
+    assert format_adjusted_p(0.00001) == r"Holm $p < 0.0001$"
 
 
 def test_fig1b_plot_rows_allow_bootstrap_monte_carlo_interval_differences():

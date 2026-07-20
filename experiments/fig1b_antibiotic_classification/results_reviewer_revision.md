@@ -59,10 +59,53 @@ SHA-256 为 `912de74c72960b99495e4a441e1dcb75b338dd7390625ac47b3468025c676e83`�
   和 RN4220 的两个指标均无可检测差异。
 - fine-tune 是每折单模型的 sensitivity analysis，不得写成已恢复旧论文的完整 ensemble 结果。
 
+## 旧论文 fine-tuned 柱子与当前 sensitivity 的口径诊断
+
+旧 Mac notebook 在修改前的 cell `220739609a526f79` 中直接硬编码了混合指标：RN4220
+AUPRC `0.408`、E. coli AUROC `0.962`、A. baumannii AUPRC/AUROC
+`0.4344/0.8262`。这些值不是当前 pooled OOF 单模型分析的输出。
+
+| Target | 旧图值 | 已恢复的历史 ensemble 证据 | 当前 reviewer sensitivity |
+| --- | ---: | ---: | ---: |
+| *E. coli* BW25113 | AUROC 0.962 | 5/5 folds、每折 10 members 的 fold AUROC 均值 0.96114 | 单成员 pooled OOF AUROC 0.95529 |
+| *A. baumannii* ATCC 17978 | AUPRC 0.4344 | 仅 2/5 folds 完整；两折 10-member ensemble AUPRC 均值 0.45595 | 单成员 pooled OOF AUPRC 0.35294 |
+| *S. aureus* RN4220 | AUPRC 0.408 | 仅 3/5 folds 完整；三折 10-member ensemble AUPRC 均值 0.40730 | 单成员 pooled OOF AUPRC 0.34518 |
+
+因此 A. baumannii 和 RN4220 的下降不能解释为重构代码错误：比较同时改变了 ensemble
+大小（10 → 1）、聚合方式（fold metric mean → pooled OOF）、checkpoint 完整性和推理模式。
+RN4220 fold 4 还是后补训候选。canonical runner 的 legacy 行为等价测试、strict zero-shot
+逐样本 logit 对齐和历史 checkpoint 严格加载均已通过；当前证据支持“口径不同”，不支持
+“重构 forward 发生行为漂移”。若要恢复与旧柱子严格同口径的显著性结果，必须补训缺失的
+46 个历史网格成员，形成每个 target 都完整的 5 folds × 10 members，并重新输出样本级预测。
+
+## Chemprop 数值与来源论文的关系
+
+| Target profile | 当前 common-fold 结果 | 来源论文主结果 | 解释 |
+| --- | ---: | ---: | --- |
+| Stokes 2020 / E. coli | AUROC 0.85711；AUPRC 0.50752 | AUROC 0.896；未汇报 AUPRC | 当前 AUROC 更低，AUPRC 是本次共同 folds 新增结果 |
+| Liu 2023 / A. baumannii | AUROC/AUPRC 0.77750/0.31967 | 约 0.792/0.337 | 接近且略低；旧图 0.756/0.266 是 no-RDKit ablation，不是主模型 |
+| Wong 2024 / RN4220 | AUPRC 0.32873 | AUPRC 0.364 | 当前更低 |
+
+三个 baseline 都是在 ApexOracle 固定 outer folds 上重新训练的单模型 Chemprop sensitivity，
+不是直接复制来源论文 headline。它们没有高于各自论文主结果；相对旧图变高的主要原因是
+恢复了论文主 profile（尤其 Liu 的 RDKit2D descriptors），并统一了数据和 folds。
+
+## 绘图与显著性标注
+
+- canonical 绘图实现是 `src/apexoracle/evaluation/fig1b_plot.py`，入口是
+  `scripts/reproduce/plot_fig1b_revision.py`；Matplotlib 生成冻结 CSV、PDF 和 PNG。
+- Mac canonical notebook 是
+  `/Users/kirianozan/Documents/Study/Penn/projects/local_figs/figs.ipynb`，cell ID
+  `220739609a526f79`。`/Users/kirianozan/Documents/Study/Penn/Synergy/paper_figs/figs.ipynb`
+  是只有三个旧 cell 的另一份 notebook，从未包含该 Fig. 1b cell。
+- 图上 bracket 沿用 Fig. 3a 的视觉样式，但统计量使用本实验的 paired prediction-swap test；
+  文本显示三菌株内 Holm 校正后的精确 p 值。legend 显式写为
+  `ApexOracle, fine-tuned (1 model/fold)`，不再把 sensitivity 暗示成旧 10-member ensemble。
+
 ## 发布同步
 
-- Mac canonical notebook cell `220739609a526f79` 已改为读取冻结 CSV 并绘制三个菌株的统一
-  AUPRC；该 cell 已在 Mac `base` 环境以 `Agg` 后端执行通过。
+- Mac canonical notebook cell `220739609a526f79` 已改为读取冻结 CSV、绘制三个菌株的统一
+  AUPRC 及 Holm-adjusted p-value brackets；该 cell 已在 Mac `base` 环境以 `Agg` 后端执行通过。
 - 新 panel 已合并到论文 `Fig1.pdf`；Results、Methods、caption 和 response letter 已同步为
   上述统计结论，论文完整编译为 28 页。
 - 修改前快照、最终文件和运行产物 SHA-256 见

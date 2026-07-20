@@ -13,7 +13,8 @@
       "epochs": 25
     },
     "inference": "deterministic eval-mode checkpoint inference",
-    "statistics": "5000 class-stratified paired bootstrap resamples and 5000 paired prediction-swap randomizations; Holm correction across three strains within each mode and metric"
+    "statistics": "5000 class-stratified paired bootstrap resamples and 5000 paired prediction-swap randomizations; Holm correction across three strains within each mode and metric",
+    "plot_annotation": "Fig. 3a-style brackets display exact Holm-adjusted paired prediction-swap p values; fine-tune legend explicitly says 1 model/fold"
   },
   "paired_sample_counts": {
     "ecoli_bw25113": {
@@ -51,26 +52,27 @@
     },
     "canonical_panel_pdf": {
       "path": "results/fig1b_revision/fig1b_revised_auprc.pdf",
-      "sha256": "52d56a16ba773e99d67abe8ef62ba5f9c24a73a7ead8252227c45d2f03e511a4"
+      "sha256": "26747cd6beb19a1c3ae24e0a829657932dfe8976e59eaf8fd12f445ff4889285"
     },
     "mac_rendered_panel_pdf": {
       "path": "results/fig1b_revision/fig1b_revised_auprc_mac.pdf",
-      "sha256": "14d0d9682335ba31e804dfcd7e5af630ba6b5a382f470317d16f0545aec025c6"
+      "sha256": "527199d1d7ca9ccea3ee09509beae166b5d4f54389f8a85e38b55c471a83ac45"
     }
   },
   "paper_files": {
     "directory": "/data2/tianang/projects/ApexOracle_cleaned/docs/ApexOracle_Nat_Biotech",
     "backup_directory": "/data2/tianang/projects/ApexOracle_cleaned/docs/ApexOracle_Nat_Biotech/.revision_backups/fig1b_2026-07-20_preupdate",
+    "pre_significance_backup_directory": "/data2/tianang/projects/ApexOracle_cleaned/docs/ApexOracle_Nat_Biotech/.revision_backups/fig1b_2026-07-20_significance",
     "before_sha256": {
       "Fig1.pdf": "c720fd48f09575bd79bdd7df592d33d5497e16ed341c5cf914bafc96a5eb5941",
       "sn-article.tex": "fd3579ba11f3c84d66df875c6d54f12c768eb17e6af151ce6471ede4eeb53157",
       "Response to reviewers letter.docx": "5e9952fa74514bde43687bbba9dfa64bac3bf039c60760d4e29058f1b8ffeaff"
     },
     "after_sha256": {
-      "Fig1.pdf": "e8971c526f93ea7e69ef499799baf2218750cb7216102a3ce2c6dfb7dbfd9319",
-      "sn-article.tex": "3dc3a6a2c5a4eb1a5c039598bf955506647c829d724c8b79cfa168a775f4183a",
+      "Fig1.pdf": "6197be568fdc6bfdc766668274086929ee06221d6b1f4503b9179af9bbce0185",
+      "sn-article.tex": "def03c59f69d8a1f3bdecf9260a9993fca977e7ac02ddbc35bc151bfa69d9cea",
       "Response to reviewers letter.docx": "11d09d9357c2521fb79f6fbfdb1bdf396fc4c71505dc20df9025ffa7c9200f0e",
-      "sn-article.pdf": "ab84775342631be30a4df5225d1698fadba3f02e9b268785b97c118dba7459c8"
+      "sn-article.pdf": "08ca31c77eeb6c04f6f300e35dde9a8a92e3483071609c33eae042b432c7983c"
     },
     "compiled_pages": 28
   },
@@ -78,11 +80,12 @@
     "canonical_notebook": "/Users/kirianozan/Documents/Study/Penn/projects/local_figs/figs.ipynb",
     "notebook_cell_id": "220739609a526f79",
     "backup_directory": "/Users/kirianozan/Documents/Study/Penn/projects/local_figs/.revision_backups/fig1b_2026-07-20_preupdate",
+    "pre_significance_backup_directory": "/Users/kirianozan/Documents/Study/Penn/projects/local_figs/.revision_backups/fig1b_2026-07-20_significance",
     "before_notebook_sha256": "0a2a30aeb18d52c0874c7a0a8a50ba760fefa3d52009b8e59520ab1f3137918b",
-    "after_notebook_sha256": "435b727d3da8104b6b4b049f3c13bb9576c6520bd728780df95d28c631395708",
+    "after_notebook_sha256": "6a55c94f1500c4b41f18c7c1a602c2046cd42181535c12d6016bcffc0a13b092",
     "panel_pdf": "/Users/kirianozan/Documents/Study/Penn/Synergy/paper_figs/3-strain-antibiotics.pdf",
-    "panel_pdf_sha256": "14d0d9682335ba31e804dfcd7e5af630ba6b5a382f470317d16f0545aec025c6",
+    "panel_pdf_sha256": "527199d1d7ca9ccea3ee09509beae166b5d4f54389f8a85e38b55c471a83ac45",
     "panel_csv": "/Users/kirianozan/Documents/Study/Penn/Synergy/paper_figs/fig1b_revised_auprc.csv",
-    "panel_csv_sha256": "6f5893bd081c7f709aa6029573bccc8b9350556b138ea8ea47e47cda4f5f5334"
+    "panel_csv_sha256": "498a5aa8cdc53112e4a9ab13188b017080659fa009709af39801145b822028a4"
   }
 }
