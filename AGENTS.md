@@ -251,6 +251,17 @@
   原数值仅保留为历史绘图事实。
 - **Chemprop eligibility 边界：** E. coli 的 `ce_2244` 与 RN4220 的 `na_20640` 是同一条
   RDKit 拒绝的异常铝配位结构；既有 KFold 不重排，配对比较时从双方同时排除并登记。
+- **fine-tune sensitivity 已完成：** 为避免混用残缺 ensemble，每个 outer fold 固定只使用
+  `ensemble_0`。14/15 个 fold 复用历史 checkpoint；RN4220 fold 4 以
+  `PYTHONHASHSEED=0`、ensemble seed 42 按旧 25-epoch 协议补训。pooled OOF AUPRC/AUROC
+  分别为 E. coli `0.66655/0.95529`、A. baumannii `0.35294/0.77698`、RN4220
+  `0.34518/0.92278`。相对 common-fold baseline，Holm 校正后只有 E. coli AUPRC
+  (`p=0.03539`) 和 AUROC (`p=0.00180`) 显著更高；其余四项均不显著。该结果是
+  单模型/折 sensitivity，不是旧完整 ensemble 的恢复。
+- **Fig. 1b 文稿同步已完成：** Mac canonical notebook、三菌株统一 AUPRC panel、论文 Fig. 1、
+  caption、Results、Methods 和 reviewer response 已同步；最终 TeX 完整编译为 28 页。修改前
+  快照与前后 SHA-256 记录在
+  `reproducibility/fig1b_reviewer_revision_2026-07-20.json`。
 
 #### node002 非破坏性同步（2026-07-20）
 

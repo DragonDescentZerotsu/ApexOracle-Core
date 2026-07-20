@@ -94,6 +94,30 @@ def test_fig1b_plot_rows_require_all_groups_and_keep_one_baseline_per_group():
     assert (frame["method"] == "Chemprop baseline (common folds)").sum() == 3
 
 
+def test_fig1b_plot_rows_allow_bootstrap_monte_carlo_interval_differences():
+    results = []
+    for group in range(3):
+        for family, candidate, baseline_ci in (
+            ("fine_tune_vs_baseline", 0.7, [0.39, 0.61]),
+            ("strict_zero_shot_vs_baseline", 0.6, [0.4, 0.6]),
+        ):
+            results.append(
+                {
+                    "family": family,
+                    "group": group,
+                    "metric": "auprc",
+                    "candidate": candidate,
+                    "candidate_95ci": [candidate - 0.1, candidate + 0.1],
+                    "baseline": 0.5,
+                    "baseline_95ci": baseline_ci,
+                }
+            )
+    frame = build_plot_rows({"results": results})
+    baseline = frame[frame["method"] == "Chemprop baseline (common folds)"]
+    assert baseline["ci_low"].tolist() == [0.4, 0.4, 0.4]
+    assert baseline["ci_high"].tolist() == [0.6, 0.6, 0.6]
+
+
 def test_fold_assembler_can_restrict_oof_to_a_reference_prediction_set(tmp_path):
     predictions = pd.DataFrame(
         {

@@ -405,9 +405,13 @@ metrics 完全一致；group 1 当前动态 hash split 多 5 条，继续按既�
 - Fig. 1b reviewer 修订已重新开启为独立补实验阶段：三个 strict zero-shot ensemble 的样本级
   预测和三个 Chemprop baseline 的 15 个共同-fold 运行均已完成。strict zero-shot 的 5,000 次
   paired bootstrap/randomization/Holm 结果显示只在 E. coli AUROC 上显著优于 baseline；
-  A. baumannii AUPRC 相当而 AUROC 较低，RN4220 两项均显著较低。fine-tune sensitivity 统一为
-  每折单个 `ensemble_0`，14/15 个历史 fold 已完成推理；仅 RN4220 fold 4 正在按旧 25-epoch
-  协议补训。最终不用不配对的硬编码柱高推断显著性。
+  A. baumannii AUPRC 相当而 AUROC 较低，RN4220 两项均显著较低。fine-tune sensitivity 已统一为
+  每折单个 `ensemble_0`：14/15 个 fold 复用历史 checkpoint，RN4220 fold 4 已按旧 25-epoch
+  协议补训并完成确定性推理。fine-tune 只在 E. coli AUPRC/AUROC 上显著优于 baseline；
+  A. baumannii 和 RN4220 均无显著差异。最终 Fig. 1b 使用配对样本统计，不再由不配对的
+  硬编码柱高推断显著性。Mac notebook、Fig. 1、论文 Results/Methods/caption 和回复信均已
+  同步，28 页 TeX 完整编译通过；前后文件哈希已进入 reproducibility manifest。本阶段最终
+  全仓库回归为 138 passed，`compileall` 和 `git diff --check` 均通过。
 - synergy CV 已作为论文高置信度复现候选完成；rank/base epoch 差异保留为 provenance 限制，
   不再是代码迁移阻塞项；
 - modality ablation：最终绘图值和图形入口已冻结，但缺少能够把这些值精确连接到 legacy

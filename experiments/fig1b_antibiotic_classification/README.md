@@ -65,7 +65,7 @@ python scripts/audit/audit_antibiotic_classification_checkpoints.py \
 - strict checkpoint 的历史训练时 dropout prediction 仍不可逐 bit 恢复；当前 30 个 checkpoint
   已完成的是统一 `eval()` 契约下的确定性推理。
 
-## Reviewer 修订：三菌株统一 AUPRC 与显著性（执行中）
+## Reviewer 修订：三菌株统一 AUPRC 与显著性（已完成）
 
 Reviewer 要求 Fig. 1b 对三个菌株一致报告 AUPRC，并为“优于 baseline”的表述提供统计检验。
 本阶段新增两个彼此分离的入口：
@@ -102,9 +102,19 @@ A. baumannii 几乎相同（差 `0.00132`，`p=0.9660`），RN4220 显著低
 `0.16107`（`p=0.00060`）。因此不能再保留“zero-shot 普遍优于 baseline”的概括。
 
 fine-tune sensitivity 固定为每个 outer fold 恰好使用 `ensemble_0`，避免把不同大小的
-残缺 ensemble 混入同一统计表。14/15 个历史 fold 已完成确定性推理；只有 RN4220 fold 4
-没有历史 member，正在本机 H100 按旧 25-epoch 协议补训。正式 Fig. 1b、fine-tune 统计和
-文稿数值必须等待该 fold 完成后再更新。
+残缺 ensemble 混入同一统计表。14/15 个 fold 复用历史 checkpoint；唯一缺失的 RN4220
+fold 4 已在本机 H100 以 `PYTHONHASHSEED=0`、ensemble seed 42 按旧 25-epoch 协议补训，
+best-AUROC checkpoint SHA-256 为
+`68a34004a4992c0bfff3733a9e5e7135ebed79bfbf15dd38e6eca7d2199d6a87`。
+
+fine-tune pooled OOF 的 AUROC/AUPRC 分别为 E. coli `0.95529/0.66655`、A. baumannii
+`0.77698/0.35294`、RN4220 `0.92278/0.34518`。经 5,000 次 paired 检验和三菌株内 Holm
+校正，只有 E. coli AUPRC（差 `+0.15903`，`p=0.03539`）与 AUROC（差 `+0.09818`，
+`p=0.00180`）显著高于 baseline；A. baumannii 与 RN4220 的四项差异均不显著。完整结果见
+`results_reviewer_revision.md`；该表明确属于单模型/折 sensitivity，不是旧完整 ensemble 结果。
+
+Mac notebook、最终 panel、论文和回复信已同步并通过完整编译。修改前快照、运行产物及
+最终文件的 SHA-256 见 `reproducibility/fig1b_reviewer_revision_2026-07-20.json`。
 
 node002 运行环境是
 `/data1/tianang/Projects/.venvs/fig1b-chemprop-v1`：Python 3.12.7、Chemprop 1.5.2、

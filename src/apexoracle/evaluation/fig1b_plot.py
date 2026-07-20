@@ -21,6 +21,7 @@ MODE_LABELS = {
     "strict_zero_shot_vs_baseline": "ApexOracle, zero-shot",
 }
 BASELINE_LABEL = "Chemprop baseline (common folds)"
+BASELINE_CI_FAMILY = "strict_zero_shot_vs_baseline"
 
 
 def build_plot_rows(report: dict[str, Any]) -> pd.DataFrame:
@@ -33,7 +34,7 @@ def build_plot_rows(report: dict[str, Any]) -> pd.DataFrame:
     }
     rows = []
     for group, target_label in TARGET_LABELS.items():
-        baseline_reference: dict[str, Any] | None = None
+        baseline_references: list[dict[str, Any]] = []
         for family, method_label in MODE_LABELS.items():
             try:
                 item = by_key[(family, group)]
@@ -51,14 +52,15 @@ def build_plot_rows(report: dict[str, Any]) -> pd.DataFrame:
                     "ci_high": item["candidate_95ci"][1],
                 }
             )
-            if baseline_reference is None:
-                baseline_reference = item
-            elif not np.allclose(
-                [baseline_reference["baseline"], *baseline_reference["baseline_95ci"]],
-                [item["baseline"], *item["baseline_95ci"]],
-            ):
-                raise ValueError(f"Baseline estimates disagree for group {group}")
-        assert baseline_reference is not None
+            baseline_references.append(item)
+        baseline_values = [item["baseline"] for item in baseline_references]
+        if not np.allclose(baseline_values, baseline_values[0]):
+            raise ValueError(f"Baseline point estimates disagree for group {group}")
+        # The two paired comparisons use independent bootstrap random streams,
+        # so their Monte Carlo interval endpoints need not be bit-identical even
+        # though the baseline predictions and point estimate are identical. Use
+        # the predeclared strict-zero-shot comparison as the display interval.
+        baseline_reference = by_key[(BASELINE_CI_FAMILY, group)]
         rows.append(
             {
                 "group": group,
