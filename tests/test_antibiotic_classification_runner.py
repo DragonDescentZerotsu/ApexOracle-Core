@@ -45,6 +45,7 @@ def _small_config(tmp_path: Path) -> AntibioticClassificationConfig:
         genome_embeddings=tmp_path,
         atcc_text_embeddings=tmp_path,
         text_only_embeddings=tmp_path,
+        small_molecule_records=tmp_path / "small_molecules.csv",
         peptide_embeddings=tmp_path / "pep.pt",
         small_molecule_embeddings=tmp_path / "sm.pt",
         output_dir=tmp_path,

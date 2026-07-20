@@ -78,6 +78,7 @@ paths:
   genome_embeddings: DataPrepare/Data/Genome_embs
   atcc_text_embeddings: DataPrepare/Data/Text_Description/ATCC/embeddings
   text_only_embeddings: DataPrepare/Data/Text_Description/wo_ATCC/embeddings
+  small_molecule_records: DataPrepare/Data/small_molecule/processed/small_molecule_Evo_binary_data_SELFIES.csv
   peptide_embeddings: DataPrepare/Data/Pep_emb_dict_cls_wo_pad_eval.pt
   small_molecule_embeddings: DataPrepare/Data/SM_emb_dict_cls_wo_pad_eval.pt
 

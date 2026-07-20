@@ -1,0 +1,51 @@
+{
+  "audit_date": "2026-07-19",
+  "status": "byte_exact_reconstruction_verified",
+  "original_data_mutated": false,
+  "legacy_sources": {
+    "notebook": {
+      "path": "DataPrepare/DataCheck.ipynb",
+      "sha256": "18a26e4afb14d045ae7c68a34018b668608aef9e46d783fbbafc6e7d86a19449"
+    },
+    "tokenizer_driver": {
+      "path": "DataPrepare/convert_EVO_smiles_MIC_to_SELFIES_token_SM.py",
+      "sha256": "84dacb9e4135e7eb966a0729abcd7499ccd96f3405317ff47cad1dd74695798c",
+      "recovery_tag": "legacy-code-snapshot-2026-07-17"
+    }
+  },
+  "processed_source_reconstruction": {
+    "exact_values_and_order": true,
+    "counts": {
+      "#004": {"rows": 2335, "positives": 120},
+      "17978": {"rows": 7684, "positives": 480},
+      "Staphylococcus aureus RN4220": {"rows": 39312, "positives": 512}
+    }
+  },
+  "merged_table": {
+    "explicit_block_order": [
+      "#004",
+      "17978",
+      "Staphylococcus aureus RN4220"
+    ],
+    "rows": 49331,
+    "positives": 1112,
+    "byte_exact": true,
+    "sha256": "4dabc0f8ac808d33ede3eacb47bacf7b55b2a900fcf78fd3d45a89c2037f3dc2"
+  },
+  "token_cache": {
+    "rows": 49330,
+    "unique_smiles_tokenized": 44662,
+    "excluded_invalid_smiles": 0,
+    "excluded_too_long": 0,
+    "excluded_unknown_token": 1,
+    "excluded_id": "na_12751",
+    "byte_exact": true,
+    "sha256": "d8e6391bfae3c35fe8d311461565df177fc75044cbc40204bf74f7ecf1fe7f27"
+  },
+  "protected_files_sha256_unchanged": true,
+  "validation": {
+    "repository_tests": "115 passed, 4 skipped",
+    "strict_zero_shot_group_0_dry_run": "dry_run_ok",
+    "target_rows_before_and_after_512_filter": [2335, 2335]
+  }
+}

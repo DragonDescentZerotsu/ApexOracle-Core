@@ -327,15 +327,28 @@ Synergy 关闭后的执行顺序如下：
    driver-family 审计作为发布证据；先登记全部残留 genome/text/genome+text root driver 的哈希，
    再删除会原地覆盖中间 CSV 的旧训练入口，不伪造缺失的逐 checkpoint 血缘。清理 manifest 为
    `experiments/modality_ablation/legacy_cleanup.json`。
-2. **Small-molecule classification 数据入口。** 审计并迁移
-   `DataPrepare/convert_EVO_smiles_MIC_to_SELFIES_token_SM.py` 及论文三个原始小分子数据集的
-   实际消费契约；若原始 merge/clean 代码确已缺失，则冻结现有论文输入表而不是重写未知规则。
+2. **Small-molecule classification 数据入口（已完成）。** 三个来源的历史转换规则已从
+   `DataPrepare/DataCheck.ipynb` 恢复。canonical builder 明确固定 E. coli → A. baumannii →
+   S. aureus 的 block 顺序，拒绝覆盖输入或既有输出；49,331 行 merge 与 49,330 行 token cache
+   均完成逐字节复现，所有 raw/processed 文件 SHA-256 保持不变。tokenizer revision、唯一 UNK
+   排除记录和完整数据 manifest 已冻结；旧 converter 由 legacy tag 保留后删除。classification
+   runner 现在从 versioned config 显式读取 frozen token table。
 3. **Guided generation 外部边界。** 对 `/data2/tianang/projects/discrete-diffusion-guidance`
    建立固定 commit、输入/输出和 checkpoint manifest；只在该外部仓库存在可验证 paper sampler
    时迁移或以 submodule/链接接入，不把论文后 synergy screening 重新引入本仓库。
 4. **发布收口。** 建立论文 panel→命令/config/data/checkpoint/status 映射，重写主 README，明确
    `fully supported`、`high-confidence candidate`、`partially supported` 和 `missing/external`，
    然后完成 license、secret、绝对路径和大文件扫描。
+
+三菌株小分子数据入口已于 2026-07-19 完成。已确认的三个标签规则分别是 E. coli
+`Activity == Active`、A. baumannii `Mean < mean - sample std (ddof=1)` 和 S. aureus 直接复制
+`ACTIVITY`。只读全量重建得到 49,331 行、1,112 阳性，输出 SHA-256
+`4dabc0f8ac808d33ede3eacb47bacf7b55b2a900fcf78fd3d45a89c2037f3dc2`，与冻结论文 merge
+逐字节一致。固定 IBM SELFIES tokenizer revision 后，49,330 行 token cache 也逐字节一致；唯一
+排除的是含 UNK 的 `na_12751`。原 notebook 的未排序目录遍历/原地写回和旧 converter 的硬编码
+路径/未固定 revision 不再作为发布入口。下一阶段按既定顺序进入 guided generation 外部边界审计。
+本阶段全仓库回归为 115 passed / 4 skipped；strict zero-shot group 0 的完整只读 dry-run 也以
+`dry_run_ok` 结束，目标集在 512-token 过滤前后均为 2,335 行。
 
 #### 4.1.1 Fig. 2c molecular encoder comparator 统一迁移（已完成）
 
