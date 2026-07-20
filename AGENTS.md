@@ -238,14 +238,19 @@
   canonical runner 和测试明确冻结，不得在无新实验的情况下“修正”。
 - **2026-07-20 reviewer 修订运行：** strict zero-shot 的 30 个 checkpoint 已全部完成确定性
   H100 推理并导出样本级预测；三个目标的 AUROC/AUPRC 分别为
-  `0.93504/0.58738`、`0.72408/0.32098`、`0.76741/0.16562`。统一 Chemprop baseline 与
-  paired bootstrap/randomization/Holm 入口已经实现，完整 OOF 仍在运行。
+  `0.93504/0.58738`、`0.72408/0.32098`、`0.76741/0.16562`。统一 Chemprop baseline 的
+  15 个 fold 已全部完成，pooled OOF AUROC/AUPRC 为 E. coli `0.85711/0.50752`、
+  A. baumannii `0.77750/0.31967`、RN4220 `0.92848/0.32873`。
+- **已由 5,000 次配对统计验证的事实：** strict zero-shot 相对 baseline 的 Holm 校正结果为：
+  E. coli AUPRC 差 `+0.07986`、`p=0.4167`，AUROC 差 `+0.07791`、`p=0.01360`；
+  A. baumannii AUPRC 差 `+0.00132`、`p=0.9660`，AUROC 差 `-0.05342`、`p=0.03059`；
+  RN4220 AUPRC/AUROC 差 `-0.16311/-0.16107`，两者 `p=0.00060`。因此旧的普遍优势表述
+  不成立，修订稿必须按菌株和指标分别陈述。
 - **baseline 血缘纠正：** 当前 Fig. 1b 对 A. baumannii 使用的 `0.756/0.266` 是 Liu 2023
   的 no-RDKit ablation；该论文 RDKit 主模型约为 `0.792/0.337`。修订比较应使用主模型协议，
   原数值仅保留为历史绘图事实。
-- **Chemprop eligibility 边界：** E. coli 的 `ce_2244` 含 RDKit 拒绝的异常铝配位价态；
-  既有 KFold 不重排，配对比较时从两方同时排除并登记。S. aureus 中同结构已被原 512-token
-  过滤排除。
+- **Chemprop eligibility 边界：** E. coli 的 `ce_2244` 与 RN4220 的 `na_20640` 是同一条
+  RDKit 拒绝的异常铝配位结构；既有 KFold 不重排，配对比较时从双方同时排除并登记。
 
 #### node002 非破坏性同步（2026-07-20）
 

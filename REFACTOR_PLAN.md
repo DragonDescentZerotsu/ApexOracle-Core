@@ -403,10 +403,11 @@ metrics 完全一致；group 1 当前动态 hash split 多 5 条，继续按既�
 - 11-cluster 合并两台机器后覆盖全部组，只有异常值 `-0.3467` 与绘图 `-0.1467` 不同；作者决定暂不追查；
 - fine-tuned Fig. 1b 合并两机后为 104/150 checkpoint、10/15 完整 fold；作者决定不再追查旧产物，只要求代码正确运行；
 - Fig. 1b reviewer 修订已重新开启为独立补实验阶段：三个 strict zero-shot ensemble 的样本级
-  预测已完整导出；三篇 Chemprop baseline 已固定 source revision、原模型 profile、共同 outer
-  folds 和 train-only validation；node002 8-GPU 正在运行。fine-tune 复用 104/150 checkpoint，
-  只对完全没有权重的 RN4220 fold 4 补最小 ensemble。最终采用 paired stratified bootstrap、
-  paired prediction-swap test 与 Holm 校正，不用不配对的硬编码柱高推断显著性。
+  预测和三个 Chemprop baseline 的 15 个共同-fold 运行均已完成。strict zero-shot 的 5,000 次
+  paired bootstrap/randomization/Holm 结果显示只在 E. coli AUROC 上显著优于 baseline；
+  A. baumannii AUPRC 相当而 AUROC 较低，RN4220 两项均显著较低。fine-tune sensitivity 统一为
+  每折单个 `ensemble_0`，14/15 个历史 fold 已完成推理；仅 RN4220 fold 4 正在按旧 25-epoch
+  协议补训。最终不用不配对的硬编码柱高推断显著性。
 - synergy CV 已作为论文高置信度复现候选完成；rank/base epoch 差异保留为 provenance 限制，
   不再是代码迁移阻塞项；
 - modality ablation：最终绘图值和图形入口已冻结，但缺少能够把这些值精确连接到 legacy

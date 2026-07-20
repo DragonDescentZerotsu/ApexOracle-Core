@@ -89,9 +89,22 @@ Reviewer 要求 Fig. 1b 对三个菌株一致报告 AUPRC，并为“优于 base
 - node002 的隔离环境固定为 Chemprop 1.5.2、RDKit 2025.03.5；PyTorch 2.7 加载受信任的
   Chemprop 1.x checkpoint 时显式设置 `TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD=1`，不改权重内容。
 
-当前运行状态：node002 的 8 张 A100 正在并行补三个 baseline 的其余 folds；本机 H100 正在
-导出 fine-tune 历史 checkpoint 的样本级预测，并补 RN4220 完全缺失的 fold 4。正式统计、
-绘图和文稿数值必须等待全部 OOF 预测汇总后再更新，不能使用单 fold smoke 数值。
+2026-07-20 运行状态：三个 baseline 的 15 个 fold 已全部完成。pooled OOF 的
+AUROC/AUPRC 分别为 E. coli `0.85711/0.50752`、A. baumannii `0.77750/0.31967`、
+RN4220 `0.92848/0.32873`。E. coli 与 RN4220 各有一条相同的异常铝配位结构不能被
+Chemprop/RDKit 预测；配对分析从双方同时排除，并分别记录为 `ce_2244` 与 `na_20640`。
+
+strict zero-shot 的 5,000 次 paired 分层 bootstrap 和 prediction-swap 检验已经完成。
+以 AUPRC 为主要指标，E. coli 数值高 `0.07986` 但 Holm 校正后不显著（`p=0.4167`），
+A. baumannii 几乎相同（差 `0.00132`，`p=0.9660`），RN4220 显著低
+`0.16311`（`p=0.00060`）。AUROC 方面 E. coli 显著高 `0.07791`
+（`p=0.01360`），A. baumannii 显著低 `0.05342`（`p=0.03059`），RN4220 显著低
+`0.16107`（`p=0.00060`）。因此不能再保留“zero-shot 普遍优于 baseline”的概括。
+
+fine-tune sensitivity 固定为每个 outer fold 恰好使用 `ensemble_0`，避免把不同大小的
+残缺 ensemble 混入同一统计表。14/15 个历史 fold 已完成确定性推理；只有 RN4220 fold 4
+没有历史 member，正在本机 H100 按旧 25-epoch 协议补训。正式 Fig. 1b、fine-tune 统计和
+文稿数值必须等待该 fold 完成后再更新。
 
 node002 运行环境是
 `/data1/tianang/Projects/.venvs/fig1b-chemprop-v1`：Python 3.12.7、Chemprop 1.5.2、

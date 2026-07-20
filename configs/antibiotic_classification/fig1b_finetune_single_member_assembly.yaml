@@ -1,0 +1,45 @@
+schema_version: 1
+description: >-
+  Fig. 1b fine-tune sensitivity analysis using exactly ensemble member 0 in
+  every outer fold. Historical checkpoints are reused for 14 folds; only
+  S. aureus RN4220 fold 4 is retrained because no historical member survived.
+groups:
+  - group: 0
+    reference_predictions: results/fig1b_revision/baselines/group_0/oof_predictions.csv
+    folds:
+      - fold: 0
+        sources: [results/fig1b_revision/apexoracle_fine_tune_single_member/antibiotic_classification_fine-tune_group_0_fold_0.csv]
+      - fold: 1
+        sources: [results/fig1b_revision/apexoracle_fine_tune_single_member/antibiotic_classification_fine-tune_group_0_fold_1.csv]
+      - fold: 2
+        sources: [results/fig1b_revision/apexoracle_fine_tune_single_member/antibiotic_classification_fine-tune_group_0_fold_2.csv]
+      - fold: 3
+        sources: [results/fig1b_revision/apexoracle_fine_tune_single_member/antibiotic_classification_fine-tune_group_0_fold_3.csv]
+      - fold: 4
+        sources: [results/fig1b_revision/apexoracle_fine_tune_single_member/antibiotic_classification_fine-tune_group_0_fold_4.csv]
+  - group: 1
+    reference_predictions: results/fig1b_revision/baselines/group_1/oof_predictions.csv
+    folds:
+      - fold: 0
+        sources: [results/fig1b_revision/apexoracle_fine_tune_single_member/antibiotic_classification_fine-tune_group_1_fold_0.csv]
+      - fold: 1
+        sources: [results/fig1b_revision/apexoracle_fine_tune_single_member/antibiotic_classification_fine-tune_group_1_fold_1.csv]
+      - fold: 2
+        sources: [results/fig1b_revision/apexoracle_fine_tune_single_member/antibiotic_classification_fine-tune_group_1_fold_2.csv]
+      - fold: 3
+        sources: [results/fig1b_revision/apexoracle_fine_tune_single_member/antibiotic_classification_fine-tune_group_1_fold_3.csv]
+      - fold: 4
+        sources: [results/fig1b_revision/apexoracle_fine_tune_single_member/antibiotic_classification_fine-tune_group_1_fold_4.csv]
+  - group: 2
+    reference_predictions: results/fig1b_revision/baselines/group_2/oof_predictions.csv
+    folds:
+      - fold: 0
+        sources: [results/fig1b_revision/apexoracle_fine_tune_single_member/antibiotic_classification_fine-tune_group_2_fold_0.csv]
+      - fold: 1
+        sources: [results/fig1b_revision/apexoracle_fine_tune_single_member/antibiotic_classification_fine-tune_group_2_fold_1.csv]
+      - fold: 2
+        sources: [results/fig1b_revision/apexoracle_fine_tune_single_member/antibiotic_classification_fine-tune_group_2_fold_2.csv]
+      - fold: 3
+        sources: [results/fig1b_revision/apexoracle_fine_tune_single_member/antibiotic_classification_fine-tune_group_2_fold_3.csv]
+      - fold: 4
+        sources: [results/fig1b_revision/apexoracle_fine_tune_single_member/antibiotic_classification_fine-tune_group_2_fold_4.csv]

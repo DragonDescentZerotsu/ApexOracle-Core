@@ -101,14 +101,61 @@ def assemble_config(config_path: Path, *, repo_root: Path, output_root: Path) ->
             combined.to_csv(group_dir / f"fold_{fold}_predictions.csv", index=False)
             folds.append(combined)
             fold_reports.append(report)
-        oof = pd.concat(folds, ignore_index=True)
-        if oof["molecule_id"].duplicated().any():
+        oof_all = pd.concat(folds, ignore_index=True)
+        if oof_all["molecule_id"].duplicated().any():
             raise ValueError(f"Group {group} OOF table contains duplicate IDs")
+        all_eligible_metrics = {
+            "auroc": float(roc_auc_score(oof_all["label"], oof_all["prediction"])),
+            "auprc": float(
+                average_precision_score(oof_all["label"], oof_all["prediction"])
+            ),
+        }
+        oof = oof_all
+        exclusions: list[str] = []
+        reference_value = group_config.get("reference_predictions")
+        if reference_value is not None:
+            reference_path = Path(reference_value)
+            if not reference_path.is_absolute():
+                reference_path = repo_root / reference_path
+            reference = pd.read_csv(reference_path)[["molecule_id", "label"]]
+            if reference["molecule_id"].duplicated().any():
+                raise ValueError(f"{reference_path} contains duplicate molecule IDs")
+            missing = set(reference["molecule_id"]) - set(oof_all["molecule_id"])
+            if missing:
+                raise ValueError(
+                    f"Group {group} is missing {len(missing)} reference molecule IDs"
+                )
+            exclusions = sorted(set(oof_all["molecule_id"]) - set(reference["molecule_id"]))
+            oof = reference.merge(
+                oof_all,
+                on="molecule_id",
+                how="left",
+                validate="one_to_one",
+                suffixes=("_reference", ""),
+            )
+            if oof["prediction"].isna().any():
+                raise ValueError(f"Group {group} produced missing aligned predictions")
+            if not np.array_equal(oof["label_reference"], oof["label"]):
+                raise ValueError(f"Group {group} reference labels differ")
+            oof = oof.drop(columns="label_reference")
+        if exclusions:
+            oof_all.to_csv(group_dir / "oof_predictions_all_eligible.csv", index=False)
         oof.to_csv(group_dir / "oof_predictions.csv", index=False)
+        aligned_fold_metrics = [
+            {
+                "auroc": float(roc_auc_score(frame["label"], frame["prediction"])),
+                "auprc": float(
+                    average_precision_score(frame["label"], frame["prediction"])
+                ),
+            }
+            for _, frame in oof.groupby("fold", sort=True)
+        ]
         report = {
             "group": group,
             "folds": fold_reports,
             "num_examples": int(len(oof)),
+            "num_examples_all_eligible": int(len(oof_all)),
+            "excluded_molecule_ids": exclusions,
             "num_members_by_fold": {
                 str(item["fold"]): item["num_members"] for item in fold_reports
             },
@@ -118,13 +165,28 @@ def assemble_config(config_path: Path, *, repo_root: Path, output_root: Path) ->
                     average_precision_score(oof["label"], oof["prediction"])
                 ),
             },
+            "pooled_oof_metrics_all_eligible": all_eligible_metrics,
             "fold_mean": {
+                metric: float(
+                    np.mean([item[metric] for item in aligned_fold_metrics])
+                )
+                for metric in ("auroc", "auprc")
+            },
+            "fold_sample_sd": {
+                metric: float(
+                    np.std(
+                        [item[metric] for item in aligned_fold_metrics], ddof=1
+                    )
+                )
+                for metric in ("auroc", "auprc")
+            },
+            "fold_mean_all_eligible": {
                 metric: float(
                     np.mean([item["metrics"][metric] for item in fold_reports])
                 )
                 for metric in ("auroc", "auprc")
             },
-            "fold_sample_sd": {
+            "fold_sample_sd_all_eligible": {
                 metric: float(
                     np.std(
                         [item["metrics"][metric] for item in fold_reports], ddof=1

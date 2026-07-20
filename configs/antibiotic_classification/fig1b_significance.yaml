@@ -6,8 +6,9 @@ comparisons:
     group: 0
     candidate_name: ApexOracle strict zero-shot
     baseline_name: Stokes 2020 Chemprop profile
-    candidate_predictions: results/fig1b_revision/apexoracle_strict_zero_shot/group_0_common_chemprop_ids.csv
+    candidate_predictions: results/fig1b_revision/apexoracle_strict_zero_shot/antibiotic_classification_strict-zero-shot_group_0.csv
     baseline_predictions: results/fig1b_revision/baselines/group_0/oof_predictions.csv
+    candidate_may_be_superset: true
     metrics: [auprc, auroc]
   - name: strict_zero_shot_vs_liu2023_common_folds
     family: strict_zero_shot_vs_baseline
@@ -16,6 +17,7 @@ comparisons:
     baseline_name: Liu 2023 main RDKit Chemprop profile
     candidate_predictions: results/fig1b_revision/apexoracle_strict_zero_shot/antibiotic_classification_strict-zero-shot_group_1.csv
     baseline_predictions: results/fig1b_revision/baselines/group_1/oof_predictions.csv
+    candidate_may_be_superset: true
     metrics: [auprc, auroc]
   - name: strict_zero_shot_vs_wong2024_common_folds
     family: strict_zero_shot_vs_baseline
@@ -24,6 +26,7 @@ comparisons:
     baseline_name: Wong 2024 Chemprop profile
     candidate_predictions: results/fig1b_revision/apexoracle_strict_zero_shot/antibiotic_classification_strict-zero-shot_group_2.csv
     baseline_predictions: results/fig1b_revision/baselines/group_2/oof_predictions.csv
+    candidate_may_be_superset: true
     metrics: [auprc, auroc]
   - name: fine_tune_vs_stokes2020_common_folds
     family: fine_tune_vs_baseline

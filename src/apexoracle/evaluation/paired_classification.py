@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 from typing import Callable, Sequence
 
@@ -20,7 +21,12 @@ METRICS: dict[str, Metric] = {
 }
 
 
-def align_predictions(candidate_path: Path, baseline_path: Path) -> pd.DataFrame:
+def align_predictions(
+    candidate_path: Path,
+    baseline_path: Path,
+    *,
+    candidate_may_be_superset: bool = False,
+) -> pd.DataFrame:
     required = {"molecule_id", "label", "prediction"}
     frames = []
     for name, path in (("candidate", candidate_path), ("baseline", baseline_path)):
@@ -38,7 +44,15 @@ def align_predictions(candidate_path: Path, baseline_path: Path) -> pd.DataFrame
                 }
             )
         )
-    if set(frames[0]["molecule_id"]) != set(frames[1]["molecule_id"]):
+    candidate_ids = set(frames[0]["molecule_id"])
+    baseline_ids = set(frames[1]["molecule_id"])
+    missing_candidate_ids = baseline_ids - candidate_ids
+    excluded_candidate_ids = sorted(candidate_ids - baseline_ids)
+    if missing_candidate_ids:
+        raise ValueError(
+            f"Candidate is missing {len(missing_candidate_ids)} baseline molecule IDs"
+        )
+    if excluded_candidate_ids and not candidate_may_be_superset:
         raise ValueError("Candidate and baseline molecule-ID sets differ")
     merged = frames[0].merge(
         frames[1], on="molecule_id", how="inner", validate="one_to_one"
@@ -47,9 +61,11 @@ def align_predictions(candidate_path: Path, baseline_path: Path) -> pd.DataFrame
         merged["label_candidate"].to_numpy(), merged["label_baseline"].to_numpy()
     ):
         raise ValueError("Candidate and baseline labels differ after ID alignment")
-    return merged.rename(columns={"label_candidate": "label"}).drop(
+    aligned = merged.rename(columns={"label_candidate": "label"}).drop(
         columns="label_baseline"
     )
+    aligned.attrs["excluded_candidate_molecule_ids"] = excluded_candidate_ids
+    return aligned
 
 
 def _stratified_resample_indices(
@@ -146,8 +162,13 @@ def analyze_comparison(
     bootstrap_iterations: int,
     permutation_iterations: int,
     seed: int,
+    candidate_may_be_superset: bool = False,
 ) -> dict:
-    frame = align_predictions(candidate_path, baseline_path)
+    frame = align_predictions(
+        candidate_path,
+        baseline_path,
+        candidate_may_be_superset=candidate_may_be_superset,
+    )
     labels = frame["label"].to_numpy(dtype=int)
     candidate = frame["prediction_candidate"].to_numpy(dtype=float)
     baseline = frame["prediction_baseline"].to_numpy(dtype=float)
@@ -166,6 +187,9 @@ def analyze_comparison(
         "metric": metric_name,
         "num_examples": int(len(frame)),
         "num_positive": int(labels.sum()),
+        "excluded_candidate_molecule_ids": frame.attrs[
+            "excluded_candidate_molecule_ids"
+        ],
         "candidate": candidate_value,
         "baseline": baseline_value,
         "difference": candidate_value - baseline_value,
@@ -185,6 +209,10 @@ def analyze_comparison(
     }
 
 
+def _analyze_task(arguments: dict) -> dict:
+    return analyze_comparison(**arguments)
+
+
 def run_config(
     config_path: Path,
     *,
@@ -193,10 +221,14 @@ def run_config(
     bootstrap_iterations: int,
     permutation_iterations: int,
     seed: int,
+    workers: int = 1,
 ) -> dict:
+    if workers < 1:
+        raise ValueError("workers must be positive")
     with config_path.open("r", encoding="utf-8") as handle:
         config = yaml.safe_load(handle)
-    results = []
+    tasks = []
+    metadata = []
     for comparison_index, comparison in enumerate(config["comparisons"]):
         candidate = Path(comparison["candidate_predictions"])
         baseline = Path(comparison["baseline_predictions"])
@@ -205,15 +237,20 @@ def run_config(
         if not baseline.is_absolute():
             baseline = repo_root / baseline
         for metric_name in comparison.get("metrics", ["auprc", "auroc"]):
-            result = analyze_comparison(
-                candidate,
-                baseline,
-                metric_name=metric_name,
-                bootstrap_iterations=bootstrap_iterations,
-                permutation_iterations=permutation_iterations,
-                seed=seed + 10 * comparison_index,
+            tasks.append(
+                {
+                    "candidate_path": candidate,
+                    "baseline_path": baseline,
+                    "metric_name": metric_name,
+                    "bootstrap_iterations": bootstrap_iterations,
+                    "permutation_iterations": permutation_iterations,
+                    "seed": seed + 10 * comparison_index,
+                    "candidate_may_be_superset": bool(
+                        comparison.get("candidate_may_be_superset", False)
+                    ),
+                }
             )
-            result.update(
+            metadata.append(
                 {
                     "comparison": comparison["name"],
                     "family": comparison["family"],
@@ -224,7 +261,15 @@ def run_config(
                     "baseline_predictions": str(baseline),
                 }
             )
-            results.append(result)
+    if workers == 1:
+        analyzed = [_analyze_task(task) for task in tasks]
+    else:
+        with ProcessPoolExecutor(max_workers=workers) as executor:
+            analyzed = list(executor.map(_analyze_task, tasks))
+    results = []
+    for result, item_metadata in zip(analyzed, metadata, strict=True):
+        result.update(item_metadata)
+        results.append(result)
     families = sorted({item["family"] for item in results})
     for family in families:
         for metric_name in METRICS:
@@ -245,6 +290,7 @@ def run_config(
             "paired prediction-swap randomization tests"
         ),
         "multiple_testing": "Holm correction within each model-mode and metric family",
+        "workers": workers,
         "results": results,
     }
     output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -262,6 +308,12 @@ def main(argv: Sequence[str] | None = None) -> dict:
     parser.add_argument("--bootstrap-iterations", type=int, default=2000)
     parser.add_argument("--permutation-iterations", type=int, default=2000)
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument(
+        "--workers",
+        type=int,
+        default=1,
+        help="Independent metric comparisons to evaluate concurrently.",
+    )
     args = parser.parse_args(argv)
     root = args.repo_root.resolve()
     config = args.config if args.config.is_absolute() else root / args.config
@@ -273,6 +325,7 @@ def main(argv: Sequence[str] | None = None) -> dict:
         bootstrap_iterations=args.bootstrap_iterations,
         permutation_iterations=args.permutation_iterations,
         seed=args.seed,
+        workers=args.workers,
     )
     print(json.dumps(report, indent=2, sort_keys=True))
     return report
