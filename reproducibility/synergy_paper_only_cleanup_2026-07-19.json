@@ -2,6 +2,13 @@
   "schema_version": 1,
   "decision_date": "2026-07-19",
   "scope_decision": "Only code required to reproduce synergy results reported in the ApexOracle paper remains in the release worktree.",
+  "paper_candidate_acceptance": {
+    "accepted_as": "high_confidence_paper_reproduction_candidate",
+    "candidate_mean_auroc": 0.7598,
+    "candidate_mean_auprc": 0.7440,
+    "exact_original_checkpoint_claimed": false,
+    "synergy_refactor_complete": true
+  },
   "paper_evidence": {
     "manuscript": "/data2/tianang/projects/ApexOracle_cleaned/docs/ApexOracle_Nat_Biotech/sn-article.tex",
     "results_line": 161,
@@ -25,10 +32,9 @@
     "src/apexoracle/models/synergy.py",
     "src/apexoracle/models/synergy_checkpoint.py",
     "src/apexoracle/training/synergy.py",
-    "src/apexoracle/training/synergy_runner.py",
-    "synergy_Evo_train_new_reg_MDLM_one_base_model_classification.py"
+    "src/apexoracle/training/synergy_runner.py"
   ],
-  "preservation_note": "The root classification driver remains because the exact paper checkpoint lineage, LoRA rank, and 13- versus 100-epoch base identity are unresolved.",
+  "preservation_note": "The canonical runner is the release implementation. Exact original-checkpoint identity remains unknown but is no longer a refactor blocker after author acceptance of the high-confidence candidate.",
   "deleted_legacy_or_post_paper_sources": {
     "recovery": "git show legacy-code-snapshot-2026-07-17:<path>",
     "files": {
@@ -48,6 +54,7 @@
       "synergy_Evo_train_on_DBAASP_test_on_inhouse_classification_few_shot_inner_prod.py": "cc1c038900be4c29036b49de685b019966ec672adff9a0037a2cdb6949126509",
       "synergy_Evo_train_on_DBAASP_test_on_inhouse_classification_few_shot_no_lora.py": "887529a555262cc31fc4a303a9d633e9febf17d4060e341a0bb6708b3e5959d8",
       "synergy_Evo_train_on_DBAASP_test_on_inhouse_classification_few_shot_w_pred_MIC.py": "accf77b57c23f1f29e9f00af8390342aa07bae9ae24b4496c2138bc948769687",
+      "synergy_Evo_train_new_reg_MDLM_one_base_model_classification.py": "d4cff701c592c6f9eb2973b72834687fdfb21c33fb9b41cc0182a8f72488f119",
       "DataPrepare/MDLM/label_pep_nonpep.py": "08c50c2633090df06c1328354fd06b627a112fd21321361dc789eecc523e4d7a",
       "DataPrepare/synergy_inhouse_to_SMILES.py": "ad3d2b2143fa61f82b3c7e9230acb4124f5e8e18a8a184a81be9b15d73439c58",
       "DataPrepare/synergy_inhouse_to_SMILES_parallel.py": "03d8f246303a7f8727b3bee493f6687335233954d268fa57d86682dff87353bd",

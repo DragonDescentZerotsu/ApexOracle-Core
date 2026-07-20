@@ -34,12 +34,16 @@ commit，因此这里只能称为“当前重构的固定复现 revision”，�
 | Manifest ID | 当前来源 | 已固定身份 | 状态 |
 | --- | --- | --- | --- |
 | `synergy_mic_base_epoch_100` | `Checkpoints/.../guidance_regressor_pad_no_mask/noise_guidance_best_R2_all_peptide_epoch_100.pth` | SHA-256 `f24faf67…c3a4` | 三折候选加载的 base；不是已确认的 Methods 13-epoch 权重 |
-| `synergy_three_fold_7ensemble_candidate` | `Checkpoints/.../MDLM_3_fold_ensembles_1_base_model_cls` | 21 个 member 的完整 manifest | 最接近论文的 CV 候选，但 rank/指标与 Methods 仍冲突 |
+| `synergy_three_fold_7ensemble_candidate` | `Checkpoints/.../MDLM_3_fold_ensembles_1_base_model_cls` | 21 个 member 的完整 manifest | 作者接受的论文高置信度复现候选；不是精确原始 checkpoint 声明 |
 
 作者于 2026-07-19 将本仓库范围收缩为只复现论文已汇报结果，因此 post-paper all-data
 guidance、prospective regression 和 screening 权重不再由本发布 manifest 管理；本次只从 Git
 登记和代码中移除这些条目，没有删除本地 checkpoint 二进制。清理范围与恢复位置见
 `reproducibility/synergy_paper_only_cleanup_2026-07-19.json`。
+
+作者同日确认本机 mean AUROC/AUPRC `0.7598/0.7440` 可作为论文实现的高置信度复现候选；
+与论文 `0.7539/0.7454` 的绝对差为 `0.0059/0.0014`。rank 和 base-epoch 差异继续记录为
+provenance 限制，但 synergy 重构阶段已关闭。
 
 ## DLM-only 决策记录
 

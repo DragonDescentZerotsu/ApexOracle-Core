@@ -1,5 +1,11 @@
 {
-  "status": "experimental_candidate_not_exact_paper_identity",
+  "status": "paper_high_confidence_reproduction_candidate_complete",
+  "author_decision": {
+    "date": "2026-07-19",
+    "accepted_as": "high_confidence_paper_reproduction_candidate",
+    "exact_original_checkpoint_claimed": false,
+    "refactor_stage_complete": true
+  },
   "checkpoint_directory": "Checkpoints/genome_text_learnable_emb/strain_wise_synergy/MDLM_3_fold_ensembles_1_base_model_cls",
   "file_pattern": "fold_{0..2}_ensemble_{0..6}.ckpt",
   "file_count": 21,

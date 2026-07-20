@@ -262,8 +262,9 @@ import 它。下一高置信度阶段改为 reviewer Evo-2 embedding scaling 分
 记录 commit candidate，不把它加入当前仓库，也不声称它是已确认的精确 producer。下一阶段
 进入 synergy CV 的代码迁移与历史协议核验。
 
-Synergy CV 迁移已于 2026-07-19 启动，当前处于 `experimental / protocol freeze`。候选
-legacy driver 为 `synergy_Evo_train_new_reg_MDLM_one_base_model_classification.py`，输入
+Synergy CV 迁移已于 2026-07-19 完成，当前状态为
+`paper high-confidence reproduction candidate / exact checkpoint identity unresolved`。候选
+legacy driver 曾为 `synergy_Evo_train_new_reg_MDLM_one_base_model_classification.py`，输入
 `synergistic_pairs_Evo.csv` 的 SHA-256 为
 `ff57e2152159be950a9823f5d94f24c0771b18465bd17cfd11d9d0318db393be`。只读 adapter 已恢复
 2,263 行 genome+text 与 469 行 text-only、合计 2,732 行的动态 eligible 数据。由于旧 split
@@ -274,9 +275,7 @@ legacy driver 为 `synergy_Evo_train_new_reg_MDLM_one_base_model_classification.
 forward、LoRA/base 初始化、held-out AUROC selection、checkpoint schema 和统一 runner 已抽取。
 21 个 member 与 1 个 base 的 SHA-256 已全部登记；代表性真实 checkpoint 在 H100 上完成
 genome+text 与 text-only 两路 inline legacy 公式逐值一致验证，fold 2 的真实数据 1-member/
-1-epoch 完整 runner smoke 也已通过。当前仍不提升为 fully supported，唯一阻塞是候选代码和
-checkpoint 与 Methods 在 LoRA rank、base epochs 及最终 mean 指标上存在未解决冲突；root
-legacy driver 暂不删除。
+1-epoch 完整 runner smoke 也已通过。
 
 作者于 2026-07-19 进一步确认发布范围只覆盖论文中实际汇报的结果。论文 synergy 部分只汇报
 2,732 个 eligible pair、strain-wise 三折、每折 7-member ensemble 的二分类结果（mean AUROC
@@ -289,12 +288,16 @@ guidance step 和 screening loader，避免留下无消费者的发布 API。
 这次 paper-only 清理不删除或改写任何原始数据、checkpoint、日志或已有结果。legacy/root 源码可
 从 `legacy-code-snapshot-2026-07-17` 恢复；此前完成的 post-paper canonical 迁移可从 merge commit
 `e9a68d57e4b0b235906530d3ed389c66771141ce` 恢复。逐文件 SHA-256 和恢复命令登记于
-`reproducibility/synergy_paper_only_cleanup_2026-07-19.json`。唯一继续保留的 root synergy
-driver 是论文三折候选 `synergy_Evo_train_new_reg_MDLM_one_base_model_classification.py`，因为其
-checkpoint 与 Methods 的 LoRA rank、base epoch 和 aggregate 指标冲突尚未解决；在精确论文
-血缘确认前，不能用 canonical runner 的存在作为理由删除该候选证据。
+`reproducibility/synergy_paper_only_cleanup_2026-07-19.json`。
 清理后全仓库测试为 111 passed / 4 skipped；减少的测试仅对应已删除的 post-paper guidance、
 regression 和 screening 路径。JSON/YAML 解析、核心 synergy 模块编译和引用扫描均通过。
+
+作者随后确认将本机完整候选的 `0.7598/0.7440` 作为论文实现的高置信度复现候选；它与论文
+`0.7539/0.7454` 的绝对差为 `0.0059/0.0014`。Methods 中 rank 64/13 epochs 与候选
+rank 1024/100-epoch base 的差异继续作为披露边界，但不再阻塞重构完成。最后一个 root legacy
+driver 已登记 SHA-256 后删除，由 legacy tag 恢复；synergy 发布代码只保留 canonical CV 入口。
+node002 的已知 Synergy 工作目录也已只读复核：只保留六个早期 prototype，没有该 MDLM
+classification driver 或对应 `strain_wise_synergy` checkpoint family。
 
 Modality ablation 的绘图血缘已于 2026-07-19 冻结。最终 Mac notebook cell 中硬编码的四条
 曲线、三个 holdout 粒度和 12 个精确 R² 已迁移到
@@ -314,6 +317,21 @@ ChemBERTa state。仍未恢复的是“最终 12 个绘图点 -> 精确 member c
 prediction -> ensemble 聚合”的逐点链路；因此后续应写为
 `encoder/driver family identified; exact plotted ensemble lineage unresolved`，不得再写成
 模型家族未知。旧 full driver 可从 node002 和 `legacy-code-snapshot-2026-07-17` 恢复。
+
+Synergy 关闭后的执行顺序如下：
+
+1. **Modality ablation 收尾与 root 清理。** 以已冻结的 12 个论文绘图值和 ChemBERTa-MTR
+   driver-family 审计作为发布证据；先登记全部残留 genome/text/genome+text root driver 的哈希，
+   再删除会原地覆盖中间 CSV 的旧训练入口，不伪造缺失的逐 checkpoint 血缘。
+2. **Small-molecule classification 数据入口。** 审计并迁移
+   `DataPrepare/convert_EVO_smiles_MIC_to_SELFIES_token_SM.py` 及论文三个原始小分子数据集的
+   实际消费契约；若原始 merge/clean 代码确已缺失，则冻结现有论文输入表而不是重写未知规则。
+3. **Guided generation 外部边界。** 对 `/data2/tianang/projects/discrete-diffusion-guidance`
+   建立固定 commit、输入/输出和 checkpoint manifest；只在该外部仓库存在可验证 paper sampler
+   时迁移或以 submodule/链接接入，不把论文后 synergy screening 重新引入本仓库。
+4. **发布收口。** 建立论文 panel→命令/config/data/checkpoint/status 映射，重写主 README，明确
+   `fully supported`、`high-confidence candidate`、`partially supported` 和 `missing/external`，
+   然后完成 license、secret、绝对路径和大文件扫描。
 
 #### 4.1.1 Fig. 2c molecular encoder comparator 统一迁移（已完成）
 
@@ -347,11 +365,13 @@ checkpoint 网格；canonical 采用有严格 checkpoint 证据的 fixed profile
 
 - phylum-wise 和 11-cluster species-wise：现存日志与论文数值或完整 fold 不完全一致；
 - fine-tuned Fig. 1b：现存日志不完整；
-- synergy CV：现存指标接近但不完全等于论文结果，且 LoRA rank 与 Methods 存在差异；
+- synergy CV 已作为论文高置信度复现候选完成；rank/base epoch 差异保留为 provenance 限制，
+  不再是代码迁移阻塞项；
 - modality ablation：最终绘图值和图形入口已冻结，但缺少能够把这些值精确连接到 legacy
   checkpoint、held-out predictions 和 ensemble 聚合过程的最终指标表。
 
-这些实验先进入 `experimental` 状态，不在 README 中声称已经完整复现。
+除已由作者接受为高置信度候选的 synergy 外，其余证据不完整实验继续标为 partially supported，
+不声称已找回精确历史结果。
 
 #### 4.3 明确外部或缺失部分
 
@@ -368,9 +388,8 @@ checkpoint 网格；canonical 采用有严格 checkpoint 证据的 fixed profile
 
 - [x] 已被 canonical 入口取代的 hierarchical MIC、Fig. 1b、sequence similarity、早期
   Fig. 2b 和 APEX 支持代码；
-- [ ] synergy、few-shot 与其余 in-house 副本：all-data classification guidance、prospective
-  regression producer 和 screening 副本已迁移删除；CV 候选、classification/few-shot 与其他
-  in-house 副本继续等待各自证据冻结；
+- [x] synergy、few-shot 与其余 in-house 副本：论文 CV 已迁入 canonical runner；作者接受本机
+  完整结果为高置信度复现候选；所有 root、post-paper 和无共享消费者副本均已归档删除；
 - [x] 已确认无消费者的 `_old.py`、debug、临时 notebook 和部分机器专用 launcher；
 - [x] `Fangping_correlation/`、`e3nn_playground/`；
 - [x] `GPU_eye.py`、`run.py`、`run_full.py` 等资源占用工具；
