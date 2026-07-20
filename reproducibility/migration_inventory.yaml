@@ -154,6 +154,24 @@ entries:
     deletion_allowed: true
     deletion_note: Source code, configs, derived audits, and dedicated tests were removed; original data, checkpoints, logs, and existing results were not modified.
 
+  - id: modality_ablation
+    source:
+      - legacy-code-snapshot-2026-07-17:MIC_with_genome*.py
+      - legacy-code-snapshot-2026-07-17:MIC_with_text*.py
+      - Mac:/Users/kirianozan/Documents/Study/Penn/projects/local_figs/figs.ipynb
+    destination:
+      - src/apexoracle/evaluation/modality_ablation.py
+      - scripts/reproduce/plot_modality_ablation.py
+      - configs/modality_ablation/paper_plot.json
+      - experiments/modality_ablation
+    status: paper_plot_reproducible_legacy_training_drivers_archived
+    evidence:
+      - experiments/modality_ablation/candidate_lineage.json
+      - experiments/modality_ablation/legacy_cleanup.json
+      - experiments/modality_ablation/paper_values.csv
+    deletion_allowed: true
+    deletion_note: Exact member-level training lineage is unavailable; release support is the frozen paper plot plus an explicit candidate-family audit.
+
   - id: phylum_and_species_holdouts
     source:
       - DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_species_*.py

@@ -1,8 +1,8 @@
 # Modality ablation（附录图）
 
 本目录冻结论文最终 modality-ablation 图的 12 个绘图值和绘图契约。当前支持级别为
-`paper plot reproducible / training lineage unresolved`：可以从版本化的小型结果表重建论文图，
-但不能声称现存 legacy checkpoint 已经精确重算这些数值。
+`paper plot reproducible / legacy training rerun unavailable`：可以从版本化的小型结果表重建
+论文图，但不能声称不完整的 legacy checkpoint 已经精确重算这些数值。代码收尾已完成。
 
 ## 已由最终绘图资源验证的事实
 
@@ -30,9 +30,10 @@
   精确来源。
 - checkpoint 的 `R2` 字段是单成员训练期间的 best held-out R²，不是图中的 ensemble R²。
   缺少精确 held-out predictions、成员选择和聚合记录时，不能从该字段反推论文图。
-- 旧 driver 会原地写
-  `DataPrepare/Data/DBAASP_id_bact_name_SMILES_MIC_Evo_with_genome.csv`。为保护论文数据版本，
-  本阶段不运行这些入口，也不删除它们。
+- 15 个旧 driver 都会在顶层原地写
+  `DataPrepare/Data/DBAASP_id_bact_name_SMILES_MIC_Evo_with_genome.csv`，且没有运行时消费者。
+  它们已在不执行的前提下登记 SHA-256 并从发布工作树删除；恢复 tag、分类和受保护数据哈希见
+  `legacy_cleanup.json`。
 
 ## 绘图入口
 
@@ -47,3 +48,6 @@ MPLBACKEND=Agg python scripts/reproduce/plot_modality_ablation.py \
 
 该命令只读取 `paper_values.csv` 和 `configs/modality_ablation/paper_plot.json`，不会读取或修改
 训练数据。CLI 会拒绝用输出路径覆盖上述两个输入文件。
+
+旧 driver 的删除不代表训练血缘已被补齐。发布边界是复现论文图和披露候选家族，不提供缺失的
+逐 checkpoint 训练重跑；原始数据、embedding、checkpoint 和历史结果均未删除或修改。

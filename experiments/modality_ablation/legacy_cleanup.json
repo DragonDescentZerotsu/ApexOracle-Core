@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "decision_date": "2026-07-19",
+  "status": "paper_plot_reproducible_legacy_training_drivers_archived",
+  "release_contract": {
+    "values": "experiments/modality_ablation/paper_values.csv",
+    "values_sha256": "cb66d1b2faf0ea4f352df5182d8d697137bd2c6e0f02e680e56a09cf39efade6",
+    "plot_config": "configs/modality_ablation/paper_plot.json",
+    "plot_config_sha256": "4185a78e6ca2be240aef4e8736d1fed94050d8e4e85e3a1c20b49c408dcf367e",
+    "plot_entrypoint": "scripts/reproduce/plot_modality_ablation.py",
+    "training_rerun_claimed": false
+  },
+  "protected_paper_data": {
+    "path": "DataPrepare/Data/DBAASP_id_bact_name_SMILES_MIC_Evo_with_genome.csv",
+    "size_bytes": 95160297,
+    "sha256_before_cleanup": "67a91a55a687a7fb93395e5a9770f1ebbe40f6de6ad4a3448ed8c1e9bc7c47cc",
+    "sha256_after_cleanup": "67a91a55a687a7fb93395e5a9770f1ebbe40f6de6ad4a3448ed8c1e9bc7c47cc",
+    "modified": false
+  },
+  "archive": {
+    "tag": "legacy-code-snapshot-2026-07-17",
+    "recovery_command": "git show legacy-code-snapshot-2026-07-17:<path>",
+    "candidate_driver_family": {
+      "MIC_with_genome_test_on_non_seen_strains.py": "8fcd7b54656c577726a345f9b8c16f60840bd20c8daaff479ba39cd6454be7b0",
+      "MIC_with_genome_test_on_non_seen_species_3_species_5_ensemble.py": "f9e2b822540a0d96f2e8a512183fb3fb0cd08bae5d7c05f828dcf49432fcb69b",
+      "MIC_with_genome_test_on_non_seen_species_11_species_5_ensemble.py": "a9ab9f6483968c1a7a6c3ea1c800db17823460825e23fb90a971eec5b451149e",
+      "MIC_with_text_test_on_non_seen_strains.py": "fbe9b80f3d2958613cc82018752bbf42124fa792818ec272361ff615aa14b7b4",
+      "MIC_with_text_test_on_non_seen_species_3_species_5_ensemble.py": "ccddcbf210be548e0030afe6057169f561524c7b6f6be4d544c87e5b98e234bd",
+      "MIC_with_text_test_on_non_seen_species_11_species_5_ensemble.py": "c9f5b5fa7f4b095e66638482dfc88eb2fef3272c00c87833d590a7f35b78322c",
+      "MIC_with_text_genome_test_on_non_seen_strains.py": "b801b68d747c6fbb24f8640fb996a4a1360f6ecf761536a36b20c69e52172dc7",
+      "MIC_with_text_genome_test_on_non_seen_species_3_species_5_ensemble.py": "cf5f72ad201ec20f510d70abc5ba7d8ed6eb110225ecf76439ac84ab04f3e55e",
+      "MIC_with_text_genome_test_on_non_seen_species_11_species_5_ensemble.py": "0e7f6b9abfb9f6810ee5963914e0592240dd994403db40fffa9a560b3e56215f"
+    },
+    "earlier_historical_prototypes": {
+      "MIC_with_genome.py": "68f730ec696cc355934e9d783fefad53438c96ab493d900f8bff503f691f01da",
+      "MIC_with_genome_no_AMP.py": "a2dc15d558dc39e2dc229f00ee129ab355233018fbe37f00ae870a3483c87ef7",
+      "MIC_with_genome_test_on_non_seen_pep_&_non_seen_species.py": "9eb3415db2ba37b1c65cd88864d0fcde9e788796d06f153c12e0e2e68269ed77",
+      "MIC_with_genome_test_on_non_seen_species.py": "8f81e0df53bb6d79411c34388629c151b750168e6e88456bfcc77f65a4df46cd",
+      "MIC_with_genome_test_on_non_seen_species_3_species.py": "4a79181ab1acc2ac3d3f446d0f43248a01e40981745da3a4e7eb2b4d84aa5b2a",
+      "MIC_with_genome_test_on_non_seen_species_5_fold.py": "76f8ab8f6056c6514029053f9b34dd10bd4ca9853b1a87aa9219201617049a8a"
+    }
+  },
+  "reason": "All fifteen standalone drivers have no runtime consumers, execute training logic at import time, and overwrite a protected intermediate CSV in place. Exact paper values are frozen independently; incomplete checkpoint remnants cannot reconstruct the plotted ensembles."
+}

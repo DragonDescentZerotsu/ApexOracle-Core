@@ -305,8 +305,11 @@ Modality ablation 的绘图血缘已于 2026-07-19 冻结。最终 Mac notebook 
 `scripts/reproduce/plot_modality_ablation.py`。本机与 node002 的九个候选 driver SHA-256
 完全一致，但两台机器的 checkpoint 仅为互补残片；代码、日志和 W&B output 均未找到完整
 最终指标表，checkpoint 内 `R2` 也只是单成员 best score，不能反推出 ensemble 曲线。因此本项
-状态为 `paper plot reproducible / training lineage unresolved`。旧训练 driver 暂留且不得运行，
-因为它们会原地覆盖过滤后的中间 CSV；本阶段没有修改任何原始或论文数据。
+状态为 `paper plot reproducible / legacy training rerun unavailable`。15 个旧训练 driver 均无
+运行时消费者且会原地覆盖过滤后的中间 CSV；它们已在不运行的前提下登记 SHA-256 并归档删除。
+受保护的 91 MB CSV 清理前 SHA-256 已冻结，原始数据、checkpoint 和结果未修改。
+清理后 canonical 入口成功生成 1-page PDF 和 PNG，冻结值/配置/受保护 CSV 的 SHA-256 均未变化；
+全仓库测试为 111 passed / 4 skipped。
 
 2026-07-19 追加核验纠正了此前过于宽泛的“训练血缘未恢复”表述：四条 modality 曲线的
 分子 encoder 均已由本机/node002 同源 driver 和真实 checkpoint 验证为
@@ -320,9 +323,10 @@ prediction -> ensemble 聚合”的逐点链路；因此后续应写为
 
 Synergy 关闭后的执行顺序如下：
 
-1. **Modality ablation 收尾与 root 清理。** 以已冻结的 12 个论文绘图值和 ChemBERTa-MTR
+1. **Modality ablation 收尾与 root 清理（已完成）。** 以已冻结的 12 个论文绘图值和 ChemBERTa-MTR
    driver-family 审计作为发布证据；先登记全部残留 genome/text/genome+text root driver 的哈希，
-   再删除会原地覆盖中间 CSV 的旧训练入口，不伪造缺失的逐 checkpoint 血缘。
+   再删除会原地覆盖中间 CSV 的旧训练入口，不伪造缺失的逐 checkpoint 血缘。清理 manifest 为
+   `experiments/modality_ablation/legacy_cleanup.json`。
 2. **Small-molecule classification 数据入口。** 审计并迁移
    `DataPrepare/convert_EVO_smiles_MIC_to_SELFIES_token_SM.py` 及论文三个原始小分子数据集的
    实际消费契约；若原始 merge/clean 代码确已缺失，则冻结现有论文输入表而不是重写未知规则。
@@ -407,8 +411,8 @@ loss 和 per-task R² 已迁入 `src/apexoracle/benchmarks/molecule_encoders/`�
 `strict=True` 加载，固定四序列的 legacy/canonical `(4,128)` feature SHA-256 完全相同；三个
 Fig. 2b runner、两个 Fig. 2b capsule builder 和 zero-shot capsule source builder 均已切换到
 canonical source。`compare_APEX/aaindex1.csv` 与 checkpoint 继续作为被 Git 忽略的 paper
-  assets 保留。modality 与 synergy driver 因证据边界仍暂留；Fig. 2c comparator 已在下一阶段
-  迁入 profiles 并删除 root 复制 driver。
+  assets 保留。synergy 与 modality root driver 随后都已在证据冻结和恢复点登记后删除；Fig. 2c
+  comparator 也已迁入 profiles 并删除 root 复制 driver。
 
 `PeptideCLM/` 不作为自有核心代码维护。优先改为明确版本的外部依赖；如果必须 vendor，则只保留必要文件并完整保留上游 README、LICENSE 和来源说明。
 
