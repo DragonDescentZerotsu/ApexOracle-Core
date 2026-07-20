@@ -30,6 +30,10 @@
   `/data2/tianang/projects/.venvs/fig1b-chemprop-v1` 和 node002
   `/data1/tianang/Projects/.venvs/fig1b-chemprop-v1`。两者核心版本均已核验为 Chemprop 1.5.2、
   Torch 2.7.1+cu126、NumPy 1.26.4、pandas 2.2.2、scikit-learn 1.8.0 和 RDKit 2025.03.5。
+- Fig. 1b 补实验实时状态统一使用
+  `python scripts/reproduce/monitor_fig1b_revision.py`；需要连续刷新时使用
+  `watch -n 30 python scripts/reproduce/monitor_fig1b_revision.py`。该入口只读本机和 node002
+  的日志/产物与 GPU 状态，不修改 checkpoint 或原始数据。
 
 ## Git 与发布状态
 
@@ -255,8 +259,14 @@
   RN4220 AUPRC/AUROC 差 `-0.16311/-0.16107`，两者 `p=0.00060`。因此旧的普遍优势表述
   不成立，修订稿必须按菌株和指标分别陈述。
 - **baseline 血缘纠正：** 当前 Fig. 1b 对 A. baumannii 使用的 `0.756/0.266` 是 Liu 2023
-  的 no-RDKit ablation；该论文 RDKit 主模型约为 `0.792/0.337`。修订比较应使用主模型协议，
-  原数值仅保留为历史绘图事实。
+  的 no-RDKit ablation；该论文 RDKit 主模型约为 `0.792/0.337`。ApexOracle 自身没有 RDKit
+  feature augmentation；作者确认修订比较继续采用 no-RDKit
+  ablation，以保持 feature 条件一致，不采用 RDKit 增强的最强版本。
+- **已由 GPU telemetry 验证的事实：** 2026-07-20 16:55 尝试把本机 GPU1 加入 Fig. 1b 补训；
+  两分钟内 GPU/显存分别升到 90°C/88°C，并出现 hardware/software thermal slowdown。当前账号
+  无权下调 350W power limit，因此 worker 在首个 epoch 前停止，GPU1 不再参与本轮实验；对应
+  node002 队列保持不变。完整 30 秒采样记录位于 ignored runtime 文件
+  `results/fig1b_revision/gpu1_thermal.csv`。
 - **Chemprop eligibility 边界：** E. coli 的 `ce_2244` 与 RN4220 的 `na_20640` 是同一条
   RDKit 拒绝的异常铝配位结构；既有 KFold 不重排，配对比较时从双方同时排除并登记。
 - **fine-tune sensitivity 已完成：** 为避免混用残缺 ensemble，每个 outer fold 固定只使用

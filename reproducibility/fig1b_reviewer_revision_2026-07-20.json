@@ -38,6 +38,28 @@
       "large_checkpoints_transferred": false,
       "transfer_contract": "sync prediction CSV/JSON only; node002 queue skips when the valid JSON exists"
     },
+    "local_gpu1_thermal_audit": {
+      "attempted": true,
+      "worker_started_at": "2026-07-20T16:55:06-04:00",
+      "worker_stopped_before_first_epoch": true,
+      "peak_gpu_temperature_c": 90,
+      "peak_memory_temperature_c": 88,
+      "thermal_slowdown_observed": ["hardware", "software"],
+      "requested_power_limit_w": 350,
+      "power_limit_reduction_attempt": "failed: insufficient permissions",
+      "decision": "exclude GPU1 from this run; retain node002 as authoritative queue for the attempted members",
+      "telemetry": "results/fig1b_revision/gpu1_thermal.csv"
+    },
+    "live_monitor": {
+      "entrypoint": "scripts/reproduce/monitor_fig1b_revision.py",
+      "watch_command": "watch -n 30 python scripts/reproduce/monitor_fig1b_revision.py",
+      "fields": ["unique member and epoch progress", "dynamic Apex ETA", "baseline folds", "GPU thermal/utilization", "disk and checkpoint usage"],
+      "snapshot_at": "2026-07-20T17:00:33-04:00",
+      "snapshot_epoch_units": 62,
+      "total_epoch_units": 1125,
+      "snapshot_apex_eta_hours": 15.6,
+      "eta_scope": "Apex reconstruction only; total ETA remains unavailable until the first full baseline fold completes"
+    },
     "storage_projection": {
       "checkpoint_size_bytes": 9084193417,
       "node002_free_bytes_at_check": 6078575149056,

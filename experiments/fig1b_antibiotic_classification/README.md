@@ -121,3 +121,28 @@ node002 运行环境是
 RDKit 2025.03.5、PyTorch 2.7.1+cu126、Pandas 2.2.2、scikit-learn 1.8.0。
 该 venv 使用 `--system-site-packages` 继承 node002 的 CUDA PyTorch；Chemprop 与新版 Pandas
 不兼容的旧 RDKit 2023 已在 venv 内由 RDKit 2025.03.5 覆盖，未修改 conda base。
+
+## 完整 ensemble 最终补跑（进行中）
+
+上文已经完成的 baseline 与单成员 fine-tune 只作为 reviewer sensitivity 保留。作者随后确认
+最终结果必须使用与被比较论文一致的 ensemble 数量：ApexOracle 每个 outer fold 10 members，
+Stokes/Liu/Wong 分别为 `20/10/20`。由于 ApexOracle 自身没有 RDKit feature augmentation，
+Liu 使用论文报告的 no-RDKit ablation，不采用其 RDKit 增强主模型。新运行写入
+`results/fig1b_revision/full_ensemble_reconstruction/` 和
+`results/fig1b_revision/baselines_full_ensemble_no_rdkit/`，不覆盖历史 checkpoint 或原始数据。
+
+一次性查看两台机器的合并状态：
+
+```bash
+python scripts/reproduce/monitor_fig1b_revision.py
+```
+
+每 30 秒连续刷新：
+
+```bash
+watch -n 30 python scripts/reproduce/monitor_fig1b_revision.py
+```
+
+监控同时显示 45 个待补 member 的唯一完成数与 epoch、15 个 baseline fold、动态 Apex ETA、
+GPU 温度/热降频、磁盘余量和新 checkpoint 占用。总 ETA 必须等首个完整 baseline fold 完成后
+再外推；Apex ETA 不应被误写成整个 reviewer 实验的完成时间。

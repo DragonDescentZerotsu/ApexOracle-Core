@@ -409,6 +409,15 @@ metrics 完全一致；group 1 当前动态 hash split 多 5 条，继续按既�
   checkpoint 写盘间隙。由于 H100 约完成 7 epochs、A100 约完成 3 epochs，node002 八条队列的
   最后一个未启动任务（group 1 fold 4 members 1--8）已追加到 H100 后续队列；完成 prediction
   会同步到 node002，使原队列跳过对应任务，从而缩短尾部耗时且不移动大型权重；
+- 2026-07-20 17:00 再次尝试启用本机 GPU1，但正式训练开始约 2 分钟后达到 90°C、显存温度
+  88°C，并同时出现 NVIDIA hardware/software thermal slowdown。当前账号没有权限把 350W power
+  limit 下调，因此该 worker 在首个 epoch 完成前终止；未完成目录已明确标记，node002 原队列仍是
+  这四个成员的权威执行者。GPU1 不再计入可用训练资源；
+- 新增只读监控入口 `scripts/reproduce/monitor_fig1b_revision.py`。它合并本机与 node002 的 45 个
+  缺失 member、当前 epoch、15 个 Chemprop fold、GPU 温度/利用率/热降频、checkpoint 占用和
+  磁盘余量，并按活跃 worker 的实测 epoch 时间动态估计 Apex 阶段 ETA。17:00 快照为
+  `62/1125` epoch units、吞吐量外推约 15.6 小时；这是 Apex 阶段的动态粗估，不包含尚未开始且
+  尚无实测速率的完整 baseline 阶段；
 - Fig. 1b reviewer 修订已重新开启为独立补实验阶段：三个 strict zero-shot ensemble 的样本级
   预测和三个 Chemprop baseline 的 15 个共同-fold 运行均已完成。strict zero-shot 的 5,000 次
   paired bootstrap/randomization/Holm 结果显示只在 E. coli AUROC 上显著优于 baseline；
