@@ -62,6 +62,7 @@ from apexoracle.features.precomputed import (
     load_all_embeddings,
     load_text_only_embeddings,
 )
+from apexoracle.features.kmer import load_legacy_projected_embeddings
 from apexoracle.models.strain_fusion import FirstTokenAttentionGenome, RegressionHead
 from apexoracle.models.hf_molecule_encoder import (
     HFMoleculeEncoderConfig,
@@ -108,7 +109,10 @@ class HierarchicalMicPaths:
         output_override: Path | None = None,
     ) -> "HierarchicalMicPaths":
         def resolve(value: str) -> Path:
-            path = Path(value)
+            expanded = os.path.expandvars(value)
+            if "$" in expanded:
+                raise ValueError(f"Unresolved environment variable in path: {value}")
+            path = Path(expanded)
             return path if path.is_absolute() else repo_root / path
 
         output = output_override or resolve(output_path)
@@ -152,6 +156,39 @@ class HierarchicalMicPaths:
 
 
 @dataclass(frozen=True)
+class GenomeEmbeddingAdapterConfig:
+    kind: str
+    input_dim: int
+    output_dim: int
+    trainable: bool
+    initialization: str
+
+    @classmethod
+    def from_mapping(cls, values: Mapping[str, Any]) -> "GenomeEmbeddingAdapterConfig":
+        return cls(
+            kind=str(values["kind"]),
+            input_dim=int(values["input_dim"]),
+            output_dim=int(values["output_dim"]),
+            trainable=bool(values["trainable"]),
+            initialization=str(values["initialization"]),
+        )
+
+    def validate(self, *, configured_output_dim: int) -> None:
+        if self.kind != "legacy_frozen_kmer_projection":
+            raise ValueError(f"Unsupported genome embedding adapter: {self.kind}")
+        if self.input_dim < 1 or self.output_dim < 1:
+            raise ValueError("Genome adapter dimensions must be positive")
+        if self.output_dim != configured_output_dim:
+            raise ValueError(
+                "Genome adapter output dimension must match model genome dimension"
+            )
+        if self.trainable:
+            raise ValueError("The legacy k-mer projection must remain frozen")
+        if self.initialization != "xavier_uniform_gain_0.01_unseeded_process_state":
+            raise ValueError("Unexpected legacy k-mer projection initialization")
+
+
+@dataclass(frozen=True)
 class HierarchicalMicConfig:
     protocol_family: str
     holdout_protocol: str
@@ -179,6 +216,7 @@ class HierarchicalMicConfig:
     text_embedding_scale: float
     paths: HierarchicalMicPaths
     molecule_encoder: HFMoleculeEncoderConfig | None = None
+    genome_embedding_adapter: GenomeEmbeddingAdapterConfig | None = None
 
     @classmethod
     def load(
@@ -230,6 +268,12 @@ class HierarchicalMicConfig:
             raw["paths"],
             output_path=output_path,
             output_override=output_dir,
+        )
+        adapter_values = raw.get("genome_embedding_adapter")
+        genome_embedding_adapter = (
+            None
+            if adapter_values is None
+            else GenomeEmbeddingAdapterConfig.from_mapping(adapter_values)
         )
         molecule_encoder = None
         if encoder_profile is not None:
@@ -301,6 +345,7 @@ class HierarchicalMicConfig:
             genome_embedding_scale=float(training["genome_embedding_scale"]),
             text_embedding_scale=float(training["text_embedding_scale"]),
             molecule_encoder=molecule_encoder,
+            genome_embedding_adapter=genome_embedding_adapter,
             paths=paths,
         )
         config.validate()
@@ -351,6 +396,10 @@ class HierarchicalMicConfig:
             )
         if self.molecule_encoder is not None:
             self.molecule_encoder.validate()
+        if self.genome_embedding_adapter is not None:
+            self.genome_embedding_adapter.validate(
+                configured_output_dim=self.genome_embedding_dim
+            )
 
 
 @dataclass
@@ -373,6 +422,7 @@ class RuntimeFeatures:
     peptide_embeddings: Mapping[Any, torch.Tensor] | None
     small_molecule_embeddings: Mapping[Any, torch.Tensor] | None
     tokenizer: Any | None = None
+    genome_embedding_adapter: nn.Module | None = None
 
     @property
     def all_text_embeddings(self) -> dict[str, torch.Tensor]:
@@ -496,13 +546,25 @@ def load_runtime_features(
 ) -> RuntimeFeatures:
     paths = config.paths
     online = config.molecule_encoder is not None
-    return RuntimeFeatures(
-        genome_embeddings=load_all_embeddings(
+    genome_adapter = None
+    if config.genome_embedding_adapter is None:
+        genome_embeddings = load_all_embeddings(
             paths.genome_embeddings,
             config.genome_embedding_scale,
             device,
             "genome",
-        ),
+        )
+    else:
+        adapter = config.genome_embedding_adapter
+        genome_embeddings, genome_adapter = load_legacy_projected_embeddings(
+            paths.genome_embeddings,
+            input_dim=adapter.input_dim,
+            output_dim=adapter.output_dim,
+            scale=config.genome_embedding_scale,
+            device=device,
+        )
+    return RuntimeFeatures(
+        genome_embeddings=genome_embeddings,
         atcc_text_embeddings=load_all_embeddings(
             paths.atcc_text_embeddings,
             config.text_embedding_scale,
@@ -526,6 +588,7 @@ def load_runtime_features(
             if online
             else None
         ),
+        genome_embedding_adapter=genome_adapter,
     )
 
 
@@ -1283,6 +1346,7 @@ def run_holdout(
                             if config.molecule_encoder is None
                             else config.molecule_encoder.checkpoint_state_key
                         ),
+                        genome_embedding_adapter=features.genome_embedding_adapter,
                     ),
                     config.paths.output_dir
                     / checkpoint_filename(config, split, group, ensemble),
@@ -1452,6 +1516,17 @@ def dry_run_report(
             "precomputed_mdlm"
             if config.molecule_encoder is None
             else config.molecule_encoder.name
+        ),
+        "genome_embedding_adapter": (
+            None
+            if config.genome_embedding_adapter is None
+            else {
+                "kind": config.genome_embedding_adapter.kind,
+                "input_dim": config.genome_embedding_adapter.input_dim,
+                "output_dim": config.genome_embedding_adapter.output_dim,
+                "trainable": config.genome_embedding_adapter.trainable,
+                "initialization": config.genome_embedding_adapter.initialization,
+            }
         ),
         "record_counts": counts,
         "auxiliary_before_length_filter": {

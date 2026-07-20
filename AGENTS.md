@@ -13,6 +13,10 @@
 - 之前还有很多实验是在node002上面做的，你可以找到对应的代码在node002的 /data1/tianang/Projects/Synergy。在node002上我们同样是使用的conda的base环境完成的Synergy的实验。node002的conda路径是：/data1/tianang/anaconda3/bin/conda
 - /data2/tianang/projects/discrete-diffusion-guidance 里面是所有我们使用的generate peptide用的代码和仓库
 - /data2/tianang/projects/evo2 里面是我们使用的embedding genome的代码
+- **作者于 2026-07-19 确认的 guided generation 边界：** sampler 继续保留在外部
+  `/data2/tianang/projects/discrete-diffusion-guidance`，与 DLM pretraining 和 Evo-2 producer 一样
+  不复制进当前 Synergy 源码；未来 ApexOracle 总仓库只在外部仓库拥有 clean、固定 commit 后将其
+  作为 submodule 或版本化链接。
 - **作者于 2026-07-19 确认的边界：** 当前仓库不重构或重跑 Evo-2 genome embedding extraction，直接消费 `DataPrepare/Data/Genome_embs` 中的预计算 tensor。未来整合后的 ApexOracle 主仓库可以在 `external/evo2` 使用固定 clean commit 的 Git submodule；权重和 embedding 数据不进入 submodule。
 - **已验证事实：** 当前 567 个 embedding 共 3,437,540,485 bytes，逐文件 SHA-256 manifest 位于 `experiments/evo2_genome_embeddings/file_manifest.csv`，其中三份论文数据匹配 563 个。全部已匹配 tensor 为 `torch.bfloat16`、hidden dimension 8192。重构后的只读 safe loader 完整重算 reviewer scaling CSV/PNG 后逐字节一致。当前外部 Evo-2 HEAD `afd0dae0a4bb25f3ca55f171fbdac4907b937afd` 的 commit object 存在，但 checkout dirty，且没有原始 extraction log 证明该 commit 是精确 producer，因此仅作为未来 submodule candidate。
 - 论文最终绘图在 SSH host alias `Mac` 上维护；主 notebook 为 `/Users/kirianozan/Documents/Study/Penn/projects/local_figs/figs.ipynb`。
@@ -147,13 +151,13 @@
 | 论文内容 | 最匹配的代码或资源 | 判断及证据 |
 | --- | --- | --- |
 | Fig. 1a strain-wise 泛化；Fig. 2c 最终 DLM 和 7 模型 ensemble | `scripts/reproduce/run_hierarchical_mic.py --protocol strain`；checkpoint：`Checkpoints/genome_text_learnable_emb/strain_wise_w_SM_b_attn/MDLM_MTR_fix_7_fold_ensembles` | **最终版 / 高置信度。** 三个完整 group 的 ensemble R2 分别为 0.4057、0.6889、0.6434，平均值恰好为论文中的 0.5793；每组均有 7 个模型。 |
-| Fig. 1a / Fig. 2f phylum-wise holdout | `scripts/reproduce/run_hierarchical_mic.py --protocol phylum`；checkpoint 位于 `.../3_species_w_SM/MDLM_MTR_fix_cls_wo_pad_7_fold_ensembles` | **代码路径已统一并验证；历史结果仍为中等置信度。** node002 找回三个 MDLM 终版日志/checkpoint，Fungi 分区与新 adapter 完全一致；现存指标与论文 0.3744 仍不一致，因此不能声称完整恢复论文绘图运行。 |
-| Fig. 1a / Fig. 2d、g species-wise 11-cluster holdout | `scripts/reproduce/run_hierarchical_mic.py --protocol species`；checkpoint 位于 `.../11_species_w_SM/MDLM_MTR_fix_cls_wo_pad_7_fold_ensembles` | **代码路径已统一并验证；历史结果仍为中等置信度。** 现存终版日志只有 group 6–10；论文中完整 11-cluster 汇总运行没有保留下来。 |
+| Fig. 1a / Fig. 2f phylum-wise holdout | `scripts/reproduce/run_hierarchical_mic.py --protocol phylum`；checkpoint 位于 `.../3_species_w_SM/MDLM_MTR_fix_cls_wo_pad_7_fold_ensembles` | **代码路径已统一并验证；历史结果仍为中等置信度。** node002 的完整 MDLM 候选为 Fungi `0.3034`、Pseudomonadati `0.4152`、Bacillati `0.4346`，均值 `0.3844`，比论文 `0.3744` 高 `0.0100`。作者决定暂不继续追查精确论文运行。 |
+| Fig. 1a / Fig. 2d、g species-wise 11-cluster holdout | `scripts/reproduce/run_hierarchical_mic.py --protocol species`；checkpoint 位于 `.../11_species_w_SM/MDLM_MTR_fix_cls_wo_pad_7_fold_ensembles` | **代码路径已统一并验证；历史结果仍为中等置信度。** 合并 node002 group 0–5 和本机 group 6–10 后已覆盖全部 11 组；10 个非异常值重算均值 `0.43366`，与论文 `0.4337` 一致。唯一差异是现存异常组 `-0.3467`，而 Mac 绘图为 `-0.1467`。作者决定暂不继续追查。 |
 | Fig. 2c strain-wise molecular encoder 比较 | `scripts/reproduce/run_hierarchical_mic.py --protocol strain --molecule-encoder {chemberta_mtr,chemberta_mlm,molformer,peptideclm}`；配置 `configs/hierarchical_mic/legacy_fig2c_comparators.yaml` | **代码路径已统一并通过真实模型 H100 smoke。** profiles 保留各 encoder 的 online tokenization、first-token pooling、mode、freeze epoch、ensemble 数和 optimizer 差异。MTR/MolFormer/PeptideCLM 现存 checkpoint 已严格匹配固定 revision；node002 MLM checkpoint 的 state schema 精确匹配。PeptideCLM fixed 与 node002 早期 7-member 变体不同，论文精确 ensemble 血缘仍未完全恢复。 |
-| Fig. 2c Evo-2 与 k-mer 消融 | 当前没有对应源代码；`Checkpoints/KMER_genome_text_learnable_emb` 下只有 2026 年的部分或失败日志 | **缺失。** 论文报告 R2 下降 11.6%，但当前 KMER 日志没有完整结束，仓库内也没有包含 k-mer 实现的 Python 文件。不能声称当前仓库能够复现该结果。 |
+| Fig. 2c Evo-2 与 k-mer 消融 | canonical producer 为 `scripts/reproduce/build_kmer_embeddings.py`；consumer 使用共享 hierarchical runner 和 `configs/hierarchical_mic/legacy_kmer_reconstruction.yaml`；血缘见 `experiments/kmer_ablation/` | **代码迁移完成；论文精确训练血缘仍缺失。** Mac 最终图的单模型 k-mer 为 R²/Spearman/Pearson `0.4507/0.6688/0.6793`。`/data/fangping/kmer_baseline` 是 2026 年 post-paper reconstruction：完整 global/25-epoch/7-member 三组均值 R² `0.5276`，协议与论文不同。567 个 global 和 567 个 windowed tensor 已建立逐文件 manifest；两种 canonical producer 在真实 E. coli ATCC 25922 上均与现存 tensor 逐值相同。 |
 | Fig. 2b 不使用 strain knowledge 的五折 molecular representation benchmark | canonical 模块为 `src/apexoracle/benchmarks/molecule_encoders/`，正式结果见 `experiments/fig2b_molecule_encoders/results_shared_5fold.md`；DLM 预训练代码仍位于外部 `/data2/tianang/projects/mdlm` | **正式修订版 / 高置信度。** 7-model × 5-fold 已在 10,886 个共享 molecule 上完成；旧 root/capsule source 副本由 legacy tag 和 migration audit 追溯。 |
 | Fig. 1b 严格 target-strain zero-shot 小分子分类 | canonical 入口 `scripts/reproduce/run_antibiotic_classification.py --mode strict-zero-shot`；checkpoint：`.../antibiotic_3_strain_compare/MDLM_fix_cls_sm_all_test_10_fold_ensembles` | **最终版 / 高置信度，已完成行为保持迁移。** 完整 held-out target-strain 数据不进入训练，但仍逐 epoch 用于 best-AUROC checkpoint selection。完整 ensemble 指标：E. coli `#004` 为 0.9360 AUROC / 0.5890 AUPRC；A. baumannii 17978 为 0.7262 / 0.3243；S. aureus RN4220 为 0.7679 / 0.1655。30 个 checkpoint 和 3 个完成日志网格完整；group 0 / ensemble 0 已在 H100 上与 capsule 做到 2,335 条 logit 逐值一致。 |
-| Fig. 1b fine-tuned ApexOracle | 同一入口的 `--mode fine-tune --fold N`；checkpoint：`MDLM_fix_cls_10_fold_ensembles` | **代码路径已统一 / 历史结果证据不完整。** 该模式保留目标 strain 上的五折 KFold fine-tuning，但现存 checkpoint 只有 77/150，14 个日志中只有 6 个包含最终汇总。`--mode molecule-only` 对应旧 `wo_SAND`，完整保留仅用 DLM molecule embedding 的对照；它不是 strict zero-shot ApexOracle。 |
+| Fig. 1b fine-tuned ApexOracle | 同一入口的 `--mode fine-tune --fold N`；checkpoint：`MDLM_fix_cls_10_fold_ensembles` | **代码路径已统一 / 历史结果证据不完整。** 合并本机与 node002 后恢复 104/150 个 checkpoint 和 10/15 个完整 fold ensemble；E. coli 五折 AUROC `0.96114` 与绘图 `0.962` 接近，其余目标仍不完整。作者决定不再追查旧产物，只要求 canonical 代码正确运行。`--mode molecule-only` 对应旧 `wo_SAND`。 |
 | Synergy 二分类结果 | canonical 入口 `scripts/reproduce/run_synergy_cv.py`；配置 `configs/synergy/legacy_cv.yaml`；checkpoint：`.../strain_wise_synergy/MDLM_3_fold_ensembles_1_base_model_cls` | **论文高置信度复现候选 / 重构完成。** 使用 `synergistic_pairs_Evo.csv`、strain-wise 三折、单个完整 MIC base 和 7-member ensemble。现存 mean AUROC/AUPRC `0.7598/0.7440` 与论文 `0.7539/0.7454` 的绝对差为 `0.0059/0.0014`；作者确认接受为论文实现的高置信度复现候选。它不是精确原始 checkpoint 声明；rank 1024/100-epoch base 与 Methods rank 64/13 epochs 的差异继续披露。root driver 已归档删除。 |
 | Synergy 候选使用的完整数据 MIC base model | `train_on_all_data.py`；checkpoint 家族 `Checkpoints/genome_text_learnable_emb/guidance_regressor_pad_no_mask`，尤其是 `noise_guidance_best_R2_all_peptide_epoch_100.pth` | 这是现存三折候选 driver 实际加载的最匹配 base model，但 Methods 写 13 epochs，而该文件来自 100-epoch run，精确论文身份仍未解决。 |
 | Guided molecule generation、remasking sampler 和 256-step 三阶段 guidance | 不在当前仓库；分析脚本指向 `/data2/tianang/projects/discrete-diffusion-guidance` | **外部依赖 / 缺失。** 当前仓库包含 predictor、保存的输出或图片以及 similarity 分析，但不包含实际生成 ApexOracle-3/12/23 的 sampler。论文参数为 256 steps、MIC target 1、sigma 从 0.5 线性降到 0.2、`t_on=0.55`、`t_off=0.45`，两个阶段的 guidance strength 为 15。 |
@@ -449,10 +453,10 @@ Strain count mapping 的演化顺序如下：
 
 1. 当前没有 Git 历史，因此不能确定论文最终版本对应的精确 commit。
 2. DLM 训练代码、checkpoint 和 Fig. 2b DLM 源代码依赖外部 `/data2/tianang/projects/mdlm`。
-3. Evo-2 genome window feature extraction 实现缺失。
-4. k-mer ablation 源代码和成功日志缺失。
-5. 实际 discrete guided-generation/remasking sampler 位于外部仓库。
-6. 最终 species-wise 和 phylum-wise checkpoint/log 无法对应当前论文 aggregate 数字，且若干 fold 缺失。
+3. Evo-2 genome window feature extraction 按作者决定保留为外部 producer；当前仓库只消费预计算 tensor。
+4. k-mer producer/consumer 已迁入并验证，但产生论文 `0.4507` 的精确单模型训练日志、projection 状态和 checkpoint 仍未恢复；现存完整 `0.5276` 是协议不同的 post-paper 7-member reconstruction。
+5. 实际 discrete guided-generation/remasking sampler 按作者决定继续位于外部仓库。
+6. species-wise 唯一异常组和 phylum-wise `0.0100` aggregate 差异已量化并由作者决定暂不追查。
 7. 现存 synergy CV 脚本最接近论文，但 LoRA rank 与论文描述不一致，aggregate 指标也略有差异。
 8. 论文描述的不可变 2,732 行 synergy 数据没有保存；当前只有更大的原始表和动态过滤逻辑。
 9. 三个已发表 small-molecule 原始数据集存在，但完整 merge/clean 脚本缺失。
@@ -476,7 +480,7 @@ Strain count mapping 的演化顺序如下：
 3. 抽取一个共享 ApexOracle library，统一 dataset/mapping、split protocol、fusion block、head、metric 和 checkpoint schema；每个论文实验只保留小型 config-driven 入口。
 4. 高置信度 hierarchical MIC 和 strict zero-shot 分类路径已经完成统一入口；下一步把这些
    已验证入口纳入正式 quickstart，并继续迁移 sequence similarity。
-5. 在声称完整复现之前，解决或明确归档 species/phylum、synergy rank、k-mer 和 Fig. 2b 指标不一致。
+5. species/phylum、synergy rank 和 k-mer 的残余差异已经机器可读归档；不要把高置信度候选写成精确历史复现。
 6. 清晰拆分外部项目：要么在许可证允许的前提下 vendoring 固定版本的 DLM/generation 代码，要么把它们声明为带版本的外部依赖。
 7. 把历史副本、W&B 日志、notebook、旁支项目、巨型 checkpoint 和 reviewer capsule 移出源代码包；不要盲目删除 provenance，而应保留机器可读的 archive manifest。
 8. 用最小且经过测试的安装说明、数据下载说明、实验配置、预期指标和容差、license/citation 以及清晰的支持矩阵，替换当前 `environment.yml` 和 `Readme.md`。

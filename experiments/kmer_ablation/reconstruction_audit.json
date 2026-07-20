@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "scope": "paper_fig2c_strainwise_kmer_ablation",
+  "paper_final": {
+    "model": "DLM MTR+DLM+kmer",
+    "ensemble_members": 1,
+    "r2": 0.4507,
+    "spearman": 0.6688,
+    "pearson": 0.6793,
+    "source": "Mac:/Users/kirianozan/Documents/Study/Penn/projects/local_figs/figs.ipynb",
+    "source_sha256": "0a2a30aeb18d52c0874c7a0a8a50ba760fefa3d52009b8e59520ab1f3137918b",
+    "exact_training_lineage_recovered": false
+  },
+  "post_paper_reconstruction": {
+    "source_root": "/data/fangping/kmer_baseline",
+    "producer_modes": {
+      "windowed": {
+        "path": "/data/fangping/kmer_baseline/extract_multi_kmer_embeddings.py",
+        "sha256": "8f155d86105f2fee6f2a4c36314a6f1cc54d1aa09b0a56e64558a616ce1912a5",
+        "tensor_root": "/data/fangping/kmer_embeddings/k456_combined",
+        "files": 567,
+        "bytes": 3653747262,
+        "shape": "num_windows x 5376",
+        "producer_output_dtype": "torch.float32",
+        "current_tensor_dtype": "torch.bfloat16",
+        "alphabet_order": "ATGC",
+        "manifest": "experiments/kmer_ablation/windowed_embedding_manifest.csv",
+        "manifest_sha256": "b8a7dabd749efddc5f26e3a6884fbafda3f736474611248644c1942d6b1784a0"
+      },
+      "global": {
+        "path": "/data/fangping/kmer_baseline/extract_global_multi_kmer_embeddings.py",
+        "sha256": "b6f6202d4a78a81af5a224c6c271a8c211ea19328c3309982698988f7729f740",
+        "tensor_root": "/data/fangping/kmer_embeddings/k456_global",
+        "files": 567,
+        "bytes": 6890949,
+        "shape": "1 x 5376",
+        "dtype": "torch.bfloat16",
+        "alphabet_order": "ACGT",
+        "manifest": "experiments/kmer_ablation/global_embedding_manifest.csv",
+        "manifest_sha256": "52cef04ac8c8743771356019a32883af786d5deea71f5701e385593dfd088b56"
+      }
+    },
+    "training_driver": {
+      "path": "/data/fangping/kmer_baseline/KMER_DP_inhouse_SM_MIC_with_text_genome_test_on_non_seen_strains_MDLM_MTR_fix_cls_wo_padding_eval_global_fast25.py",
+      "sha256": "40969829a55916e539ac1426c27364581497ccb7563ba6bd53b2788d01769f9b",
+      "epochs": 25,
+      "ensemble_members": 7,
+      "projection": "untrained frozen 5376->8192->8192 MLP",
+      "projection_seeded_before_creation": false,
+      "checkpoints_present": 0
+    },
+    "complete_log": {
+      "path": "/data/fangping/kmer_baseline/logs/strains_global_fast25_perfonly.log",
+      "sha256": "66daebe73c99199a304bcc16e0b5b95b314ee9b628d1ef7bc8bbc7201d92b550"
+    },
+    "group_r2": [
+      0.3660217895254453,
+      0.6308115232562945,
+      0.5860106066386859
+    ],
+    "mean_r2": 0.5276146398068086,
+    "difference_from_paper_r2": 0.07691463980680857,
+    "status": "high_confidence_post_paper_reconstruction_candidate_not_exact_paper_run"
+  },
+  "canonical_migration": {
+    "paper_scope_only": true,
+    "phylum_and_species_reconstruction_migrated": false,
+    "original_data_modified": false,
+    "producer_entrypoint": "scripts/reproduce/build_kmer_embeddings.py",
+    "consumer_config": "configs/hierarchical_mic/legacy_kmer_reconstruction.yaml",
+    "default_output_root": "results/kmer_ablation"
+  }
+}

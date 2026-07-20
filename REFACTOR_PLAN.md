@@ -346,7 +346,7 @@ Synergy 关闭后的执行顺序如下：
 `4dabc0f8ac808d33ede3eacb47bacf7b55b2a900fcf78fd3d45a89c2037f3dc2`，与冻结论文 merge
 逐字节一致。固定 IBM SELFIES tokenizer revision 后，49,330 行 token cache 也逐字节一致；唯一
 排除的是含 UNK 的 `na_12751`。原 notebook 的未排序目录遍历/原地写回和旧 converter 的硬编码
-路径/未固定 revision 不再作为发布入口。下一阶段按既定顺序进入 guided generation 外部边界审计。
+路径/未固定 revision 不再作为发布入口。作者随后要求在 guided generation 前先完成 k-mer 消融迁移。
 本阶段全仓库回归为 115 passed / 4 skipped；strict zero-shot group 0 的完整只读 dry-run 也以
 `dry_run_ok` 结束，目标集在 512-token 过滤前后均为 2,335 行。
 
@@ -378,10 +378,30 @@ checkpoint 网格；canonical 采用有严格 checkpoint 证据的 fixed profile
 血缘已恢复。完整审计见
 `experiments/hierarchical_mic/strain/fig2c_comparator_migration_audit.json`。
 
+#### 4.1.2 Fig. 2c strain-wise k-mer 消融（已完成）
+
+状态（2026-07-19）：**代码迁移、真实 tensor 等价和血缘冻结完成。** 权限开放后确认
+`/data/fangping/kmer_baseline` 是 2026 年 post-paper reconstruction，而不是论文精确历史源码。
+论文最终绘图中的单模型 k-mer 为 R²/Spearman/Pearson `0.4507/0.6688/0.6793`；现存完整
+global reconstruction 明确改为 25 epochs 和 7 members，三组 R² `0.3660/0.6308/0.5860`，
+均值 `0.5276`，不能替代论文值。
+
+新增 `apexoracle.features.kmer` 统一 global/windowed k=`4,5,6` producer，并提供拒绝覆盖非空
+输出的 CLI；现存 reconstruction 的一次性 frozen random `5376→8192→8192` projection 已通过
+可选 adapter 接入共享 hierarchical runner，新 checkpoint 会保存 projection state。567 个 global
+和 567 个 windowed tensor 均已生成 SHA-256/shape/dtype manifest。E. coli ATCC 25922 的两种
+canonical 重算与现存 tensor 均逐值相同。真实 group 0 dry-run 的 71,419 条 held-out 样本与历史
+metrics 完全一致；group 1 当前动态 hash split 多 5 条，继续按既有 runner 契约标注为不恢复精确
+历史 membership。仅迁移论文相关 strain-wise 路径，不迁移额外 phylum/species k-mer 实验。
+
+完整限制和命令见 `experiments/kmer_ablation/README.md`。
+本阶段新增 6 项 k-mer 测试后，全仓库回归为 125 passed；既有论文路径没有回归失败。
+
 #### 4.2 迁移前需要作者或原始结果进一步核验
 
-- phylum-wise 和 11-cluster species-wise：现存日志与论文数值或完整 fold 不完全一致；
-- fine-tuned Fig. 1b：现存日志不完整；
+- phylum-wise 候选均值 `0.3844` 与论文 `0.3744` 相差 `+0.0100`；作者决定暂不追查；
+- 11-cluster 合并两台机器后覆盖全部组，只有异常值 `-0.3467` 与绘图 `-0.1467` 不同；作者决定暂不追查；
+- fine-tuned Fig. 1b 合并两机后为 104/150 checkpoint、10/15 完整 fold；作者决定不再追查旧产物，只要求代码正确运行；
 - synergy CV 已作为论文高置信度复现候选完成；rank/base epoch 差异保留为 provenance 限制，
   不再是代码迁移阻塞项；
 - modality ablation：最终绘图值和图形入口已冻结，但缺少能够把这些值精确连接到 legacy
@@ -394,8 +414,7 @@ checkpoint 网格；canonical 采用有严格 checkpoint 证据的 fixed profile
 
 - Evo-2 genome embedding 提取；
 - DLM 预训练及部分 checkpoint；
-- guided generation/remasking sampler；
-- k-mer ablation。
+- guided generation/remasking sampler（作者确认继续作为外部仓库，未来固定 clean commit 后再作为 ApexOracle submodule）。
 
 在对应外部仓库完成重构前，仅提供接口、数据契约和缺失说明，不复制未经核验的大型代码树。
 

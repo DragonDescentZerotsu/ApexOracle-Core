@@ -169,8 +169,9 @@ def legacy_hierarchical_checkpoint_payload(
     missing_genome_embedding: nn.Parameter,
     molecule_encoder: nn.Module | None = None,
     molecule_encoder_state_key: str | None = None,
+    genome_embedding_adapter: nn.Module | None = None,
 ) -> dict:
-    """Build the exact seven-key payload written by the current legacy driver."""
+    """Build the legacy payload, including an optional frozen input adapter."""
 
     payload = {
         "R2": r2,
@@ -187,6 +188,10 @@ def legacy_hierarchical_checkpoint_payload(
                 "molecule_encoder_state_key is required when saving an online encoder"
             )
         payload[molecule_encoder_state_key] = molecule_encoder.state_dict()
+    if genome_embedding_adapter is not None:
+        payload["kmer_projection_state_dict"] = (
+            genome_embedding_adapter.state_dict()
+        )
     return payload
 
 
