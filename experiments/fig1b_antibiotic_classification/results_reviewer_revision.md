@@ -1,13 +1,17 @@
-# Fig. 1b reviewer 修订结果
+# Fig. 1b reviewer 修订：单成员诊断与完整 ensemble 补实验
 
 更新时间：2026-07-20。primary comparison metric 为 pooled out-of-fold AUPRC；AUROC 同时保留。
 所有 baseline 使用与 ApexOracle fine-tune 完全相同的五个 molecule-ID outer folds，模型选择只看
 outer-train 内部 validation。统计使用同一样本上的分层 paired bootstrap 95% CI、双侧
 prediction-swap randomization test，并在每个 model-mode × metric 的三个菌株内做 Holm 校正。
 
+> 2026-07-20 作者确认：下列单成员 ApexOracle 与单模型 Chemprop 数值仅保留为诊断，不是最终
+> Fig. 1b 结果。最终比较使用 ApexOracle 每折 10 members，以及 Stokes/Liu/Wong 分别
+> 20/10/20 个 Chemprop 模型；Liu 采用论文汇报的无 RDKit feature 版本。
+
 ## 已由运行产物验证的事实
 
-### Common-fold Chemprop baselines
+### Common-fold Chemprop 单模型诊断（已被最终 ensemble 协议取代）
 
 | Target | n（positive） | pooled AUPRC | pooled AUROC | fold AUPRC mean ± s.d. | fold AUROC mean ± s.d. |
 | --- | ---: | ---: | ---: | ---: | ---: |
@@ -75,20 +79,20 @@ AUPRC `0.408`、E. coli AUROC `0.962`、A. baumannii AUPRC/AUROC
 大小（10 → 1）、聚合方式（fold metric mean → pooled OOF）、checkpoint 完整性和推理模式。
 RN4220 fold 4 还是后补训候选。canonical runner 的 legacy 行为等价测试、strict zero-shot
 逐样本 logit 对齐和历史 checkpoint 严格加载均已通过；当前证据支持“口径不同”，不支持
-“重构 forward 发生行为漂移”。若要恢复与旧柱子严格同口径的显著性结果，必须补训缺失的
-46 个历史网格成员，形成每个 target 都完整的 5 folds × 10 members，并重新输出样本级预测。
+“重构 forward 发生行为漂移”。若要恢复与旧柱子严格同口径的显著性结果，必须补齐
+完整 5 folds × 10 members，并重新输出样本级预测。RN4220 fold 4 member 0 已补训，因此当前
+剩余 45 个成员；它们已分派到本机 3 张 H100 与 node002 8 张 A100，并与历史目录隔离保存。
 
 ## Chemprop 数值与来源论文的关系
 
 | Target profile | 当前 common-fold 结果 | 来源论文主结果 | 解释 |
 | --- | ---: | ---: | --- |
 | Stokes 2020 / E. coli | AUROC 0.85711；AUPRC 0.50752 | AUROC 0.896；未汇报 AUPRC | 当前 AUROC 更低，AUPRC 是本次共同 folds 新增结果 |
-| Liu 2023 / A. baumannii | AUROC/AUPRC 0.77750/0.31967 | 约 0.792/0.337 | 接近且略低；旧图 0.756/0.266 是 no-RDKit ablation，不是主模型 |
+| Liu 2023 / A. baumannii | AUROC/AUPRC 0.77750/0.31967 | 约 0.792/0.337 | 这是带 RDKit 的单模型诊断；最终改用论文汇报的 no-RDKit ablation（论文约 0.756/0.266） |
 | Wong 2024 / RN4220 | AUPRC 0.32873 | AUPRC 0.364 | 当前更低 |
 
-三个 baseline 都是在 ApexOracle 固定 outer folds 上重新训练的单模型 Chemprop sensitivity，
-不是直接复制来源论文 headline。它们没有高于各自论文主结果；相对旧图变高的主要原因是
-恢复了论文主 profile（尤其 Liu 的 RDKit2D descriptors），并统一了数据和 folds。
+上述三个 baseline 都是在 ApexOracle 固定 outer folds 上重新训练的单模型 Chemprop sensitivity，
+不是最终比较。最终重跑恢复原发布 ensemble 数量；Liu 不使用 RDKit2D descriptors。
 
 ## 绘图与显著性标注
 
@@ -98,15 +102,15 @@ RN4220 fold 4 还是后补训候选。canonical runner 的 legacy 行为等价�
   `/Users/kirianozan/Documents/Study/Penn/projects/local_figs/figs.ipynb`，cell ID
   `220739609a526f79`。`/Users/kirianozan/Documents/Study/Penn/Synergy/paper_figs/figs.ipynb`
   是只有三个旧 cell 的另一份 notebook，从未包含该 Fig. 1b cell。
-- 图上 bracket 沿用 Fig. 3a 的视觉样式，但统计量使用本实验的 paired prediction-swap test；
-  文本显示三菌株内 Holm 校正后的精确 p 值。legend 显式写为
-  `ApexOracle, fine-tuned (1 model/fold)`，不再把 sensitivity 暗示成旧 10-member ensemble。
+- Holm 校正后的 `p < 0.05` 才标为显著。完整 ensemble 完成后，新增 notebook cell 使用
+  Fig. 3a bracket 样式显示 paired prediction-swap test 的 Holm-adjusted p；原始论文 cell
+  不允许覆盖或改写。
 
 ## 发布同步
 
-- Mac canonical notebook cell `220739609a526f79` 已改为读取冻结 CSV、绘制三个菌株的统一
-  AUPRC 及 Holm-adjusted p-value brackets；该 cell 已在 Mac `base` 环境以 `Agg` 后端执行通过。
-- 新 panel 已合并到论文 `Fig1.pdf`；Results、Methods、caption 和 response letter 已同步为
-  上述统计结论，论文完整编译为 28 页。
+- 对原始 Mac cell 的直接修改属于错误操作，已保留修改前备份；待 Mac SSH 恢复后将原 cell
+  完整恢复，并把 reviewer 绘图移入独立新 cell 和独立输出文件。
+- 禁止脚本自动合并或覆盖论文 `Fig1.pdf`。总图已经从更新前备份恢复，临时 bracket 图注也已
+  撤回；后续只生成独立 panel，论文图片编辑由作者完成。
 - 修改前快照、最终文件和运行产物 SHA-256 见
   `reproducibility/fig1b_reviewer_revision_2026-07-20.json`。

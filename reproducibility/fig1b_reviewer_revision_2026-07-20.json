@@ -2,6 +2,27 @@
   "schema_version": 1,
   "date": "2026-07-20",
   "scope": "Fig. 1b common-fold AUPRC and paired-significance reviewer revision",
+  "current_status": "single-member results superseded as diagnostics; full ensembles running",
+  "author_decisions_2026_07_20": {
+    "apexoracle_final_ensemble_members_per_fold": 10,
+    "baseline_ensemble_sizes": {
+      "stokes2020": 20,
+      "liu2023": 10,
+      "wong2024": 20
+    },
+    "liu2023_profile": "paper-reported no-RDKit-feature ablation",
+    "paper_figure_policy": "generate a separate notebook panel only; never overwrite or compose Fig1.pdf",
+    "original_mac_cell_policy": "restore cell 220739609a526f79; create a new cell for reviewer plots"
+  },
+  "full_ensemble_reconstruction": {
+    "historical_checkpoints_recovered": 104,
+    "expected_checkpoints": 150,
+    "rn4220_fold4_member0_retrained": true,
+    "remaining_members_launched": 45,
+    "local_gpus": [0, 2, 3],
+    "node002_gpus": [0, 1, 2, 3, 4, 5, 6, 7],
+    "output_subdirectory": "results/fig1b_revision/full_ensemble_reconstruction"
+  },
   "protocol": {
     "outer_folds": "5-fold molecule-level KFold, shuffle=true, random_state=42",
     "baseline_selection": "12.5% stratified validation subset drawn only from each outer training fold",
@@ -74,6 +95,13 @@
       "Response to reviewers letter.docx": "11d09d9357c2521fb79f6fbfdb1bdf396fc4c71505dc20df9025ffa7c9200f0e",
       "sn-article.pdf": "08ca31c77eeb6c04f6f300e35dde9a8a92e3483071609c33eae042b432c7983c"
     },
+    "compiled_pages": 28
+  },
+  "paper_figure_rollback": {
+    "status": "completed",
+    "Fig1.pdf_sha256": "e8971c526f93ea7e69ef499799baf2218750cb7216102a3ce2c6dfb7dbfd9319",
+    "sn-article.tex_sha256": "3dc3a6a2c5a4eb1a5c039598bf955506647c829d724c8b79cfa168a775f4183a",
+    "sn-article.pdf_sha256": "d68aa2f3a4a47838b35073bb8ab92e22d7aaa30b99040b4c8aa16c746105eeda",
     "compiled_pages": 28
   },
   "mac_plot_files": {

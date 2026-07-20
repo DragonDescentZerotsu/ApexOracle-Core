@@ -7,7 +7,10 @@ sources:
     downloaded_archive_md5: dc1d77c8cc59f2cc4915bb45d8c4c7bf
     historical_chemprop_commit: 3ce99db967b1bb3f9fb13cc9eaf8d604760314ca
     commit_status: inferred_from_training_date_not_recorded_by_publication
-    implementation_note: architecture_and_hyperparameters_replayed_with_chemprop_1.5.2
+    implementation_note: >-
+      architecture and hyperparameters replayed with Chemprop 1.5.2; the final
+      comparison uses the paper-reported no-RDKit-feature ablation and a
+      10-member ensemble matching the released 10-fold checkpoint directory
     published_auroc: 0.896
     published_auprc: null
   liu2023:

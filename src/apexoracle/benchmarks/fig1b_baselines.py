@@ -40,7 +40,11 @@ def _sha256(path: Path) -> str:
 def load_config(path: Path) -> dict[str, Any]:
     with path.open("r", encoding="utf-8") as handle:
         config = yaml.safe_load(handle)
-    if config.get("protocol") != "fig1b_common_outer_folds_chemprop_sensitivity":
+    supported_protocols = {
+        "fig1b_common_outer_folds_chemprop_sensitivity",
+        "fig1b_common_outer_folds_chemprop_final_ensembles",
+    }
+    if config.get("protocol") not in supported_protocols:
         raise ValueError("Unexpected Fig. 1b baseline protocol")
     return config
 
@@ -184,6 +188,18 @@ def _chemprop_executable(bin_dir: Path | None, name: str) -> str:
     return executable
 
 
+def _feature_arguments(profile: dict[str, Any]) -> list[str]:
+    """Return the feature flags for one paper-specific baseline profile."""
+
+    generator = profile.get("features_generator")
+    if not generator:
+        return []
+    arguments = ["--features_generator", str(generator)]
+    if bool(profile.get("no_features_scaling", False)):
+        arguments.append("--no_features_scaling")
+    return arguments
+
+
 def run_fold(
     config: dict[str, Any],
     *,
@@ -192,13 +208,21 @@ def run_fold(
     output_dir: Path,
     chemprop_bin_dir: Path | None,
     gpu: int | None,
-    ensemble_size: int,
+    ensemble_size: int | None,
     reuse_existing: bool = False,
 ) -> dict[str, Any]:
     targets = {int(item["group"]): item for item in config["targets"]}
     target = targets[group]
     profile = config["profiles"][target["profile"]]
     common = config["chemprop"]
+    selected_ensemble_size = (
+        int(profile["ensemble_size"])
+        if ensemble_size is None
+        else int(ensemble_size)
+    )
+    if selected_ensemble_size <= 0:
+        raise ValueError("ensemble_size must be positive")
+    feature_arguments = _feature_arguments(profile)
     fold_dir = output_dir / f"fold_{fold}"
     model_dir = fold_dir / "checkpoints"
     train = _chemprop_executable(chemprop_bin_dir, "chemprop_train")
@@ -223,7 +247,7 @@ def run_fold(
         "--save_dir",
         str(model_dir),
         "--ensemble_size",
-        str(ensemble_size),
+        str(selected_ensemble_size),
         "--epochs",
         str(common["epochs"]),
         "--batch_size",
@@ -242,9 +266,6 @@ def run_fold(
         str(common["max_lr"]),
         "--final_lr",
         str(common["final_lr"]),
-        "--features_generator",
-        str(common["features_generator"]),
-        "--no_features_scaling",
         "--metric",
         str(common["checkpoint_metric"]),
         "--extra_metrics",
@@ -257,11 +278,14 @@ def run_fold(
         "0",
         "--quiet",
     ]
+    command.extend(feature_arguments)
     if gpu is not None:
         command.extend(["--gpu", str(gpu)])
     checkpoint_paths = list(model_dir.glob("fold_0/model_*/model.pt"))
     training_returncode = 0
-    training_reused = reuse_existing and len(checkpoint_paths) == ensemble_size
+    training_reused = (
+        reuse_existing and len(checkpoint_paths) == selected_ensemble_size
+    )
     if not training_reused:
         try:
             subprocess.run(command, check=True, env=chemprop_environment)
@@ -271,7 +295,7 @@ def run_fold(
             # fail in that reporting step; a complete checkpoint grid remains
             # valid for the explicit prediction pass below.
             checkpoint_paths = list(model_dir.glob("fold_0/model_*/model.pt"))
-            if len(checkpoint_paths) != ensemble_size:
+            if len(checkpoint_paths) != selected_ensemble_size:
                 raise
             training_returncode = int(error.returncode)
     raw_predictions = fold_dir / "chemprop_predictions.csv"
@@ -283,12 +307,10 @@ def run_fold(
         str(model_dir),
         "--preds_path",
         str(raw_predictions),
-        "--features_generator",
-        str(common["features_generator"]),
-        "--no_features_scaling",
         "--num_workers",
         "0",
     ]
+    predict_command.extend(feature_arguments)
     if gpu is not None:
         predict_command.extend(["--gpu", str(gpu)])
     subprocess.run(predict_command, check=True, env=chemprop_environment)
@@ -323,7 +345,8 @@ def run_fold(
         "group": group,
         "fold": fold,
         "profile": target["profile"],
-        "ensemble_size": ensemble_size,
+        "ensemble_size": selected_ensemble_size,
+        "features_generator": profile.get("features_generator"),
         "num_examples": int(len(result)),
         "num_prediction_exclusions": int(invalid.sum()),
         "metrics": metrics,
@@ -434,7 +457,11 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--chemprop-bin-dir", type=Path)
     parser.add_argument("--gpu", type=int)
-    parser.add_argument("--ensemble-size", type=int, default=1)
+    parser.add_argument(
+        "--ensemble-size",
+        type=int,
+        help="Override the paper-specific ensemble size in the profile.",
+    )
     parser.add_argument("--reuse-existing", action="store_true")
     parser.add_argument("--prepare-only", action="store_true")
     parser.add_argument("--summarize", action="store_true")

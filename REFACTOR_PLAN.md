@@ -401,21 +401,26 @@ metrics 完全一致；group 1 当前动态 hash split 多 5 条，继续按既�
 
 - phylum-wise 候选均值 `0.3844` 与论文 `0.3744` 相差 `+0.0100`；作者决定暂不追查；
 - 11-cluster 合并两台机器后覆盖全部组，只有异常值 `-0.3467` 与绘图 `-0.1467` 不同；作者决定暂不追查；
-- fine-tuned Fig. 1b 合并两机后为 104/150 checkpoint、10/15 完整 fold；作者决定不再追查旧产物，只要求代码正确运行；
+- fine-tuned Fig. 1b 合并两机后为 104/150 个历史 checkpoint；作者于 2026-07-20 改为要求最终
+  结果使用每个 outer fold 的完整 10-member ensemble。RN4220 fold 4 member 0 已按冻结协议补训，
+  其余 45 个缺失成员已分派到本机 3 张空闲 H100 和 node002 8 张空闲 A100；新产物写入独立
+  `results/fig1b_revision/full_ensemble_reconstruction/`，不覆盖历史 checkpoint；
 - Fig. 1b reviewer 修订已重新开启为独立补实验阶段：三个 strict zero-shot ensemble 的样本级
   预测和三个 Chemprop baseline 的 15 个共同-fold 运行均已完成。strict zero-shot 的 5,000 次
   paired bootstrap/randomization/Holm 结果显示只在 E. coli AUROC 上显著优于 baseline；
   A. baumannii AUPRC 相当而 AUROC 较低，RN4220 两项均显著较低。fine-tune sensitivity 已统一为
   每折单个 `ensemble_0`：14/15 个 fold 复用历史 checkpoint，RN4220 fold 4 已按旧 25-epoch
   协议补训并完成确定性推理。fine-tune 只在 E. coli AUPRC/AUROC 上显著优于 baseline；
-  A. baumannii 和 RN4220 均无显著差异。最终 Fig. 1b 使用配对样本统计，不再由不配对的
-  硬编码柱高推断显著性。Mac notebook、Fig. 1、论文 Results/Methods/caption 和回复信均已
-  同步，28 页 TeX 完整编译通过；前后文件哈希已进入 reproducibility manifest。本阶段最终
-  全仓库回归为 138 passed，`compileall` 和 `git diff --check` 均通过。
+  A. baumannii 和 RN4220 均无显著差异。作者随后确认这只能作为 sensitivity，不能作为最终
+  结果；完整 ensemble 及对应 paired statistics 完成前，不再更新论文数值。
 - Fig. 1b 旧柱子与当前 sensitivity 的指标口径诊断已完成：旧值来自不完整历史
   10-member ensemble 的 fold-level 汇总，而当前是 5-fold single-member pooled OOF；两者不得
-  作为行为等价复现互相替代。绘图 legend 已显式标注 `1 model/fold`，并加入 Fig. 3a 风格的
-  Holm-adjusted paired-test p-value brackets。
+  作为行为等价复现互相替代。单成员图仅作为诊断，最终图等待完整 ensemble。
+- baseline 发布资产已核验：Stokes/Wong 各为 20-member ensemble，Liu 为 10-fold checkpoint
+  directory（预测时按 10-model ensemble 消费）。最终共同-fold 重跑采用 `20/10/20`；Liu 使用
+  论文汇报的 no-RDKit-feature ablation，不采用带 RDKit2D descriptor 的更强主模型。
+- 作者明确禁止自动覆盖论文总图。已将 `Fig1.pdf` 恢复为更新前备份并删除自动拼接脚本；Mac
+  原始 cell `220739609a526f79` 必须恢复，新 reviewer 图只能放在新增 cell 并输出独立 panel。
 - synergy CV 已作为论文高置信度复现候选完成；rank/base epoch 差异保留为 provenance 限制，
   不再是代码迁移阻塞项；
 - modality ablation：最终绘图值和图形入口已冻结，但缺少能够把这些值精确连接到 legacy

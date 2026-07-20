@@ -5,6 +5,7 @@ from pathlib import Path
 import pandas as pd
 
 from apexoracle.benchmarks.fig1b_baselines import (
+    _feature_arguments,
     build_target_table,
     prepare_common_folds,
 )
@@ -73,3 +74,13 @@ def test_common_folds_cover_every_id_once_and_keep_test_out_of_validation(tmp_pa
         assert not test_ids & train_ids
         assert not test_ids & val_ids
         assert not train_ids & val_ids
+
+
+def test_feature_arguments_preserve_paper_specific_baseline_contract():
+    assert _feature_arguments({"features_generator": None}) == []
+    assert _feature_arguments(
+        {
+            "features_generator": "rdkit_2d_normalized",
+            "no_features_scaling": True,
+        }
+    ) == ["--features_generator", "rdkit_2d_normalized", "--no_features_scaling"]
