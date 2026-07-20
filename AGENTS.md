@@ -26,6 +26,10 @@
   拼接论文总图 PDF。Fig. 1b 原 cell `220739609a526f79` 已从修改前备份逐字节恢复；reviewer
   sensitivity 位于新 cell `fig1b-reviewer-sensitivity-20260720`，输出独立 panel 文件。后续完整
   ensemble 图继续使用新的 cell，论文总图编辑由作者完成。
+- Fig. 1b Chemprop 最终重跑环境分别为本机
+  `/data2/tianang/projects/.venvs/fig1b-chemprop-v1` 和 node002
+  `/data1/tianang/Projects/.venvs/fig1b-chemprop-v1`。两者核心版本均已核验为 Chemprop 1.5.2、
+  Torch 2.7.1+cu126、NumPy 1.26.4、pandas 2.2.2、scikit-learn 1.8.0 和 RDKit 2025.03.5。
 
 ## Git 与发布状态
 

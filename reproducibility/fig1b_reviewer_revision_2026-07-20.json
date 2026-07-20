@@ -37,6 +37,45 @@
     "original_cell_executed_during_restore": false,
     "pre_restore_backup": "/Users/kirianozan/Documents/Study/Penn/projects/local_figs/.revision_backups/fig1b_2026-07-20_restore-original-cell/figs.pre_restore.ipynb"
   },
+  "baseline_full_ensemble_reconstruction": {
+    "status": "scheduled after each GPU finishes its ApexOracle queue",
+    "profiles": {
+      "stokes2020": {
+        "ensemble_size": 20,
+        "features_generator": "rdkit_2d_normalized"
+      },
+      "liu2023": {
+        "ensemble_size": 10,
+        "features_generator": null,
+        "variant": "paper-reported no-RDKit-feature ablation"
+      },
+      "wong2024": {
+        "ensemble_size": 20,
+        "features_generator": "rdkit_2d_normalized"
+      }
+    },
+    "folds_sha256": {
+      "group_0": "53e8e0132bf5017ae6773fa1ed2081ed5915ed350570e96d6f829d4a2b5ee591",
+      "group_1": "7a2f60d210ca4dac554c25169a9582ed46b91564a17f4062a805c365f13d96c5",
+      "group_2": "6366266ffc428395c8e15c439b1a2a0759d3cbe34b3e744d08c9e3148e917788"
+    },
+    "folds_match_between_machines": true,
+    "core_environment": {
+      "chemprop": "1.5.2",
+      "torch": "2.7.1+cu126",
+      "numpy": "1.26.4",
+      "pandas": "2.2.2",
+      "scikit_learn": "1.8.0",
+      "rdkit": "2025.03.5"
+    },
+    "local_environment": "/data2/tianang/projects/.venvs/fig1b-chemprop-v1",
+    "node002_environment": "/data1/tianang/Projects/.venvs/fig1b-chemprop-v1",
+    "scheduled_gpus": {
+      "local": [0, 2, 3],
+      "node002": [0, 1, 2, 3, 4, 5, 6, 7]
+    },
+    "output_subdirectory": "results/fig1b_revision/baselines_full_ensemble_no_rdkit"
+  },
   "protocol": {
     "outer_folds": "5-fold molecule-level KFold, shuffle=true, random_state=42",
     "baseline_selection": "12.5% stratified validation subset drawn only from each outer training fold",
