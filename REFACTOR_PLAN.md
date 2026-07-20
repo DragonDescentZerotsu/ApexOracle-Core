@@ -4,6 +4,10 @@
 > 状态：执行中  
 > 适用范围：当前 `Synergy` 仓库，以及后续需要整合的 Evo-2 genome embedding、DLM/MDLM 和 guided generation 代码。
 
+当前执行焦点（2026-07-20）：generation 前的发布代码清理已经完成；正在本机、node001 和
+node002 上补齐 reviewer 要求的 Fig. 1b 完整 fine-tune/baseline ensemble。机器职责、代码同步、
+数据/权重和外部仓库位置以 `docs/COMPUTE_AND_ASSET_MAP.md` 为统一索引。
+
 ## 1. 重构目标
 
 本次重构的目标不是简单删除旧文件，而是把当前以实验脚本副本为主的研究代码整理成一个可审计、可复用、可复现且适合公开发布的代码库：
@@ -221,8 +225,10 @@ fusion/head、四路训练、metrics、best-AUROC selection、checkpoint schema 
 行为验证包括：真实数据 dry-run 与旧日志计数逐项一致；11 项 CPU 测试；H100 上四路合成
 batch 的一轮训练/评估 smoke；以及 strict zero-shot group 0 / ensemble 0 的 2,335 条真实
 checkpoint logit 与 capsule 在 batch size 70 下逐值完全一致。30 个 strict checkpoint 和
-150 个 molecule-only checkpoint 网格完整；fine-tune 仅存 77/150 个 checkpoint，因此仍按
-证据不完整处理。详见 `experiments/fig1b_antibiotic_classification/`。
+150 个 molecule-only checkpoint 网格完整。最初本机单独审计只看到 77/150 个 fine-tune
+checkpoint；合并 node002 后恢复 104 个历史 checkpoint，随后补训 RN4220 fold 4 member 0，
+本轮开始前为 105/150。剩余 45 个 member 正在三机并行补齐；在完成前仍按证据不完整处理。
+详见 `experiments/fig1b_antibiotic_classification/`。
 
 Sequence similarity 已于 2026-07-19 完成迁移。canonical 入口为
 `scripts/reproduce/run_sequence_similarity.py`，配置为
@@ -235,8 +241,9 @@ ties；论文展示 15510，而稳定输入顺序选择 9800，数值不变。�
 tracked drivers/manifests 已删除并由 legacy tag 保留。详见
 `experiments/sequence_similarity/`。
 
-当前下一项高置信度迁移改为 AMP/PepLink 最终数据处理血缘；fine-tune 完整正式结果、
-synergy CV 和 modality ablation 继续保留证据边界。
+AMP/PepLink、synergy、modality ablation、k-mer 和其余 generation 前路径已经完成发布清理与
+证据冻结。当前下一项是完成 Fig. 1b reviewer 补实验并重新计算完整 ensemble 的 paired
+statistics；generation 外部仓库暂时只读审计，不在本阶段修改。
 
 PepLink 外部依赖边界已于 2026-07-19 完成。作者维护的独立仓库
 `DragonDescentZerotsu/PepLink` 已发布 PyPI `PepLink==0.1.1`，tag `v0.1.1` 和 commit
@@ -403,7 +410,8 @@ metrics 完全一致；group 1 当前动态 hash split 多 5 条，继续按既�
 - 11-cluster 合并两台机器后覆盖全部组，只有异常值 `-0.3467` 与绘图 `-0.1467` 不同；作者决定暂不追查；
 - fine-tuned Fig. 1b 合并两机后为 104/150 个历史 checkpoint；作者于 2026-07-20 改为要求最终
   结果使用每个 outer fold 的完整 10-member ensemble。RN4220 fold 4 member 0 已按冻结协议补训，
-  其余 45 个缺失成员已分派到本机 3 张空闲 H100 和 node002 8 张空闲 A100；新产物写入独立
+  其余 45 个缺失成员最初分派到本机 3 张空闲 H100 和 node002 8 张空闲 A100，随后又由
+  node001 8 张 A100 接管 node002 各队列的后排 member；新产物写入独立
   `results/fig1b_revision/full_ensemble_reconstruction/`，不覆盖历史 checkpoint；
   运行一小时后的持续采样确认 11 张卡均正常计算，node002 单次 0% utilization 是验证和 9 GB
   checkpoint 写盘间隙。由于 H100 约完成 7 epochs、A100 约完成 3 epochs，node002 八条队列的

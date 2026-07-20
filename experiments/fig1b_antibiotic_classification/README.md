@@ -136,6 +136,17 @@ Liu 使用论文报告的 no-RDKit ablation，不采用其 RDKit 增强主模型
 RN4220 fold 4 member 0 后已有 105 个，因此本轮只训练剩余 45 个 member。监控中的待补完成数
 只计算这 45 个新任务；例如 `0/45` 不表示已有 105 个资产不存在。
 
+当前完整 ensemble 运行中，每个成功 member 固定完整训练 25 epochs，没有 early stopping。
+目标菌株四个 folds 用于训练，第五个 held fold 每个 epoch 都用于 strict highest-AUROC
+checkpoint selection；没有独立 validation set。该 held-test selection 是历史协议的已知局限，
+当前为保持行为而保留。随后另行加载最佳 checkpoint，以全 `eval()` 模式导出确定性 prediction。
+
+本任务不在线调用 molecular encoder。runner 启动时一次性加载 768 维 float32 的
+`Pep_emb_dict_cls_wo_pad_eval.pt`（18,029 entries，SHA-256 `c0863086…a9ff7b`）和
+`SM_emb_dict_cls_wo_pad_eval.pt`（49,330 entries，SHA-256 `5d2e2f4d…e83ac`），Dataset 按
+`DBAASP_id` 查表。这里的 fine-tune 只更新 strain-aware attention、regression/classification
+heads 和 missing-genome parameter，不更新 DLM/MDLM molecule encoder。
+
 一次性查看本机、node001 和 node002 的合并状态：
 
 ```bash

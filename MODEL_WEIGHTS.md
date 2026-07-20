@@ -10,6 +10,9 @@
   resolver 加载；其余本地权重仍读取已登记的 `current_path`。
 - 每个本地 checkpoint 在发布前必须具备 SHA-256、文件大小、稳定下载 URI、许可或再分发结论和至少一个加载 smoke test。
 - 第三方 Hugging Face 权重不应默认复制再分发。优先固定 revision 并从上游下载；只有许可允许且确有离线发布需要时才镜像到统一存储。
+- Fig. 1b 当前加载的 `Pep_emb_dict_cls_wo_pad_eval.pt` 和 `SM_emb_dict_cls_wo_pad_eval.pt` 是
+  预计算 molecule feature cache，不是可训练模型权重，因此不登记为 checkpoint manifest ID；
+  它们的条目数、SHA-256、消费代码和机器位置记录在 `docs/COMPUTE_AND_ASSET_MAP.md`。
 
 ## Fig. 2b 当前登记
 

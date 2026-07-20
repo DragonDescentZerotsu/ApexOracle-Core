@@ -4,11 +4,23 @@
 命令行入口。重构原则是先冻结并验证历史行为，再删除被替代副本；原始源码血缘可从 Git tag
 `legacy-code-snapshot-2026-07-17` 查看。
 
-当前已完成三类主路径：
+当前已完成以下主路径：
 
 - Fig. 2b 共享 10,886 molecule / 5-fold molecular encoder benchmark；
 - hierarchical MIC（strain/species/phylum）和 Fig. 1b 三菌株抗生素分类的行为保持重构。
 - ApexOracle-3/12/23 sequence-similarity 分析的 cache、alignment 和输出等价重构。
+- synergy 论文三折候选、modality ablation 绘图入口、k-mer producer/consumer 和论文前数据
+  pipeline 的清理与证据冻结。
+
+当前进行中的 reviewer 补实验是 Fig. 1b fine-tune 完整 10-member/fold ensemble 与
+`20/10/20` no-RDKit 对照。实时查看本机、node001、node002：
+
+```bash
+watch -n 30 python scripts/reproduce/monitor_fig1b_revision.py
+```
+
+机器职责、conda/venv、共享文件系统、数据/权重和外部仓库位置统一记录在
+`docs/COMPUTE_AND_ASSET_MAP.md`。
 
 PepLink 作为独立发布的 peptide↔SMILES 工具，不复制进本仓库。ApexOracle 固定可选依赖
 `PepLink==0.1.1` 并通过薄 adapter 调用；外部依赖决策和 179 条历史 structure correction
@@ -89,6 +101,7 @@ conda run -n base pytest -q
 checkpoint 和大型结果文件不进入 Git；权重登记见 `configs/model_weights.yaml` 和
 `MODEL_WEIGHTS.md`。
 
-仍未完成或证据不足的部分包括 fine-tuned Fig. 1b 完整五折结果、synergy CV 精确版本、
-modality ablation、Evo-2 embedding 提取、guided generation sampler 和 k-mer ablation。
-不要仅因为代码入口存在就把这些项目表述为已经完整复现。
+仍未完成或证据不足的部分包括正在运行的 fine-tuned Fig. 1b 完整 ensemble、synergy 的精确
+历史 checkpoint 身份、modality ablation 的精确训练 checkpoint 血缘、Evo-2 extraction producer、
+guided generation sampler 的自包含复现，以及产生论文 k-mer 单模型柱子的精确训练血缘。
+synergy、modality 和 k-mer 的发布代码清理已经完成，但不能因此把候选血缘写成精确历史复现。

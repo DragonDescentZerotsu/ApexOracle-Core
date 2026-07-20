@@ -80,6 +80,15 @@
       "node001_expanded_snapshot_at": "2026-07-20T17:15:38-04:00",
       "node001_expanded_epoch_units": 76,
       "node001_expanded_apex_eta_hours": 9.3,
+      "latest_snapshot_at": "2026-07-20T18:09:46-04:00",
+      "latest_available_checkpoints": 105,
+      "latest_completed_new_members": 0,
+      "latest_epoch_units": 150,
+      "latest_total_epoch_units": 1125,
+      "latest_apex_eta_hours": 8.7,
+      "latest_local_new_checkpoint_count": 3,
+      "latest_shared_node_new_checkpoint_count": 16,
+      "latest_shared_node_new_checkpoint_bytes": 145347094672,
       "eta_scope": "Apex reconstruction only; total ETA remains unavailable until the first full baseline fold completes"
     },
     "storage_projection": {
@@ -155,6 +164,33 @@
       "PYTHONHASHSEED": 0,
       "ensemble_seed": 42,
       "epochs": 25
+    },
+    "current_member_training": {
+      "epochs": 25,
+      "early_stopping": false,
+      "target_training_folds": 4,
+      "held_fold_use": "evaluated every epoch for strict highest-AUROC checkpoint selection; no independent validation set",
+      "deterministic_export": "reload saved checkpoint and evaluate with all consumed modules in eval mode"
+    },
+    "precomputed_molecule_features": {
+      "online_molecule_encoder": false,
+      "peptide_cache": {
+        "path": "DataPrepare/Data/Pep_emb_dict_cls_wo_pad_eval.pt",
+        "entries": 18029,
+        "shape_per_entry": [1, 768],
+        "dtype": "torch.float32",
+        "size_bytes": 60959487,
+        "sha256": "c08630860efb87e97fa9955b08db526499b16208f7be1a89e7fa0b2346a9ff7b"
+      },
+      "small_molecule_cache": {
+        "path": "DataPrepare/Data/SM_emb_dict_cls_wo_pad_eval.pt",
+        "entries": 49330,
+        "shape_per_entry": [1, 768],
+        "dtype": "torch.float32",
+        "size_bytes": 166844850,
+        "sha256": "5d2e2f4d7b9c7287764e44f84dc7977b60cd1c0c6a7317fd91189e91bc5ede83"
+      },
+      "trainable_scope": "strain-aware attention, regression/classification heads, and missing-genome parameter; molecular encoder is absent"
     },
     "inference": "deterministic eval-mode checkpoint inference",
     "statistics": "5000 class-stratified paired bootstrap resamples and 5000 paired prediction-swap randomizations; Holm correction across three strains within each mode and metric",
