@@ -24,8 +24,10 @@ similarity = [
 ]
 peplink = ["PepLink==0.1.1"]
 data-preparation = [
+  "biopython>=1.81",
   "rdkit>=2023.9",
   "selfies>=2.1",
+  "torch>=2.1",
   "transformers>=4.40",
   "pyyaml>=6",
   "tqdm>=4.64",
@@ -57,6 +59,7 @@ apexoracle-run-antibiotic-classification = "apexoracle.training.antibiotic_class
 apexoracle-run-sequence-similarity = "apexoracle.evaluation.sequence_similarity.runner:main"
 apexoracle-run-synergy-cv = "apexoracle.training.synergy_runner:main"
 apexoracle-plot-modality-ablation = "apexoracle.evaluation.modality_ablation:main"
+apexoracle-build-kmer-embeddings = "apexoracle.features.kmer_cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

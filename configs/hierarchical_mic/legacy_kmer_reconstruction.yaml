@@ -1,0 +1,55 @@
+schema_version: 1
+protocol_family: paper_legacy_hierarchical_mic_holdouts
+status: post_paper_global_kmer_reconstruction_candidate
+
+# This profile preserves the completed March 2026 reconstruction, not the
+# missing exact run behind the paper's R2=0.4507 bar.
+model:
+  molecule_embedding_dim: 768
+  genome_embedding_dim: 8192
+  text_embedding_dim: 4096
+  attention_heads: 4
+  attention_dropout: 0.1
+  head_hidden_dims: [3072, 128]
+  head_dropout: 0.2
+  regression_targets: 1
+  missing_genome_embedding: learned_1_by_8192_parameter
+
+genome_embedding_adapter:
+  kind: legacy_frozen_kmer_projection
+  input_dim: 5376
+  output_dim: 8192
+  trainable: false
+  initialization: xavier_uniform_gain_0.01_unseeded_process_state
+
+training:
+  ensembles_per_group: 7
+  ensemble_seeds: [42, 2024, 2025, 2077, 2012, 1973, 2002]
+  epochs: 25
+  batch_size: 80
+  optimizer: Adam
+  learning_rate: 1.0e-5
+  weight_decay: 0.0
+  scheduler: CosineAnnealingLR
+  scheduler_eta_min: 1.0e-10
+  freeze_epochs: 5000
+  genome_embedding_scale: 1.0
+  text_embedding_scale: 1.0
+
+paths:
+  genome_embeddings: ${APEXORACLE_KMER_EMBEDDINGS_DIR}
+  atcc_text_embeddings: DataPrepare/Data/Text_Description/ATCC/embeddings
+  text_only_embeddings: DataPrepare/Data/Text_Description/wo_ATCC/embeddings
+  peptide_embeddings: DataPrepare/Data/Pep_emb_dict_cls_wo_pad_eval.pt
+  small_molecule_embeddings: DataPrepare/Data/SM_emb_dict_cls_wo_pad_eval.pt
+  mic_records: DataPrepare/Data/DBAASP_inhouse_AMP_SELFIES_token_MIC_Evo.csv
+  small_molecule_records: DataPrepare/Data/small_molecule/processed/small_molecule_Evo_binary_data_SELFIES.csv
+
+outputs:
+  strain: results/kmer_ablation/reconstructed_global_fast25
+
+holdouts:
+  strain:
+    adapter: legacy_within_species_three_fold
+    group_names: [fold 1, fold 2, fold 3]
+    historical_membership: exact_2025_hash_seed_not_recovered

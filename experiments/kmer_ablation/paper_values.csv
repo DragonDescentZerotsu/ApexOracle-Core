@@ -1,0 +1,4 @@
+model,ensemble_members,r2,spearman,pearson,source,status
+DLM MTR+DLM+Evo2,7,0.5793,0.7472,0.7597,Mac final figure notebook,paper_final
+DLM MTR+DLM+Evo2,1,0.5032,0.7143,0.7239,Mac final figure notebook,paper_final
+DLM MTR+DLM+kmer,1,0.4507,0.6688,0.6793,Mac final figure notebook,paper_final
