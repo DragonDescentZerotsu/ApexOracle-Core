@@ -7,6 +7,7 @@ import pandas as pd
 from apexoracle.benchmarks.fig1b_baselines import (
     _feature_arguments,
     build_target_table,
+    load_prepared_folds,
     prepare_common_folds,
 )
 
@@ -84,3 +85,13 @@ def test_feature_arguments_preserve_paper_specific_baseline_contract():
             "no_features_scaling": True,
         }
     ) == ["--features_generator", "rdkit_2d_normalized", "--no_features_scaling"]
+
+
+def test_prepared_folds_can_be_reused_without_rewriting(tmp_path):
+    output = tmp_path / "output"
+    config = _config(tmp_path)
+    expected = prepare_common_folds(tmp_path, config, group=0, output_dir=output)
+    before = (output / "folds.csv").stat().st_mtime_ns
+    observed = load_prepared_folds(config, group=0, output_dir=output)
+    assert observed == expected
+    assert (output / "folds.csv").stat().st_mtime_ns == before

@@ -181,6 +181,25 @@ def prepare_common_folds(
     return report
 
 
+def load_prepared_folds(
+    config: dict[str, Any], *, group: int, output_dir: Path
+) -> dict[str, Any]:
+    """Load an already prepared split without rewriting shared fold files."""
+
+    manifest_path = output_dir / "dataset_manifest.json"
+    folds_path = output_dir / "folds.csv"
+    if not manifest_path.exists() or not folds_path.exists():
+        raise FileNotFoundError(
+            f"Prepared folds are missing in {output_dir}; run --prepare-only first"
+        )
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    if int(manifest["group"]) != group:
+        raise ValueError(f"Prepared group does not match requested group {group}")
+    if manifest["protocol"] != config["protocol"]:
+        raise ValueError("Prepared folds use a different protocol")
+    return manifest
+
+
 def _chemprop_executable(bin_dir: Path | None, name: str) -> str:
     executable = str(bin_dir / name) if bin_dir is not None else shutil.which(name)
     if not executable or not Path(executable).exists():
@@ -463,6 +482,11 @@ def build_parser() -> argparse.ArgumentParser:
         help="Override the paper-specific ensemble size in the profile.",
     )
     parser.add_argument("--reuse-existing", action="store_true")
+    parser.add_argument(
+        "--reuse-prepared",
+        action="store_true",
+        help="Read an existing fold manifest instead of rewriting shared CSV files.",
+    )
     parser.add_argument("--prepare-only", action="store_true")
     parser.add_argument("--summarize", action="store_true")
     return parser
@@ -477,8 +501,10 @@ def main(argv: Sequence[str] | None = None) -> dict[str, Any]:
         args.output_root if args.output_root.is_absolute() else root / args.output_root
     )
     output_dir = output_root / f"group_{args.group}"
-    manifest = prepare_common_folds(
-        root, config, group=args.group, output_dir=output_dir
+    manifest = (
+        load_prepared_folds(config, group=args.group, output_dir=output_dir)
+        if args.reuse_prepared
+        else prepare_common_folds(root, config, group=args.group, output_dir=output_dir)
     )
     if args.prepare_only:
         print(json.dumps(manifest, indent=2, sort_keys=True))
