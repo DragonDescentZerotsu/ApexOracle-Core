@@ -420,7 +420,8 @@ metrics 完全一致；group 1 当前动态 hash split 多 5 条，继续按既�
   directory（预测时按 10-model ensemble 消费）。最终共同-fold 重跑采用 `20/10/20`；Liu 使用
   论文汇报的 no-RDKit-feature ablation，不采用带 RDKit2D descriptor 的更强主模型。
 - 作者明确禁止自动覆盖论文总图。已将 `Fig1.pdf` 恢复为更新前备份并删除自动拼接脚本；Mac
-  原始 cell `220739609a526f79` 必须恢复，新 reviewer 图只能放在新增 cell 并输出独立 panel。
+  原始 cell `220739609a526f79` 已从修改前备份逐字节恢复。reviewer sensitivity 已迁到新 cell
+  `fig1b-reviewer-sensitivity-20260720`，并改为输出独立 panel。
 - synergy CV 已作为论文高置信度复现候选完成；rank/base epoch 差异保留为 provenance 限制，
   不再是代码迁移阻塞项；
 - modality ablation：最终绘图值和图形入口已冻结，但缺少能够把这些值精确连接到 legacy

@@ -22,6 +22,10 @@
 - 论文最终绘图在 SSH host alias `Mac` 上维护；主 notebook 为 `/Users/kirianozan/Documents/Study/Penn/projects/local_figs/figs.ipynb`。
 - Mac 的 conda 位于 `/Users/kirianozan/Documents/anaconda/anaconda3/bin/conda`。后续论文绘图统一使用其 `base` 环境；已验证包含 Matplotlib 3.7.1、Seaborn 0.12.2、NumPy 1.24.3 和 nbformat 5.7.0。
 - 通过非交互 SSH 生成图片时可使用 `MPLBACKEND=Agg .../conda run --no-capture-output -n base python ...`；在 notebook 中交互运行时继续使用 base kernel 即可。
+- **作者于 2026-07-20 确认的绘图边界：** 不允许重写论文原始绘图 cell，也不允许代码自动覆盖或
+  拼接论文总图 PDF。Fig. 1b 原 cell `220739609a526f79` 已从修改前备份逐字节恢复；reviewer
+  sensitivity 位于新 cell `fig1b-reviewer-sensitivity-20260720`，输出独立 panel 文件。后续完整
+  ensemble 图继续使用新的 cell，论文总图编辑由作者完成。
 
 ## Git 与发布状态
 

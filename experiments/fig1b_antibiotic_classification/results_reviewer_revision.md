@@ -108,8 +108,10 @@ RN4220 fold 4 还是后补训候选。canonical runner 的 legacy 行为等价�
 
 ## 发布同步
 
-- 对原始 Mac cell 的直接修改属于错误操作，已保留修改前备份；待 Mac SSH 恢复后将原 cell
-  完整恢复，并把 reviewer 绘图移入独立新 cell 和独立输出文件。
+- 原始 Mac cell `220739609a526f79` 已从修改前备份逐字节恢复；原始硬编码论文数值和 output
+  保持不变。reviewer sensitivity 已迁入新 cell `fig1b-reviewer-sensitivity-20260720`，独立输出
+  `3-strain-antibiotics-reviewer-sensitivity.pdf`。两个 cell 均通过 notebook schema 与语法校验，
+  恢复过程中没有执行原始 cell。
 - 禁止脚本自动合并或覆盖论文 `Fig1.pdf`。总图已经从更新前备份恢复，临时 bracket 图注也已
   撤回；后续只生成独立 panel，论文图片编辑由作者完成。
 - 修改前快照、最终文件和运行产物 SHA-256 见
