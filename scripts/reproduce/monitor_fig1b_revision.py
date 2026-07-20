@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""实时汇总 Fig. 1b reviewer 实验在本机与 node002 的进度。"""
+"""实时汇总 Fig. 1b reviewer 实验在本机、node001 与 node002 的进度。"""
 
 from __future__ import annotations
 
@@ -69,6 +69,16 @@ def _gpu_status() -> list[dict[str, str]]:
     ]
 
 
+def _fig1b_sessions() -> list[str]:
+    result = subprocess.run(
+        ["tmux", "list-sessions", "-F", "#{session_name}"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    return [name for name in result.stdout.splitlines() if name.startswith("fig1b_")]
+
+
 def collect(repo_root: Path) -> dict[str, object]:
     reconstruction = (
         repo_root / "results/fig1b_revision/full_ensemble_reconstruction"
@@ -122,12 +132,6 @@ def collect(repo_root: Path) -> dict[str, object]:
 
     disk = shutil.disk_usage(repo_root)
     checkpoint_files = list(reconstruction.glob("group_*_fold_*_member_*/*.pth"))
-    sessions = subprocess.run(
-        ["tmux", "list-sessions", "-F", "#{session_name}"],
-        capture_output=True,
-        text=True,
-        check=False,
-    )
     return {
         "tasks": tasks,
         "baseline_complete": baseline_complete,
@@ -136,15 +140,13 @@ def collect(repo_root: Path) -> dict[str, object]:
         "checkpoint_count": len(checkpoint_files),
         "checkpoint_bytes": sum(path.stat().st_size for path in checkpoint_files),
         "gpus": _gpu_status(),
-        "sessions": [
-            name
-            for name in sessions.stdout.splitlines()
-            if name.startswith("fig1b_")
-        ],
+        "sessions": _fig1b_sessions(),
     }
 
 
-def _remote_collect(host: str, root: Path, script: Path) -> dict[str, object]:
+def _remote_collect(
+    host: str, root: Path, script: Path, *, runtime_only: bool = False
+) -> dict[str, object]:
     command = [
         "ssh",
         "-o",
@@ -156,6 +158,8 @@ def _remote_collect(host: str, root: Path, script: Path) -> dict[str, object]:
         "--repo-root",
         str(root),
     ]
+    if runtime_only:
+        command.append("--runtime-only")
     result = subprocess.run(command, capture_output=True, text=True, timeout=30)
     if result.returncode:
         raise RuntimeError(result.stderr.strip() or "remote collection failed")
@@ -193,7 +197,12 @@ def _gpu_lines(label: str, payload: dict[str, object]) -> list[str]:
     return lines
 
 
-def render(local: dict[str, object], remote: dict[str, object] | None) -> str:
+def render(
+    local: dict[str, object],
+    remote: dict[str, object] | None,
+    extra_runtimes: list[tuple[str, dict[str, object]]] | None = None,
+) -> str:
+    extra_runtimes = extra_runtimes or []
     hosts = [local] + ([remote] if remote else [])
     merged: dict[str, dict[str, object]] = {}
     for key in EXPECTED_TASKS:
@@ -260,6 +269,8 @@ def render(local: dict[str, object], remote: dict[str, object] | None) -> str:
         lines.extend(["", *_gpu_lines("node002", remote)])
     else:
         lines.extend(["", "node002: 状态读取失败；本机任务不受影响。"])
+    for label, runtime in extra_runtimes:
+        lines.extend(["", *_gpu_lines(label, runtime)])
 
     lines.extend(
         [
@@ -276,10 +287,12 @@ def render(local: dict[str, object], remote: dict[str, object] | None) -> str:
             f"new ckpt {remote['checkpoint_count']} / "
             f"{_human_bytes(int(remote['checkpoint_bytes']))}"
         )
-    lines.append(
-        f"活跃 tmux: 本机 {len(local['sessions'])}; "
-        f"node002 {len(remote['sessions']) if remote else '?'}"
-    )
+    session_fields = [
+        f"本机 {len(local['sessions'])}",
+        f"node002 {len(remote['sessions']) if remote else '?'}",
+        *(f"{label} {len(runtime['sessions'])}" for label, runtime in extra_runtimes),
+    ]
+    lines.append(f"活跃 tmux: {'; '.join(session_fields)}")
     return "\n".join(lines)
 
 
@@ -290,14 +303,24 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--node-host", default="node002")
     parser.add_argument(
+        "--extra-node-host",
+        action="append",
+        default=["node001"],
+        help="只读取 GPU/tmux 状态的额外共享文件系统节点；可重复指定",
+    )
+    parser.add_argument(
         "--node-root", type=Path, default=Path("/data1/tianang/Projects/Synergy_release")
     )
     parser.add_argument("--collect", action="store_true", help=argparse.SUPPRESS)
+    parser.add_argument("--runtime-only", action="store_true", help=argparse.SUPPRESS)
     return parser.parse_args()
 
 
 def main() -> None:
     args = parse_args()
+    if args.runtime_only:
+        print(json.dumps({"gpus": _gpu_status(), "sessions": _fig1b_sessions()}))
+        return
     local = collect(args.repo_root.resolve())
     if args.collect:
         print(json.dumps(local))
@@ -307,7 +330,16 @@ def main() -> None:
         remote = _remote_collect(args.node_host, args.node_root, remote_script)
     except (OSError, RuntimeError, subprocess.TimeoutExpired, json.JSONDecodeError):
         remote = None
-    print(render(local, remote))
+    extra_runtimes = []
+    for host in args.extra_node_host:
+        try:
+            runtime = _remote_collect(
+                host, args.node_root, remote_script, runtime_only=True
+            )
+        except (OSError, RuntimeError, subprocess.TimeoutExpired, json.JSONDecodeError):
+            continue
+        extra_runtimes.append((host, runtime))
+    print(render(local, remote, extra_runtimes))
 
 
 if __name__ == "__main__":

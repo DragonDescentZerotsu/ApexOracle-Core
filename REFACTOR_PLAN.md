@@ -418,6 +418,16 @@ metrics 完全一致；group 1 当前动态 hash split 多 5 条，继续按既�
   磁盘余量，并按活跃 worker 的实测 epoch 时间动态估计 Apex 阶段 ETA。17:00 快照为
   `62/1125` epoch units、吞吐量外推约 15.6 小时；这是 Apex 阶段的动态粗估，不包含尚未开始且
   尚无实测速率的完整 baseline 阶段；
+- 2026-07-20 17:15 确认 node001 与 node002 共同挂载 `bright91:/data1`，release driver 的 inode、
+  文件大小和 SHA-256 一致；node001 的 8 张 A100 80GB、Torch 2.7.1+cu126 和 Chemprop 1.5.2
+  环境均通过验证。node002 每条四任务队列的第 3 个 member 已各迁 1 个到 node001；node001
+  正式训练时 8 张卡利用率为 86--100%、温度 56--68°C。共享 `/data1` 只扫描一次，避免监控
+  重复计算同一任务；
+- node001 的 8 个 Apex worker 完成后分别继续执行 baseline folds
+  `2/3, 2/4, 1/0, 1/1, 1/2, 1/3, 1/4, 0/4`。node002 尚未启动的 baseline session 已增加
+  `metrics.json` 完成保护，后续 historical evaluation 等待链原样恢复。扩容后 17:15 动态 Apex
+  ETA 从约 15.6 小时降至约 9.3 小时；完整实验 ETA 仍需首个 `20/10/20` baseline fold 完成后
+  才能可靠外推；
 - Fig. 1b reviewer 修订已重新开启为独立补实验阶段：三个 strict zero-shot ensemble 的样本级
   预测和三个 Chemprop baseline 的 15 个共同-fold 运行均已完成。strict zero-shot 的 5,000 次
   paired bootstrap/randomization/Holm 结果显示只在 E. coli AUROC 上显著优于 baseline；

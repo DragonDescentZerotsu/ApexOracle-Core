@@ -34,6 +34,12 @@
   `python scripts/reproduce/monitor_fig1b_revision.py`；需要连续刷新时使用
   `watch -n 30 python scripts/reproduce/monitor_fig1b_revision.py`。该入口只读本机和 node002
   的日志/产物与 GPU 状态，不修改 checkpoint 或原始数据。
+- **2026-07-20 node001 扩容事实：** node001 与 node002 共同挂载 `bright91:/data1`；release
+  driver 的 inode/size/hash 一致，8 张 A100 80GB 和共享 base/Chemprop 环境已通过 CUDA import。
+  node002 各队列的第 3 个待补 member 已各分配一个到 node001；训练进入 steady state 后利用率
+  86--100%、温度 56--68°C。每个 node001 worker 随后再运行一个完整 baseline fold；node002
+  baseline 队列以 `metrics.json` 为完成条件跳过共享文件系统中已完成的 fold。监控只从 `/data1`
+  汇总一次任务进度，但分别显示 node001/node002 GPU，避免共享产物被重复计数。
 
 ## Git 与发布状态
 

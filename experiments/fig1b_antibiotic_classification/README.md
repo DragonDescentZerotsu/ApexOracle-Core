@@ -131,7 +131,7 @@ Liu 使用论文报告的 no-RDKit ablation，不采用其 RDKit 增强主模型
 `results/fig1b_revision/full_ensemble_reconstruction/` 和
 `results/fig1b_revision/baselines_full_ensemble_no_rdkit/`，不覆盖历史 checkpoint 或原始数据。
 
-一次性查看两台机器的合并状态：
+一次性查看本机、node001 和 node002 的合并状态：
 
 ```bash
 python scripts/reproduce/monitor_fig1b_revision.py
