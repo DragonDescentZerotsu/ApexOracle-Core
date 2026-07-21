@@ -1,0 +1,98 @@
+schema_version: 1
+description: >-
+  Final Fig. 1b ApexOracle fine-tune predictions. Each outer fold averages the
+  fixed legacy ensemble indices 0--9, combining historical and reconstructed
+  member-level prediction tables without modifying either checkpoint source.
+
+groups:
+  - group: 0
+    reference_predictions: results/fig1b_revision/baselines/group_0/oof_predictions.csv
+    folds:
+      - fold: 0
+        sources: [results/fig1b_revision/full_ensemble_historical_predictions/antibiotic_classification_fine-tune_group_0_fold_0.csv]
+      - fold: 1
+        sources: [results/fig1b_revision/full_ensemble_historical_predictions/antibiotic_classification_fine-tune_group_0_fold_1.csv]
+      - fold: 2
+        sources: [results/fig1b_revision/full_ensemble_historical_predictions/antibiotic_classification_fine-tune_group_0_fold_2.csv]
+      - fold: 3
+        sources: [results/fig1b_revision/full_ensemble_historical_predictions/antibiotic_classification_fine-tune_group_0_fold_3.csv]
+      - fold: 4
+        sources: [results/fig1b_revision/full_ensemble_historical_predictions/antibiotic_classification_fine-tune_group_0_fold_4.csv]
+
+  - group: 1
+    reference_predictions: results/fig1b_revision/baselines/group_1/oof_predictions.csv
+    folds:
+      - fold: 0
+        sources: [results/fig1b_revision/full_ensemble_historical_predictions/antibiotic_classification_fine-tune_group_1_fold_0.csv]
+      - fold: 1
+        sources: [results/fig1b_revision/full_ensemble_historical_predictions/antibiotic_classification_fine-tune_group_1_fold_1.csv]
+      - fold: 2
+        sources:
+          - results/fig1b_revision/full_ensemble_historical_predictions/antibiotic_classification_fine-tune_group_1_fold_2.csv
+          - results/fig1b_revision/full_ensemble_reconstruction/group_1_fold_2_member_1/predictions/antibiotic_classification_fine-tune_group_1_fold_2.csv
+          - results/fig1b_revision/full_ensemble_reconstruction/group_1_fold_2_member_2/predictions/antibiotic_classification_fine-tune_group_1_fold_2.csv
+          - results/fig1b_revision/full_ensemble_reconstruction/group_1_fold_2_member_3/predictions/antibiotic_classification_fine-tune_group_1_fold_2.csv
+          - results/fig1b_revision/full_ensemble_reconstruction/group_1_fold_2_member_4/predictions/antibiotic_classification_fine-tune_group_1_fold_2.csv
+          - results/fig1b_revision/full_ensemble_reconstruction/group_1_fold_2_member_5/predictions/antibiotic_classification_fine-tune_group_1_fold_2.csv
+          - results/fig1b_revision/full_ensemble_reconstruction/group_1_fold_2_member_6/predictions/antibiotic_classification_fine-tune_group_1_fold_2.csv
+          - results/fig1b_revision/full_ensemble_reconstruction/group_1_fold_2_member_7/predictions/antibiotic_classification_fine-tune_group_1_fold_2.csv
+          - results/fig1b_revision/full_ensemble_reconstruction/group_1_fold_2_member_8/predictions/antibiotic_classification_fine-tune_group_1_fold_2.csv
+          - results/fig1b_revision/full_ensemble_reconstruction/group_1_fold_2_member_9/predictions/antibiotic_classification_fine-tune_group_1_fold_2.csv
+      - fold: 3
+        sources:
+          - results/fig1b_revision/full_ensemble_historical_predictions/antibiotic_classification_fine-tune_group_1_fold_3.csv
+          - results/fig1b_revision/full_ensemble_reconstruction/group_1_fold_3_member_1/predictions/antibiotic_classification_fine-tune_group_1_fold_3.csv
+          - results/fig1b_revision/full_ensemble_reconstruction/group_1_fold_3_member_2/predictions/antibiotic_classification_fine-tune_group_1_fold_3.csv
+          - results/fig1b_revision/full_ensemble_reconstruction/group_1_fold_3_member_3/predictions/antibiotic_classification_fine-tune_group_1_fold_3.csv
+          - results/fig1b_revision/full_ensemble_reconstruction/group_1_fold_3_member_4/predictions/antibiotic_classification_fine-tune_group_1_fold_3.csv
+          - results/fig1b_revision/full_ensemble_reconstruction/group_1_fold_3_member_5/predictions/antibiotic_classification_fine-tune_group_1_fold_3.csv
+          - results/fig1b_revision/full_ensemble_reconstruction/group_1_fold_3_member_6/predictions/antibiotic_classification_fine-tune_group_1_fold_3.csv
+          - results/fig1b_revision/full_ensemble_reconstruction/group_1_fold_3_member_7/predictions/antibiotic_classification_fine-tune_group_1_fold_3.csv
+          - results/fig1b_revision/full_ensemble_reconstruction/group_1_fold_3_member_8/predictions/antibiotic_classification_fine-tune_group_1_fold_3.csv
+          - results/fig1b_revision/full_ensemble_reconstruction/group_1_fold_3_member_9/predictions/antibiotic_classification_fine-tune_group_1_fold_3.csv
+      - fold: 4
+        sources:
+          - results/fig1b_revision/full_ensemble_historical_predictions/antibiotic_classification_fine-tune_group_1_fold_4.csv
+          - results/fig1b_revision/full_ensemble_reconstruction/group_1_fold_4_member_1/predictions/antibiotic_classification_fine-tune_group_1_fold_4.csv
+          - results/fig1b_revision/full_ensemble_reconstruction/group_1_fold_4_member_2/predictions/antibiotic_classification_fine-tune_group_1_fold_4.csv
+          - results/fig1b_revision/full_ensemble_reconstruction/group_1_fold_4_member_3/predictions/antibiotic_classification_fine-tune_group_1_fold_4.csv
+          - results/fig1b_revision/full_ensemble_reconstruction/group_1_fold_4_member_4/predictions/antibiotic_classification_fine-tune_group_1_fold_4.csv
+          - results/fig1b_revision/full_ensemble_reconstruction/group_1_fold_4_member_5/predictions/antibiotic_classification_fine-tune_group_1_fold_4.csv
+          - results/fig1b_revision/full_ensemble_reconstruction/group_1_fold_4_member_6/predictions/antibiotic_classification_fine-tune_group_1_fold_4.csv
+          - results/fig1b_revision/full_ensemble_reconstruction/group_1_fold_4_member_7/predictions/antibiotic_classification_fine-tune_group_1_fold_4.csv
+          - results/fig1b_revision/full_ensemble_reconstruction/group_1_fold_4_member_8/predictions/antibiotic_classification_fine-tune_group_1_fold_4.csv
+          - results/fig1b_revision/full_ensemble_reconstruction/group_1_fold_4_member_9/predictions/antibiotic_classification_fine-tune_group_1_fold_4.csv
+
+  - group: 2
+    reference_predictions: results/fig1b_revision/baselines/group_2/oof_predictions.csv
+    folds:
+      - fold: 0
+        sources: [results/fig1b_revision/full_ensemble_historical_predictions/antibiotic_classification_fine-tune_group_2_fold_0.csv]
+      - fold: 1
+        sources: [results/fig1b_revision/full_ensemble_historical_predictions/antibiotic_classification_fine-tune_group_2_fold_1.csv]
+      - fold: 2
+        sources: [results/fig1b_revision/full_ensemble_historical_predictions/antibiotic_classification_fine-tune_group_2_fold_2.csv]
+      - fold: 3
+        sources:
+          - results/fig1b_revision/full_ensemble_historical_predictions/antibiotic_classification_fine-tune_group_2_fold_3.csv
+          - results/fig1b_revision/full_ensemble_reconstruction/group_2_fold_3_member_1/predictions/antibiotic_classification_fine-tune_group_2_fold_3.csv
+          - results/fig1b_revision/full_ensemble_reconstruction/group_2_fold_3_member_2/predictions/antibiotic_classification_fine-tune_group_2_fold_3.csv
+          - results/fig1b_revision/full_ensemble_reconstruction/group_2_fold_3_member_3/predictions/antibiotic_classification_fine-tune_group_2_fold_3.csv
+          - results/fig1b_revision/full_ensemble_reconstruction/group_2_fold_3_member_4/predictions/antibiotic_classification_fine-tune_group_2_fold_3.csv
+          - results/fig1b_revision/full_ensemble_reconstruction/group_2_fold_3_member_5/predictions/antibiotic_classification_fine-tune_group_2_fold_3.csv
+          - results/fig1b_revision/full_ensemble_reconstruction/group_2_fold_3_member_6/predictions/antibiotic_classification_fine-tune_group_2_fold_3.csv
+          - results/fig1b_revision/full_ensemble_reconstruction/group_2_fold_3_member_7/predictions/antibiotic_classification_fine-tune_group_2_fold_3.csv
+          - results/fig1b_revision/full_ensemble_reconstruction/group_2_fold_3_member_8/predictions/antibiotic_classification_fine-tune_group_2_fold_3.csv
+          - results/fig1b_revision/full_ensemble_reconstruction/group_2_fold_3_member_9/predictions/antibiotic_classification_fine-tune_group_2_fold_3.csv
+      - fold: 4
+        sources:
+          - results/fig1b_revision/full_ensemble_historical_predictions/antibiotic_classification_fine-tune_group_2_fold_4.csv
+          - results/fig1b_revision/full_ensemble_reconstruction/group_2_fold_4_member_1/predictions/antibiotic_classification_fine-tune_group_2_fold_4.csv
+          - results/fig1b_revision/full_ensemble_reconstruction/group_2_fold_4_member_2/predictions/antibiotic_classification_fine-tune_group_2_fold_4.csv
+          - results/fig1b_revision/full_ensemble_reconstruction/group_2_fold_4_member_3/predictions/antibiotic_classification_fine-tune_group_2_fold_4.csv
+          - results/fig1b_revision/full_ensemble_reconstruction/group_2_fold_4_member_4/predictions/antibiotic_classification_fine-tune_group_2_fold_4.csv
+          - results/fig1b_revision/full_ensemble_reconstruction/group_2_fold_4_member_5/predictions/antibiotic_classification_fine-tune_group_2_fold_4.csv
+          - results/fig1b_revision/full_ensemble_reconstruction/group_2_fold_4_member_6/predictions/antibiotic_classification_fine-tune_group_2_fold_4.csv
+          - results/fig1b_revision/full_ensemble_reconstruction/group_2_fold_4_member_7/predictions/antibiotic_classification_fine-tune_group_2_fold_4.csv
+          - results/fig1b_revision/full_ensemble_reconstruction/group_2_fold_4_member_8/predictions/antibiotic_classification_fine-tune_group_2_fold_4.csv
+          - results/fig1b_revision/full_ensemble_reconstruction/group_2_fold_4_member_9/predictions/antibiotic_classification_fine-tune_group_2_fold_4.csv

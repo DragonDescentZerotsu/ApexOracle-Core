@@ -1,0 +1,63 @@
+schema_version: 1
+description: >-
+  Final paired Fig. 1b comparisons. ApexOracle fine-tune and every Chemprop
+  baseline use 10-member ensembles; strict zero-shot also uses its historical
+  10-member ensemble. All comparisons are aligned on identical molecule IDs.
+
+comparisons:
+  - name: strict_zero_shot_vs_stokes2020_10member
+    family: strict_zero_shot_vs_baseline
+    group: 0
+    candidate_name: ApexOracle strict zero-shot (10 members)
+    baseline_name: Stokes 2020 Chemprop (10 members)
+    candidate_predictions: results/fig1b_revision/apexoracle_strict_zero_shot/antibiotic_classification_strict-zero-shot_group_0.csv
+    baseline_predictions: results/fig1b_revision/baselines_full_ensemble_no_rdkit/group_0/oof_predictions.csv
+    candidate_may_be_superset: true
+    metrics: [auprc, auroc]
+
+  - name: strict_zero_shot_vs_liu2023_no_rdkit_10member
+    family: strict_zero_shot_vs_baseline
+    group: 1
+    candidate_name: ApexOracle strict zero-shot (10 members)
+    baseline_name: Liu 2023 no-RDKit Chemprop (10 members)
+    candidate_predictions: results/fig1b_revision/apexoracle_strict_zero_shot/antibiotic_classification_strict-zero-shot_group_1.csv
+    baseline_predictions: results/fig1b_revision/baselines_full_ensemble_no_rdkit/group_1/oof_predictions.csv
+    candidate_may_be_superset: true
+    metrics: [auprc, auroc]
+
+  - name: strict_zero_shot_vs_wong2024_10member
+    family: strict_zero_shot_vs_baseline
+    group: 2
+    candidate_name: ApexOracle strict zero-shot (10 members)
+    baseline_name: Wong 2024 Chemprop (10 members)
+    candidate_predictions: results/fig1b_revision/apexoracle_strict_zero_shot/antibiotic_classification_strict-zero-shot_group_2.csv
+    baseline_predictions: results/fig1b_revision/baselines_full_ensemble_no_rdkit/group_2/oof_predictions.csv
+    candidate_may_be_superset: true
+    metrics: [auprc, auroc]
+
+  - name: fine_tune_vs_stokes2020_10member
+    family: fine_tune_vs_baseline
+    group: 0
+    candidate_name: ApexOracle fine-tune (10 members/fold)
+    baseline_name: Stokes 2020 Chemprop (10 members/fold)
+    candidate_predictions: results/fig1b_revision/apexoracle_fine_tune_10member/group_0/oof_predictions.csv
+    baseline_predictions: results/fig1b_revision/baselines_full_ensemble_no_rdkit/group_0/oof_predictions.csv
+    metrics: [auprc, auroc]
+
+  - name: fine_tune_vs_liu2023_no_rdkit_10member
+    family: fine_tune_vs_baseline
+    group: 1
+    candidate_name: ApexOracle fine-tune (10 members/fold)
+    baseline_name: Liu 2023 no-RDKit Chemprop (10 members/fold)
+    candidate_predictions: results/fig1b_revision/apexoracle_fine_tune_10member/group_1/oof_predictions.csv
+    baseline_predictions: results/fig1b_revision/baselines_full_ensemble_no_rdkit/group_1/oof_predictions.csv
+    metrics: [auprc, auroc]
+
+  - name: fine_tune_vs_wong2024_10member
+    family: fine_tune_vs_baseline
+    group: 2
+    candidate_name: ApexOracle fine-tune (10 members/fold)
+    baseline_name: Wong 2024 Chemprop (10 members/fold)
+    candidate_predictions: results/fig1b_revision/apexoracle_fine_tune_10member/group_2/oof_predictions.csv
+    baseline_predictions: results/fig1b_revision/baselines_full_ensemble_no_rdkit/group_2/oof_predictions.csv
+    metrics: [auprc, auroc]

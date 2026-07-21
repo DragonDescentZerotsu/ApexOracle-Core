@@ -219,6 +219,21 @@ def _feature_arguments(profile: dict[str, Any]) -> list[str]:
     return arguments
 
 
+def _ordered_checkpoint_paths(model_dir: Path) -> list[Path]:
+    """Return Chemprop ensemble checkpoints in numeric member order."""
+
+    paths = list(model_dir.glob("fold_0/model_*/model.pt"))
+    try:
+        return sorted(
+            paths,
+            key=lambda path: int(path.parent.name.removeprefix("model_")),
+        )
+    except ValueError as error:
+        raise ValueError(
+            f"Unexpected Chemprop model directory in {model_dir}"
+        ) from error
+
+
 def run_fold(
     config: dict[str, Any],
     *,
@@ -300,10 +315,10 @@ def run_fold(
     command.extend(feature_arguments)
     if gpu is not None:
         command.extend(["--gpu", str(gpu)])
-    checkpoint_paths = list(model_dir.glob("fold_0/model_*/model.pt"))
+    checkpoint_paths = _ordered_checkpoint_paths(model_dir)
     training_returncode = 0
     training_reused = (
-        reuse_existing and len(checkpoint_paths) == selected_ensemble_size
+        reuse_existing and len(checkpoint_paths) >= selected_ensemble_size
     )
     if not training_reused:
         try:
@@ -313,17 +328,28 @@ def run_fold(
             # checkpoint has been written. Some modern dependency combinations
             # fail in that reporting step; a complete checkpoint grid remains
             # valid for the explicit prediction pass below.
-            checkpoint_paths = list(model_dir.glob("fold_0/model_*/model.pt"))
-            if len(checkpoint_paths) != selected_ensemble_size:
+            checkpoint_paths = _ordered_checkpoint_paths(model_dir)
+            if len(checkpoint_paths) < selected_ensemble_size:
                 raise
             training_returncode = int(error.returncode)
+    checkpoint_paths = _ordered_checkpoint_paths(model_dir)
+    selected_checkpoint_paths = checkpoint_paths[:selected_ensemble_size]
+    selected_indices = [
+        int(path.parent.name.removeprefix("model_"))
+        for path in selected_checkpoint_paths
+    ]
+    if selected_indices != list(range(selected_ensemble_size)):
+        raise RuntimeError(
+            "Chemprop checkpoint grid does not contain the expected leading members: "
+            f"{selected_indices}"
+        )
     raw_predictions = fold_dir / "chemprop_predictions.csv"
     predict_command = [
         predict,
         "--test_path",
         str(fold_dir / "test.csv"),
-        "--checkpoint_dir",
-        str(model_dir),
+        "--checkpoint_paths",
+        *[str(path) for path in selected_checkpoint_paths],
         "--preds_path",
         str(raw_predictions),
         "--num_workers",
@@ -365,6 +391,7 @@ def run_fold(
         "fold": fold,
         "profile": target["profile"],
         "ensemble_size": selected_ensemble_size,
+        "ensemble_indices": selected_indices,
         "features_generator": profile.get("features_generator"),
         "num_examples": int(len(result)),
         "num_prediction_exclusions": int(invalid.sum()),

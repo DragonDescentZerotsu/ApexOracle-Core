@@ -949,7 +949,16 @@ def load_checkpoint_into_model(
     *,
     device: torch.device,
 ) -> dict:
-    checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=False)
+    # Historical fine-tune checkpoints can exceed 9 GB because they retain Adam
+    # state that inference never consumes. Memory-map on CPU so only the
+    # fusion/head tensors touched below are paged in, then let load_state_dict
+    # copy those tensors to the requested device.
+    checkpoint = torch.load(
+        checkpoint_path,
+        map_location="cpu",
+        weights_only=False,
+        mmap=True,
+    )
     if config.full_fusion:
         assert isinstance(model, FullFusionModel)
         inference_keys = {

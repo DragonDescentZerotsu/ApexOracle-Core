@@ -1,15 +1,87 @@
 # Fig. 1b reviewer 修订：单成员诊断与完整 ensemble 补实验
 
-更新时间：2026-07-20。primary comparison metric 为 pooled out-of-fold AUPRC；AUROC 同时保留。
+更新时间：2026-07-21。primary comparison metric 为 pooled out-of-fold AUPRC；AUROC 同时保留。
 所有 baseline 使用与 ApexOracle fine-tune 完全相同的五个 molecule-ID outer folds，模型选择只看
 outer-train 内部 validation。统计使用同一样本上的分层 paired bootstrap 95% CI、双侧
 prediction-swap randomization test，并在每个 model-mode × metric 的三个菌株内做 Holm 校正。
 
 > 2026-07-20 作者确认：下列单成员 ApexOracle 与单模型 Chemprop 数值仅保留为诊断，不是最终
-> Fig. 1b 结果。最终比较使用 ApexOracle 每折 10 members，以及 Stokes/Liu/Wong 分别
-> 20/10/20 个 Chemprop 模型；Liu 采用论文汇报的无 RDKit feature 版本。
+> Fig. 1b 结果。最终比较使用 ApexOracle 每折 10 members，三个 Chemprop baseline 也统一
+> 使用 10 个模型；Liu 采用论文汇报的无 RDKit feature 版本。
 
 ## 已由运行产物验证的事实
+
+### ApexOracle fine-tune 10-member ensemble（最终汇总）
+
+2026-07-21 已完成 `3 strains × 5 outer folds × 10 members = 150` 个 checkpoint 的
+确定性推理与组装。每个 fold 都严格包含原编号 `ensemble_0`--`ensemble_9`；组装器同时核验
+样本 ID、标签和 member 数。以下共同 cohort 与 Chemprop baseline 对齐，适合最终成对比较：
+
+| Target | n（positive） | pooled OOF AUPRC | pooled OOF AUROC | fold AUPRC mean ± s.d. | fold AUROC mean ± s.d. |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| *E. coli* BW25113 | 2,334 (120) | 0.69045 | 0.95560 | 0.71205 ± 0.14657 | 0.95884 ± 0.03341 |
+| *A. baumannii* ATCC 17978 | 7,684 (480) | 0.41636 | 0.81732 | 0.43436 ± 0.05261 | 0.82200 ± 0.02138 |
+| *S. aureus* RN4220 | 39,310 (512) | 0.39442 | 0.94689 | 0.40127 ± 0.03500 | 0.95309 ± 0.00776 |
+
+旧论文柱子使用 fold-metric mean 口径，因此与旧值比较或继续该图口径时应使用最后两列，
+不能换成 pooled OOF。A. baumannii AUPRC `0.43436` 四舍五入后恰为旧图 `0.4344`；E. coli
+AUROC 比旧图 `0.962` 低 `0.00316`；RN4220 AUPRC 比旧图 `0.408` 低 `0.00673`。
+paired significance 和 reviewer 主比较使用同一样本上的 pooled OOF predictions；必须等待
+RN4220 剩余三个 10-member Chemprop folds 完成后重算，不能沿用单模型 sensitivity 的 p 值。
+
+canonical 汇总为
+`results/fig1b_revision/apexoracle_fine_tune_10member/summary.json`，SHA-256
+`234bd8da3a48d0b9d92350b50c4e84278520192873581113b858abadac290b0b`。
+
+### 最终 10-member Chemprop baseline
+
+三个 baseline 的 15 个 folds 已于 2026-07-22 全部完成。每个 fold 最终 prediction 都只使用
+固定编号 `model_0`--`model_9`；Stokes 2020 和 Wong 2024 保留各自论文 profile 的 RDKit2D，
+Liu 2023 使用作者确认的 no-RDKit ablation。
+
+| Target | pooled OOF AUPRC | pooled OOF AUROC | fold AUPRC mean ± s.d. | fold AUROC mean ± s.d. |
+| --- | ---: | ---: | ---: | ---: |
+| *E. coli* BW25113 | 0.54378 | 0.87074 | 0.54535 ± 0.13277 | 0.85932 ± 0.07452 |
+| *A. baumannii* ATCC 17978 | 0.29221 | 0.77288 | 0.30355 ± 0.02240 | 0.77589 ± 0.03375 |
+| *S. aureus* RN4220 | 0.33459 | 0.89877 | 0.36616 ± 0.04826 | 0.94337 ± 0.01597 |
+
+### 最终 10-member paired comparison（5,000 iterations）
+
+以下使用共同 molecule cohort 的 pooled OOF predictions。p 值来自双侧 paired
+prediction-swap test，并在每个 mode × metric 的三株内进行 Holm 校正。
+
+| Mode | Target | Metric | ApexOracle | Baseline | Difference [95% CI] | Holm p |
+| --- | --- | --- | ---: | ---: | ---: | ---: |
+| fine-tune | *E. coli* | AUPRC | 0.69045 | 0.54378 | +0.14667 [0.05452, 0.24480] | 0.02639 |
+| fine-tune | *E. coli* | AUROC | 0.95560 | 0.87074 | +0.08485 [0.04443, 0.12736] | 0.01200 |
+| fine-tune | *A. baumannii* | AUPRC | 0.41636 | 0.29221 | +0.12415 [0.08126, 0.16176] | 0.00060 |
+| fine-tune | *A. baumannii* | AUROC | 0.81732 | 0.77288 | +0.04444 [0.02360, 0.06481] | 0.02180 |
+| fine-tune | RN4220 | AUPRC | 0.39442 | 0.33459 | +0.05984 [0.02053, 0.09661] | 0.02639 |
+| fine-tune | RN4220 | AUROC | 0.94689 | 0.89877 | +0.04812 [0.03581, 0.06040] | 0.01800 |
+| strict zero-shot | *E. coli* | AUPRC | 0.58738 | 0.54378 | +0.04360 [-0.06451, 0.15065] | 0.54269 |
+| strict zero-shot | *E. coli* | AUROC | 0.93502 | 0.87074 | +0.06427 [0.01918, 0.11180] | 0.04759 |
+| strict zero-shot | *A. baumannii* | AUPRC | 0.32098 | 0.29221 | +0.02877 [-0.01551, 0.07338] | 0.54269 |
+| strict zero-shot | *A. baumannii* | AUROC | 0.72408 | 0.77288 | -0.04880 [-0.08016, -0.01826] | 0.04759 |
+| strict zero-shot | RN4220 | AUPRC | 0.16562 | 0.33459 | -0.16897 [-0.21391, -0.12629] | 0.00060 |
+| strict zero-shot | RN4220 | AUROC | 0.76740 | 0.89877 | -0.13137 [-0.15651, -0.10657] | 0.00060 |
+
+最终统计 JSON 为 `results/fig1b_revision/significance_10member.json`，SHA-256
+`12c1d603b29679ee5f9b1bd8fcd5a60a78b5beb622fe593ca8fd6e7003577ae0`。
+
+### Strict zero-shot 的同口径 error bar
+
+zero-shot 每株历史上只有一个 held-target 10-member ensemble，因此原报告只有完整 target 的一个
+指标。为与 fine-tune/baseline 的 error bar 口径一致，最终图可以把这组固定 prediction 按同一
+五个 outer-fold test membership 分区；模型不重训，error bar 表示测试分区间 sample s.d.：
+
+| Target | fold AUPRC mean ± s.d. | fold AUROC mean ± s.d. |
+| --- | ---: | ---: |
+| *E. coli* BW25113 | 0.58537 ± 0.13716 | 0.93982 ± 0.03495 |
+| *A. baumannii* ATCC 17978 | 0.32515 ± 0.06589 | 0.72391 ± 0.05126 |
+| *S. aureus* RN4220 | 0.16630 ± 0.05288 | 0.76676 ± 0.02141 |
+
+这些五折 error bars 不是 10 个 ensemble members 的随机种子方差；三种方法因此保持同一种
+test-fold uncertainty 解释。paired significance 仍使用上表的完整 pooled predictions。
 
 ### Common-fold Chemprop 单模型诊断（已被最终 ensemble 协议取代）
 
@@ -75,13 +147,13 @@ AUPRC `0.408`、E. coli AUROC `0.962`、A. baumannii AUPRC/AUROC
 | *A. baumannii* ATCC 17978 | AUPRC 0.4344 | 仅 2/5 folds 完整；两折 10-member ensemble AUPRC 均值 0.45595 | 单成员 pooled OOF AUPRC 0.35294 |
 | *S. aureus* RN4220 | AUPRC 0.408 | 仅 3/5 folds 完整；三折 10-member ensemble AUPRC 均值 0.40730 | 单成员 pooled OOF AUPRC 0.34518 |
 
-因此 A. baumannii 和 RN4220 的下降不能解释为重构代码错误：比较同时改变了 ensemble
+因此早先 A. baumannii 和 RN4220 的下降不能解释为重构代码错误：比较同时改变了 ensemble
 大小（10 → 1）、聚合方式（fold metric mean → pooled OOF）、checkpoint 完整性和推理模式。
 RN4220 fold 4 还是后补训候选。canonical runner 的 legacy 行为等价测试、strict zero-shot
 逐样本 logit 对齐和历史 checkpoint 严格加载均已通过；当前证据支持“口径不同”，不支持
-“重构 forward 发生行为漂移”。若要恢复与旧柱子严格同口径的显著性结果，必须补齐
-完整 5 folds × 10 members，并重新输出样本级预测。RN4220 fold 4 member 0 已补训，因此当前
-剩余 45 个成员；它们已分派到本机 3 张 H100 与 node002 8 张 A100，并与历史目录隔离保存。
+“重构 forward 发生行为漂移”。目前完整 `5 folds × 10 members` 及样本级预测均已补齐；最终
+10-member 结果见上文。历史与补训 checkpoint、member prediction 和最终组装目录彼此隔离，
+没有覆盖原始数据或历史权重。
 
 ## Chemprop 数值与来源论文的关系
 
@@ -92,7 +164,7 @@ RN4220 fold 4 还是后补训候选。canonical runner 的 legacy 行为等价�
 | Wong 2024 / RN4220 | AUPRC 0.32873 | AUPRC 0.364 | 当前更低 |
 
 上述三个 baseline 都是在 ApexOracle 固定 outer folds 上重新训练的单模型 Chemprop sensitivity，
-不是最终比较。最终重跑恢复原发布 ensemble 数量；Liu 不使用 RDKit2D descriptors。
+不是最终比较。最终三个 baseline 均统一为每折 10 members；Liu 不使用 RDKit2D descriptors。
 
 ## 绘图与显著性标注
 
