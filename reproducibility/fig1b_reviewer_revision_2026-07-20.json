@@ -2,14 +2,15 @@
   "schema_version": 1,
   "date": "2026-07-20",
   "scope": "Fig. 1b common-fold AUPRC and paired-significance reviewer revision",
-  "current_status": "single-member results superseded as diagnostics; full ensembles running",
+  "current_status": "final ApexOracle and Chemprop 10-member ensembles plus paired significance complete",
   "author_decisions_2026_07_20": {
     "apexoracle_final_ensemble_members_per_fold": 10,
     "baseline_ensemble_sizes": {
-      "stokes2020": 20,
+      "stokes2020": 10,
       "liu2023": 10,
-      "wong2024": 20
+      "wong2024": 10
     },
+    "baseline_ensemble_size_decision_updated": "2026-07-21; unified with ApexOracle for the final fair comparison",
     "liu2023_profile": "paper-reported no-RDKit-feature ablation",
     "paper_figure_policy": "generate a separate notebook panel only; never overwrite or compose Fig1.pdf",
     "original_mac_cell_policy": "restore cell 220739609a526f79; create a new cell for reviewer plots"
@@ -21,6 +22,40 @@
     "rn4220_fold4_member0_retrained": true,
     "available_before_45_member_run": 105,
     "remaining_members_launched": 45,
+    "remaining_members_completed": 45,
+    "final_prediction_assembly": {
+      "status": "complete",
+      "path": "results/fig1b_revision/apexoracle_fine_tune_10member/summary.json",
+      "sha256": "234bd8da3a48d0b9d92350b50c4e84278520192873581113b858abadac290b0b",
+      "members_per_fold": 10,
+      "folds_per_target": 5,
+      "metrics": {
+        "ecoli_bw25113": {
+          "pooled_oof_auprc": 0.690453038394082,
+          "pooled_oof_auroc": 0.9555950767841012,
+          "fold_mean_auprc": 0.7120549699259378,
+          "fold_sd_auprc": 0.14656574790679372,
+          "fold_mean_auroc": 0.958844870458097,
+          "fold_sd_auroc": 0.03341166119490065
+        },
+        "abaumannii_atcc17978": {
+          "pooled_oof_auprc": 0.4163608036720981,
+          "pooled_oof_auroc": 0.8173199495650564,
+          "fold_mean_auprc": 0.4343605652272541,
+          "fold_sd_auprc": 0.05260747361976826,
+          "fold_mean_auroc": 0.821999208253595,
+          "fold_sd_auroc": 0.021380221632501823
+        },
+        "saureus_rn4220": {
+          "pooled_oof_auprc": 0.3944239152363174,
+          "pooled_oof_auroc": 0.9468909882597041,
+          "fold_mean_auprc": 0.4012683278703581,
+          "fold_sd_auprc": 0.03500364748605357,
+          "fold_mean_auroc": 0.9530901978974116,
+          "fold_sd_auroc": 0.007756286863419512
+        }
+      }
+    },
     "local_gpus": [0, 2, 3],
     "node001_gpus": [0, 1, 2, 3, 4, 5, 6, 7],
     "node002_gpus": [0, 1, 2, 3, 4, 5, 6, 7],
@@ -116,10 +151,10 @@
     "pre_restore_backup": "/Users/kirianozan/Documents/Study/Penn/projects/local_figs/.revision_backups/fig1b_2026-07-20_restore-original-cell/figs.pre_restore.ipynb"
   },
   "baseline_full_ensemble_reconstruction": {
-    "status": "scheduled after each GPU finishes its ApexOracle queue",
+    "status": "15/15 folds complete",
     "profiles": {
       "stokes2020": {
-        "ensemble_size": 20,
+        "ensemble_size": 10,
         "features_generator": "rdkit_2d_normalized"
       },
       "liu2023": {
@@ -128,7 +163,7 @@
         "variant": "paper-reported no-RDKit-feature ablation"
       },
       "wong2024": {
-        "ensemble_size": 20,
+        "ensemble_size": 10,
         "features_generator": "rdkit_2d_normalized"
       }
     },
@@ -154,6 +189,21 @@
       "node002": [0, 1, 2, 3, 4, 5, 6, 7]
     },
     "output_subdirectory": "results/fig1b_revision/baselines_full_ensemble_no_rdkit"
+  },
+  "final_10member_comparison": {
+    "significance_config": "configs/antibiotic_classification/fig1b_significance_10member.yaml",
+    "significance_output": "results/fig1b_revision/significance_10member.json",
+    "significance_sha256": "12c1d603b29679ee5f9b1bd8fcd5a60a78b5beb622fe593ca8fd6e7003577ae0",
+    "bootstrap_iterations": 5000,
+    "prediction_swap_iterations": 5000,
+    "holm_scope": "three strains within each model-mode and metric family",
+    "baseline_summary_sha256": {
+      "group_0": "08e4ffd5a48d35705af8a5fe323fd611923394d788d5df94e7fd8dc7ff83b4a1",
+      "group_1": "869ef124b4f8c62b23ad9d432dfcd4ff582866b11c95b025a2e0c3b51812e67c",
+      "group_2": "4501a901cc41bdf9a8bf3d4d66325af2d756d32947169c4ce74faecb0a6f449b"
+    },
+    "fine_tune_holm_significant": "6/6 comparisons at p < 0.05",
+    "strict_zero_shot_interpretation": "E. coli AUROC higher; A. baumannii AUROC lower; RN4220 AUPRC and AUROC lower; other two AUPRC comparisons not significant"
   },
   "protocol": {
     "outer_folds": "5-fold molecule-level KFold, shuffle=true, random_state=42",

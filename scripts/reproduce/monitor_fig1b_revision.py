@@ -27,6 +27,7 @@ EXPECTED_TASKS = {
 EPOCHS_PER_TASK = 25
 FINE_TUNE_GRID_SIZE = 3 * 5 * 10
 AVAILABLE_BEFORE_CURRENT_RUN = FINE_TUNE_GRID_SIZE - len(EXPECTED_TASKS)
+FINAL_BASELINE_ENSEMBLE_SIZE = 10
 
 
 def _elapsed_seconds(value: str) -> int | None:
@@ -81,6 +82,18 @@ def _fig1b_sessions() -> list[str]:
     return [name for name in result.stdout.splitlines() if name.startswith("fig1b_")]
 
 
+def _baseline_is_complete(metrics_path: Path) -> bool:
+    """Require the current fair-comparison ensemble size, not a stale result."""
+
+    if not metrics_path.exists():
+        return False
+    try:
+        report = json.loads(metrics_path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return False
+    return int(report.get("ensemble_size", -1)) == FINAL_BASELINE_ENSEMBLE_SIZE
+
+
 def collect(repo_root: Path) -> dict[str, object]:
     reconstruction = (
         repo_root / "results/fig1b_revision/full_ensemble_reconstruction"
@@ -123,14 +136,23 @@ def collect(repo_root: Path) -> dict[str, object]:
     )
     baseline_complete = 0
     baseline_running = 0
+    baseline_complete_keys = []
+    baseline_running_keys = []
     for group in range(3):
         for fold in range(5):
+            key = f"{group}:{fold}"
             fold_dir = baseline_root / f"group_{group}" / f"fold_{fold}"
-            baseline_complete += int((fold_dir / "metrics.json").exists())
-            baseline_running += int(
+            complete = _baseline_is_complete(fold_dir / "metrics.json")
+            baseline_complete += int(complete)
+            running = (
                 (fold_dir / "baseline_driver.log").exists()
-                and not (fold_dir / "metrics.json").exists()
+                and not complete
             )
+            baseline_running += int(running)
+            if complete:
+                baseline_complete_keys.append(key)
+            if running:
+                baseline_running_keys.append(key)
 
     disk = shutil.disk_usage(repo_root)
     checkpoint_files = list(reconstruction.glob("group_*_fold_*_member_*/*.pth"))
@@ -138,6 +160,8 @@ def collect(repo_root: Path) -> dict[str, object]:
         "tasks": tasks,
         "baseline_complete": baseline_complete,
         "baseline_running": baseline_running,
+        "baseline_complete_keys": baseline_complete_keys,
+        "baseline_running_keys": baseline_running_keys,
         "disk_free": disk.free,
         "checkpoint_count": len(checkpoint_files),
         "checkpoint_bytes": sum(path.stat().st_size for path in checkpoint_files),
@@ -260,10 +284,21 @@ def render(
             else "Apex 粗略 ETA: 至少一个 worker 完成首个 epoch 后显示"
         ),
     ]
-    baseline_complete = sum(int(host["baseline_complete"]) for host in hosts)
-    baseline_running = sum(int(host["baseline_running"]) for host in hosts)
+    complete_keys = {
+        key
+        for host in hosts
+        for key in host.get("baseline_complete_keys", [])
+    }
+    running_keys = {
+        key
+        for host in hosts
+        for key in host.get("baseline_running_keys", [])
+    }
+    baseline_complete = len(complete_keys)
+    baseline_running = len(running_keys - complete_keys)
     lines.append(
-        f"Chemprop no-RDKit baseline: 完成 {baseline_complete}/15 folds；"
+        f"Chemprop 10-member baseline（Liu no-RDKit）: "
+        f"完成 {baseline_complete}/15 folds；"
         f"运行中 {baseline_running}（Apex 阶段后自动启动）"
     )
     if not baseline_complete:

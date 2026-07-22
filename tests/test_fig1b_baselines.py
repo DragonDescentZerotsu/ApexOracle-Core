@@ -6,9 +6,11 @@ import pandas as pd
 
 from apexoracle.benchmarks.fig1b_baselines import (
     _feature_arguments,
+    _ordered_checkpoint_paths,
     build_target_table,
     load_prepared_folds,
     prepare_common_folds,
+    run_fold,
 )
 
 
@@ -95,3 +97,83 @@ def test_prepared_folds_can_be_reused_without_rewriting(tmp_path):
     observed = load_prepared_folds(config, group=0, output_dir=output)
     assert observed == expected
     assert (output / "folds.csv").stat().st_mtime_ns == before
+
+
+def test_checkpoint_paths_are_ordered_by_numeric_ensemble_index(tmp_path):
+    model_dir = tmp_path / "checkpoints"
+    for index in (10, 2, 1):
+        checkpoint = model_dir / "fold_0" / f"model_{index}" / "model.pt"
+        checkpoint.parent.mkdir(parents=True)
+        checkpoint.touch()
+    assert [
+        path.parent.name for path in _ordered_checkpoint_paths(model_dir)
+    ] == ["model_1", "model_2", "model_10"]
+
+
+def test_fold_prediction_can_reuse_leading_subset_of_larger_ensemble(
+    tmp_path, monkeypatch
+):
+    config = _config(tmp_path)
+    config["chemprop"] = {
+        "epochs": 30,
+        "batch_size": 50,
+        "init_lr": 1e-4,
+        "max_lr": 1e-3,
+        "final_lr": 1e-4,
+        "checkpoint_metric": "auc",
+        "reported_metrics": ["prc-auc"],
+    }
+    config["profiles"] = {
+        "test": {
+            "ensemble_size": 10,
+            "features_generator": None,
+            "depth": 3,
+            "dropout": 0.0,
+            "ffn_num_layers": 2,
+            "hidden_size": 300,
+        }
+    }
+    output = tmp_path / "output"
+    prepare_common_folds(tmp_path, config, group=0, output_dir=output)
+    model_dir = output / "fold_0/checkpoints/fold_0"
+    for index in range(20):
+        checkpoint = model_dir / f"model_{index}" / "model.pt"
+        checkpoint.parent.mkdir(parents=True)
+        checkpoint.touch()
+
+    calls = []
+
+    def fake_run(command, *, check, env):
+        calls.append(command)
+        prediction_path = Path(command[command.index("--preds_path") + 1])
+        test_path = Path(command[command.index("--test_path") + 1])
+        labels = pd.read_csv(test_path)["activity"]
+        pd.DataFrame({"activity": labels * 0.8 + 0.1}).to_csv(
+            prediction_path, index=False
+        )
+
+    monkeypatch.setattr(
+        "apexoracle.benchmarks.fig1b_baselines._chemprop_executable",
+        lambda _bin_dir, name: name,
+    )
+    monkeypatch.setattr(
+        "apexoracle.benchmarks.fig1b_baselines.subprocess.run", fake_run
+    )
+    report = run_fold(
+        config,
+        group=0,
+        fold=0,
+        output_dir=output,
+        chemprop_bin_dir=None,
+        gpu=None,
+        ensemble_size=None,
+        reuse_existing=True,
+    )
+    assert report["training_reused"] is True
+    assert report["ensemble_indices"] == list(range(10))
+    assert len(calls) == 1
+    selected = calls[0][calls[0].index("--checkpoint_paths") + 1 :]
+    selected = selected[: selected.index("--preds_path")]
+    assert [Path(path).parent.name for path in selected] == [
+        f"model_{index}" for index in range(10)
+    ]

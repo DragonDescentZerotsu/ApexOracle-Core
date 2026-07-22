@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import importlib.util
 from pathlib import Path
 
@@ -29,3 +30,28 @@ def test_expected_reconstruction_grid_has_45_unique_members() -> None:
     assert "0:0:0" not in MONITOR.EXPECTED_TASKS
     assert MONITOR.FINE_TUNE_GRID_SIZE == 150
     assert MONITOR.AVAILABLE_BEFORE_CURRENT_RUN == 105
+
+
+def test_baseline_completion_rejects_stale_20_member_result(tmp_path) -> None:
+    metrics = tmp_path / "metrics.json"
+    metrics.write_text(json.dumps({"ensemble_size": 20}), encoding="utf-8")
+    assert MONITOR._baseline_is_complete(metrics) is False
+    metrics.write_text(json.dumps({"ensemble_size": 10}), encoding="utf-8")
+    assert MONITOR._baseline_is_complete(metrics) is True
+
+
+def test_collect_reports_baseline_fold_identity_and_ignores_completed_log(
+    tmp_path,
+) -> None:
+    fold = (
+        tmp_path
+        / "results/fig1b_revision/baselines_full_ensemble_no_rdkit/group_2/fold_1"
+    )
+    fold.mkdir(parents=True)
+    (fold / "baseline_driver.log").write_text("finished\n", encoding="utf-8")
+    (fold / "metrics.json").write_text(
+        json.dumps({"ensemble_size": 10}), encoding="utf-8"
+    )
+    report = MONITOR.collect(tmp_path)
+    assert report["baseline_complete_keys"] == ["2:1"]
+    assert report["baseline_running_keys"] == []

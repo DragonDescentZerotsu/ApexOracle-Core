@@ -122,12 +122,13 @@ RDKit 2025.03.5、PyTorch 2.7.1+cu126、Pandas 2.2.2、scikit-learn 1.8.0。
 该 venv 使用 `--system-site-packages` 继承 node002 的 CUDA PyTorch；Chemprop 与新版 Pandas
 不兼容的旧 RDKit 2023 已在 venv 内由 RDKit 2025.03.5 覆盖，未修改 conda base。
 
-## 完整 ensemble 最终补跑（进行中）
+## 完整 ensemble 最终补跑（已完成）
 
 上文已经完成的 baseline 与单成员 fine-tune 只作为 reviewer sensitivity 保留。作者随后确认
-最终结果必须使用与被比较论文一致的 ensemble 数量：ApexOracle 每个 outer fold 10 members，
-Stokes/Liu/Wong 分别为 `20/10/20`。由于 ApexOracle 自身没有 RDKit feature augmentation，
-Liu 使用论文报告的 no-RDKit ablation，不采用其 RDKit 增强主模型。新运行写入
+最终结果中 ApexOracle 每个 outer fold 使用 10 members。作者于 2026-07-21 决定三个 baseline
+也统一使用固定编号 0--9 的 10-member ensemble，而不是照搬发布资产不同的 `20/10/20` 大小。
+由于 ApexOracle 自身没有 RDKit feature augmentation，Liu 使用论文报告的 no-RDKit ablation，
+不采用其 RDKit 增强主模型。新运行写入
 `results/fig1b_revision/full_ensemble_reconstruction/` 和
 `results/fig1b_revision/baselines_full_ensemble_no_rdkit/`，不覆盖历史 checkpoint 或原始数据。
 
@@ -136,7 +137,8 @@ Liu 使用论文报告的 no-RDKit ablation，不采用其 RDKit 增强主模型
 RN4220 fold 4 member 0 后已有 105 个，因此本轮只训练剩余 45 个 member。监控中的待补完成数
 只计算这 45 个新任务；例如 `0/45` 不表示已有 105 个资产不存在。
 
-当前完整 ensemble 运行中，每个成功 member 固定完整训练 25 epochs，没有 early stopping。
+ApexOracle 完整 ensemble 已于 2026-07-21 完成。每个成功 member 固定完整训练 25 epochs，
+没有 early stopping。
 目标菌株四个 folds 用于训练，第五个 held fold 每个 epoch 都用于 strict highest-AUROC
 checkpoint selection；没有独立 validation set。该 held-test selection 是历史协议的已知局限，
 当前为保持行为而保留。随后另行加载最佳 checkpoint，以全 `eval()` 模式导出确定性 prediction。
@@ -146,6 +148,20 @@ checkpoint selection；没有独立 validation set。该 held-test selection 是
 `SM_emb_dict_cls_wo_pad_eval.pt`（49,330 entries，SHA-256 `5d2e2f4d…e83ac`），Dataset 按
 `DBAASP_id` 查表。这里的 fine-tune 只更新 strain-aware attention、regression/classification
 heads 和 missing-genome parameter，不更新 DLM/MDLM molecule encoder。
+
+最终组装严格核验 15 个 fold 均为 10 members。共同 baseline cohort 上的 fold mean ± sample
+s.d.（与旧论文柱子相同口径）为：E. coli AUPRC/AUROC
+`0.71205 ± 0.14657 / 0.95884 ± 0.03341`；A. baumannii
+`0.43436 ± 0.05261 / 0.82200 ± 0.02138`；RN4220
+`0.40127 ± 0.03500 / 0.95309 ± 0.00776`。pooled OOF AUPRC/AUROC 分别为
+`0.69045/0.95560`、`0.41636/0.81732`、`0.39442/0.94689`。
+
+15 个 baseline folds 已全部完成。baseline 的 fold-mean AUPRC/AUROC 为 E. coli
+`0.54535/0.85932`、A. baumannii `0.30355/0.77589`、RN4220 `0.36616/0.94337`。
+5,000 次 paired bootstrap/prediction-swap 的最终结果显示：fine-tune 在三株两个指标上均高于
+baseline，且 6/6 Holm-adjusted `p < 0.05`；strict zero-shot 只有 E. coli AUROC 显著更高，
+A. baumannii AUROC 显著更低，RN4220 两项均显著更低。完整数值见
+`results_reviewer_revision.md`。
 
 一次性查看本机、node001 和 node002 的合并状态：
 
