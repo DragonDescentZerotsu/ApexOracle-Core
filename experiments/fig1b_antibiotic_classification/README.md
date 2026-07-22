@@ -163,6 +163,29 @@ baseline，且 6/6 Holm-adjusted `p < 0.05`；strict zero-shot 只有 E. coli AU
 A. baumannii AUROC 显著更低，RN4220 两项均显著更低。完整数值见
 `results_reviewer_revision.md`。
 
+## 最终双指标 panel（2026-07-22）
+
+最终绘图输入冻结在 `final_10member_dual_metric.csv`。每个柱高为五个 outer folds 的指标均值，
+error bar 为五折 sample s.d.；显著性 bracket 显示同一 held-fold 样本上 prediction-swap test 的
+Holm-adjusted `p`。左 panel 为 AUPRC，右 panel 为 AUROC，三种方法依次为 Chemprop baseline、
+ApexOracle zero-shot 和 ApexOracle fine-tuned（每折均为固定 10-member ensemble）。
+
+Mac canonical notebook
+`/Users/kirianozan/Documents/Study/Penn/projects/local_figs/figs.ipynb` 中新增且只执行了 cell
+`fig1b-final-10member-dual-metric-20260722`；说明 cell 为
+`fig1b-final-10member-dual-metric-notes-20260722`。新 cell 沿用原论文 panel 的 pastel 配色、
+白色柱边、虚线水平网格、italic species labels 和 despine 风格，独立输出：
+
+- `/Users/kirianozan/Documents/Study/Penn/Synergy/paper_figs/3-strain-antibiotics-final-10member-dual-metric.pdf`
+- `/Users/kirianozan/Documents/Study/Penn/Synergy/paper_figs/3-strain-antibiotics-final-10member-dual-metric.png`
+
+原始 cell `220739609a526f79` 的 source SHA-256 仍为
+`56d9eb55eb1d23ee7f30d9ad504cc49bb6f05f862517d34bc60ca9c480cc24a4`，已有 output 的语义
+SHA-256 仍为 `86b36871d2ce1810dfa44e7f41c7fad475cc66923790e8f7d97006cd81fb52f2`。
+本次没有执行或重写原始 cell，也没有覆盖旧 panel PDF、reviewer sensitivity panel 或论文总图。
+完整 notebook、输入和输出 hash 见
+`reproducibility/fig1b_reviewer_revision_2026-07-20.json`。
+
 一次性查看本机、node001 和 node002 的合并状态：
 
 ```bash

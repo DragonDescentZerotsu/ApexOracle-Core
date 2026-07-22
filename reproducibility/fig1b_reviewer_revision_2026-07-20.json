@@ -324,5 +324,49 @@
     "panel_pdf_sha256": "527199d1d7ca9ccea3ee09509beae166b5d4f54389f8a85e38b55c471a83ac45",
     "panel_csv": "/Users/kirianozan/Documents/Study/Penn/Synergy/paper_figs/fig1b_revised_auprc.csv",
     "panel_csv_sha256": "498a5aa8cdc53112e4a9ab13188b017080659fa009709af39801145b822028a4"
+  },
+  "final_dual_metric_notebook_panel": {
+    "status": "completed",
+    "date": "2026-07-22",
+    "canonical_notebook": "/Users/kirianozan/Documents/Study/Penn/projects/local_figs/figs.ipynb",
+    "notebook_sha256_after_append": "065c12bf38edce3d79c204525d597383d9d8af4c00b369d26abd486d041ab8dd",
+    "new_markdown_cell_id": "fig1b-final-10member-dual-metric-notes-20260722",
+    "new_markdown_cell_source_sha256": "101b8d986f5280d87db3904b00ec1de8971220cc3b77c97d448e5bd6544078da",
+    "new_code_cell_id": "fig1b-final-10member-dual-metric-20260722",
+    "new_code_cell_source_sha256": "799045dfb39b6a347c16798ffadaf6135ae35799872e4ec7b11c821ee070806b",
+    "execution_scope": "the new plotting cell was executed in an isolated notebook; no pre-existing cell was executed",
+    "layout": "left AUPRC; right AUROC",
+    "bar_value": "mean across five outer folds",
+    "error_bar": "sample standard deviation across five outer folds",
+    "significance_annotation": "exact Holm-adjusted paired prediction-swap p values",
+    "tracked_input": {
+      "path": "experiments/fig1b_antibiotic_classification/final_10member_dual_metric.csv",
+      "sha256": "c4c189f7b327af0cb5762499efcae660474120586f6882a71ad1604c9383a8eb"
+    },
+    "mac_input_copy": {
+      "path": "/Users/kirianozan/Documents/Study/Penn/Synergy/paper_figs/fig1b_final_10member_dual_metric.csv",
+      "sha256": "c4c189f7b327af0cb5762499efcae660474120586f6882a71ad1604c9383a8eb"
+    },
+    "outputs": {
+      "pdf": {
+        "path": "/Users/kirianozan/Documents/Study/Penn/Synergy/paper_figs/3-strain-antibiotics-final-10member-dual-metric.pdf",
+        "sha256": "4a8ac5944449f99acca251d6c021241770b315dee0238f1a95405f52816800ac"
+      },
+      "png": {
+        "path": "/Users/kirianozan/Documents/Study/Penn/Synergy/paper_figs/3-strain-antibiotics-final-10member-dual-metric.png",
+        "sha256": "16fd562005a6acd0a9ec37d69c84e13e76739bb34535bd84290c04d8f3dbfb89"
+      }
+    },
+    "backup": {
+      "path": "/Users/kirianozan/Documents/Study/Penn/projects/local_figs/.revision_backups/fig1b_2026-07-22_final-10member-dual-metric/figs.pre_final_dual_metric.ipynb",
+      "sha256": "72123dcdba4cac2e6ba38d345c4e730a0d4c38199c7f21fd04d446ac3b7e1aea"
+    },
+    "protected_original_cell": {
+      "cell_id": "220739609a526f79",
+      "source_sha256_before_and_after": "56d9eb55eb1d23ee7f30d9ad504cc49bb6f05f862517d34bc60ca9c480cc24a4",
+      "semantic_output_sha256_before_and_after": "86b36871d2ce1810dfa44e7f41c7fad475cc66923790e8f7d97006cd81fb52f2"
+    },
+    "output_policy": "did not overwrite the original panel, reviewer sensitivity panel, or paper composite Fig1.pdf",
+    "visual_qa": "passed: original palette and styling retained; labels, error bars, and significance brackets are unclipped"
   }
 }
