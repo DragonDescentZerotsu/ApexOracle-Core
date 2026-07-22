@@ -204,6 +204,13 @@ prediction-swap `p`。它独立输出：
 `bbox_inches="tight"` 并显式设置 margins，同时把 y-axis 上限从 `1.12` 收紧至 `1.03`。最终
 PDF 与旧 `3-strain-antibiotics.pdf` 页面尺寸逐点一致；原始和双指标 cell 仍未变化。
 
+论文 Methods 的结构也已按作者意见调整：`Data / Small Molecule Antibiotics` 现在只保留数据来源、
+样本量和标签说明；旧 single-model reviewer `\rev{...}` 实验段已从该 subsection 删除。更新后的
+Fig. 1b 最终协议迁至 `ApexOracle Architecture and Training / Implementation Details`，明确记录
+固定五折、每折 10-member ensemble、ApexOracle 25 epochs、baseline 内部 validation、Liu
+no-RDKit profile、五折 AUPRC mean ± sample s.d. 以及 pooled paired statistics。修改后的 TeX 已在
+临时输出目录编译为 28 页，没有覆盖论文目录中的 PDF 或任何 figure 文件。
+
 一次性查看本机、node001 和 node002 的合并状态：
 
 ```bash
