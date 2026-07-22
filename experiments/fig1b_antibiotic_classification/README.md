@@ -199,6 +199,11 @@ prediction-swap `p`。它独立输出：
 替换段落及相对当前论文草稿的修改清单位于 `reviewer_response_auprc_final.md`；原始 docx 和 TeX
 尚未自动改写。
 
+作者反馈初版 legend 与坐标区之间留白过大后，仅修改上述 AUPRC-only cell 的 layout：画布使用
+旧论文 panel 的实际页面尺寸 `741.12 × 380.724 pt`（约 `10.293 × 5.288 in`），取消
+`bbox_inches="tight"` 并显式设置 margins，同时把 y-axis 上限从 `1.12` 收紧至 `1.03`。最终
+PDF 与旧 `3-strain-antibiotics.pdf` 页面尺寸逐点一致；原始和双指标 cell 仍未变化。
+
 一次性查看本机、node001 和 node002 的合并状态：
 
 ```bash
