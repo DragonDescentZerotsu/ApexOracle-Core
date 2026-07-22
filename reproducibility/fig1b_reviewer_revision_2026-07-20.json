@@ -375,10 +375,10 @@
     "canonical_notebook": "/Users/kirianozan/Documents/Study/Penn/projects/local_figs/figs.ipynb",
     "author_created_heading": "### Final 10-member Fig. 1b: AUPRC only version",
     "new_code_cell_id": "fig1b-final-10member-auprc-only-20260722",
-    "new_code_cell_source_sha256": "390878183c3055b58bd1c57467700f89611a7f46b9af032dfcd60508807fafae",
-    "new_code_cell_serialized_outputs_sha256": "880726c5c113ec52dbe12bbcbf19b5a733c6ad1f09f03e6e69a1ed6b0b983636",
+    "new_code_cell_source_sha256": "594055a3be026bb76d76a32d73b72ea6ac518c2026fa7710bb629f693af56003",
+    "new_code_cell_serialized_outputs_sha256": "755ff456f24faf180ca1e89aebfe8c15d0ff64fd1109d24bc5003b584bdabb6b",
     "notebook_sha256_before_fill": "b9170fcd735a82853620ac8732b9fb3f1451c623d3a287b9c40cb99fe07230c7",
-    "notebook_sha256_after_fill": "7f3c8daacb7aba43aa7485ad2f58a0cb7dc50af34cb1ec9da2b5c5dc658ad8bb",
+    "notebook_sha256_after_fill": "babbb4f2d7cf467f4e08f1c73a3faf4670b819153ca3b23183cc94524cade81a",
     "execution_scope": "only the author-created AUPRC-only placeholder was executed in an isolated notebook; the original and dual-metric cells were not executed",
     "bar_value": "mean AUPRC across five outer folds",
     "error_bar": "sample standard deviation of AUPRC across five outer folds",
@@ -390,16 +390,20 @@
     "outputs": {
       "pdf": {
         "path": "/Users/kirianozan/Documents/Study/Penn/Synergy/paper_figs/3-strain-antibiotics-final-10member-auprc-only.pdf",
-        "sha256": "d9f5adb7874d0441fb9b8673ee1c8204de88c06a595a2a739c4c18544d33a3fc"
+        "sha256": "bf840057d3b3b1081f2ef7b4a9235cfa1563fb3ce541014464134b0bcad84d46"
       },
       "png": {
         "path": "/Users/kirianozan/Documents/Study/Penn/Synergy/paper_figs/3-strain-antibiotics-final-10member-auprc-only.png",
-        "sha256": "3569ca6252e6cbc674163f3dc0435a1742bacea3e47b7994ef1fe9047e85055f"
+        "sha256": "57fdcb63f9dcbbd58be0741fdc224d9768bacb310a8bb44e2451e2775c2856f3"
       }
     },
     "backup": {
       "path": "/Users/kirianozan/Documents/Study/Penn/projects/local_figs/.revision_backups/fig1b_2026-07-22_final-10member-auprc-only/figs.pre_auprc_only.ipynb",
       "sha256": "b9170fcd735a82853620ac8732b9fb3f1451c623d3a287b9c40cb99fe07230c7"
+    },
+    "layout_revision_backup": {
+      "path": "/Users/kirianozan/Documents/Study/Penn/projects/local_figs/.revision_backups/fig1b_2026-07-22_final-10member-auprc-only-layout/figs.pre_compact_layout.ipynb",
+      "sha256": "7f3c8daacb7aba43aa7485ad2f58a0cb7dc50af34cb1ec9da2b5c5dc658ad8bb"
     },
     "protected_cells": {
       "original_cell_source_sha256_before_and_after": "56d9eb55eb1d23ee7f30d9ad504cc49bb6f05f862517d34bc60ca9c480cc24a4",
@@ -407,7 +411,8 @@
       "dual_metric_cell_source_sha256_before_and_after": "799045dfb39b6a347c16798ffadaf6135ae35799872e4ec7b11c821ee070806b",
       "dual_metric_cell_serialized_outputs_sha256_before_and_after": "974f65bea4488ee9db425e37af0a843fa3d00cc96f263204edcee1272b7d3d97"
     },
-    "visual_qa": "passed on the exported 2800 x 1712 PNG and single-page PDF; no clipping or overlap detected",
+    "layout_revision": "reduced legend-to-axes whitespace and matched the original panel page size exactly: 741.12 x 380.724 pt",
+    "visual_qa": "passed on the exported 3087 x 1586 PNG and single-page PDF; no clipping or overlap detected",
     "paper_edit_policy": "the notebook panel was generated, but the paper composite, manuscript TeX, and response-letter docx were not overwritten"
   }
 }
