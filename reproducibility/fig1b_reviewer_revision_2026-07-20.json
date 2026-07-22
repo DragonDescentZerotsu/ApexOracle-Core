@@ -413,6 +413,34 @@
     },
     "layout_revision": "reduced legend-to-axes whitespace and matched the original panel page size exactly: 741.12 x 380.724 pt",
     "visual_qa": "passed on the exported 3087 x 1586 PNG and single-page PDF; no clipping or overlap detected",
-    "paper_edit_policy": "the notebook panel was generated, but the paper composite, manuscript TeX, and response-letter docx were not overwritten"
+    "paper_edit_policy": "the notebook panel was generated, but the paper composite and response-letter docx were not overwritten"
+  },
+  "manuscript_methods_relocation": {
+    "status": "completed",
+    "date": "2026-07-22",
+    "source": "/data2/tianang/projects/ApexOracle_cleaned/docs/ApexOracle_Nat_Biotech/sn-article.tex",
+    "source_sha256_before": "3dc3a6a2c5a4eb1a5c039598bf955506647c829d724c8b79cfa168a775f4183a",
+    "source_sha256_after": "88f4c3291e1ca59b7c9a654f37ae581cc19d96633d2577f07293e284555f0108",
+    "removed_from": "Methods / Data / Small Molecule Antibiotics",
+    "removed_content": "outdated single-model Fig. 1b reviewer protocol",
+    "data_paragraph_scope_after_edit": "dataset sources, sample counts, strains, and binary labels only",
+    "inserted_under": "Methods / ApexOracle Architecture and Training / Implementation Details",
+    "inserted_protocol": [
+      "fixed five-fold molecule partitions with random state 42",
+      "10-member fine-tuned ApexOracle ensemble per outer fold and fixed 10-member zero-shot ensemble",
+      "25 epochs, batch size 70, Adam 1e-5, cosine-annealing schedule",
+      "legacy held-target checkpoint selection for ApexOracle",
+      "10 Chemprop models per outer fold with outer-training internal validation",
+      "Liu no-RDKit-feature profile",
+      "mean AUPRC plus sample standard deviation across folds",
+      "pooled paired bootstrap and prediction-swap tests with Holm correction"
+    ],
+    "validation": {
+      "command": "latexmk -pdf -interaction=nonstopmode -halt-on-error -outdir=/tmp/apexoracle-fig1b-methods-check sn-article.tex",
+      "compiled_pages": 28,
+      "temporary_pdf": "/tmp/apexoracle-fig1b-methods-check/sn-article.pdf",
+      "temporary_pdf_sha256": "502ed36ab111a3975bf92b4c59a6807a032d15344292e12aa2e1d884db54aee4"
+    },
+    "output_policy": "compiled to a temporary directory; did not overwrite the manuscript PDF, response-letter docx, or any figure PDF"
   }
 }
