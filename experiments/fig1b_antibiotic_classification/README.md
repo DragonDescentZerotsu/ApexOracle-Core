@@ -186,6 +186,19 @@ SHA-256 仍为 `86b36871d2ce1810dfa44e7f41c7fad475cc66923790e8f7d97006cd81fb52f2
 完整 notebook、输入和输出 hash 见
 `reproducibility/fig1b_reviewer_revision_2026-07-20.json`。
 
+作者随后在原始 cell 后新增 `### Final 10-member Fig. 1b: AUPRC only version` 区域。
+该区域的 placeholder 已填写为独立 cell `fig1b-final-10member-auprc-only-20260722`，只读取同一
+冻结 CSV 的 AUPRC 行，沿用相同三色 palette、五折 sample s.d. 和 Holm-adjusted paired
+prediction-swap `p`。它独立输出：
+
+- `/Users/kirianozan/Documents/Study/Penn/Synergy/paper_figs/3-strain-antibiotics-final-10member-auprc-only.pdf`
+- `/Users/kirianozan/Documents/Study/Penn/Synergy/paper_figs/3-strain-antibiotics-final-10member-auprc-only.png`
+
+该图已按最终 PNG/PDF 检查，title、legend、数值标签、error bar 和六个 bracket 均无裁切或重叠。
+原始 cell 和双指标 cell 均未执行或修改。给 reviewer 的最终英文回复、建议图注、Results/Methods
+替换段落及相对当前论文草稿的修改清单位于 `reviewer_response_auprc_final.md`；原始 docx 和 TeX
+尚未自动改写。
+
 一次性查看本机、node001 和 node002 的合并状态：
 
 ```bash

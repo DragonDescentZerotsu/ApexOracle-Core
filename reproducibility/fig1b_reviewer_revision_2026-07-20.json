@@ -368,5 +368,46 @@
     },
     "output_policy": "did not overwrite the original panel, reviewer sensitivity panel, or paper composite Fig1.pdf",
     "visual_qa": "passed: original palette and styling retained; labels, error bars, and significance brackets are unclipped"
+  },
+  "final_auprc_only_notebook_panel": {
+    "status": "completed",
+    "date": "2026-07-22",
+    "canonical_notebook": "/Users/kirianozan/Documents/Study/Penn/projects/local_figs/figs.ipynb",
+    "author_created_heading": "### Final 10-member Fig. 1b: AUPRC only version",
+    "new_code_cell_id": "fig1b-final-10member-auprc-only-20260722",
+    "new_code_cell_source_sha256": "390878183c3055b58bd1c57467700f89611a7f46b9af032dfcd60508807fafae",
+    "new_code_cell_serialized_outputs_sha256": "880726c5c113ec52dbe12bbcbf19b5a733c6ad1f09f03e6e69a1ed6b0b983636",
+    "notebook_sha256_before_fill": "b9170fcd735a82853620ac8732b9fb3f1451c623d3a287b9c40cb99fe07230c7",
+    "notebook_sha256_after_fill": "7f3c8daacb7aba43aa7485ad2f58a0cb7dc50af34cb1ec9da2b5c5dc658ad8bb",
+    "execution_scope": "only the author-created AUPRC-only placeholder was executed in an isolated notebook; the original and dual-metric cells were not executed",
+    "bar_value": "mean AUPRC across five outer folds",
+    "error_bar": "sample standard deviation of AUPRC across five outer folds",
+    "significance_annotation": "exact Holm-adjusted paired prediction-swap p values computed from pooled sample-level out-of-fold predictions",
+    "tracked_input": {
+      "path": "experiments/fig1b_antibiotic_classification/final_10member_dual_metric.csv",
+      "sha256": "c4c189f7b327af0cb5762499efcae660474120586f6882a71ad1604c9383a8eb"
+    },
+    "outputs": {
+      "pdf": {
+        "path": "/Users/kirianozan/Documents/Study/Penn/Synergy/paper_figs/3-strain-antibiotics-final-10member-auprc-only.pdf",
+        "sha256": "d9f5adb7874d0441fb9b8673ee1c8204de88c06a595a2a739c4c18544d33a3fc"
+      },
+      "png": {
+        "path": "/Users/kirianozan/Documents/Study/Penn/Synergy/paper_figs/3-strain-antibiotics-final-10member-auprc-only.png",
+        "sha256": "3569ca6252e6cbc674163f3dc0435a1742bacea3e47b7994ef1fe9047e85055f"
+      }
+    },
+    "backup": {
+      "path": "/Users/kirianozan/Documents/Study/Penn/projects/local_figs/.revision_backups/fig1b_2026-07-22_final-10member-auprc-only/figs.pre_auprc_only.ipynb",
+      "sha256": "b9170fcd735a82853620ac8732b9fb3f1451c623d3a287b9c40cb99fe07230c7"
+    },
+    "protected_cells": {
+      "original_cell_source_sha256_before_and_after": "56d9eb55eb1d23ee7f30d9ad504cc49bb6f05f862517d34bc60ca9c480cc24a4",
+      "original_cell_serialized_outputs_sha256_before_and_after": "3d7bd72cc57ba654692b062d67002db2e5f7854315ece895cdc426c8ee60db40",
+      "dual_metric_cell_source_sha256_before_and_after": "799045dfb39b6a347c16798ffadaf6135ae35799872e4ec7b11c821ee070806b",
+      "dual_metric_cell_serialized_outputs_sha256_before_and_after": "974f65bea4488ee9db425e37af0a843fa3d00cc96f263204edcee1272b7d3d97"
+    },
+    "visual_qa": "passed on the exported 2800 x 1712 PNG and single-page PDF; no clipping or overlap detected",
+    "paper_edit_policy": "the notebook panel was generated, but the paper composite, manuscript TeX, and response-letter docx were not overwritten"
   }
 }
