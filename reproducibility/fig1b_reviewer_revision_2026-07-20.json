@@ -413,34 +413,49 @@
     },
     "layout_revision": "reduced legend-to-axes whitespace and matched the original panel page size exactly: 741.12 x 380.724 pt",
     "visual_qa": "passed on the exported 3087 x 1586 PNG and single-page PDF; no clipping or overlap detected",
-    "paper_edit_policy": "the notebook panel was generated, but the paper composite and response-letter docx were not overwritten"
+    "paper_edit_policy": "at panel-generation time, the paper composite and response-letter docx were not overwritten; the response letter was updated later under manuscript_response_sync, while the paper composite remained author-managed"
   },
   "manuscript_methods_relocation": {
-    "status": "completed",
+    "status": "superseded_by_author_decision",
     "date": "2026-07-22",
     "source": "/data2/tianang/projects/ApexOracle_cleaned/docs/ApexOracle_Nat_Biotech/sn-article.tex",
-    "source_sha256_before": "3dc3a6a2c5a4eb1a5c039598bf955506647c829d724c8b79cfa168a775f4183a",
-    "source_sha256_after": "88f4c3291e1ca59b7c9a654f37ae581cc19d96633d2577f07293e284555f0108",
-    "removed_from": "Methods / Data / Small Molecule Antibiotics",
-    "removed_content": "outdated single-model Fig. 1b reviewer protocol",
-    "data_paragraph_scope_after_edit": "dataset sources, sample counts, strains, and binary labels only",
-    "inserted_under": "Methods / ApexOracle Architecture and Training / Implementation Details",
-    "inserted_protocol": [
-      "fixed five-fold molecule partitions with random state 42",
-      "10-member fine-tuned ApexOracle ensemble per outer fold and fixed 10-member zero-shot ensemble",
-      "25 epochs, batch size 70, Adam 1e-5, cosine-annealing schedule",
-      "legacy held-target checkpoint selection for ApexOracle",
-      "10 Chemprop models per outer fold with outer-training internal validation",
-      "Liu no-RDKit-feature profile",
-      "mean AUPRC plus sample standard deviation across folds",
-      "pooled paired bootstrap and prediction-swap tests with Holm correction"
-    ],
-    "validation": {
-      "command": "latexmk -pdf -interaction=nonstopmode -halt-on-error -outdir=/tmp/apexoracle-fig1b-methods-check sn-article.tex",
-      "compiled_pages": 28,
-      "temporary_pdf": "/tmp/apexoracle-fig1b-methods-check/sn-article.pdf",
-      "temporary_pdf_sha256": "502ed36ab111a3975bf92b4c59a6807a032d15344292e12aa2e1d884db54aee4"
+    "superseded_revision_source_sha256_after": "88f4c3291e1ca59b7c9a654f37ae581cc19d96633d2577f07293e284555f0108",
+    "author_decision": "Methods should not contain the detailed Fig. 1b reviewer protocol because the reviewer did not request it",
+    "final_methods_scope": "Methods / Data / Small Molecule Antibiotics contains dataset sources, sample counts, strains, and binary labels only; no new Fig. 1b protocol was added elsewhere in Methods",
+    "final_manuscript_scope": "only the results overview, Fig. 1b caption, and Results paragraph were updated with concise common-fold wording, final AUPRC values, and significance conclusions"
+  },
+  "manuscript_response_sync": {
+    "status": "completed",
+    "date": "2026-07-22",
+    "manuscript_tex": {
+      "path": "/data2/tianang/projects/ApexOracle_cleaned/docs/ApexOracle_Nat_Biotech/sn-article.tex",
+      "sha256_after": "907ef0bb7561204ad1ead721aa605535b92d480bea818d22b25e13e5d45c4244",
+      "updated_sections": [
+        "results overview",
+        "Fig. 1b caption",
+        "small-molecule Results paragraph"
+      ],
+      "methods_updated": false
     },
-    "output_policy": "compiled to a temporary directory; did not overwrite the manuscript PDF, response-letter docx, or any figure PDF"
+    "response_letter": {
+      "path": "/data2/tianang/projects/ApexOracle_cleaned/docs/ApexOracle_Nat_Biotech/Response to reviewers letter.docx",
+      "sha256_before": "11d09d9357c2521fb79f6fbfdb1bdf396fc4c71505dc20df9025ffa7c9200f0e",
+      "sha256_after": "a7e2517ca723aaed1d14fb7f49053392cb8c8565737299e9eba0905c5ed8add8",
+      "backup": "/data2/tianang/projects/ApexOracle_cleaned/docs/ApexOracle_Nat_Biotech/.revision_backups/fig1b_2026-07-22_final-10member-auprc-text/Response to reviewers letter.pre_final_auprc.docx",
+      "required_retained_wording": "Because Stokes et al. did not report E. coli AUPRC, we reproduced the released Chemprop/RDKit model profile on the same fixed fivefold molecule partitions used for the ApexOracle comparison. We applied the same common-fold procedure to the Liu and Wong model profiles.",
+      "replacement_font_color": "FF0000"
+    },
+    "validation": {
+      "tex_command": "latexmk -pdf -interaction=nonstopmode -halt-on-error -outdir=/tmp/apexoracle-fig1b-final-text-check sn-article.tex",
+      "tex_compiled_pages": 28,
+      "tex_temporary_pdf": "/tmp/apexoracle-fig1b-final-text-check/sn-article.pdf",
+      "tex_temporary_pdf_sha256": "32df9765cc5f71d1122cb2ac0f901ea29a5f7281a172703c4dfaa08d798d7c6a",
+      "response_temporary_pdf": "/tmp/apexoracle-response-final-text-check/Response to reviewers letter.pdf",
+      "response_compiled_pages": 25,
+      "response_temporary_pdf_sha256": "ec17e1d2c9722861112d060c2ad2b7c3f459a3fafa9a8adf89d7a2bfbb3fd129",
+      "legacy_value_scan": "passed",
+      "word_red_text_check": "passed"
+    },
+    "output_policy": "manuscript PDF, figure PDFs, and the paper composite were not overwritten; only the TeX source and response-letter docx were updated"
   }
 }

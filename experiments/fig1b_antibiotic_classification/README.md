@@ -195,21 +195,21 @@ prediction-swap `p`。它独立输出：
 - `/Users/kirianozan/Documents/Study/Penn/Synergy/paper_figs/3-strain-antibiotics-final-10member-auprc-only.png`
 
 该图已按最终 PNG/PDF 检查，title、legend、数值标签、error bar 和六个 bracket 均无裁切或重叠。
-原始 cell 和双指标 cell 均未执行或修改。给 reviewer 的最终英文回复、建议图注、Results/Methods
-替换段落及相对当前论文草稿的修改清单位于 `reviewer_response_auprc_final.md`；原始 docx 和 TeX
-尚未自动改写。
+原始 cell 和双指标 cell 均未执行或修改。给 reviewer 的最终英文回复、建议图注、Results
+替换段落及相对当前论文草稿的修改清单位于 `reviewer_response_auprc_final.md`。
 
 作者反馈初版 legend 与坐标区之间留白过大后，仅修改上述 AUPRC-only cell 的 layout：画布使用
 旧论文 panel 的实际页面尺寸 `741.12 × 380.724 pt`（约 `10.293 × 5.288 in`），取消
 `bbox_inches="tight"` 并显式设置 margins，同时把 y-axis 上限从 `1.12` 收紧至 `1.03`。最终
 PDF 与旧 `3-strain-antibiotics.pdf` 页面尺寸逐点一致；原始和双指标 cell 仍未变化。
 
-论文 Methods 的结构也已按作者意见调整：`Data / Small Molecule Antibiotics` 现在只保留数据来源、
-样本量和标签说明；旧 single-model reviewer `\rev{...}` 实验段已从该 subsection 删除。更新后的
-Fig. 1b 最终协议迁至 `ApexOracle Architecture and Training / Implementation Details`，明确记录
-固定五折、每折 10-member ensemble、ApexOracle 25 epochs、baseline 内部 validation、Liu
-no-RDKit profile、五折 AUPRC mean ± sample s.d. 以及 pooled paired statistics。修改后的 TeX 已在
-临时输出目录编译为 28 页，没有覆盖论文目录中的 PDF 或任何 figure 文件。
+作者最终决定不在 Methods 中加入 Fig. 1b 的细碎实验流程。`Data / Small Molecule Antibiotics`
+仅保留数据来源、样本量和标签说明，先前迁入 `Implementation Details` 的详细 protocol 已由作者
+删除。论文只在 Fig. 1b 图注、Results 和结果概览中作简洁更新：说明三个 baseline 均按原论文的
+model configuration 和 training procedure 复现并使用共同五折，随后报告最终 AUPRC 和显著性。
+实际 response-letter docx 已同步最终 10-member 数值，并保留作者指定的 Stokes/Liu/Wong
+common-fold 说明；修改前 Word 备份位于论文目录的 `.revision_backups/`。TeX 已在临时目录完整
+编译为 28 页，Word 已转换为 25 页 PDF 检查；没有覆盖论文 PDF、任何 figure 或论文总图。
 
 一次性查看本机、node001 和 node002 的合并状态：
 
