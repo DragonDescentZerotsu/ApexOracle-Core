@@ -1,0 +1,170 @@
+aa,decision,confidence,review_notes,required_action
+LYS-C12,verified,high,N6 dodecanoyl L-lysine matches the laurylated lysine side-chain annotation,retain
+LYS-C14,verified,high,N6 tetradecanoyl L-lysine matches the myristoylated lysine side-chain annotation,retain
+LYS-C16,verified,high,N6 hexadecanoyl L-lysine matches the palmitoylated lysine side-chain annotation,retain
+LYS-ACT,verified,high,N6 acetyl L-lysine matches side-chain-acetylated lysine,retain
+D-AIB,verified_source_annotation_typo,high,AIB is achiral so the source D label has no chemical meaning; OPSIN gives the correct C4H9NO2 structure,retain and document achirality
+Ser-GLC,ambiguous_source_annotation,high,Serine glycosylated does not specify sugar identity linkage position anomer or stereochemistry,resolve from primary DBAASP source or exclude
+"Thr-GLC ",ambiguous_source_annotation,high,Threonine glycosylated does not uniquely specify GlcNAc linkage or sugar stereochemistry,resolve from primary DBAASP source or exclude
+D-ABU,verified,high,The 2R aminobutanoic-acid structure matches D alpha-aminobutyrate,retain
+NLYS,verified,high,N-(4-aminobutyl)glycine and formula C6H14N2O2 agree with the structure,retain
+AGP,verified,high,3-guanidinopropanoic acid and formula C4H9N3O2 agree with the structure,retain
+Me-ARG,ambiguous_source_annotation,medium,N-methyl-arginine does not specify alpha versus guanidino nitrogen methylation; the pipeline assumes guanidino N methylation,resolve methylation site from primary source
+PFPh,not_a_complete_amino_acid_definition,high,Pentafluorophenyl is a substituent and OPSIN produced pentafluorobenzene without amino-acid termini,model as an explicit substituent or exclude as a residue
+"Asn-GLC ",ambiguous_source_annotation,high,Asparagine glycosylated does not uniquely specify GlcNAc identity linkage or stereochemistry,resolve from primary DBAASP source or exclude
+Acm-Cys,verified,high,S-acetamidomethyl cysteine and formula C6H12N2O3S agree with the 2R cysteine structure,retain
+TERT BU ALA,verified,medium,"2-amino-3,3-dimethylbutanoic acid matches tert-butylalanine and leaves unspecified stereochemistry unassigned",retain
+D-FLG,verified,high,The 2R fluorenylglycine structure matches D-fluorenylglycine,retain
+4-NH2-D-PRO,verified,high,The 2R 3S aminoproline structure matches gamma-S-amino-D-proline and the source formula,retain
+CYS-S-CH3,ambiguous_source_annotation,medium,The source provides only formula C4H9NO2S2; S-methylthio-L-cysteine connectivity and L stereochemistry were inferred,resolve identity from primary source
+S-ALA-4-pen,incorrect_pipeline_output,high,ChatGPT introduced sulfur and changed an alpha-substituted alanine into a thioether; the final handcrafted mapping is different,use the separately corrected final structure only after independent validation
+R-ALA-7-oct,incorrect_pipeline_output,high,ChatGPT converted alpha-octenyl alanine into a side-chain-extended amino acid; the final handcrafted mapping is different,use the separately corrected final structure only after independent validation
+CF3-Bpg,verified,medium,The bicyclo[1.1.1]pentyl trifluoromethyl glycine connectivity matches the annotation and unspecified stereochemistry remains unassigned,retain
+D-CF3-Bpg,verified,high,The 2R bicyclo[1.1.1]pentyl trifluoromethyl glycine matches the D annotation,retain
+bASP,verified,medium,3-aminobutanedioic acid is the beta-aspartic-acid constitution and unspecified stereochemistry remains unassigned,retain
+AEt-VAL,verified,medium,N-(2-aminoethyl)-L-valine matches N-aminoethyl valine under the dataset's uppercase L-residue convention,retain
+NNar,incorrect_pipeline_output,high,The source says guanidinoethyl glycine with C5H12N4O2 but the standardized propyl name and OPSIN structure add one carbon,correct connectivity or exclude
+CYS-PEG750,non_exact_polymer_proxy,high,A nominal PEG750 conjugate was replaced by one short discrete ether without evidence that it is the assayed material,represent the exact conjugate or exclude
+CYS-PEG2000,non_exact_polymer_proxy,high,A nominal PEG2000 conjugate was replaced by a short discrete ether chain without exact composition evidence,represent the exact conjugate or exclude
+Tic,verified,medium,"1,2,3,4-tetrahydroisoquinoline-3-carboxylic acid matches Tic and leaves unspecified stereochemistry unassigned",retain
+Oic,ambiguous_source_annotation,medium,Octahydroindolecarboxylic acid has multiple possible stereoisomers and the source annotation specifies none,resolve stereochemistry from primary source
+D-LAP,verified_source_annotation_typo,medium,N2-dodecyl-D-asparagine matches the textual D-N-lauryl asparagine identity although the supplied formula has an extra oxygen and hydrogens,retain only with documented source-formula discrepancy
+LYS-C8,verified,high,N6 octanoyl L-lysine matches the annotation,retain
+LYS-C4,verified,high,N6 butanoyl L-lysine matches the annotation,retain
+LYS-C12-OH,ambiguous_source_annotation,medium,Hydroxylaurylated does not state the hydroxy position while the standardized name assumes 12-hydroxy,confirm hydroxy position from primary source
+"N,N-Me-Lys",ambiguous_source_annotation,high,"N,N-dimethyllysine does not specify alpha versus epsilon nitrogen methylation; the pipeline assumes N6,N6",resolve methylation sites from primary source
+BIP,verified,medium,"2-amino-3-(4-biphenylyl)propanoic acid matches 4,4-biphenylalanine and leaves unspecified stereochemistry unassigned",retain
+DAB(Ac),ambiguous_source_annotation,high,Acetylated diaminobutyrate does not specify which amino group is acetylated and the standardized name is not locanted,resolve acetylation site from primary source
+Ph-TRP,verified,medium,2-phenyl-L-tryptophan connectivity matches the annotation under the uppercase L-residue convention,retain
+LYS-C5,verified,high,N6 pentanoyl L-lysine matches the annotation,retain
+LYS-Me-C5,verified,high,N6 4-methylpentanoyl L-lysine matches the annotation,retain
+LYS-C6,verified,high,N6 hexanoyl L-lysine matches the annotation,retain
+LYS-Me-C6,verified,medium,N6 2-methylhexanoyl L-lysine matches the annotation and the unspecified acyl stereocenter remains unassigned,retain
+LYS-Me-C8,verified,medium,N6 4-methyloctanoyl L-lysine matches the annotation and the unspecified acyl stereocenter remains unassigned,retain
+LYS-C18,incorrect_pipeline_output,high,Oleoyl denotes cis-9-octadecenoyl but the standardized name and structure omit double-bond E/Z stereochemistry,restore cis geometry or exclude
+D-LYS-C4,verified,high,N6 butanoyl D-lysine matches the annotation,retain
+D-LYS-C6,verified,high,N6 hexanoyl D-lysine matches the annotation,retain
+D-LYS-Me-C5,verified,high,N6 4-methylpentanoyl D-lysine matches the annotation,retain
+D-LYS-C8,verified,high,N6 octanoyl D-lysine matches the annotation,retain
+2-OH-Me-SER,incorrect_pipeline_output,high,Alpha-hydroxymethylserine was converted into N-hydroxymethyl serine; the attachment site is different,correct connectivity or exclude
+10-Adc,verified,high,10-aminodecanoic acid and formula C10H21NO2 agree with the structure,retain
+DIP,verified,medium,"2-amino-3,3-diphenylpropanoic acid matches 3,3-diphenylalanine and leaves unspecified stereochemistry unassigned",retain
+"His[(CH2)3C6H5]2",ambiguous_source_annotation,high,The source aliases conflict between cyclohexyl and bis-phenylpropyl substitution; the pipeline selected bis-phenylpropyl,resolve substituent identity from primary source
+Lys(N3),verified_source_annotation_typo,high,6-azido-L-lysine matches azidolysine; the source formula overcounts one nitrogen and hydrogen,retain with documented source-formula correction
+LYS-C10,verified,high,N6 decanoyl L-lysine matches the annotation,retain
+12-Guan-C12,verified_source_annotation_typo,high,12-guanidinododecanoic acid requires the guanidino carbon and three nitrogens shown by OPSIN; the source formula omits them,retain with documented source-formula correction
+MET-Boro,verified,medium,The methionine boronic-acid analogue matches the common interpretation of methionine boronic acid,retain
+TERT BU CYS,verified,high,S-tert-butyl L-cysteine and formula C7H15NO2S agree with the structure,retain
+D-Thr-GLC,ambiguous_source_annotation,high,D-threonine glycosylated does not uniquely specify GlcNAc linkage or sugar stereochemistry,resolve from primary source or exclude
+"N,N-Me-D-Orn",verified,high,"The 2R 5-dimethylamino structure matches N,N-dimethyl-D-ornithine and the source formula",retain
+"N,N,N-Me-D-Orn",verified_source_annotation_typo,medium,The trimethylammonio D-ornithine constitution and charge match the name; the source neutral formula is inconsistent with the zwitterionic representation,retain with charge and formula documented
+MOR-D-Orn,verified_source_annotation_typo,high,Morpholinyl D-ornithine contains two nitrogens as in the structure; the source formula incorrectly lists three,retain with documented source-formula correction
+Hex-Hyp,verified,medium,The 2S 4R hexyloxyproline structure matches 4-hexyloxy-Hyp under the usual L-Hyp convention,retain
+Dab(Cys),ambiguous_source_annotation,high,Cysteinylated diaminobutyrate does not uniquely state the attachment nitrogen or peptide orientation,resolve linkage from primary source
+CYS-S-HexNAc,ambiguous_source_annotation,medium,S-linked HexNAc cysteine does not by itself uniquely specify GlcNAc identity anomer and full sugar stereochemistry,resolve glycan identity from primary source
+bHTrp,verified,medium,2-amino-4-indolylbutanoic acid matches beta-homotryptophan and leaves unspecified stereochemistry unassigned,retain
+4-3Fm-PHE,verified,medium,4-trifluoromethyl phenylalanine connectivity and formula agree and unspecified stereochemistry remains unassigned,retain
+D-BIP,verified,high,"The 2R biphenylalanine structure matches D-4,4-biphenylalanine",retain
+D-Me-Trp,incorrect_pipeline_output,high,N-methyltryptophan conventionally denotes alpha-amino N methylation but the pipeline methylated indole N1,resolve the methylation site and correct or exclude
+Me-PENT-GLY,incorrect_pipeline_output,high,The pipeline omitted the alpha methyl implied by methyl-pentenylglycine and the final handcrafted mapping is different,use the separately corrected final structure only after independent validation
+LYS-C7,verified,high,N6 heptanoyl L-lysine matches the annotation,retain
+Lys-C9,verified,high,N6 nonanoyl L-lysine matches the annotation,retain
+Lys-C11,verified,high,N6 undecanoyl L-lysine matches the annotation,retain
+D-LYS-C10,verified,high,N6 decanoyl D-lysine matches the annotation,retain
+D-LYS-C12,verified,high,N6 dodecanoyl D-lysine matches the annotation,retain
+D-LYS-C14,verified,high,N6 tetradecanoyl D-lysine matches the annotation,retain
+D-LYS-C16,verified,high,N6 hexadecanoyl D-lysine matches the annotation,retain
+CYS-C12,verified,high,S-dodecanoyl L-cysteine matches laurylated cysteine side chain,retain
+4-Br-PHE,verified,medium,4-bromophenylalanine connectivity and formula agree and unspecified stereochemistry remains unassigned,retain
+4-I-PHE,verified,medium,4-iodophenylalanine connectivity and formula agree and unspecified stereochemistry remains unassigned,retain
+LYS-NH2-C5,verified,high,N6 5-aminopentanoyl L-lysine matches the annotation,retain
+LYS-Ahx,verified,high,N6 6-aminohexanoyl L-lysine matches the Ahx annotation,retain
+LYS-BrC6,verified,high,N6 6-bromohexanoyl L-lysine matches the annotation,retain
+LYS-NH2-C11,verified,high,N6 11-aminoundecanoyl L-lysine matches the annotation,retain
+NTrp,verified_source_annotation_typo,high,N-(2-indolylethyl)glycine requires C12H14N2O2 as in the OPSIN structure; the source formula is one carbon short,retain with documented source-formula correction
+Ndpe,verified,high,"N-(2,2-diphenylethyl)glycine and formula C16H17NO2 agree with the structure",retain
+Ala-d3,verified,high,The OPSIN SMILES explicitly retains three deuterium isotopes and 2S alanine stereochemistry,retain
+IAA-Cys,incorrect_pipeline_output,high,Iodoacetamide alkylation gives S-carbamidomethyl cysteine but the pipeline created an S-(2-carbamoylethyl) group with one extra carbon,correct to S-carbamidomethyl cysteine or exclude
+5F-PHE,verified,medium,Pentafluorophenylalanine connectivity and formula agree and unspecified alpha stereochemistry remains unassigned,retain
+DAP-C10,verified,medium,Side-chain decanoylated diaminopropionic acid matches the annotation and unspecified alpha stereochemistry remains unassigned,retain
+DAP-C12,verified,medium,Side-chain dodecanoylated diaminopropionic acid matches the annotation and unspecified alpha stereochemistry remains unassigned,retain
+DAP-C14,verified,medium,Side-chain tetradecanoylated diaminopropionic acid matches the annotation and unspecified alpha stereochemistry remains unassigned,retain
+DAP-C16,verified,medium,Side-chain hexadecanoylated diaminopropionic acid matches the annotation and unspecified alpha stereochemistry remains unassigned,retain
+DAB-C10,verified,medium,Side-chain decanoylated diaminobutyrate matches the annotation and unspecified alpha stereochemistry remains unassigned,retain
+DAB-C12,verified,medium,Side-chain dodecanoylated diaminobutyrate matches the annotation and unspecified alpha stereochemistry remains unassigned,retain
+DAB-C14,verified,medium,Side-chain tetradecanoylated diaminobutyrate matches the annotation and unspecified alpha stereochemistry remains unassigned,retain
+DAB-C16,verified,medium,Side-chain hexadecanoylated diaminobutyrate matches the annotation and unspecified alpha stereochemistry remains unassigned,retain
+"His[(CH2)7C6H5]2",verified,medium,Bis-phenylheptyl L-histidine connectivity agrees with the explicit source substituent expression,retain
+"His[(CH2)7C6H5]",verified,medium,N-phenylheptyl L-histidine connectivity agrees with the explicit source substituent expression,retain
+HCha,incorrect_pipeline_output,high,The pipeline produced C11 2-amino-5-cyclohexylpentanoic acid while the source homocyclohexylalanine annotation states C10,resolve chain length and correct or exclude
+Leu(O)S,verified,medium,2-amino-4-methylpentanethioic acid matches the leucine thioic thione annotation,retain
+BisHomo-Pra,incorrect_pipeline_output,high,The source formula C7H11NO2 requires one more methylene than OPSIN 2-aminohex-5-ynoic acid C6H9NO2,correct chain length or exclude
+"N,4-Me-Glu	",verified,medium,N-methyl-4-methyl-L-glutamic acid matches the annotation and leaves the unspecified C4 stereocenter unassigned,retain
+Pre-TRP,verified,medium,N1-prenyl L-tryptophan matches the N-dimethylallyl tryptophan annotation and formula,retain
+N-TYR,incorrect_pipeline_output,high,Nitrotyrosine must retain the phenolic hydroxyl and formula C9H10N2O5; the pipeline produced nitrophenylalanine C9H10N2O4,restore the phenolic hydroxyl or exclude
+R-ALA-4-pen,verified,high,The 2R pent-4-enyl substituted amino acid matches the source annotation,retain
+Glu-OAll,incorrect_pipeline_output,high,OPSIN emitted a negatively charged glutamate monoanion rather than the neutral allyl ester definition used as a residue,neutralize and independently validate the intended alpha versus side-chain ester
+LYS-PEG4,non_exact_polymer_proxy,high,The source formula C14H30N2O7 is incompatible with the much shorter C11H24N2O4 ether chosen by the pipeline,represent the exact PEG4 conjugate or exclude
+LYS-C24,verified,high,N6 tetracosanoyl L-lysine matches lignoceroylated lysine,retain
+LYS-C22,verified,high,N6 docosanoyl L-lysine matches behenoyl or docosanoyl lysine,retain
+LYS-C20,verified,high,N6 eicosanoyl L-lysine matches arachidoylated lysine,retain
+LYS-PEG8,non_exact_polymer_proxy,high,The source formula C22H46N2O11 is incompatible with the shorter C15H32N2O6 ether chosen by the pipeline,represent the exact PEG8 conjugate or exclude
+S-Fmoc-ALA-4-pen,verified,high,The 2S Fmoc-protected pent-4-enyl amino acid matches the annotation and formula,retain
+Me-Ile,verified,high,N-methyl-L-isoleucine and formula C7H15NO2 agree with the structure,retain
+BTA,verified,medium,3-benzothienyl alanine connectivity and formula agree and unspecified stereochemistry remains unassigned,retain
+DAB-C4,verified,medium,Side-chain butanoylated diaminobutyrate matches the annotation and leaves unspecified alpha stereochemistry unassigned,retain
+DAB-C6,verified,medium,Side-chain hexanoylated diaminobutyrate matches the annotation and leaves unspecified alpha stereochemistry unassigned,retain
+DAB-C8,verified,medium,Side-chain octanoylated diaminobutyrate matches the annotation and leaves unspecified alpha stereochemistry unassigned,retain
+D-Gly-C8,verified,high,The 2R octylglycine structure matches D-octylglycine and the source formula,retain
+Gly-C8,verified,medium,Octylglycine connectivity and formula agree and unspecified stereochemistry remains unassigned,retain
+CYS-PEG4-Chol,non_exact_polymer_proxy,high,The source formula C38H68NO7S is incompatible with the shorter C34H59NO4S linker emitted by OPSIN,represent the exact PEG4-cholesterol conjugate or exclude
+Eps-LYS,verified,high,6-aminohexanoic acid is epsilon-aminocaproic acid or epsilon lysine,retain
+S-TERT BU CYS,verified,high,S-tert-butylthio L-cysteine connectivity stereochemistry and formula agree,retain
+β-BzThi-Ala,verified,medium,3-benzothienyl alanine connectivity and formula agree and unspecified stereochemistry remains unassigned,retain
+CYS-C16,verified,high,S-hexadecanoyl L-cysteine matches palmitoylated cysteine side chain,retain
+"2F(3,5)-PHE",verified,medium,"3,5-difluorophenylalanine connectivity and formula agree and unspecified stereochemistry remains unassigned",retain
+PHE-NH2-C5,ambiguous_source_annotation,high,Phenylalanine with aminopentanoylated side group does not state the attachment atom or ring position; the pipeline assumes para acylation,resolve attachment site from primary source
+ORN-NH2-C5,verified,high,N5 5-aminopentanoyl L-ornithine matches the annotation,retain
+ORN-NH2-C7,verified,high,N5 7-aminoheptanoyl L-ornithine matches the annotation,retain
+"2F(2,6)-PHE",verified,medium,"2,6-difluorophenylalanine connectivity and formula agree and unspecified stereochemistry remains unassigned",retain
+6F-LEU,incorrect_pipeline_output,high,The source is hexafluoroleucine C6H7F6NO2 but the pipeline emitted a C5 pentafluoro structure,correct carbon and fluorine counts or exclude
+CF3-Pro,ambiguous_source_annotation,high,Trifluoromethane-proline does not specify the CF3 attachment position or stereochemistry; OPSIN assumed alpha-CF3 2S proline,resolve position and stereochemistry from primary source
+CH3-S-Pro,verified,high,The 2S 4R 4-methylthio-proline structure and formula match the annotation,retain
+CYS-PEG5000,non_exact_polymer_proxy,high,A nominal PEG5000 conjugate was replaced by the same short ether used for PEG750 without exact composition evidence,represent the exact conjugate or exclude
+mPEG-2000-Mal-CYS,non_exact_polymer_proxy,high,A nominal mPEG2000 maleimide cysteine conjugate was replaced by a small discrete maleimide ether,represent the exact conjugate or exclude
+D-Lys(N3),verified_source_annotation_typo,high,6-azido-D-lysine matches the name and D stereochemistry; the source formula overcounts nitrogen and hydrogen,retain with documented source-formula correction
+2-DMA-TRP,verified,medium,2-prenyl L-tryptophan connectivity and formula agree with the annotation,retain
+Cbz-D-ORN,verified,high,N-delta Cbz-protected D-ornithine connectivity stereochemistry and formula agree,retain
+LYS-PA,ambiguous_source_annotation,medium,Piperic acid normally has defined conjugated-alkene geometry but neither the source nor generated structure records E/Z stereochemistry,resolve piperic-acid geometry from primary source
+ORN-PA,ambiguous_source_annotation,medium,Piperic acid normally has defined conjugated-alkene geometry but neither the source nor generated structure records E/Z stereochemistry,resolve piperic-acid geometry from primary source
+LYS-EPA,incorrect_pipeline_output,high,The standardized 4-ethyl methylenedioxyphenyl name is internally inconsistent and OPSIN dearomatized the ring while the source formula also disagrees,resolve the exact ethylpiperic-acid structure or exclude
+ORN-EPA,incorrect_pipeline_output,high,The standardized 4-ethyl methylenedioxyphenyl name is internally inconsistent and OPSIN dearomatized the ring while the source formula also disagrees,resolve the exact ethylpiperic-acid structure or exclude
+CYS-PEG12-Chol,ambiguous_source_annotation,high,The generic PEG12-cholesterol side-chain description does not specify linker chemistry and the source formula differs by O and H from the OPSIN structure,obtain the exact conjugate structure from primary source or exclude
+D-3-OH-ASN,incorrect_pipeline_output,high,D-3-hydroxyasparagine C4H8N2O4 was converted into C3H8N2O3 diamino-hydroxypropanoic acid,restore the asparagine side-chain carboxamide or exclude
+CYS-Chol,verified_source_annotation_typo,medium,Direct cholesteryl thioether L-cysteine matches the text and carbon count; the source hydrogen count differs by one,retain only with documented formula and linkage confirmation
+CYS-PEG24-Chol,incorrect_pipeline_output,high,The nominal PEG24 conjugate and source C78H148NO27S contain one more ethylene-oxide unit than OPSIN C76H143NO25S,restore the full PEG24 linker or exclude
+5-Cl-TRP,verified,medium,5-chlorotryptophan connectivity and formula agree and unspecified alpha stereochemistry remains unassigned,retain
+D-bALA,verified_source_annotation_typo,high,Beta-alanine is achiral so the source D label has no chemical meaning; OPSIN gives the correct C3H7NO2 structure,retain and document achirality
+AMiPPA,ambiguous_source_annotation,high,The source name is malformed and its formula conflicts strongly with the OPSIN hydroxy dicarboxylic acid,resolve the exact structure from primary source or exclude
+MPro,verified,high,The 2S 4R 4-mercaptoproline structure and formula match the annotation,retain
+Dab(Thr),verified,high,L-threonyl-L-diaminobutyric acid connectivity stereochemistry and formula agree,retain
+D-Dab(Thr),verified,high,L-threonyl-D-diaminobutyric acid connectivity stereochemistry and formula agree,retain
+3-Me-Trp,incorrect_pipeline_output,high,Beta-methyltryptophan should be methylated on the side-chain beta carbon but OPSIN created a fused 3-methyl indole-derived structure with formula C12H16N2O2,correct beta-methyltryptophan stereochemistry and connectivity or exclude
+OMe-Glu,verified,high,L-glutamic-acid 5-methyl ester matches delta-OMe-Glu,retain
+"3-NH2-2-OH-4,15-Me-(E)14-C19",incorrect_pipeline_output,high,The source specifies both 4- and 15-methyl substituents and C21 but the standardized name omitted 4-methyl and OPSIN gives C20,restore the missing methyl and specified alkene geometry or exclude
+"2-NH2-2,6,8-Me-C10",ambiguous_source_annotation,high,"The AA code says methyl positions 2,6,8 whereas the prose says 2,5,6 and the pipeline follows the prose",resolve the contradictory locants from primary source
+D-OMe-Glu,verified,high,D-glutamic-acid 5-methyl ester matches D-delta-OMe-Glu,retain
+"N1,N2-Me-ORN",incorrect_pipeline_output,high,"N1,N2-dimethylornithine indicates methylation across two nitrogens but OPSIN placed both methyl groups on the alpha amino nitrogen",resolve nitrogen-specific methylation and correct or exclude
+SER-O-GlcNAc,verified_source_annotation_typo,high,Beta-O-GlcNAc L-serine connectivity and stereochemistry match the annotation; the source formula omits both nitrogens,retain with documented source-formula correction
+4-F-ABU,verified,medium,4-fluoro-2-aminobutanoic acid and formula agree and unspecified stereochemistry remains unassigned,retain
+4-2F-ABU,verified,medium,"4,4-difluoro-2-aminobutanoic acid and formula agree and unspecified stereochemistry remains unassigned",retain
+4-3F-ABU,verified,medium,"4,4,4-trifluoro-2-aminobutanoic acid and formula agree and unspecified stereochemistry remains unassigned",retain
+4-2F-5-3F-NVA,verified,medium,"4,4-difluoro-5,5,5-trifluoronorvaline connectivity and formula agree and unspecified stereochemistry remains unassigned",retain
+D-SER-O-OMe-CIN,verified_source_annotation_typo,high,O-(4-methoxycinnamoyl)-D-serine connectivity and D stereochemistry agree; ester formation explains the one-hydrogen source-formula discrepancy,retain with documented formula correction
+D-SER-O-Me-CIN,verified_source_annotation_typo,high,O-(4-methylcinnamoyl)-D-serine connectivity and D stereochemistry agree; ester formation explains the one-hydrogen source-formula discrepancy,retain with documented formula correction
+SER-O-Me-CIN,verified_source_annotation_typo,high,O-(4-methylcinnamoyl)-L-serine connectivity and L stereochemistry agree; ester formation explains the one-hydrogen source-formula discrepancy,retain with documented formula correction
+D-Piz,verified,high,The 2R piperazine-2-carboxylic-acid structure matches D-piperazic acid and the source formula,retain
+DHLys,incorrect_pipeline_output,high,"4,5-dehydrolysine must retain the side-chain amino nitrogen and source C6H12N2O2 but the pipeline emitted C6H11NO2 aminohexenoic acid",restore the lysine side-chain amino group or exclude
+"13-N,N-Me-Guan-(E)2,4,8-C13",incorrect_pipeline_output,high,The code and source specify a C13 acid plus dimethylguanidino total C16 but the standardized pentadecatrienoic name yields C18 and different double-bond positions,resolve chain length locants and geometry or exclude
+LYS-Bu,verified,high,N6 but-3-ynoyl L-lysine matches the annotation and source formula,retain
+DAP-Bu,verified,medium,Side-chain but-3-ynoyl diaminopropionic acid matches the annotation and source formula while unspecified alpha stereochemistry remains unassigned,retain

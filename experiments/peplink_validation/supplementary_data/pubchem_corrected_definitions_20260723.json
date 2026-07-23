@@ -1,0 +1,118 @@
+{
+  "PropertyTable": {
+    "Properties": [
+      {
+        "CID": 65124,
+        "MolecularFormula": "C9H10N2O5",
+        "SMILES": "C1=CC(=C(C=C1C[C@@H](C(=O)O)N)[N+](=O)[O-])O",
+        "ConnectivitySMILES": "C1=CC(=C(C=C1CC(C(=O)O)N)[N+](=O)[O-])O",
+        "Title": "3-Nitro-L-tyrosine"
+      },
+      {
+        "CID": 6436547,
+        "MolecularFormula": "C24H46N2O3",
+        "SMILES": "CCCCCCCC/C=C\\CCCCCCCC(=O)NCCCC[C@@H](C(=O)O)N",
+        "ConnectivitySMILES": "CCCCCCCCC=CCCCCCCCC(=O)NCCCCC(C(=O)O)N",
+        "Title": "N6-Oleoyl-L-lysine"
+      },
+      {
+        "CID": 53748860,
+        "MolecularFormula": "C12H14N2O2",
+        "SMILES": "CC(C1=CNC2=CC=CC=C21)[C@@H](C(=O)O)N",
+        "ConnectivitySMILES": "CC(C1=CNC2=CC=CC=C21)C(C(=O)O)N",
+        "Title": "Beta-methyltryptophan"
+      },
+      {
+        "CID": 439893,
+        "MolecularFormula": "C4H9NO4",
+        "SMILES": "C(C(CO)(C(=O)O)N)O",
+        "ConnectivitySMILES": "C(C(CO)(C(=O)O)N)O",
+        "Title": "alpha-(Hydroxymethyl)serine"
+      },
+      {
+        "CID": 17754220,
+        "MolecularFormula": "C5H10N2O3S",
+        "SMILES": "C([C@@H](C(=O)O)N)SCC(=O)N",
+        "ConnectivitySMILES": "C(C(C(=O)O)N)SCC(=O)N",
+        "Title": "S-Carbamidomethylcysteine"
+      },
+      {
+        "CID": 7019591,
+        "MolecularFormula": "C6H7F6NO2",
+        "SMILES": "C([C@@H](C(=O)O)N)C(C(F)(F)F)C(F)(F)F",
+        "ConnectivitySMILES": "C(C(C(=O)O)N)C(C(F)(F)F)C(F)(F)F",
+        "Title": "5,5,5,5',5',5'-Hexafluoroleucine"
+      },
+      {
+        "CID": 224400,
+        "MolecularFormula": "C10H19NO2",
+        "SMILES": "C1CCC(CC1)CCC(C(=O)O)N",
+        "ConnectivitySMILES": "C1CCC(CC1)CCC(C(=O)O)N",
+        "Title": "2-Amino-4-cyclohexylbutanoic acid"
+      },
+      {
+        "CID": 688254,
+        "MolecularFormula": "C12H14N2O2",
+        "SMILES": "CN[C@H](CC1=CNC2=CC=CC=C21)C(=O)O",
+        "ConnectivitySMILES": "CNC(CC1=CNC2=CC=CC=C21)C(=O)O",
+        "Title": "n-Methyl-d-tryptophan"
+      },
+      {
+        "CID": 71435968,
+        "MolecularFormula": "C7H11NO2",
+        "SMILES": "C#CCCCC(C(=O)O)N",
+        "ConnectivitySMILES": "C#CCCCC(C(=O)O)N",
+        "Title": "2-Aminohept-6-ynoic acid"
+      },
+      {
+        "CID": 250936,
+        "MolecularFormula": "C10H11NO2",
+        "SMILES": "C1C2=CC=CC=C2CC1(C(=O)O)N",
+        "ConnectivitySMILES": "C1C2=CC=CC=C2CC1(C(=O)O)N",
+        "Title": "2-Aminoindane-2-carboxylic acid"
+      },
+      {
+        "CID": 435719,
+        "MolecularFormula": "C5H12N4O2",
+        "SMILES": "C(CN=C(N)N)C(C(=O)O)N",
+        "ConnectivitySMILES": "C(CN=C(N)N)C(C(=O)O)N",
+        "Title": "Norarginine"
+      },
+      {
+        "CID": 428913,
+        "MolecularFormula": "C4H10N2O2",
+        "SMILES": "C(CNCC(=O)O)N",
+        "ConnectivitySMILES": "C(CNCC(=O)O)N",
+        "Title": "N-(2-Aminoethyl)glycine"
+      },
+      {
+        "CID": 440473,
+        "MolecularFormula": "C8H10N2O4",
+        "SMILES": "C1=CN(C=C(C1=O)O)C[C@@H](C(=O)O)N",
+        "ConnectivitySMILES": "C1=CN(C=C(C1=O)O)CC(C(=O)O)N",
+        "Title": "Mimosine"
+      },
+      {
+        "CID": 95048,
+        "MolecularFormula": "C5H3ClO2S",
+        "SMILES": "C1=C(SC(=C1)Cl)C(=O)O",
+        "ConnectivitySMILES": "C1=C(SC(=C1)Cl)C(=O)O",
+        "Title": "5-Chloro-2-thiophenecarboxylic acid"
+      },
+      {
+        "CID": 15284838,
+        "MolecularFormula": "C6H12N4O2",
+        "SMILES": "C1[C@H](NC(=N1)N)C[C@@H](C(=O)O)N",
+        "ConnectivitySMILES": "C1C(NC(=N1)N)CC(C(=O)O)N",
+        "Title": "Enduracididine"
+      },
+      {
+        "CID": 5288447,
+        "MolecularFormula": "C5H10N2O3",
+        "SMILES": "C(CC(=O)O)[C@H](C(=O)N)N",
+        "ConnectivitySMILES": "C(CC(=O)O)C(C(=O)N)N",
+        "Title": "Isoglutamine, D-"
+      }
+    ]
+  }
+}

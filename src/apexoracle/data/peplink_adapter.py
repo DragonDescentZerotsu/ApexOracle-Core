@@ -12,8 +12,8 @@ from typing import Any, Mapping
 
 
 PEPLINK_PACKAGE = "PepLink"
-PEPLINK_VERSION = "0.1.1"
-PEPLINK_GIT_COMMIT = "cec2a02427766e4ba95806924801af31bdcc9939"
+PEPLINK_VERSION = "0.1.2"
+PEPLINK_GIT_COMMIT = "90f627cc7fd65daaf9c5d0a973d17b79bcd097d5"
 PEPLINK_REPOSITORY = "https://github.com/DragonDescentZerotsu/PepLink"
 
 

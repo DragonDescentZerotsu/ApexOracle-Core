@@ -1,0 +1,90 @@
+{
+  "automated_checks": {
+    "charged_opsin_structures": 1,
+    "final_exactly_matches_opsin": 166,
+    "final_mapping_rdkit_valid": 169,
+    "final_structure_matches_opsin": 166,
+    "opsin_rdkit_valid": 169,
+    "opsin_selfies_structure_exact": 169,
+    "structures_with_unassigned_stereocenters": 60
+  },
+  "conservative_exclusion": {
+    "affected_mic_rows": 1667,
+    "affected_unique_peptides": 300,
+    "contains_handcrafted_replacement_peptides": 149,
+    "contains_unresolved_final_risk_peptides": 151,
+    "csv": "experiments/peplink_validation/flagged_peptide_exclusions.csv",
+    "flagged_aa_definitions": 50
+  },
+  "deprecated_exploratory_exclusion_do_not_use_for_reviewer_response": {
+    "affected_mic_rows": 4095,
+    "affected_unique_peptides": 617,
+    "chemical_flag_peptides": 300,
+    "csv": "experiments/peplink_validation/peplink_validation_sensitivity_exclusions.csv",
+    "forward_generation_failed_peptides": 355,
+    "overlap_peptides": 38,
+    "reason": "Forward-construction failure is not equivalent to a frozen training-structure error; many such records use DBAASP-linked whole-peptide PubChem structures.",
+    "status": "retired_after_source_lineage_audit"
+  },
+  "detail_csv": "experiments/peplink_validation/chatgpt_opsin_chemical_validation.csv",
+  "lineage_rows": 169,
+  "manual_review": {
+    "affected_unique_peptides_by_decision": {
+      "ambiguous_source_annotation": 85,
+      "incorrect_pipeline_output": 208,
+      "non_exact_polymer_proxy": 7,
+      "not_a_complete_amino_acid_definition": 0,
+      "verified": 605,
+      "verified_source_annotation_typo": 49
+    },
+    "complete": true,
+    "decision_counts": {
+      "ambiguous_source_annotation": 20,
+      "incorrect_pipeline_output": 22,
+      "non_exact_polymer_proxy": 7,
+      "not_a_complete_amino_acid_definition": 1,
+      "verified": 105,
+      "verified_source_annotation_typo": 14
+    },
+    "reviewed_rows": 169,
+    "used_aa_by_decision": {
+      "ambiguous_source_annotation": 11,
+      "incorrect_pipeline_output": 16,
+      "non_exact_polymer_proxy": 3,
+      "verified": 83,
+      "verified_source_annotation_typo": 12
+    }
+  },
+  "schema_version": 2,
+  "scope_notice": "This file summarizes the complete 169-row chemical audit, not the reviewer-facing training-impact scope. Use reviewer_response_scope_summary.json for the source-aware 56-peptide/219-row scope.",
+  "source_hashes": {
+    "curated_mic": {
+      "path": "DataPrepare/Data/DBAASP_id_bact_name_SMILES_MIC_Evo.csv",
+      "sha256": "ebbe1b32a45460a2f88f112192627f80f9f7391c1d17dfc2ebf007fe6f6ef2aa"
+    },
+    "dbaasp_json": {
+      "path": "DataPrepare/Data/all_peptides_data.json",
+      "sha256": "927ea275f40cdc2f79acdae6a87b0efc13ae5b7acee3901a50d2005a8f187ce0"
+    },
+    "final_aa_mapping": {
+      "path": "DataPrepare/Data/all_aa_smiles_new_handcrafted.csv",
+      "sha256": "42fe91726f2d6a8fb951d7ef7d27298f3151bb45bc5fa222c5d7d9d9e5777544"
+    },
+    "gpt_names": {
+      "path": "DataPrepare/Data/unusual_aa_text_transfered_by_GPT.txt",
+      "sha256": "3e8a2db262f3b36723e25a75b5c88ae93fedfa175a19a3da302fc6aa640e45f5"
+    },
+    "historical_pipeline_csv": {
+      "path": "DataPrepare/Data/unusual_aa_wo_PubChem_smiles.csv",
+      "sha256": "91df1a0e192e1c5510f7a65fd65d88c199aeb2d52d6b03f5e74bb618c41c771b"
+    },
+    "opsin_smiles": {
+      "path": "DataPrepare/Data/unusual_aa_smiles_OPSIN_output.txt",
+      "sha256": "8439e0cbeb7c211f10c56a379a31aeaa822087a7734527352ed66299a17ca783"
+    },
+    "source_annotations": {
+      "path": "DataPrepare/Data/unusual_aa_names_wo_PubChem_smiles.json",
+      "sha256": "42ffaa49232b4c02bb210a7e22993f7edc065bb443ff312e42e7ee98ae3ba87f"
+    }
+  }
+}

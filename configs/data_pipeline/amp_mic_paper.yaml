@@ -28,7 +28,7 @@ inhouse:
     rows: 15718
     sha256: 42f0421a997a23a4c07eae37c0116b2b49ee78f9fbd8c93aac03d5354f711896
   paper_reproduction: consume_frozen_long_table
-  new_data: build_with_peplink_0.1.1
+  new_data: build_with_peplink_0.1.2
 
 merged_paper_output:
   path: DataPrepare/Data/DBAASP_inhouse_AMP_SMILES_MIC_Evo.csv

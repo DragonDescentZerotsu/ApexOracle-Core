@@ -44,6 +44,41 @@
   86--100%、温度 56--68°C。每个 node001 worker 随后再运行一个完整 baseline fold；node002
   baseline 队列以 `metrics.json` 为完成条件跳过共享文件系统中已完成的 fold。监控只从 `/data1`
   汇总一次任务进度，但分别显示 node001/node002 GPU，避免共享产物被重复计数。
+- **2026-07-21 Fig. 1b 负载重排事实：** Apex fine-tune 已达到 `150/150`，本轮 `45/45` 缺失
+  member 均已完成，15 个 fold 的最终 10-member prediction 也已组装。RN4220/Wong baseline
+  folds 3/4 已完成并固定使用前 10 members；folds 0/1/2 当前分别在 node001 GPU0/1/2 运行。
+  node002 后启动且会并发写共享 fold 3/4 的重复 worker 已停止。
+  本机 Chemprop venv 已按 node producer commit 补齐 `descriptastorus 2.7.0.3`。作者随后决定
+  三个 baseline 均与 ApexOracle 对齐为 10-member ensemble；RN4220 fold 0/1/2 已按 10 members
+  重启，fold 3/4 和 E. coli 的既有 20-member 目录只选择 `model_0`--`model_9` 做最终 prediction。
+  历史 checkpoint 分散在两台机器，推理必须在实际拥有对应文件的机器运行；不要重新启动已停止的
+  duplicate baseline session。
+- **2026-07-22 Fig. 1b 最终补实验事实：** 三个 baseline 的 `15/15` folds 已完成，每折最终
+  固定消费 10 members。fold-mean AUPRC/AUROC 为 E. coli `0.54535/0.85932`、A. baumannii
+  no-RDKit `0.30355/0.77589`、RN4220 `0.36616/0.94337`。共同样本上 5,000 次 paired
+  bootstrap/prediction-swap 显示 fine-tune 的 6/6 指标均高于 baseline 且 Holm-adjusted
+  `p < 0.05`。strict zero-shot 只有 E. coli AUROC 显著更高；A. baumannii AUROC 和 RN4220
+  两项显著更低。最终统计 SHA-256 为
+  `12c1d603b29679ee5f9b1bd8fcd5a60a78b5beb622fe593ca8fd6e7003577ae0`。
+- **2026-07-22 Fig. 1b 最终绘图事实：** Mac canonical notebook 已新增独立 cell
+  `fig1b-final-10member-dual-metric-20260722`，左 AUPRC、右 AUROC；每个柱为五折均值，error bar
+  为 sample s.d.，bracket 为 exact Holm-adjusted paired prediction-swap `p`。输入冻结在
+  `experiments/fig1b_antibiotic_classification/final_10member_dual_metric.csv`；新输出为
+  `3-strain-antibiotics-final-10member-dual-metric.{pdf,png}`。原 cell `220739609a526f79` 的源码和
+  output 语义 hash 均未变化，旧 panel 和论文总图均未覆盖。
+- **2026-07-22 Fig. 1b AUPRC-only 绘图事实：** 作者新增的 AUPRC-only placeholder 已填写为
+  cell `fig1b-final-10member-auprc-only-20260722`，独立输出
+  `3-strain-antibiotics-final-10member-auprc-only.{pdf,png}`。柱为五折 mean AUPRC，error bar 为
+  sample s.d.，bracket 为 pooled sample-level paired test 的 Holm-adjusted `p`。原始与双指标
+  cell 均经 hash 确认未变化；论文总图未自动覆盖。最终英文回复及修改清单位于
+  `experiments/fig1b_antibiotic_classification/reviewer_response_auprc_final.md`。
+- **2026-07-22 AUPRC-only layout 修订事实：** 已按作者反馈压缩 legend 与坐标区留白，并将
+  PDF 页面精确匹配旧论文 panel 的 `741.12 × 380.724 pt`；仅 AUPRC-only cell 发生变化。
+- **2026-07-22 Fig. 1b 文稿最终边界：** `Methods / Data / Small Molecule Antibiotics` 保持纯数据
+  描述；作者删除了先前迁入 `Implementation Details` 的细碎 Fig. 1b protocol，因此 Methods 不再
+  新增该实验的实现细节。TeX 只更新结果概览、Fig. 1b 图注和 Results；实际 response-letter docx
+  已换成最终 10-member AUPRC 数值，并保留指定的 Stokes/Liu/Wong common-fold 说明。TeX 临时
+  编译为 28 页、Word 临时转换为 25 页；未覆盖论文 PDF、figure 或论文总图。
 
 ## Git 与发布状态
 
@@ -75,6 +110,81 @@
 - **2026-07-18 已完成的 Fig. 2b 修订：** 回复信中关于各 encoder 是否使用相同数据、五折不确定性和原 27.1\% 表述的回答已经改为已完成实验及正式数值；论文 Fig. 2b 图注、Results 和 Methods 已同步修改。作者随后更新了完整 `Fig2_2.pdf`；经实际渲染核验，panel b 现为 10,886 个共享分子的七模型结果，显示五折 sample s.d. error bars，柱上三位小数与正式结果一致。最新 TeX 已再次完整编译为 28 页。
 - **当前正式结果：** 文稿、回复信和图片使用 24-layer joint DLM `0.5386 ± 0.0250` 与 12-layer DLM-only `0.3765 ± 0.0239`，相对第二名提升表述为 29.1\%。正文当前仍把优势解释为 joint DLM+MTR objective，但没有明确写出两个 DLM checkpoint 的容量不同；因此“objective 导致提升”仍应视为尚未完成容量控制核验的解释，而不是现有 benchmark 已证明的事实。
 - **仍待实验核验的事项：** 如果后续采用 12-layer joint 候选作为主比较，必须再次同步 Fig. 2b、Results、回复信结果段和 29.1\% 相对提升；在该实验完成前，当前 24-layer joint 正式结果和图片保持不变。
+
+## 2026-07-20 Reviewer 4 unseen-species 初筛
+
+### 已由代码、私有表格 hash 和 producer 过滤路径验证的事实
+
+- Mac 的私有 in-house AMP 表格已复制到被 Git 忽略的
+  `DataPrepare/Data/private_inhouse_amp/Master_List_Peptides_Antimicrobial_Activity.xlsx`；Mac 与
+  本机 SHA-256 均为 `956ff3d60364a113c2149a63b74b65d4f81ec03741fefbac1841558ed54744a4`。
+  原始 Excel、派生逐表头 CSV 和执行后的 notebook 均不得上传 GitHub。
+- `guaidance_regressor_all_data_pad_no_mask.py` 实际消费的不是源 CSV 中全部 5,614 个 strain 名，
+  而是经过 genome/text embedding 过滤后的 1,599 个标准化 strain ID；它们全部可回映到 389 个
+  producer-era species 名。审计入口为
+  `scripts/audit/audit_reviewer4_inhouse_species_coverage.py`。
+- Excel 两个 sheet 共 76 个 assay 表头，归一化为 35 个 species。结合项目 frozen taxonomy alias
+  与 2026-07-20 NCBI Datasets v2 名称核对后，11 个 species 没有进入 guidance regressor 的实际
+  训练 exposure，其中 10 个已有 MIC 数值：`[Clostridium] scindens` 468、
+  `Collinsella aerofaciens` 404、`Akkermansia muciniphila` 363、
+  `Parabacteroides distasonis` 271、`Bacteroides uniformis` 230、`Segatella copri` 161、
+  `Bacteroides eggerthii` 143、`Bacteroides ovatus` 99、`Agathobacter rectalis` 83、
+  `[Clostridium] symbiosum` 53；`Staphylococcus capitis` 只有表头、没有测量值。
+- 上述 11 个候选当前均不具备 generation 所需的完整 exact-target genome+text embedding 组合；
+  其中 9 个表头提供了 exact strain accession，但现存两个 embedding 目录对这些 exact target 均为
+  0 个匹配，另两个表头没有给出 exact strain ID。
+
+### 根据现有证据作出的推断
+
+- 当前表格可以支持“存在 species-level 未见候选”的数据结论，但不能单独支持 reviewer 要求的
+  broad efficacy：每个未见 species 目前最多只有一个有数据的 strain，不能把单 strain 活性写成
+  对整个 species 或 genus 的广谱有效性。
+- 现有高覆盖候选多为肠道 commensal/opportunist；仅按 assay 数排序不能建立临床合理性。临床 target
+  应由作者和 microbiology 团队另行确认，并配套多个独立 isolate。
+
+### 仍待作者确认或新增资产的事项
+
+- 从 10 个有 MIC 的 unseen species 中选择临床 target，并确定至少一个多-isolate 的 species/genus
+  panel；如果没有现成 panel，应先补菌株而不是直接把单列结果写入 reviewer response。
+- 目标确定后，Evo-2 genome embedding 与 strain-text embedding 仍由外部 producer 生成并登记
+  exact genome assembly、text source、SHA-256 和 producer commit；在这些资产就绪前不启动 sampler。
+
+## 2026-07-21 Reviewer 4 可购买 unseen 靶点初筛
+
+审计入口 `scripts/audit/audit_reviewer4_unseen_atcc_pathogens.py`，输出与完整结论位于
+`experiments/reviewer4_unseen_targets/`。该初筛回答的是「要做 broad-efficacy 实验应该买什么」，
+与 in-house workbook 初筛（「已有 MIC 的未见 species 有哪些」）互补。
+
+### 已由代码和公开数据源验证的事实
+
+- 训练暴露沿用同一冻结过滤：1,599 个 strain ID、389 个 producer-era species 名、425 个 canonical 名。
+- 425 个训练名全部由 NCBI Taxonomy 解析成功，归一到当前 165 个 genus；unseen 判定在当前名上
+  进行。这一步会改变结论：`Ochrobactrum anthropi` 已并入 `Brucella`，而 `Brucella melitensis`
+  和 `Brucella abortus` 在训练集中，因此它被正确判为 species-only 而非未见 genus。
+- 81 个策展候选中，62 个为 genus-level unseen，19 个为 species-only。
+- ATCC 目录经站点公开搜索索引读取；产品模板名取自实时 facet，细菌为
+  `Bacteria and Bacteriophages`、真菌为 `Mycology`、原生动物为 `Protistology`。用错模板名会让
+  所有真核候选静默返回 0 个产品。
+- 以「在线可订购 + 已有 ATCC Genome Portal assembly」为门槛，18 个 genus-level unseen species
+  有 >= 3 个可用 isolate。前三名为 *Morganella morganii*（24）、*Pantoea agglomerans*（15）和
+  *Providencia stuartii*（11）。*Providencia* 三个 species 全部未见，合计 21 个可用 isolate。
+- 抽查 ATCC 33672 与 ATCC 49042 的实时产品页，均可访问且 Genome Portal genome ID 与索引一致。
+
+### 根据现有证据作出的推断
+
+- 未见 genus 不等于未见 family，回复中必须主动披露。*Providencia* 与 *Morganella* 同属
+  Morganellaceae，而三个 *Proteus* species 在训练集中。family 也完全未见的候选只有
+  *Pantoea*、*Erysipelothrix*、*Brevundimonas*、*Leptospira* 和 *Treponema*。
+- Morganellaceae 候选对 polymyxin 天然耐药（lipid A L-Ara4N），临床需求叙事更强但 AMP 起效
+  概率更低；这是从已知耐药机制推断的，不是本仓库数据证明的。
+
+### 仍待作者确认的事项
+
+- 选定靶点，并决定走 genus-level 主张（*Providencia*）还是 family 也未见的单 species 主张。
+- 逐条核对实时产品页的 BSL、运输限制与机构生物安全审批；厌氧、fastidious 和螺旋体候选的 MIC
+  方案与常规 CLSI 肉汤稀释不同，需先确认可行性。
+- 本初筛只证明「买得到且有基因组」。模型在这些靶点上的预测性能尚未评估，也没有任何湿实验数据；
+  不得在回复信中把候选清单表述为已完成的 broad-efficacy 结果。
 
 ## 审稿回复辅助脚本
 
@@ -179,7 +289,7 @@
 | Fig. 2c Evo-2 与 k-mer 消融 | canonical producer 为 `scripts/reproduce/build_kmer_embeddings.py`；consumer 使用共享 hierarchical runner 和 `configs/hierarchical_mic/legacy_kmer_reconstruction.yaml`；血缘见 `experiments/kmer_ablation/` | **代码迁移完成；论文精确训练血缘仍缺失。** Mac 最终图的单模型 k-mer 为 R²/Spearman/Pearson `0.4507/0.6688/0.6793`。`/data/fangping/kmer_baseline` 是 2026 年 post-paper reconstruction：完整 global/25-epoch/7-member 三组均值 R² `0.5276`，协议与论文不同。567 个 global 和 567 个 windowed tensor 已建立逐文件 manifest；两种 canonical producer 在真实 E. coli ATCC 25922 上均与现存 tensor 逐值相同。 |
 | Fig. 2b 不使用 strain knowledge 的五折 molecular representation benchmark | canonical 模块为 `src/apexoracle/benchmarks/molecule_encoders/`，正式结果见 `experiments/fig2b_molecule_encoders/results_shared_5fold.md`；DLM 预训练代码仍位于外部 `/data2/tianang/projects/mdlm` | **正式修订版 / 高置信度。** 7-model × 5-fold 已在 10,886 个共享 molecule 上完成；旧 root/capsule source 副本由 legacy tag 和 migration audit 追溯。 |
 | Fig. 1b 严格 target-strain zero-shot 小分子分类 | canonical 入口 `scripts/reproduce/run_antibiotic_classification.py --mode strict-zero-shot`；checkpoint：`.../antibiotic_3_strain_compare/MDLM_fix_cls_sm_all_test_10_fold_ensembles` | **最终版 / 高置信度，已完成行为保持迁移。** 完整 held-out target-strain 数据不进入训练，但仍逐 epoch 用于 best-AUROC checkpoint selection。完整 ensemble 指标：E. coli `#004` 为 0.9360 AUROC / 0.5890 AUPRC；A. baumannii 17978 为 0.7262 / 0.3243；S. aureus RN4220 为 0.7679 / 0.1655。30 个 checkpoint 和 3 个完成日志网格完整；group 0 / ensemble 0 已在 H100 上与 capsule 做到 2,335 条 logit 逐值一致。 |
-| Fig. 1b fine-tuned ApexOracle | 同一入口的 `--mode fine-tune --fold N`；checkpoint：`MDLM_fix_cls_10_fold_ensembles` | **代码路径已统一 / 完整 ensemble 补实验进行中。** fine-tune 网格为 `3 strains × 5 outer folds × 10 members = 150 checkpoints`；strict zero-shot 才是无 KFold 的 `3 × 10 = 30`。合并两机后恢复 104 个历史 checkpoint，RN4220 fold 4 member 0 补训后已有 105 个，因此本轮只补剩余 45 个 member；任务在本机、node001、node002 间并行且输出与历史目录隔离。单成员 pooled OOF 只保留为 sensitivity。`--mode molecule-only` 对应旧 `wo_SAND`。 |
+| Fig. 1b fine-tuned ApexOracle | 同一入口的 `--mode fine-tune --fold N`；checkpoint：`MDLM_fix_cls_10_fold_ensembles` | **完整 10-member ensemble / 最终补实验完成。** fine-tune 网格为 `3 strains × 5 outer folds × 10 members = 150 checkpoints`；strict zero-shot 是无 KFold 的 `3 × 10 = 30`。15 个 fold 已逐项验证恰好 10 members。fold-mean AUPRC/AUROC 为 E. coli `0.71205/0.95884`、A. baumannii `0.43436/0.82200`、RN4220 `0.40127/0.95309`；与三个最终 10-member baseline 的 6/6 paired comparisons 均为 Holm-adjusted `p < 0.05`。单成员 pooled OOF 只保留为 sensitivity。`--mode molecule-only` 对应旧 `wo_SAND`。 |
 | Synergy 二分类结果 | canonical 入口 `scripts/reproduce/run_synergy_cv.py`；配置 `configs/synergy/legacy_cv.yaml`；checkpoint：`.../strain_wise_synergy/MDLM_3_fold_ensembles_1_base_model_cls` | **论文高置信度复现候选 / 重构完成。** 使用 `synergistic_pairs_Evo.csv`、strain-wise 三折、单个完整 MIC base 和 7-member ensemble。现存 mean AUROC/AUPRC `0.7598/0.7440` 与论文 `0.7539/0.7454` 的绝对差为 `0.0059/0.0014`；作者确认接受为论文实现的高置信度复现候选。它不是精确原始 checkpoint 声明；rank 1024/100-epoch base 与 Methods rank 64/13 epochs 的差异继续披露。root driver 已归档删除。 |
 | Synergy 候选使用的完整数据 MIC base model | 外部 MDLM producer `/data2/tianang/projects/mdlm/guaidance_regressor_all_data_pad_no_mask.py`；checkpoint `Checkpoints/genome_text_learnable_emb/guidance_regressor_pad_no_mask/noise_guidance_best_R2_all_peptide_epoch_100.pth` | 这是现存三折候选实际加载的最匹配 base model，但 Methods 写 13 epochs，而该文件来自 100-epoch run，精确论文身份仍未解决。历史 `train_on_all_data.py` 不是该权重的 producer，已按 SHA 归档删除。 |
 | Guided molecule generation、remasking sampler 和 256-step 三阶段 guidance | 不在当前仓库；分析脚本指向 `/data2/tianang/projects/discrete-diffusion-guidance` | **外部依赖 / 缺失。** 当前仓库包含 predictor、保存的输出或图片以及 similarity 分析，但不包含实际生成 ApexOracle-3/12/23 的 sampler。论文参数为 256 steps、MIC target 1、sigma 从 0.5 线性降到 0.2、`t_on=0.55`、`t_off=0.45`，两个阶段的 guidance strength 为 15。 |
@@ -296,9 +406,11 @@
   的 cell `220739609a526f79`。另一份
   `/Users/kirianozan/Documents/Study/Penn/Synergy/paper_figs/figs.ipynb` 是三 cell 的旧副本，
   从未包含当前 Fig. 1b cell。图上使用 Fig. 3a 风格 bracket，显示 paired prediction-swap
-  test 的 Holm-adjusted p；fine-tuned legend 明确标注 `1 model/fold`。
-- **Fig. 1b 文稿同步已完成：** Mac canonical notebook、三菌株统一 AUPRC panel、论文 Fig. 1、
-  caption、Results、Methods 和 reviewer response 已同步；最终 TeX 完整编译为 28 页。修改前
+  test 的 Holm-adjusted p。旧 `1 model/fold` sensitivity 只作诊断；最终 AUPRC-only cell 使用
+  每折 10-member ensemble。
+- **Fig. 1b 文稿同步已完成：** Mac canonical notebook、三菌株统一 AUPRC panel、论文 Fig. 1
+  caption、Results/概览和 reviewer response 已同步；Methods 按作者决定不加入详细 protocol。
+  最终 TeX 完整编译为 28 页，response letter 临时转换为 25 页。修改前
   快照与前后 SHA-256 记录在
   `reproducibility/fig1b_reviewer_revision_2026-07-20.json`。
 
@@ -381,21 +493,78 @@ Strain count mapping 的演化顺序如下：
 
 - `DataPrepare/DownloadAllPep.py`：下载全部 DBAASP peptide record 到 `all_peptides_data.json`；依赖硬编码的旧 API 和路径假设。
 - `DownloadOnePep.py` 和 `ExtractSynData.py`：单条记录或 synergy API 的探索和 debug，不是正式 pipeline 步骤。
-- PepLink chemistry core 已由作者独立发布为 `PepLink==0.1.1`：仓库
-  `https://github.com/DragonDescentZerotsu/PepLink`，tag `v0.1.1`，commit
-  `cec2a02427766e4ba95806924801af31bdcc9939`，MIT license。ApexOracle 不 vendor、不使用
+- PepLink chemistry core 当前独立发布版本为 `PepLink==0.1.2`：仓库
+  `https://github.com/DragonDescentZerotsu/PepLink`，tag `v0.1.2`，commit
+  `90f627cc7fd65daaf9c5d0a973d17b79bcd097d5`，MIT license。ApexOracle 不 vendor、不使用
   submodule，只通过 `src/apexoracle/data/peplink_adapter.py` 调用公开 API。旧
   `aa_seq_to_smiles.py` 仅因仍有 legacy data driver import 而暂留，不再作为 canonical 实现。
-- **已验证事实：** 独立 PepLink 测试 22 passed；内置 amino-acid mapping 与论文文件 SHA
-  一致。179 条历史 structure correction 中 177 条与 v0.1.1 逐字符串一致；DBAASP 19000
+- **已验证事实：** 独立 PepLink 0.1.2 测试 23 passed；内置 amino-acid mapping 与论文文件 SHA
+  一致。0.1.2 只修改 reverse Histidine template，forward structure generation 与 0.1.1 相同。
+  179 条历史 structure correction 中 177 条与 v0.1.1/0.1.2 逐字符串一致；DBAASP 19000
   和 21769 的差异仅为 v0.1.1 `FragmentParent` 移除游离 fragment，全部 179 条均为 fragment
   parent equivalent。这两个 ID 在最终 token cache 中影响 9 行。论文复现必须使用 frozen
-  paper CSV 的 SHA，新数据才使用 v0.1.1 normalization。
+  paper CSV 的 SHA，新数据使用 v0.1.2。
 - `try.py`：为缺少 PubChem SMILES 的 DBAASP peptide 补结构的早期原型，输出缺失结构的中间 CSV。
 - `correct_SMILES_offered_by_DBAASP.py`：重建 DBAASP 提供的 peptide structure 以保留 stereochemistry，并更新 merged SMILES/Evo MIC 文件。它晚于 `try.py`，属于最终化学结构清理血缘。
 - `concentration_unit_transfer.py`：最早的 MIC 单位转换原型。`concentration_unit_transfer_new.py` 面向 19-task wide table；`concentration_unit_transfer_all_bact.py` 扩展到全部 bacteria 并计算 mean；历史最终 long-format 行为现由 `src/apexoracle/data/amp_mic.py` 和只读入口 `scripts/prepare_data/build_amp_mic_dataset.py` 取代。
 - `APEX_in_house_to_SMILES.py`：把 in-house APEX 表转换为早期 wide SMILES 格式。`APEX_in_house_to_SMILES_merge_w_DBAASP.py` 合并该早期格式。最终 long-format、merge 和 AMP token filter 现由 `src/apexoracle/data/amp_training_data.py` 与 `scripts/prepare_data/build_amp_training_dataset.py` 取代。小分子二分类转换已迁移至 `src/apexoracle/data/small_molecule_antibiotics.py` 与 `scripts/prepare_data/build_small_molecule_antibiotic_dataset.py`；旧 converter 已由 legacy tag 保留后删除。
 - **2026-07-19 已验证事实：** canonical MIC 重建得到相同 105,547 行，ID/strain/SMILES 精确一致，MIC 最大绝对误差 `4.55e-13`，没有记录超出 `1e-12` tolerance。历史 structure correction 是先用旧 SMILES 分子量换算 MIC、再原地替换展示 SMILES；新实现通过 179 条只用于分子量的 override 显式复现，不覆盖任何原始文件。frozen in-house long table 合并后的 121,265 行 CSV 和固定 IBM tokenizer revision 后的 120,955 行 token cache 均逐字节一致；310 行仅因超过 1024 tokens 排除，invalid/UNK 为 0。PepLink 新建 in-house structure 与 legacy 只差 terminal `[OH]`/canonical `O`，归一化后 15,718/15,718 行一致。
+- **2026-07-20/21 已由完整数据审计与发布端验证的事实：** PepLink 0.1.1 对 16,430 个 curated DBAASP
+  peptide ID 中 16,075 个成功 forward 的结构全部通过 SELFIES molecular-graph round-trip。
+  reverse contract cohort 为 4,939 个，0.1.1 annotation round-trip 为 3,729/4,939；全部 1,210 个
+  失败均含 Histidine，且只影响 reverse parser，不影响论文 forward data generation。修复版
+  `PepLink==0.1.2` 已通过 PR #4 合并到 commit
+  `90f627cc7fd65daaf9c5d0a973d17b79bcd097d5`，tag `v0.1.2`，并发布到 GitHub Release 与 PyPI；
+  wheel/sdist SHA-256 已与 PyPI JSON API 核对。正式版达到 4,939/4,939，其中支持的 head-to-tail
+  cyclic 为 523/523，测试为 23 passed。459 条 bundled
+  residue definition 中 7 条 isolated forward 失败，其中 5 条进入 curated cohort、共 36 次
+  residue occurrence。证据位于 `experiments/peplink_validation/`。
+- **2026-07-20 已由血缘对齐和逐条人工审计验证的事实：** 169 条历史
+  `DBAASP annotation -> ChatGPT-o1 name -> OPSIN SMILES -> final mapping` 完整对齐；105 条
+  `verified`、14 条 `verified_source_annotation_typo`、20 条 `ambiguous_source_annotation`、
+  22 条 `incorrect_pipeline_output`、7 条 `non_exact_polymer_proxy`、1 条
+  `not_a_complete_amino_acid_definition`。OPSIN SMILES 的 RDKit validity 与 SELFIES structure
+  preservation 均为 169/169，但这不证明 name-to-structure chemical identity 正确。
+- **2026-07-21 已由 notebook producer、CSV lineage 与实际 model eligibility 验证的事实：** 459 条
+  mapping = 39 条标准 L/D + 420 条 noncanonical；420 条的最终分支为 207 条保留 PubChem lookup、
+  44 条二次 GPT-refinement+OPSIN correction、169 条无 PubChem 命中的主 ChatGPT-o1+OPSIN branch。
+  旧说法“另外 251 条均未经过 GPT/OPSIN”错误；251 是初次 PubChem lookup success 数，其中 44 条
+  后来进入第二条 GPT/OPSIN branch。完整血缘见
+  `experiments/peplink_validation/AA_AND_PEPTIDE_LINEAGE_ZH.md`。
+- **2026-07-21 已由 source-aware 交集验证的事实：** frozen MIC structure 来源为 DBAASP-linked
+  PubChem CID whole-peptide 840 peptide/8,434 row、local residue builder 15,521/96,747、
+  DBAASP-offered structure 69/366。whole-peptide PubChem 不经过 ChatGPT-o1、OPSIN 或 PepLink。
+  PepLink forward failure 不等同于训练结构错误。
+- **2026-07-22 已由 canonical loader 和逐 peptide 重算验证的事实：** 作者决定 coordination-bond
+  omission 作为去金属/忽略配位预处理，不计为错误。实际 `<=512` token genome-or-text DBAASP pool
+  为 15,177 peptide/74,103 row；其中 reviewer-facing 确认的本地 definition/template 错误为
+  56 peptide/219 row（0.296%，报告 0.30%）。DBAASP sequence/unusual-AA annotation 内部不一致属于
+  上游 source-data quality 和 historical producer 容错，不是 ChatGPT-o1/OPSIN 或 PepLink 转换错误；
+  作者决定将其从 reviewer-facing 错误报告、回复和论文修改中全部排除。
+  复现入口为 `scripts/audit/recalculate_reviewer_peptide_scope.py`，逐条结果位于
+  `experiments/peplink_validation/recalculated_local_error_peptides.csv`。polymer proxy 不纳入范围。
+- **2026-07-23 已由 canonical loader、RDKit、PubChem PUG REST 和文档渲染验证的事实：**
+  `scripts/audit/build_peplink_supplementary_data.py` 生成英文期刊版和中文镜像 Supplementary Data，
+  覆盖 56 个 peptide、219 条 loader row 和 18 个错误 definition；每条均记录 historical erroneous
+  与 corrected structure/formula、位置、具体错误、处置和证据。16 个 direct PubChem definition 的
+  名称、分子式和结构均复核一致；`NNar` 与 `D-3-OH-ASN` 因没有 exact public compound record 标为
+  中等置信度且不猜测未指定 stereochemistry。manifest 登记输入/输出 SHA-256。正式
+  `sn-article.tex` 已在 ChatGPT-o1/OPSIN Methods 段落加入 source-aware audit 和 56/219 数字；
+  `Response to reviewers letter.docx` 已替换为完成时态精简回复。临时 TeX/DOCX 渲染分别为
+  28/25 页，正式论文 PDF 未自动覆盖；被排除的 DBAASP annotation 脏数据仍未写入两份正式文档。
+- **2026-07-23 reviewer 发布包边界：** 根目录 `.gitignore` 继续默认排除全部 CSV/XLSX，仅对
+  `experiments/peplink_validation/` 中正式化学审计、PepLink 0.1.2 round-trip records 和
+  Supplementary Data，以及 `experiments/reviewer4_unseen_targets/` 的公开候选表按精确路径放行。
+  私有 in-house workbook、投稿 DOCX/PDF、PepLink 0.1.1/dev exploratory output、退役 sensitivity
+  表和一次性投稿文档修改脚本不进入发布仓库。统一索引为 `experiments/README.md` 与
+  `scripts/audit/README.md`。
+- **根据现有证据作出的判断：** 0.30% 只能说明 prevalence 很低，不能证明 zero model impact。
+  仅删除 held-out rows 的 evaluation sensitivity 不能消除 training exposure；历史 hierarchical MIC
+  没有保存 ID-aligned row-level predictions，strain-wise 精确 2025 membership 也未恢复，因此当前
+  不声称已做该 sensitivity。旧 forward-failure union 已退役，不进入 reviewer response。
+- **仍待作者或 chemistry coauthor 确认的事项：** 解析 20 条 ambiguous source annotation、二次
+  44-residue branch 的 source/site conflicts，并为 successor dataset 完成 56 个 reviewer-facing peptide 的
+  corrected/excluded 处置。原 frozen paper CSV 不原地覆盖，仅用于既有模型复现。
 - `DBAASP_SELFIES_Token_see.py` 和 `debug_notebook.py`：只用于 tokenizer vocabulary 检查。`debug.py` 把小分子 SELFIES 导出给外部 `mdlm` 项目。
 - `bacteria_get.py`：统计 DBAASP JSON 中 strain/species 出现次数和 activity unit 变体，为 mapping 构建提供探索性支持。
 - `canonical-peptide-check.py`：检查 canonical peptide 内容。`smiles_to_peptide.py` 把 peptide-like SMILES 反向转换为 D/L residue sequence，并被 peptide/non-peptide 标签脚本复用。

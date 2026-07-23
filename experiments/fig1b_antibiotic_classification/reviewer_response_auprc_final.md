@@ -14,7 +14,7 @@ We additionally compared methods on identical sample-level out-of-fold predictio
 
 ## 建议替换的 Fig. 1b 图注
 
-**b,** Small-molecule antibiotic classification evaluated consistently by AUPRC for all three target strains. We reproduced each baseline using the model configuration and training procedure reported in its original study and evaluated all methods on the same fixed fivefold molecule partitions. Bars show mean AUPRC and error bars show sample standard deviation across the five folds. Brackets show Holm-adjusted p values from paired prediction-swap tests.
+**b,** Small-molecule antibiotic classification across three target strains. ApexOracle was compared with three existing strain-expert models, each trained specifically on small-molecule activity data for its corresponding target strain. Without using any target-strain small-molecule training data, zero-shot ApexOracle outperformed two of the three strain-expert models; after fine-tuning, ApexOracle significantly outperformed all three. Bars show mean AUPRC; error bars show sample standard deviation across the five folds; brackets show Holm-adjusted p values from paired prediction-swap tests.
 
 ## 建议替换的 Results 段落
 

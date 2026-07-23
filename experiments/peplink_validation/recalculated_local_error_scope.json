@@ -1,0 +1,222 @@
+{
+  "schema_version": 1,
+  "scope_decision": {
+    "coordination_bond_omission": "accepted_preprocessing_not_counted_as_error",
+    "dbaasp_annotation_inconsistency": "excluded_upstream_source_data_quality_issue_outside_reviewer_question",
+    "polymer_proxy": "excluded_by_author_decision",
+    "whole_peptide_pubchem": "excluded_from_local_builder_error_scope"
+  },
+  "excluded_upstream_dbaasp_annotation_data_quality": {
+    "position_mismatch_ids": [
+      4284,
+      6728,
+      11391,
+      11599,
+      14286,
+      14310,
+      18245,
+      22038,
+      22039
+    ],
+    "count_mismatch_ids": [
+      6672,
+      6686,
+      10433,
+      11203,
+      12985,
+      14902,
+      19626,
+      21558,
+      21561
+    ],
+    "note": "These records document inconsistent DBAASP sequence/annotation fields and historical producer fallback behavior. They are not ChatGPT-o1/OPSIN or PepLink conversion errors and are excluded from the reviewer-facing error scope."
+  },
+  "confirmed_error_categories": {
+    "incorrect_main_169_definitions": [
+      6360,
+      6361,
+      9065,
+      9502,
+      11949,
+      13516,
+      14615,
+      14660,
+      14866,
+      15829,
+      15831,
+      18246,
+      18247,
+      18248,
+      18249,
+      18251,
+      18252,
+      18915,
+      18930,
+      19711,
+      20833,
+      20876,
+      20877,
+      20878,
+      20879,
+      20880,
+      20881,
+      20882,
+      22359,
+      22360
+    ],
+    "incomplete_or_nonpolymerizable_templates": [
+      7692,
+      10624,
+      11307,
+      13129,
+      13143,
+      13145,
+      17700,
+      17701,
+      17702,
+      17703,
+      17704,
+      17705,
+      21350,
+      21351,
+      21352,
+      21353,
+      21354,
+      21355,
+      21356,
+      21357,
+      21358,
+      21359
+    ],
+    "incorrect_secondary_44_definitions": [
+      20704,
+      20718,
+      21598,
+      21600
+    ]
+  },
+  "category_overlaps": {},
+  "data_pools": {
+    "frozen_dbaasp_mic": {
+      "unique_peptides": 16430,
+      "mic_rows": 105547,
+      "reviewer_facing_local_conversion_error_union": {
+        "unique_peptides": 56,
+        "mic_rows": 286,
+        "peptide_fraction": 0.003408399269628728,
+        "mic_row_fraction": 0.0027096933119842345
+      },
+      "categories": {
+        "incorrect_main_169_definitions": {
+          "unique_peptides": 30,
+          "mic_rows": 150
+        },
+        "incomplete_or_nonpolymerizable_templates": {
+          "unique_peptides": 22,
+          "mic_rows": 114
+        },
+        "incorrect_secondary_44_definitions": {
+          "unique_peptides": 4,
+          "mic_rows": 22
+        }
+      }
+    },
+    "canonical_genome_text_le_512": {
+      "unique_peptides": 14767,
+      "mic_rows": 65319,
+      "reviewer_facing_local_conversion_error_union": {
+        "unique_peptides": 55,
+        "mic_rows": 159,
+        "peptide_fraction": 0.0037245208911762715,
+        "mic_row_fraction": 0.0024342075047076653
+      },
+      "categories": {
+        "incorrect_main_169_definitions": {
+          "unique_peptides": 29,
+          "mic_rows": 86
+        },
+        "incomplete_or_nonpolymerizable_templates": {
+          "unique_peptides": 22,
+          "mic_rows": 56
+        },
+        "incorrect_secondary_44_definitions": {
+          "unique_peptides": 4,
+          "mic_rows": 17
+        }
+      }
+    },
+    "canonical_genome_or_text_before_length_filter": {
+      "unique_peptides": 15664,
+      "mic_rows": 76604,
+      "reviewer_facing_local_conversion_error_union": {
+        "unique_peptides": 56,
+        "mic_rows": 219,
+        "peptide_fraction": 0.003575076608784474,
+        "mic_row_fraction": 0.002858858545245679
+      },
+      "categories": {
+        "incorrect_main_169_definitions": {
+          "unique_peptides": 30,
+          "mic_rows": 116
+        },
+        "incomplete_or_nonpolymerizable_templates": {
+          "unique_peptides": 22,
+          "mic_rows": 86
+        },
+        "incorrect_secondary_44_definitions": {
+          "unique_peptides": 4,
+          "mic_rows": 17
+        }
+      }
+    },
+    "canonical_genome_or_text_le_512_with_path_duplicates": {
+      "unique_peptides": 15177,
+      "mic_rows": 74103,
+      "reviewer_facing_local_conversion_error_union": {
+        "unique_peptides": 56,
+        "mic_rows": 219,
+        "peptide_fraction": 0.0036897937668841007,
+        "mic_row_fraction": 0.002955345937411441
+      },
+      "categories": {
+        "incorrect_main_169_definitions": {
+          "unique_peptides": 30,
+          "mic_rows": 116
+        },
+        "incomplete_or_nonpolymerizable_templates": {
+          "unique_peptides": 22,
+          "mic_rows": 86
+        },
+        "incorrect_secondary_44_definitions": {
+          "unique_peptides": 4,
+          "mic_rows": 17
+        }
+      }
+    },
+    "canonical_genome_or_text_le_512_unique_records": {
+      "unique_peptides": 15177,
+      "mic_rows": 73624,
+      "reviewer_facing_local_conversion_error_union": {
+        "unique_peptides": 56,
+        "mic_rows": 219,
+        "peptide_fraction": 0.0036897937668841007,
+        "mic_row_fraction": 0.0029745735086384876
+      },
+      "categories": {
+        "incorrect_main_169_definitions": {
+          "unique_peptides": 30,
+          "mic_rows": 116
+        },
+        "incomplete_or_nonpolymerizable_templates": {
+          "unique_peptides": 22,
+          "mic_rows": 86
+        },
+        "incorrect_secondary_44_definitions": {
+          "unique_peptides": 4,
+          "mic_rows": 17
+        }
+      }
+    }
+  },
+  "interpretation": "The genome-or-text array can contain the same assay row through more than one modality path. Use its unique-record view for prevalence and retain the non-deduplicated view only to describe loader exposure."
+}

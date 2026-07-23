@@ -75,6 +75,22 @@ slurm-*.out
 *.tar.gz
 *.tgz
 
+# Reviewer-facing audit tables are intentionally versioned. Keep the global
+# binary/data exclusions above, then allow only these documented outputs.
+!experiments/peplink_validation/chatgpt_opsin_manual_review.csv
+!experiments/peplink_validation/chatgpt_opsin_chemical_validation.csv
+!experiments/peplink_validation/recalculated_local_error_peptides.csv
+!experiments/peplink_validation/revised_training_impact_scope.csv
+!experiments/peplink_validation/peplink_0.1.2/roundtrip_records.csv
+!experiments/peplink_validation/supplementary_data/*.csv
+!experiments/peplink_validation/supplementary_data/*.xlsx
+!experiments/reviewer4_unseen_targets/*.csv
+
+# Historical exploratory PepLink outputs remain local to avoid confusing them
+# with the released v0.1.2 and source-aware reviewer scope.
+experiments/peplink_validation/peplink_0.1.2.dev0/
+experiments/peplink_validation/roundtrip_summary.json
+
 # 临时文件
 *.tmp
 *.temp

@@ -22,7 +22,7 @@ similarity = [
   "pyyaml>=6",
   "tqdm>=4.64",
 ]
-peplink = ["PepLink==0.1.1"]
+peplink = ["PepLink==0.1.2"]
 data-preparation = [
   "biopython>=1.81",
   "rdkit>=2023.9",

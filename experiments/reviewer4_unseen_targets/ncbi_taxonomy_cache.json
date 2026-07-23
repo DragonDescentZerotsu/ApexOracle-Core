@@ -1,0 +1,3775 @@
+{
+ "Achromobacter xylosoxidans": {
+  "tax_id": 85698,
+  "current_name": "Achromobacter xylosoxidans",
+  "genus": "Achromobacter",
+  "family": "Alcaligenaceae",
+  "rank": "SPECIES"
+ },
+ "Acidipropionibacterium acidipropionici": {
+  "tax_id": 1748,
+  "current_name": "Acidipropionibacterium acidipropionici",
+  "genus": "Acidipropionibacterium",
+  "family": "Propionibacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Acidipropionibacterium jensenii": {
+  "tax_id": 1749,
+  "current_name": "Acidipropionibacterium jensenii",
+  "genus": "Acidipropionibacterium",
+  "family": "Propionibacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Acidipropionibacterium thoenii": {
+  "tax_id": 1751,
+  "current_name": "Acidipropionibacterium thoenii",
+  "genus": "Acidipropionibacterium",
+  "family": "Propionibacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Acinetobacter baumannii": {
+  "tax_id": 470,
+  "current_name": "Acinetobacter baumannii",
+  "genus": "Acinetobacter",
+  "family": "Moraxellaceae",
+  "rank": "SPECIES"
+ },
+ "Acinetobacter baylyi": {
+  "tax_id": 202950,
+  "current_name": "Acinetobacter baylyi",
+  "genus": "Acinetobacter",
+  "family": "Moraxellaceae",
+  "rank": "SPECIES"
+ },
+ "Acinetobacter calcoaceticus": {
+  "tax_id": 471,
+  "current_name": "Acinetobacter calcoaceticus",
+  "genus": "Acinetobacter",
+  "family": "Moraxellaceae",
+  "rank": "SPECIES"
+ },
+ "Acinetobacter junii": {
+  "tax_id": 40215,
+  "current_name": "Acinetobacter junii",
+  "genus": "Acinetobacter",
+  "family": "Moraxellaceae",
+  "rank": "SPECIES"
+ },
+ "Acinetobacter lwoffii": {
+  "tax_id": 28090,
+  "current_name": "Acinetobacter lwoffii",
+  "genus": "Acinetobacter",
+  "family": "Moraxellaceae",
+  "rank": "SPECIES"
+ },
+ "Actinobaculum schaalii": {
+  "tax_id": 59505,
+  "current_name": "Actinotignum schaalii",
+  "genus": "Actinotignum",
+  "family": "Actinomycetaceae",
+  "rank": "SPECIES"
+ },
+ "Actinomyces israelii": {
+  "tax_id": 1659,
+  "current_name": "Actinomyces israelii",
+  "genus": "Actinomyces",
+  "family": "Actinomycetaceae",
+  "rank": "SPECIES"
+ },
+ "Actinomyces naeslundii": {
+  "tax_id": 1655,
+  "current_name": "Actinomyces naeslundii",
+  "genus": "Actinomyces",
+  "family": "Actinomycetaceae",
+  "rank": "SPECIES"
+ },
+ "Actinomyces viscosus": {
+  "tax_id": 1656,
+  "current_name": "Actinomyces viscosus",
+  "genus": "Actinomyces",
+  "family": "Actinomycetaceae",
+  "rank": "SPECIES"
+ },
+ "Actinotignum schaalii": {
+  "tax_id": 59505,
+  "current_name": "Actinotignum schaalii",
+  "genus": "Actinotignum",
+  "family": "Actinomycetaceae",
+  "rank": "SPECIES"
+ },
+ "Aerococcus viridans": {
+  "tax_id": 1377,
+  "current_name": "Aerococcus viridans",
+  "genus": "Aerococcus",
+  "family": "Aerococcaceae",
+  "rank": "SPECIES"
+ },
+ "Aeromonas bestiarum": {
+  "tax_id": 105751,
+  "current_name": "Aeromonas bestiarum",
+  "genus": "Aeromonas",
+  "family": "Aeromonadaceae",
+  "rank": "SPECIES"
+ },
+ "Aeromonas hydrophila": {
+  "tax_id": 644,
+  "current_name": "Aeromonas hydrophila",
+  "genus": "Aeromonas",
+  "family": "Aeromonadaceae",
+  "rank": "SPECIES"
+ },
+ "Aeromonas salmonicida": {
+  "tax_id": 645,
+  "current_name": "Aeromonas salmonicida",
+  "genus": "Aeromonas",
+  "family": "Aeromonadaceae",
+  "rank": "SPECIES"
+ },
+ "Aeromonas sobria": {
+  "tax_id": 646,
+  "current_name": "Aeromonas sobria",
+  "genus": "Aeromonas",
+  "family": "Aeromonadaceae",
+  "rank": "SPECIES"
+ },
+ "Aeromonas veronii": {
+  "tax_id": 654,
+  "current_name": "Aeromonas veronii",
+  "genus": "Aeromonas",
+  "family": "Aeromonadaceae",
+  "rank": "SPECIES"
+ },
+ "Aggregatibacter actinomycetemcomitans": {
+  "tax_id": 714,
+  "current_name": "Aggregatibacter actinomycetemcomitans",
+  "genus": "Aggregatibacter",
+  "family": "Pasteurellaceae",
+  "rank": "SPECIES"
+ },
+ "Agrobacterium radiobacter": {
+  "tax_id": 362,
+  "current_name": "Agrobacterium radiobacter",
+  "genus": "Agrobacterium",
+  "family": "Rhizobiaceae",
+  "rank": "SPECIES"
+ },
+ "Agrobacterium tumefaciens": {
+  "tax_id": 358,
+  "current_name": "Agrobacterium tumefaciens",
+  "genus": "Agrobacterium",
+  "family": "Rhizobiaceae",
+  "rank": "SPECIES"
+ },
+ "Alcaligenes faecalis": {
+  "tax_id": 511,
+  "current_name": "Alcaligenes faecalis",
+  "genus": "Alcaligenes",
+  "family": "Alcaligenaceae",
+  "rank": "SPECIES"
+ },
+ "Alicyclobacillus acidoterrestris": {
+  "tax_id": 1450,
+  "current_name": "Alicyclobacillus acidoterrestris",
+  "genus": "Alicyclobacillus",
+  "family": "Alicyclobacillaceae",
+  "rank": "SPECIES"
+ },
+ "Aliivibrio fischeri": {
+  "tax_id": 668,
+  "current_name": "Aliivibrio fischeri",
+  "genus": "Aliivibrio",
+  "family": "Vibrionaceae",
+  "rank": "SPECIES"
+ },
+ "Alternaria alternata": {
+  "tax_id": 5599,
+  "current_name": "Alternaria alternata",
+  "genus": "Alternaria",
+  "family": "Pleosporaceae",
+  "rank": "SPECIES"
+ },
+ "Arthrobacter globiformis": {
+  "tax_id": 1665,
+  "current_name": "Arthrobacter globiformis",
+  "genus": "Arthrobacter",
+  "family": "Micrococcaceae",
+  "rank": "SPECIES"
+ },
+ "Arthrobacter oxydans": {
+  "tax_id": 1671,
+  "current_name": "Pseudarthrobacter oxydans",
+  "genus": "Pseudarthrobacter",
+  "family": "Micrococcaceae",
+  "rank": "SPECIES"
+ },
+ "Aspergillus awamori": {
+  "tax_id": 105351,
+  "current_name": "Aspergillus awamori",
+  "genus": "Aspergillus",
+  "family": "Aspergillaceae",
+  "rank": "SPECIES"
+ },
+ "Aspergillus brasiliensis": {
+  "tax_id": 319629,
+  "current_name": "Aspergillus brasiliensis",
+  "genus": "Aspergillus",
+  "family": "Aspergillaceae",
+  "rank": "SPECIES"
+ },
+ "Aspergillus fijiensis": {
+  "tax_id": 1191702,
+  "current_name": "Aspergillus fijiensis",
+  "genus": "Aspergillus",
+  "family": "Aspergillaceae",
+  "rank": "SPECIES"
+ },
+ "Aspergillus flavus": {
+  "tax_id": 5059,
+  "current_name": "Aspergillus flavus",
+  "genus": "Aspergillus",
+  "family": "Aspergillaceae",
+  "rank": "SPECIES"
+ },
+ "Aspergillus fumigatus": {
+  "tax_id": 746128,
+  "current_name": "Aspergillus fumigatus",
+  "genus": "Aspergillus",
+  "family": "Aspergillaceae",
+  "rank": "SPECIES"
+ },
+ "Aspergillus nidulans": {
+  "tax_id": 162425,
+  "current_name": "Aspergillus nidulans",
+  "genus": "Aspergillus",
+  "family": "Aspergillaceae",
+  "rank": "SPECIES"
+ },
+ "Aspergillus niger": {
+  "tax_id": 5061,
+  "current_name": "Aspergillus niger",
+  "genus": "Aspergillus",
+  "family": "Aspergillaceae",
+  "rank": "SPECIES"
+ },
+ "Aspergillus oryzae": {
+  "tax_id": 5062,
+  "current_name": "Aspergillus oryzae",
+  "genus": "Aspergillus",
+  "family": "Aspergillaceae",
+  "rank": "SPECIES"
+ },
+ "Bacillus amyloliquefaciens": {
+  "tax_id": 1390,
+  "current_name": "Bacillus amyloliquefaciens",
+  "genus": "Bacillus",
+  "family": "Bacillaceae",
+  "rank": "SPECIES"
+ },
+ "Bacillus anthracis": {
+  "tax_id": 1392,
+  "current_name": "Bacillus anthracis",
+  "genus": "Bacillus",
+  "family": "Bacillaceae",
+  "rank": "SPECIES"
+ },
+ "Bacillus atrophaeus": {
+  "tax_id": 1452,
+  "current_name": "Bacillus atrophaeus",
+  "genus": "Bacillus",
+  "family": "Bacillaceae",
+  "rank": "SPECIES"
+ },
+ "Bacillus cereus": {
+  "tax_id": 1396,
+  "current_name": "Bacillus cereus",
+  "genus": "Bacillus",
+  "family": "Bacillaceae",
+  "rank": "SPECIES"
+ },
+ "Bacillus coagulans": {
+  "tax_id": 1398,
+  "current_name": "Heyndrickxia coagulans",
+  "genus": "Heyndrickxia",
+  "family": "Bacillaceae",
+  "rank": "SPECIES"
+ },
+ "Bacillus licheniformis": {
+  "tax_id": 1402,
+  "current_name": "Bacillus licheniformis",
+  "genus": "Bacillus",
+  "family": "Bacillaceae",
+  "rank": "SPECIES"
+ },
+ "Bacillus megaterium": {
+  "tax_id": 1404,
+  "current_name": "Priestia megaterium",
+  "genus": "Priestia",
+  "family": "Bacillaceae",
+  "rank": "SPECIES"
+ },
+ "Bacillus pacificus": {
+  "tax_id": 2026187,
+  "current_name": "Bacillus pacificus",
+  "genus": "Bacillus",
+  "family": "Bacillaceae",
+  "rank": "SPECIES"
+ },
+ "Bacillus paranthracis": {
+  "tax_id": 2026186,
+  "current_name": "Bacillus paranthracis",
+  "genus": "Bacillus",
+  "family": "Bacillaceae",
+  "rank": "SPECIES"
+ },
+ "Bacillus pumilus": {
+  "tax_id": 1408,
+  "current_name": "Bacillus pumilus",
+  "genus": "Bacillus",
+  "family": "Bacillaceae",
+  "rank": "SPECIES"
+ },
+ "Bacillus spizizenii": {
+  "tax_id": 96241,
+  "current_name": "Bacillus spizizenii",
+  "genus": "Bacillus",
+  "family": "Bacillaceae",
+  "rank": "SPECIES"
+ },
+ "Bacillus subtilis": {
+  "tax_id": 1423,
+  "current_name": "Bacillus subtilis",
+  "genus": "Bacillus",
+  "family": "Bacillaceae",
+  "rank": "SPECIES"
+ },
+ "Bacillus thuringiensis": {
+  "tax_id": 1428,
+  "current_name": "Bacillus thuringiensis",
+  "genus": "Bacillus",
+  "family": "Bacillaceae",
+  "rank": "SPECIES"
+ },
+ "Bacillus tropicus": {
+  "tax_id": 2026188,
+  "current_name": "Bacillus tropicus",
+  "genus": "Bacillus",
+  "family": "Bacillaceae",
+  "rank": "SPECIES"
+ },
+ "Bacteroides fragilis": {
+  "tax_id": 817,
+  "current_name": "Bacteroides fragilis",
+  "genus": "Bacteroides",
+  "family": "Bacteroidaceae",
+  "rank": "SPECIES"
+ },
+ "Bacteroides thetaiotaomicron": {
+  "tax_id": 818,
+  "current_name": "Bacteroides thetaiotaomicron",
+  "genus": "Bacteroides",
+  "family": "Bacteroidaceae",
+  "rank": "SPECIES"
+ },
+ "Bifidobacterium adolescentis": {
+  "tax_id": 1680,
+  "current_name": "Bifidobacterium adolescentis",
+  "genus": "Bifidobacterium",
+  "family": "Bifidobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Bifidobacterium breve": {
+  "tax_id": 1685,
+  "current_name": "Bifidobacterium breve",
+  "genus": "Bifidobacterium",
+  "family": "Bifidobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Bifidobacterium catenulatum": {
+  "tax_id": 1686,
+  "current_name": "Bifidobacterium catenulatum",
+  "genus": "Bifidobacterium",
+  "family": "Bifidobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Bifidobacterium longum": {
+  "tax_id": 216816,
+  "current_name": "Bifidobacterium longum",
+  "genus": "Bifidobacterium",
+  "family": "Bifidobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Blautia coccoides": {
+  "tax_id": 33035,
+  "current_name": "Blautia producta",
+  "genus": "Blautia",
+  "family": "Lachnospiraceae",
+  "rank": "SPECIES"
+ },
+ "Blautia obeum": {
+  "tax_id": 40520,
+  "current_name": "Blautia obeum",
+  "genus": "Blautia",
+  "family": "Lachnospiraceae",
+  "rank": "SPECIES"
+ },
+ "Bordetella bronchiseptica": {
+  "tax_id": 518,
+  "current_name": "Bordetella bronchiseptica",
+  "genus": "Bordetella",
+  "family": "Alcaligenaceae",
+  "rank": "SPECIES"
+ },
+ "Brevibacillus brevis": {
+  "tax_id": 1393,
+  "current_name": "Brevibacillus brevis",
+  "genus": "Brevibacillus",
+  "family": "Paenibacillaceae",
+  "rank": "SPECIES"
+ },
+ "Brucella abortus": {
+  "tax_id": 235,
+  "current_name": "Brucella abortus",
+  "genus": "Brucella",
+  "family": "Brucellaceae",
+  "rank": "SPECIES"
+ },
+ "Brucella melitensis": {
+  "tax_id": 29459,
+  "current_name": "Brucella melitensis",
+  "genus": "Brucella",
+  "family": "Brucellaceae",
+  "rank": "SPECIES"
+ },
+ "Burkholderia cenocepacia": {
+  "tax_id": 95486,
+  "current_name": "Burkholderia cenocepacia",
+  "genus": "Burkholderia",
+  "family": "Burkholderiaceae",
+  "rank": "SPECIES"
+ },
+ "Burkholderia cepacia": {
+  "tax_id": 292,
+  "current_name": "Burkholderia cepacia",
+  "genus": "Burkholderia",
+  "family": "Burkholderiaceae",
+  "rank": "SPECIES"
+ },
+ "Burkholderia gladioli": {
+  "tax_id": 28095,
+  "current_name": "Burkholderia gladioli",
+  "genus": "Burkholderia",
+  "family": "Burkholderiaceae",
+  "rank": "SPECIES"
+ },
+ "Burkholderia glumae": {
+  "tax_id": 337,
+  "current_name": "Burkholderia glumae",
+  "genus": "Burkholderia",
+  "family": "Burkholderiaceae",
+  "rank": "SPECIES"
+ },
+ "Burkholderia mallei": {
+  "tax_id": 13373,
+  "current_name": "Burkholderia mallei",
+  "genus": "Burkholderia",
+  "family": "Burkholderiaceae",
+  "rank": "SPECIES"
+ },
+ "Burkholderia multivorans": {
+  "tax_id": 87883,
+  "current_name": "Burkholderia multivorans",
+  "genus": "Burkholderia",
+  "family": "Burkholderiaceae",
+  "rank": "SPECIES"
+ },
+ "Burkholderia pseudomallei": {
+  "tax_id": 28450,
+  "current_name": "Burkholderia pseudomallei",
+  "genus": "Burkholderia",
+  "family": "Burkholderiaceae",
+  "rank": "SPECIES"
+ },
+ "Burkholderia stabilis": {
+  "tax_id": 95485,
+  "current_name": "Burkholderia stabilis",
+  "genus": "Burkholderia",
+  "family": "Burkholderiaceae",
+  "rank": "SPECIES"
+ },
+ "Burkholderia thailandensis": {
+  "tax_id": 57975,
+  "current_name": "Burkholderia thailandensis",
+  "genus": "Burkholderia",
+  "family": "Burkholderiaceae",
+  "rank": "SPECIES"
+ },
+ "Burkholderia ubonensis": {
+  "tax_id": 101571,
+  "current_name": "Burkholderia ubonensis",
+  "genus": "Burkholderia",
+  "family": "Burkholderiaceae",
+  "rank": "SPECIES"
+ },
+ "Byssochlamys fulva": {
+  "tax_id": 89137,
+  "current_name": "Paecilomyces fulvus",
+  "genus": "Paecilomyces",
+  "family": "Thermoascaceae",
+  "rank": "SPECIES"
+ },
+ "Campylobacter jejuni": {
+  "tax_id": 197,
+  "current_name": "Campylobacter jejuni",
+  "genus": "Campylobacter",
+  "family": "Campylobacteraceae",
+  "rank": "SPECIES"
+ },
+ "Candida albicans": {
+  "tax_id": 5476,
+  "current_name": "Candida albicans",
+  "genus": "Candida",
+  "family": "Debaryomycetaceae",
+  "rank": "SPECIES"
+ },
+ "Candida auris": {
+  "tax_id": 498019,
+  "current_name": "Candidozyma auris",
+  "genus": "Candidozyma",
+  "family": "Metschnikowiaceae",
+  "rank": "SPECIES"
+ },
+ "Candida dubliniensis": {
+  "tax_id": 42374,
+  "current_name": "Candida dubliniensis",
+  "genus": "Candida",
+  "family": "Debaryomycetaceae",
+  "rank": "SPECIES"
+ },
+ "Candida glabrata": {
+  "tax_id": 5478,
+  "current_name": "Nakaseomyces glabratus",
+  "genus": "Nakaseomyces",
+  "family": "Saccharomycetaceae",
+  "rank": "SPECIES"
+ },
+ "Candida guilliermondii": {
+  "tax_id": 4929,
+  "current_name": "Meyerozyma guilliermondii",
+  "genus": "Meyerozyma",
+  "family": "Debaryomycetaceae",
+  "rank": "SPECIES"
+ },
+ "Candida inconspicua": {
+  "tax_id": 52247,
+  "current_name": "Pichia inconspicua",
+  "genus": "Pichia",
+  "family": "Pichiaceae",
+  "rank": "SPECIES"
+ },
+ "Candida kefyr": {
+  "tax_id": 4911,
+  "current_name": "Kluyveromyces marxianus",
+  "genus": "Kluyveromyces",
+  "family": "Saccharomycetaceae",
+  "rank": "SPECIES"
+ },
+ "Candida krusei": {
+  "tax_id": 4909,
+  "current_name": "Pichia kudriavzevii",
+  "genus": "Pichia",
+  "family": "Pichiaceae",
+  "rank": "SPECIES"
+ },
+ "Candida lusitaniae": {
+  "tax_id": 36911,
+  "current_name": "Clavispora lusitaniae",
+  "genus": "Clavispora",
+  "family": "Metschnikowiaceae",
+  "rank": "SPECIES"
+ },
+ "Candida parapsilosis": {
+  "tax_id": 5480,
+  "current_name": "Lodderomyces parapsilosis",
+  "genus": "Lodderomyces",
+  "family": "Debaryomycetaceae",
+  "rank": "SPECIES"
+ },
+ "Candida tropicalis": {
+  "tax_id": 5482,
+  "current_name": "Candida tropicalis",
+  "genus": "Candida",
+  "family": "Debaryomycetaceae",
+  "rank": "SPECIES"
+ },
+ "Candidozyma auris": {
+  "tax_id": 498019,
+  "current_name": "Candidozyma auris",
+  "genus": "Candidozyma",
+  "family": "Metschnikowiaceae",
+  "rank": "SPECIES"
+ },
+ "Carnobacterium divergens": {
+  "tax_id": 2748,
+  "current_name": "Carnobacterium divergens",
+  "genus": "Carnobacterium",
+  "family": "Carnobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Carnobacterium gallinarum": {
+  "tax_id": 2749,
+  "current_name": "Carnobacterium gallinarum",
+  "genus": "Carnobacterium",
+  "family": "Carnobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Carnobacterium maltaromaticum": {
+  "tax_id": 2751,
+  "current_name": "Carnobacterium maltaromaticum",
+  "genus": "Carnobacterium",
+  "family": "Carnobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Chromobacterium subtsugae": {
+  "tax_id": 251747,
+  "current_name": "Chromobacterium subtsugae",
+  "genus": "Chromobacterium",
+  "family": "Chromobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Chromobacterium violaceum": {
+  "tax_id": 536,
+  "current_name": "Chromobacterium violaceum",
+  "genus": "Chromobacterium",
+  "family": "Chromobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Citrobacter freundii": {
+  "tax_id": 546,
+  "current_name": "Citrobacter freundii",
+  "genus": "Citrobacter",
+  "family": "Enterobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Citrobacter koseri": {
+  "tax_id": 545,
+  "current_name": "Citrobacter koseri",
+  "genus": "Citrobacter",
+  "family": "Enterobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Citrobacter werkmanii": {
+  "tax_id": 67827,
+  "current_name": "Citrobacter werkmanii",
+  "genus": "Citrobacter",
+  "family": "Enterobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Clavibacter michiganensis": {
+  "tax_id": 28447,
+  "current_name": "Clavibacter michiganensis",
+  "genus": "Clavibacter",
+  "family": "Microbacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Clavispora lusitaniae": {
+  "tax_id": 36911,
+  "current_name": "Clavispora lusitaniae",
+  "genus": "Clavispora",
+  "family": "Metschnikowiaceae",
+  "rank": "SPECIES"
+ },
+ "Clostridioides difficile": {
+  "tax_id": 1496,
+  "current_name": "Clostridioides difficile",
+  "genus": "Clostridioides",
+  "family": "Peptostreptococcaceae",
+  "rank": "SPECIES"
+ },
+ "Clostridium nexile": {
+  "tax_id": 29361,
+  "current_name": "Faecalimonas nexilis",
+  "genus": "Faecalimonas",
+  "family": "Lachnospiraceae",
+  "rank": "SPECIES"
+ },
+ "Clostridium oroticum": {
+  "tax_id": 1544,
+  "current_name": "Faecalicatena orotica",
+  "genus": "Faecalicatena",
+  "family": "Lachnospiraceae",
+  "rank": "SPECIES"
+ },
+ "Clostridium perfringens": {
+  "tax_id": 1502,
+  "current_name": "Clostridium perfringens",
+  "genus": "Clostridium",
+  "family": "Clostridiaceae",
+  "rank": "SPECIES"
+ },
+ "Clostridium septicum": {
+  "tax_id": 1504,
+  "current_name": "Clostridium septicum",
+  "genus": "Clostridium",
+  "family": "Clostridiaceae",
+  "rank": "SPECIES"
+ },
+ "Clostridium spiroforme": {
+  "tax_id": 29348,
+  "current_name": "Thomasclavelia spiroformis",
+  "genus": "Thomasclavelia",
+  "family": "Coprobacillaceae",
+  "rank": "SPECIES"
+ },
+ "Clostridium sporogenes": {
+  "tax_id": 1509,
+  "current_name": "Clostridium sporogenes",
+  "genus": "Clostridium",
+  "family": "Clostridiaceae",
+  "rank": "SPECIES"
+ },
+ "Clostridium tertium": {
+  "tax_id": 1559,
+  "current_name": "Clostridium tertium",
+  "genus": "Clostridium",
+  "family": "Clostridiaceae",
+  "rank": "SPECIES"
+ },
+ "Clostridium tetani": {
+  "tax_id": 1513,
+  "current_name": "Clostridium tetani",
+  "genus": "Clostridium",
+  "family": "Clostridiaceae",
+  "rank": "SPECIES"
+ },
+ "Colletotrichum acutatum": {
+  "tax_id": 27357,
+  "current_name": "Colletotrichum acutatum",
+  "genus": "Colletotrichum",
+  "family": "Glomerellaceae",
+  "rank": "SPECIES"
+ },
+ "Companilactobacillus alimentarius": {
+  "tax_id": 1602,
+  "current_name": "Companilactobacillus alimentarius",
+  "genus": "Companilactobacillus",
+  "family": "Lactobacillaceae",
+  "rank": "SPECIES"
+ },
+ "Companilactobacillus kimchii": {
+  "tax_id": 2801452,
+  "current_name": "Companilactobacillus kimchii",
+  "genus": "Companilactobacillus",
+  "family": "Lactobacillaceae",
+  "rank": "SPECIES"
+ },
+ "Corynebacterium diphtheriae": {
+  "tax_id": 1717,
+  "current_name": "Corynebacterium diphtheriae",
+  "genus": "Corynebacterium",
+  "family": "Corynebacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Corynebacterium glutamicum": {
+  "tax_id": 1718,
+  "current_name": "Corynebacterium glutamicum",
+  "genus": "Corynebacterium",
+  "family": "Corynebacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Corynebacterium jeikeium": {
+  "tax_id": 38289,
+  "current_name": "Corynebacterium jeikeium",
+  "genus": "Corynebacterium",
+  "family": "Corynebacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Corynebacterium pseudodiphtheriticum": {
+  "tax_id": 37637,
+  "current_name": "Corynebacterium pseudodiphtheriticum",
+  "genus": "Corynebacterium",
+  "family": "Corynebacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Corynebacterium pseudotuberculosis": {
+  "tax_id": 1719,
+  "current_name": "Corynebacterium pseudotuberculosis",
+  "genus": "Corynebacterium",
+  "family": "Corynebacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Corynebacterium renale": {
+  "tax_id": 1724,
+  "current_name": "Corynebacterium renale",
+  "genus": "Corynebacterium",
+  "family": "Corynebacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Corynebacterium stationis": {
+  "tax_id": 1705,
+  "current_name": "Corynebacterium stationis",
+  "genus": "Corynebacterium",
+  "family": "Corynebacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Corynebacterium striatum": {
+  "tax_id": 43770,
+  "current_name": "Corynebacterium striatum",
+  "genus": "Corynebacterium",
+  "family": "Corynebacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Corynebacterium xerosis": {
+  "tax_id": 1725,
+  "current_name": "Corynebacterium xerosis",
+  "genus": "Corynebacterium",
+  "family": "Corynebacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Cronobacter muytjensii": {
+  "tax_id": 413501,
+  "current_name": "Cronobacter muytjensii",
+  "genus": "Cronobacter",
+  "family": "Enterobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Cronobacter sakazakii": {
+  "tax_id": 28141,
+  "current_name": "Cronobacter sakazakii",
+  "genus": "Cronobacter",
+  "family": "Enterobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Cryptococcus albidus": {
+  "tax_id": 100951,
+  "current_name": "Naganishia albida",
+  "genus": "Naganishia",
+  "family": "Filobasidiaceae",
+  "rank": "SPECIES"
+ },
+ "Cryptococcus gattii": {
+  "tax_id": 37769,
+  "current_name": "Cryptococcus gattii",
+  "genus": "Cryptococcus",
+  "family": "Cryptococcaceae",
+  "rank": "SPECIES"
+ },
+ "Cryptococcus neoformans": {
+  "tax_id": 5207,
+  "current_name": "Cryptococcus neoformans",
+  "genus": "Cryptococcus",
+  "family": "Cryptococcaceae",
+  "rank": "SPECIES"
+ },
+ "Cupriavidus necator": {
+  "tax_id": 106590,
+  "current_name": "Cupriavidus necator",
+  "genus": "Cupriavidus",
+  "family": "Burkholderiaceae",
+  "rank": "SPECIES"
+ },
+ "Cutibacterium acnes": {
+  "tax_id": 1747,
+  "current_name": "Cutibacterium acnes",
+  "genus": "Cutibacterium",
+  "family": "Propionibacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Cytophaga aquatilis": {
+  "tax_id": 991,
+  "current_name": "Flavobacterium hydatis",
+  "genus": "Flavobacterium",
+  "family": "Flavobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Delftia acidovorans": {
+  "tax_id": 80866,
+  "current_name": "Delftia acidovorans",
+  "genus": "Delftia",
+  "family": "Comamonadaceae",
+  "rank": "SPECIES"
+ },
+ "Dermacoccus nishinomiyaensis": {
+  "tax_id": 1274,
+  "current_name": "Dermacoccus nishinomiyaensis",
+  "genus": "Dermacoccus",
+  "family": "Dermacoccaceae",
+  "rank": "SPECIES"
+ },
+ "Dickeya zeae": {
+  "tax_id": 204042,
+  "current_name": "Dickeya zeae",
+  "genus": "Dickeya",
+  "family": "Pectobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Didymella pinodes": {
+  "tax_id": 749589,
+  "current_name": "Didymella pinodes",
+  "genus": "Didymella",
+  "family": "Didymellaceae",
+  "rank": "SPECIES"
+ },
+ "Edwardsiella ictaluri": {
+  "tax_id": 67780,
+  "current_name": "Edwardsiella ictaluri",
+  "genus": "Edwardsiella",
+  "family": "Hafniaceae",
+  "rank": "SPECIES"
+ },
+ "Edwardsiella tarda": {
+  "tax_id": 636,
+  "current_name": "Edwardsiella tarda",
+  "genus": "Edwardsiella",
+  "family": "Hafniaceae",
+  "rank": "SPECIES"
+ },
+ "Elizabethkingia meningoseptica": {
+  "tax_id": 238,
+  "current_name": "Elizabethkingia meningoseptica",
+  "genus": "Elizabethkingia",
+  "family": "Weeksellaceae",
+  "rank": "SPECIES"
+ },
+ "Enterobacter asburiae": {
+  "tax_id": 61645,
+  "current_name": "Enterobacter asburiae",
+  "genus": "Enterobacter",
+  "family": "Enterobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Enterobacter cloacae": {
+  "tax_id": 550,
+  "current_name": "Enterobacter cloacae",
+  "genus": "Enterobacter",
+  "family": "Enterobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Enterobacter hormaechei": {
+  "tax_id": 158836,
+  "current_name": "Enterobacter hormaechei",
+  "genus": "Enterobacter",
+  "family": "Enterobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Enterobacter ludwigii": {
+  "tax_id": 299767,
+  "current_name": "Enterobacter ludwigii",
+  "genus": "Enterobacter",
+  "family": "Enterobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Enterobacter mori": {
+  "tax_id": 539813,
+  "current_name": "Enterobacter mori",
+  "genus": "Enterobacter",
+  "family": "Enterobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Enterococcus casseliflavus": {
+  "tax_id": 37734,
+  "current_name": "Enterococcus casseliflavus",
+  "genus": "Enterococcus",
+  "family": "Enterococcaceae",
+  "rank": "SPECIES"
+ },
+ "Enterococcus durans": {
+  "tax_id": 53345,
+  "current_name": "Enterococcus durans",
+  "genus": "Enterococcus",
+  "family": "Enterococcaceae",
+  "rank": "SPECIES"
+ },
+ "Enterococcus faecalis": {
+  "tax_id": 1351,
+  "current_name": "Enterococcus faecalis",
+  "genus": "Enterococcus",
+  "family": "Enterococcaceae",
+  "rank": "SPECIES"
+ },
+ "Enterococcus faecium": {
+  "tax_id": 1352,
+  "current_name": "Enterococcus faecium",
+  "genus": "Enterococcus",
+  "family": "Enterococcaceae",
+  "rank": "SPECIES"
+ },
+ "Enterococcus gallinarum": {
+  "tax_id": 1353,
+  "current_name": "Enterococcus gallinarum",
+  "genus": "Enterococcus",
+  "family": "Enterococcaceae",
+  "rank": "SPECIES"
+ },
+ "Enterococcus hirae": {
+  "tax_id": 1354,
+  "current_name": "Enterococcus hirae",
+  "genus": "Enterococcus",
+  "family": "Enterococcaceae",
+  "rank": "SPECIES"
+ },
+ "Enterococcus mundtii": {
+  "tax_id": 53346,
+  "current_name": "Enterococcus mundtii",
+  "genus": "Enterococcus",
+  "family": "Enterococcaceae",
+  "rank": "SPECIES"
+ },
+ "Escherichia coli": {
+  "tax_id": 562,
+  "current_name": "Escherichia coli",
+  "genus": "Escherichia",
+  "family": "Enterobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Faecalicatena contorta": {
+  "tax_id": 39482,
+  "current_name": "Faecalicatena contorta",
+  "genus": "Faecalicatena",
+  "family": "Lachnospiraceae",
+  "rank": "SPECIES"
+ },
+ "Faecalicatena orotica": {
+  "tax_id": 1544,
+  "current_name": "Faecalicatena orotica",
+  "genus": "Faecalicatena",
+  "family": "Lachnospiraceae",
+  "rank": "SPECIES"
+ },
+ "Flavobacterium hydatis": {
+  "tax_id": 991,
+  "current_name": "Flavobacterium hydatis",
+  "genus": "Flavobacterium",
+  "family": "Flavobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Flavobacterium psychrophilum": {
+  "tax_id": 96345,
+  "current_name": "Flavobacterium psychrophilum",
+  "genus": "Flavobacterium",
+  "family": "Flavobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Fluoribacter dumoffii": {
+  "tax_id": 463,
+  "current_name": "Fluoribacter dumoffii",
+  "genus": "Fluoribacter",
+  "family": "Legionellaceae",
+  "rank": "SPECIES"
+ },
+ "Francisella tularensis": {
+  "tax_id": 263,
+  "current_name": "Francisella tularensis",
+  "genus": "Francisella",
+  "family": "Francisellaceae",
+  "rank": "SPECIES"
+ },
+ "Fusarium fujikuroi": {
+  "tax_id": 5127,
+  "current_name": "Fusarium fujikuroi",
+  "genus": "Fusarium",
+  "family": "Nectriaceae",
+  "rank": "SPECIES"
+ },
+ "Fusarium graminearum": {
+  "tax_id": 5518,
+  "current_name": "Fusarium graminearum",
+  "genus": "Fusarium",
+  "family": "Nectriaceae",
+  "rank": "SPECIES"
+ },
+ "Fusarium keratoplasticum": {
+  "tax_id": 1328300,
+  "current_name": "Fusarium keratoplasticum",
+  "genus": "Fusarium",
+  "family": "Nectriaceae",
+  "rank": "SPECIES"
+ },
+ "Fusarium oxysporum": {
+  "tax_id": 5507,
+  "current_name": "Fusarium oxysporum",
+  "genus": "Fusarium",
+  "family": "Nectriaceae",
+  "rank": "SPECIES"
+ },
+ "Fusarium solani": {
+  "tax_id": 169388,
+  "current_name": "Fusarium solani",
+  "genus": "Fusarium",
+  "family": "Nectriaceae",
+  "rank": "SPECIES"
+ },
+ "Fusobacterium nucleatum": {
+  "tax_id": 851,
+  "current_name": "Fusobacterium nucleatum",
+  "genus": "Fusobacterium",
+  "family": "Fusobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Fusobacterium varium": {
+  "tax_id": 856,
+  "current_name": "Fusobacterium varium",
+  "genus": "Fusobacterium",
+  "family": "Fusobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Gardnerella vaginalis": {
+  "tax_id": 2702,
+  "current_name": "Gardnerella vaginalis",
+  "genus": "Gardnerella",
+  "family": "Bifidobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Geobacillus kaustophilus": {
+  "tax_id": 1462,
+  "current_name": "Geobacillus kaustophilus",
+  "genus": "Geobacillus",
+  "family": "Anoxybacillaceae",
+  "rank": "SPECIES"
+ },
+ "Geobacillus lituanicus": {
+  "tax_id": 169283,
+  "current_name": "Geobacillus lituanicus",
+  "genus": "Geobacillus",
+  "family": "Anoxybacillaceae",
+  "rank": "SPECIES"
+ },
+ "Geobacillus stearothermophilus": {
+  "tax_id": 1422,
+  "current_name": "Geobacillus stearothermophilus",
+  "genus": "Geobacillus",
+  "family": "Anoxybacillaceae",
+  "rank": "SPECIES"
+ },
+ "Geobacillus thermoleovorans": {
+  "tax_id": 33941,
+  "current_name": "Geobacillus thermoleovorans",
+  "genus": "Geobacillus",
+  "family": "Anoxybacillaceae",
+  "rank": "SPECIES"
+ },
+ "Geotrichum candidum": {
+  "tax_id": 1173061,
+  "current_name": "Geotrichum candidum",
+  "genus": "Geotrichum",
+  "family": "Dipodascaceae",
+  "rank": "SPECIES"
+ },
+ "Glaesserella parasuis": {
+  "tax_id": 738,
+  "current_name": "Glaesserella parasuis",
+  "genus": "Glaesserella",
+  "family": "Pasteurellaceae",
+  "rank": "SPECIES"
+ },
+ "Goffeauzyma gastrica": {
+  "tax_id": 92955,
+  "current_name": "Goffeauzyma gastrica",
+  "genus": "Goffeauzyma",
+  "family": "Filobasidiaceae",
+  "rank": "SPECIES"
+ },
+ "Haemophilus ducreyi": {
+  "tax_id": 730,
+  "current_name": "[Haemophilus] ducreyi",
+  "genus": "Haemophilus",
+  "family": "Pasteurellaceae",
+  "rank": "SPECIES"
+ },
+ "Haemophilus influenzae": {
+  "tax_id": 727,
+  "current_name": "Haemophilus influenzae",
+  "genus": "Haemophilus",
+  "family": "Pasteurellaceae",
+  "rank": "SPECIES"
+ },
+ "Helicobacter pylori": {
+  "tax_id": 210,
+  "current_name": "Helicobacter pylori",
+  "genus": "Helicobacter",
+  "family": "Helicobacteraceae",
+  "rank": "SPECIES"
+ },
+ "Heyndrickxia coagulans": {
+  "tax_id": 1398,
+  "current_name": "Heyndrickxia coagulans",
+  "genus": "Heyndrickxia",
+  "family": "Bacillaceae",
+  "rank": "SPECIES"
+ },
+ "Histophilus somni": {
+  "tax_id": 731,
+  "current_name": "Histophilus somni",
+  "genus": "Histophilus",
+  "family": "Pasteurellaceae",
+  "rank": "SPECIES"
+ },
+ "Issatchenkia orientalis": {
+  "tax_id": 4909,
+  "current_name": "Pichia kudriavzevii",
+  "genus": "Pichia",
+  "family": "Pichiaceae",
+  "rank": "SPECIES"
+ },
+ "Klebsiella aerogenes": {
+  "tax_id": 548,
+  "current_name": "Klebsiella aerogenes",
+  "genus": "Klebsiella",
+  "family": "Enterobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Klebsiella michiganensis": {
+  "tax_id": 1134687,
+  "current_name": "Klebsiella michiganensis",
+  "genus": "Klebsiella",
+  "family": "Enterobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Klebsiella oxytoca": {
+  "tax_id": 571,
+  "current_name": "Klebsiella oxytoca",
+  "genus": "Klebsiella",
+  "family": "Enterobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Klebsiella pneumoniae": {
+  "tax_id": 573,
+  "current_name": "Klebsiella pneumoniae",
+  "genus": "Klebsiella",
+  "family": "Enterobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Klebsiella quasipneumoniae": {
+  "tax_id": 1463165,
+  "current_name": "Klebsiella quasipneumoniae",
+  "genus": "Klebsiella",
+  "family": "Enterobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Kluyveromyces marxianus": {
+  "tax_id": 4911,
+  "current_name": "Kluyveromyces marxianus",
+  "genus": "Kluyveromyces",
+  "family": "Saccharomycetaceae",
+  "rank": "SPECIES"
+ },
+ "Kocuria rhizophila": {
+  "tax_id": 72000,
+  "current_name": "Kocuria rhizophila",
+  "genus": "Kocuria",
+  "family": "Micrococcaceae",
+  "rank": "SPECIES"
+ },
+ "Komagataella pastoris": {
+  "tax_id": 4922,
+  "current_name": "Komagataella pastoris",
+  "genus": "Komagataella",
+  "family": "Pichiaceae",
+  "rank": "SPECIES"
+ },
+ "Lacticaseibacillus casei": {
+  "tax_id": 1582,
+  "current_name": "Lacticaseibacillus casei",
+  "genus": "Lacticaseibacillus",
+  "family": "Lactobacillaceae",
+  "rank": "SPECIES"
+ },
+ "Lacticaseibacillus paracasei": {
+  "tax_id": 1597,
+  "current_name": "Lacticaseibacillus paracasei",
+  "genus": "Lacticaseibacillus",
+  "family": "Lactobacillaceae",
+  "rank": "SPECIES"
+ },
+ "Lacticaseibacillus rhamnosus": {
+  "tax_id": 47715,
+  "current_name": "Lacticaseibacillus rhamnosus",
+  "genus": "Lacticaseibacillus",
+  "family": "Lactobacillaceae",
+  "rank": "SPECIES"
+ },
+ "Lactiplantibacillus plantarum": {
+  "tax_id": 1590,
+  "current_name": "Lactiplantibacillus plantarum",
+  "genus": "Lactiplantibacillus",
+  "family": "Lactobacillaceae",
+  "rank": "SPECIES"
+ },
+ "Lactobacillus acidophilus": {
+  "tax_id": 1579,
+  "current_name": "Lactobacillus acidophilus",
+  "genus": "Lactobacillus",
+  "family": "Lactobacillaceae",
+  "rank": "SPECIES"
+ },
+ "Lactobacillus crispatus": {
+  "tax_id": 47770,
+  "current_name": "Lactobacillus crispatus",
+  "genus": "Lactobacillus",
+  "family": "Lactobacillaceae",
+  "rank": "SPECIES"
+ },
+ "Lactobacillus fermentum": {
+  "tax_id": 1613,
+  "current_name": "Limosilactobacillus fermentum",
+  "genus": "Limosilactobacillus",
+  "family": "Lactobacillaceae",
+  "rank": "SPECIES"
+ },
+ "Lactobacillus gasseri": {
+  "tax_id": 1596,
+  "current_name": "Lactobacillus gasseri",
+  "genus": "Lactobacillus",
+  "family": "Lactobacillaceae",
+  "rank": "SPECIES"
+ },
+ "Lactobacillus jensenii": {
+  "tax_id": 109790,
+  "current_name": "Lactobacillus jensenii",
+  "genus": "Lactobacillus",
+  "family": "Lactobacillaceae",
+  "rank": "SPECIES"
+ },
+ "Lactobacillus plantarum": {
+  "tax_id": 1590,
+  "current_name": "Lactiplantibacillus plantarum",
+  "genus": "Lactiplantibacillus",
+  "family": "Lactobacillaceae",
+  "rank": "SPECIES"
+ },
+ "Lactobacillus reuteri": {
+  "tax_id": 1598,
+  "current_name": "Limosilactobacillus reuteri",
+  "genus": "Limosilactobacillus",
+  "family": "Lactobacillaceae",
+  "rank": "SPECIES"
+ },
+ "Lactobacillus rhamnosus": {
+  "tax_id": 47715,
+  "current_name": "Lacticaseibacillus rhamnosus",
+  "genus": "Lacticaseibacillus",
+  "family": "Lactobacillaceae",
+  "rank": "SPECIES"
+ },
+ "Lactobacillus vaginalis": {
+  "tax_id": 1633,
+  "current_name": "Limosilactobacillus vaginalis",
+  "genus": "Limosilactobacillus",
+  "family": "Lactobacillaceae",
+  "rank": "SPECIES"
+ },
+ "Lactococcus cremoris": {
+  "tax_id": 1359,
+  "current_name": "Lactococcus cremoris",
+  "genus": "Lactococcus",
+  "family": "Streptococcaceae",
+  "rank": "SPECIES"
+ },
+ "Lactococcus garvieae": {
+  "tax_id": 1363,
+  "current_name": "Lactococcus garvieae",
+  "genus": "Lactococcus",
+  "family": "Streptococcaceae",
+  "rank": "SPECIES"
+ },
+ "Lactococcus lactis": {
+  "tax_id": 1358,
+  "current_name": "Lactococcus lactis",
+  "genus": "Lactococcus",
+  "family": "Streptococcaceae",
+  "rank": "SPECIES"
+ },
+ "Latilactobacillus sakei": {
+  "tax_id": 1599,
+  "current_name": "Latilactobacillus sakei",
+  "genus": "Latilactobacillus",
+  "family": "Lactobacillaceae",
+  "rank": "SPECIES"
+ },
+ "Legionella bozemanae": {
+  "tax_id": 447,
+  "current_name": "Legionella bozemanae",
+  "genus": "Legionella",
+  "family": "Legionellaceae",
+  "rank": "SPECIES"
+ },
+ "Legionella dumoffii": {
+  "tax_id": 463,
+  "current_name": "Fluoribacter dumoffii",
+  "genus": "Fluoribacter",
+  "family": "Legionellaceae",
+  "rank": "SPECIES"
+ },
+ "Legionella feeleii": {
+  "tax_id": 453,
+  "current_name": "Legionella feeleii",
+  "genus": "Legionella",
+  "family": "Legionellaceae",
+  "rank": "SPECIES"
+ },
+ "Legionella longbeachae": {
+  "tax_id": 450,
+  "current_name": "Legionella longbeachae",
+  "genus": "Legionella",
+  "family": "Legionellaceae",
+  "rank": "SPECIES"
+ },
+ "Legionella micdadei": {
+  "tax_id": 451,
+  "current_name": "Legionella micdadei",
+  "genus": "Legionella",
+  "family": "Legionellaceae",
+  "rank": "SPECIES"
+ },
+ "Legionella oakridgensis": {
+  "tax_id": 29423,
+  "current_name": "Legionella oakridgensis",
+  "genus": "Legionella",
+  "family": "Legionellaceae",
+  "rank": "SPECIES"
+ },
+ "Legionella pneumophila": {
+  "tax_id": 446,
+  "current_name": "Legionella pneumophila",
+  "genus": "Legionella",
+  "family": "Legionellaceae",
+  "rank": "SPECIES"
+ },
+ "Leishmania major": {
+  "tax_id": 5664,
+  "current_name": "Leishmania major",
+  "genus": "Leishmania",
+  "family": "Trypanosomatidae",
+  "rank": "SPECIES"
+ },
+ "Lelliottia amnigena": {
+  "tax_id": 61646,
+  "current_name": "Lelliottia amnigena",
+  "genus": "Lelliottia",
+  "family": "Enterobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Leuconostoc mesenteroides": {
+  "tax_id": 1245,
+  "current_name": "Leuconostoc mesenteroides",
+  "genus": "Leuconostoc",
+  "family": "Lactobacillaceae",
+  "rank": "SPECIES"
+ },
+ "Leucothrix mucor": {
+  "tax_id": 45248,
+  "current_name": "Leucothrix mucor",
+  "genus": "Leucothrix",
+  "family": "Thiotrichaceae",
+  "rank": "SPECIES"
+ },
+ "Levilactobacillus brevis": {
+  "tax_id": 1580,
+  "current_name": "Levilactobacillus brevis",
+  "genus": "Levilactobacillus",
+  "family": "Lactobacillaceae",
+  "rank": "SPECIES"
+ },
+ "Limosilactobacillus fermentum": {
+  "tax_id": 1613,
+  "current_name": "Limosilactobacillus fermentum",
+  "genus": "Limosilactobacillus",
+  "family": "Lactobacillaceae",
+  "rank": "SPECIES"
+ },
+ "Limosilactobacillus reuteri": {
+  "tax_id": 1598,
+  "current_name": "Limosilactobacillus reuteri",
+  "genus": "Limosilactobacillus",
+  "family": "Lactobacillaceae",
+  "rank": "SPECIES"
+ },
+ "Limosilactobacillus vaginalis": {
+  "tax_id": 1633,
+  "current_name": "Limosilactobacillus vaginalis",
+  "genus": "Limosilactobacillus",
+  "family": "Lactobacillaceae",
+  "rank": "SPECIES"
+ },
+ "Listeria fleischmannii": {
+  "tax_id": 1069827,
+  "current_name": "Listeria fleischmannii",
+  "genus": "Listeria",
+  "family": "Listeriaceae",
+  "rank": "SPECIES"
+ },
+ "Listeria grayi": {
+  "tax_id": 1641,
+  "current_name": "Listeria grayi",
+  "genus": "Listeria",
+  "family": "Listeriaceae",
+  "rank": "SPECIES"
+ },
+ "Listeria innocua": {
+  "tax_id": 1642,
+  "current_name": "Listeria innocua",
+  "genus": "Listeria",
+  "family": "Listeriaceae",
+  "rank": "SPECIES"
+ },
+ "Listeria ivanovii": {
+  "tax_id": 1638,
+  "current_name": "Listeria ivanovii",
+  "genus": "Listeria",
+  "family": "Listeriaceae",
+  "rank": "SPECIES"
+ },
+ "Listeria monocytogenes": {
+  "tax_id": 1639,
+  "current_name": "Listeria monocytogenes",
+  "genus": "Listeria",
+  "family": "Listeriaceae",
+  "rank": "SPECIES"
+ },
+ "Listeria seeligeri": {
+  "tax_id": 1640,
+  "current_name": "Listeria seeligeri",
+  "genus": "Listeria",
+  "family": "Listeriaceae",
+  "rank": "SPECIES"
+ },
+ "Listeria welshimeri": {
+  "tax_id": 1643,
+  "current_name": "Listeria welshimeri",
+  "genus": "Listeria",
+  "family": "Listeriaceae",
+  "rank": "SPECIES"
+ },
+ "Listonella anguillarum": {
+  "tax_id": 55601,
+  "current_name": "Vibrio anguillarum",
+  "genus": "Vibrio",
+  "family": "Vibrionaceae",
+  "rank": "SPECIES"
+ },
+ "Malassezia sympodialis": {
+  "tax_id": 76777,
+  "current_name": "Malassezia sympodialis",
+  "genus": "Malassezia",
+  "family": "Malasseziaceae",
+  "rank": "SPECIES"
+ },
+ "Mammaliicoccus sciuri": {
+  "tax_id": 1296,
+  "current_name": "Mammaliicoccus sciuri",
+  "genus": "Mammaliicoccus",
+  "family": "Staphylococcaceae",
+  "rank": "SPECIES"
+ },
+ "Mannheimia haemolytica": {
+  "tax_id": 75985,
+  "current_name": "Mannheimia haemolytica",
+  "genus": "Mannheimia",
+  "family": "Pasteurellaceae",
+  "rank": "SPECIES"
+ },
+ "Mediterraneibacter gnavus": {
+  "tax_id": 33038,
+  "current_name": "Mediterraneibacter gnavus",
+  "genus": "Mediterraneibacter",
+  "family": "Lachnospiraceae",
+  "rank": "SPECIES"
+ },
+ "Mesomycoplasma hyorhinis": {
+  "tax_id": 2100,
+  "current_name": "Mesomycoplasma hyorhinis",
+  "genus": "Mesomycoplasma",
+  "family": "Metamycoplasmataceae",
+  "rank": "SPECIES"
+ },
+ "Meyerozyma guilliermondii": {
+  "tax_id": 4929,
+  "current_name": "Meyerozyma guilliermondii",
+  "genus": "Meyerozyma",
+  "family": "Debaryomycetaceae",
+  "rank": "SPECIES"
+ },
+ "Microbacterium maritypicum": {
+  "tax_id": 33918,
+  "current_name": "Microbacterium maritypicum",
+  "genus": "Microbacterium",
+  "family": "Microbacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Micrococcus luteus": {
+  "tax_id": 1270,
+  "current_name": "Micrococcus luteus",
+  "genus": "Micrococcus",
+  "family": "Micrococcaceae",
+  "rank": "SPECIES"
+ },
+ "Micrococcus yunnanensis": {
+  "tax_id": 566027,
+  "current_name": "Micrococcus yunnanensis",
+  "genus": "Micrococcus",
+  "family": "Micrococcaceae",
+  "rank": "SPECIES"
+ },
+ "Microsporum canis": {
+  "tax_id": 63405,
+  "current_name": "Microsporum canis",
+  "genus": "Microsporum",
+  "family": "Arthrodermataceae",
+  "rank": "SPECIES"
+ },
+ "Moraxella catarrhalis": {
+  "tax_id": 480,
+  "current_name": "Moraxella catarrhalis",
+  "genus": "Moraxella",
+  "family": "Moraxellaceae",
+  "rank": "SPECIES"
+ },
+ "Mycobacterium abscessus": {
+  "tax_id": 36809,
+  "current_name": "Mycobacteroides abscessus",
+  "genus": "Mycobacteroides",
+  "family": "Mycobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Mycobacterium avium": {
+  "tax_id": 1764,
+  "current_name": "Mycobacterium avium",
+  "genus": "Mycobacterium",
+  "family": "Mycobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Mycobacterium bovis": {
+  "tax_id": 1765,
+  "current_name": "Mycobacterium tuberculosis variant bovis",
+  "genus": "Mycobacterium",
+  "family": "Mycobacteriaceae",
+  "rank": "BIOTYPE"
+ },
+ "Mycobacterium chelonae": {
+  "tax_id": 1774,
+  "current_name": "Mycobacteroides chelonae",
+  "genus": "Mycobacteroides",
+  "family": "Mycobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Mycobacterium fortuitum": {
+  "tax_id": 1766,
+  "current_name": "Mycolicibacterium fortuitum",
+  "genus": "Mycolicibacterium",
+  "family": "Mycobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Mycobacterium kansasii": {
+  "tax_id": 1768,
+  "current_name": "Mycobacterium kansasii",
+  "genus": "Mycobacterium",
+  "family": "Mycobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Mycobacterium marinum": {
+  "tax_id": 1781,
+  "current_name": "Mycobacterium marinum",
+  "genus": "Mycobacterium",
+  "family": "Mycobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Mycobacterium smegmatis": {
+  "tax_id": 1772,
+  "current_name": "Mycolicibacterium smegmatis",
+  "genus": "Mycolicibacterium",
+  "family": "Mycobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Mycobacterium tuberculosis": {
+  "tax_id": 1773,
+  "current_name": "Mycobacterium tuberculosis",
+  "genus": "Mycobacterium",
+  "family": "Mycobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Mycobacterium tuberculosis variant bovis": {
+  "tax_id": 1765,
+  "current_name": "Mycobacterium tuberculosis variant bovis",
+  "genus": "Mycobacterium",
+  "family": "Mycobacteriaceae",
+  "rank": "BIOTYPE"
+ },
+ "Mycobacterium tuberculosis variant bovis BCG": {
+  "tax_id": 33892,
+  "current_name": "Mycobacterium tuberculosis variant bovis BCG",
+  "genus": "Mycobacterium",
+  "family": "Mycobacteriaceae",
+  "rank": null
+ },
+ "Mycobacterium vaccae": {
+  "tax_id": 1810,
+  "current_name": "Mycolicibacterium vaccae",
+  "genus": "Mycolicibacterium",
+  "family": "Mycobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Mycobacterium xenopi": {
+  "tax_id": 1789,
+  "current_name": "Mycobacterium xenopi",
+  "genus": "Mycobacterium",
+  "family": "Mycobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Mycobacteroides abscessus": {
+  "tax_id": 36809,
+  "current_name": "Mycobacteroides abscessus",
+  "genus": "Mycobacteroides",
+  "family": "Mycobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Mycobacteroides chelonae": {
+  "tax_id": 1774,
+  "current_name": "Mycobacteroides chelonae",
+  "genus": "Mycobacteroides",
+  "family": "Mycobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Mycolicibacterium fortuitum": {
+  "tax_id": 1766,
+  "current_name": "Mycolicibacterium fortuitum",
+  "genus": "Mycolicibacterium",
+  "family": "Mycobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Mycolicibacterium smegmatis": {
+  "tax_id": 1772,
+  "current_name": "Mycolicibacterium smegmatis",
+  "genus": "Mycolicibacterium",
+  "family": "Mycobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Mycolicibacterium vaccae": {
+  "tax_id": 1810,
+  "current_name": "Mycolicibacterium vaccae",
+  "genus": "Mycolicibacterium",
+  "family": "Mycobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Mycoplasma genitalium": {
+  "tax_id": 2097,
+  "current_name": "Mycoplasmoides genitalium",
+  "genus": "Mycoplasmoides",
+  "family": "Mycoplasmoidaceae",
+  "rank": "SPECIES"
+ },
+ "Mycoplasma hyorhinis": {
+  "tax_id": 2100,
+  "current_name": "Mesomycoplasma hyorhinis",
+  "genus": "Mesomycoplasma",
+  "family": "Metamycoplasmataceae",
+  "rank": "SPECIES"
+ },
+ "Mycoplasma mycoides": {
+  "tax_id": 2102,
+  "current_name": "Mycoplasma mycoides",
+  "genus": "Mycoplasma",
+  "family": "Mycoplasmataceae",
+  "rank": "SPECIES"
+ },
+ "Mycoplasmoides genitalium": {
+  "tax_id": 2097,
+  "current_name": "Mycoplasmoides genitalium",
+  "genus": "Mycoplasmoides",
+  "family": "Mycoplasmoidaceae",
+  "rank": "SPECIES"
+ },
+ "Mycoplasmopsis fermentans": {
+  "tax_id": 2115,
+  "current_name": "Mycoplasmopsis fermentans",
+  "genus": "Mycoplasmopsis",
+  "family": "Metamycoplasmataceae",
+  "rank": "SPECIES"
+ },
+ "Naganishia albida": {
+  "tax_id": 100951,
+  "current_name": "Naganishia albida",
+  "genus": "Naganishia",
+  "family": "Filobasidiaceae",
+  "rank": "SPECIES"
+ },
+ "Nakaseomyces glabratus": {
+  "tax_id": 5478,
+  "current_name": "Nakaseomyces glabratus",
+  "genus": "Nakaseomyces",
+  "family": "Saccharomycetaceae",
+  "rank": "SPECIES"
+ },
+ "Neisseria gonorrhoeae": {
+  "tax_id": 485,
+  "current_name": "Neisseria gonorrhoeae",
+  "genus": "Neisseria",
+  "family": "Neisseriaceae",
+  "rank": "SPECIES"
+ },
+ "Neisseria meningitidis": {
+  "tax_id": 487,
+  "current_name": "Neisseria meningitidis",
+  "genus": "Neisseria",
+  "family": "Neisseriaceae",
+  "rank": "SPECIES"
+ },
+ "Neisseria mucosa": {
+  "tax_id": 488,
+  "current_name": "Neisseria mucosa",
+  "genus": "Neisseria",
+  "family": "Neisseriaceae",
+  "rank": "SPECIES"
+ },
+ "Nocardia asteroides": {
+  "tax_id": 1824,
+  "current_name": "Nocardia asteroides",
+  "genus": "Nocardia",
+  "family": "Nocardiaceae",
+  "rank": "SPECIES"
+ },
+ "Nocardia farcinica": {
+  "tax_id": 37329,
+  "current_name": "Nocardia farcinica",
+  "genus": "Nocardia",
+  "family": "Nocardiaceae",
+  "rank": "SPECIES"
+ },
+ "Paecilomyces fulvus": {
+  "tax_id": 89137,
+  "current_name": "Paecilomyces fulvus",
+  "genus": "Paecilomyces",
+  "family": "Thermoascaceae",
+  "rank": "SPECIES"
+ },
+ "Paenibacillus macerans": {
+  "tax_id": 44252,
+  "current_name": "Paenibacillus macerans",
+  "genus": "Paenibacillus",
+  "family": "Paenibacillaceae",
+  "rank": "SPECIES"
+ },
+ "Paenibacillus polymyxa": {
+  "tax_id": 1406,
+  "current_name": "Paenibacillus polymyxa",
+  "genus": "Paenibacillus",
+  "family": "Paenibacillaceae",
+  "rank": "SPECIES"
+ },
+ "Paraburkholderia caledonica": {
+  "tax_id": 134536,
+  "current_name": "Paraburkholderia caledonica",
+  "genus": "Paraburkholderia",
+  "family": "Burkholderiaceae",
+  "rank": "SPECIES"
+ },
+ "Paracoccidioides lutzii": {
+  "tax_id": 1048829,
+  "current_name": "Paracoccidioides lutzii",
+  "genus": "Paracoccidioides",
+  "family": "Ajellomycetaceae",
+  "rank": "SPECIES"
+ },
+ "Paracoccus denitrificans": {
+  "tax_id": 266,
+  "current_name": "Paracoccus denitrificans",
+  "genus": "Paracoccus",
+  "family": "Paracoccaceae",
+  "rank": "SPECIES"
+ },
+ "Parvimonas micra": {
+  "tax_id": 33033,
+  "current_name": "Parvimonas micra",
+  "genus": "Parvimonas",
+  "family": "Peptoniphilaceae",
+  "rank": "SPECIES"
+ },
+ "Pasteurella canis": {
+  "tax_id": 753,
+  "current_name": "Pasteurella canis",
+  "genus": "Pasteurella",
+  "family": "Pasteurellaceae",
+  "rank": "SPECIES"
+ },
+ "Pasteurella multocida": {
+  "tax_id": 747,
+  "current_name": "Pasteurella multocida",
+  "genus": "Pasteurella",
+  "family": "Pasteurellaceae",
+  "rank": "SPECIES"
+ },
+ "Pectobacterium carotovorum": {
+  "tax_id": 554,
+  "current_name": "Pectobacterium carotovorum",
+  "genus": "Pectobacterium",
+  "family": "Pectobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Pediococcus acidilactici": {
+  "tax_id": 1254,
+  "current_name": "Pediococcus acidilactici",
+  "genus": "Pediococcus",
+  "family": "Lactobacillaceae",
+  "rank": "SPECIES"
+ },
+ "Pediococcus pentosaceus": {
+  "tax_id": 1255,
+  "current_name": "Pediococcus pentosaceus",
+  "genus": "Pediococcus",
+  "family": "Lactobacillaceae",
+  "rank": "SPECIES"
+ },
+ "Penicillium chrysogenum": {
+  "tax_id": 5076,
+  "current_name": "Penicillium chrysogenum",
+  "genus": "Penicillium",
+  "family": "Aspergillaceae",
+  "rank": "SPECIES"
+ },
+ "Peptoniphilus asaccharolyticus": {
+  "tax_id": 1258,
+  "current_name": "Peptoniphilus asaccharolyticus",
+  "genus": "Peptoniphilus",
+  "family": "Peptoniphilaceae",
+  "rank": "SPECIES"
+ },
+ "Peptostreptococcus anaerobius": {
+  "tax_id": 1261,
+  "current_name": "Peptostreptococcus anaerobius",
+  "genus": "Peptostreptococcus",
+  "family": "Peptostreptococcaceae",
+  "rank": "SPECIES"
+ },
+ "Phocaeicola dorei": {
+  "tax_id": 357276,
+  "current_name": "Phocaeicola dorei",
+  "genus": "Phocaeicola",
+  "family": "Bacteroidaceae",
+  "rank": "SPECIES"
+ },
+ "Phocaeicola vulgatus": {
+  "tax_id": 821,
+  "current_name": "Phocaeicola vulgatus",
+  "genus": "Phocaeicola",
+  "family": "Bacteroidaceae",
+  "rank": "SPECIES"
+ },
+ "Photobacterium angustum": {
+  "tax_id": 661,
+  "current_name": "Photobacterium angustum",
+  "genus": "Photobacterium",
+  "family": "Vibrionaceae",
+  "rank": "SPECIES"
+ },
+ "Pichia inconspicua": {
+  "tax_id": 52247,
+  "current_name": "Pichia inconspicua",
+  "genus": "Pichia",
+  "family": "Pichiaceae",
+  "rank": "SPECIES"
+ },
+ "Pichia kudriavzevii": {
+  "tax_id": 4909,
+  "current_name": "Pichia kudriavzevii",
+  "genus": "Pichia",
+  "family": "Pichiaceae",
+  "rank": "SPECIES"
+ },
+ "Pichia pastoris": {
+  "tax_id": 4922,
+  "current_name": "Komagataella pastoris",
+  "genus": "Komagataella",
+  "family": "Pichiaceae",
+  "rank": "SPECIES"
+ },
+ "Piscirickettsia salmonis": {
+  "tax_id": 1238,
+  "current_name": "Piscirickettsia salmonis",
+  "genus": "Piscirickettsia",
+  "family": "Piscirickettsiaceae",
+  "rank": "SPECIES"
+ },
+ "Planococcus citreus": {
+  "tax_id": 1373,
+  "current_name": "Planococcus citreus",
+  "genus": "Planococcus",
+  "family": "Caryophanaceae",
+  "rank": "SPECIES"
+ },
+ "Porphyromonas gingivalis": {
+  "tax_id": 837,
+  "current_name": "Porphyromonas gingivalis",
+  "genus": "Porphyromonas",
+  "family": "Porphyromonadaceae",
+  "rank": "SPECIES"
+ },
+ "Prescottella equi": {
+  "tax_id": 43767,
+  "current_name": "Prescottella equi",
+  "genus": "Prescottella",
+  "family": "Nocardiaceae",
+  "rank": "SPECIES"
+ },
+ "Prevotella intermedia": {
+  "tax_id": 28131,
+  "current_name": "Prevotella intermedia",
+  "genus": "Prevotella",
+  "family": "Prevotellaceae",
+  "rank": "SPECIES"
+ },
+ "Priestia megaterium": {
+  "tax_id": 1404,
+  "current_name": "Priestia megaterium",
+  "genus": "Priestia",
+  "family": "Bacillaceae",
+  "rank": "SPECIES"
+ },
+ "Prodigiosinella aquatilis": {
+  "tax_id": 3076559,
+  "current_name": "Prodigiosinella aquatilis",
+  "genus": "Prodigiosinella",
+  "family": "Pectobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Propionibacterium freudenreichii": {
+  "tax_id": 1744,
+  "current_name": "Propionibacterium freudenreichii",
+  "genus": "Propionibacterium",
+  "family": "Propionibacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Proteus hauseri": {
+  "tax_id": 183417,
+  "current_name": "Proteus hauseri",
+  "genus": "Proteus",
+  "family": "Morganellaceae",
+  "rank": "SPECIES"
+ },
+ "Proteus mirabilis": {
+  "tax_id": 584,
+  "current_name": "Proteus mirabilis",
+  "genus": "Proteus",
+  "family": "Morganellaceae",
+  "rank": "SPECIES"
+ },
+ "Proteus vulgaris": {
+  "tax_id": 585,
+  "current_name": "Proteus vulgaris",
+  "genus": "Proteus",
+  "family": "Morganellaceae",
+  "rank": "SPECIES"
+ },
+ "Pseudarthrobacter oxydans": {
+  "tax_id": 1671,
+  "current_name": "Pseudarthrobacter oxydans",
+  "genus": "Pseudarthrobacter",
+  "family": "Micrococcaceae",
+  "rank": "SPECIES"
+ },
+ "Pseudoalteromonas carrageenovora": {
+  "tax_id": 227,
+  "current_name": "Pseudoalteromonas carrageenovora",
+  "genus": "Pseudoalteromonas",
+  "family": "Pseudoalteromonadaceae",
+  "rank": "SPECIES"
+ },
+ "Pseudomonas aeruginosa": {
+  "tax_id": 287,
+  "current_name": "Pseudomonas aeruginosa",
+  "genus": "Pseudomonas",
+  "family": "Pseudomonadaceae",
+  "rank": "SPECIES"
+ },
+ "Pseudomonas corrugata": {
+  "tax_id": 47879,
+  "current_name": "Pseudomonas corrugata",
+  "genus": "Pseudomonas",
+  "family": "Pseudomonadaceae",
+  "rank": "SPECIES"
+ },
+ "Pseudomonas fluorescens": {
+  "tax_id": 294,
+  "current_name": "Pseudomonas fluorescens",
+  "genus": "Pseudomonas",
+  "family": "Pseudomonadaceae",
+  "rank": "SPECIES"
+ },
+ "Pseudomonas paraeruginosa": {
+  "tax_id": 2994495,
+  "current_name": "Pseudomonas paraeruginosa",
+  "genus": "Pseudomonas",
+  "family": "Pseudomonadaceae",
+  "rank": "SPECIES"
+ },
+ "Pseudomonas putida": {
+  "tax_id": 303,
+  "current_name": "Pseudomonas putida",
+  "genus": "Pseudomonas",
+  "family": "Pseudomonadaceae",
+  "rank": "SPECIES"
+ },
+ "Pseudomonas stutzeri": {
+  "tax_id": 316,
+  "current_name": "Stutzerimonas stutzeri",
+  "genus": "Stutzerimonas",
+  "family": "Pseudomonadaceae",
+  "rank": "SPECIES"
+ },
+ "Pseudomonas syringae": {
+  "tax_id": 317,
+  "current_name": "Pseudomonas syringae",
+  "genus": "Pseudomonas",
+  "family": "Pseudomonadaceae",
+  "rank": "SPECIES"
+ },
+ "Pseudomonas tolaasii": {
+  "tax_id": 29442,
+  "current_name": "Pseudomonas tolaasii",
+  "genus": "Pseudomonas",
+  "family": "Pseudomonadaceae",
+  "rank": "SPECIES"
+ },
+ "Pyricularia grisea": {
+  "tax_id": 148305,
+  "current_name": "Pyricularia grisea",
+  "genus": "Pyricularia",
+  "family": "Pyriculariaceae",
+  "rank": "SPECIES"
+ },
+ "Ralstonia solanacearum": {
+  "tax_id": 305,
+  "current_name": "Ralstonia solanacearum",
+  "genus": "Ralstonia",
+  "family": "Burkholderiaceae",
+  "rank": "SPECIES"
+ },
+ "Ralstonia syzygii": {
+  "tax_id": 28097,
+  "current_name": "Ralstonia syzygii",
+  "genus": "Ralstonia",
+  "family": "Burkholderiaceae",
+  "rank": "SPECIES"
+ },
+ "Raoultella ornithinolytica": {
+  "tax_id": 54291,
+  "current_name": "Klebsiella ornithinolytica",
+  "genus": "Klebsiella",
+  "family": "Enterobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Rhizobium radiobacter": {
+  "tax_id": 362,
+  "current_name": "Agrobacterium radiobacter",
+  "genus": "Agrobacterium",
+  "family": "Rhizobiaceae",
+  "rank": "SPECIES"
+ },
+ "Rhizoctonia solani": {
+  "tax_id": 456999,
+  "current_name": "Rhizoctonia solani",
+  "genus": "Rhizoctonia",
+  "family": "Ceratobasidiaceae",
+  "rank": "SPECIES"
+ },
+ "Rhodococcoides fascians": {
+  "tax_id": 1828,
+  "current_name": "Rhodococcoides fascians",
+  "genus": "Rhodococcoides",
+  "family": "Nocardiaceae",
+  "rank": "SPECIES"
+ },
+ "Rhodococcus equi": {
+  "tax_id": 43767,
+  "current_name": "Prescottella equi",
+  "genus": "Prescottella",
+  "family": "Nocardiaceae",
+  "rank": "SPECIES"
+ },
+ "Rhodococcus fascians": {
+  "tax_id": 1828,
+  "current_name": "Rhodococcoides fascians",
+  "genus": "Rhodococcoides",
+  "family": "Nocardiaceae",
+  "rank": "SPECIES"
+ },
+ "Rhodotorula mucilaginosa": {
+  "tax_id": 5537,
+  "current_name": "Rhodotorula mucilaginosa",
+  "genus": "Rhodotorula",
+  "family": "Sporidiobolaceae",
+  "rank": "SPECIES"
+ },
+ "Riemerella anatipestifer": {
+  "tax_id": 34085,
+  "current_name": "Riemerella anatipestifer",
+  "genus": "Riemerella",
+  "family": "Weeksellaceae",
+  "rank": "SPECIES"
+ },
+ "Romboutsia lituseburensis": {
+  "tax_id": 1537,
+  "current_name": "Romboutsia lituseburensis",
+  "genus": "Romboutsia",
+  "family": "Peptostreptococcaceae",
+  "rank": "SPECIES"
+ },
+ "Ruminococcus gnavus": {
+  "tax_id": 33038,
+  "current_name": "Mediterraneibacter gnavus",
+  "genus": "Mediterraneibacter",
+  "family": "Lachnospiraceae",
+  "rank": "SPECIES"
+ },
+ "Ruminococcus torques": {
+  "tax_id": 33039,
+  "current_name": "Mediterraneibacter torques",
+  "genus": "Mediterraneibacter",
+  "family": "Lachnospiraceae",
+  "rank": "SPECIES"
+ },
+ "Saccharomyces cerevisiae": {
+  "tax_id": 4932,
+  "current_name": "Saccharomyces cerevisiae",
+  "genus": "Saccharomyces",
+  "family": "Saccharomycetaceae",
+  "rank": "SPECIES"
+ },
+ "Saccharomyces kudriavzevii": {
+  "tax_id": 114524,
+  "current_name": "Saccharomyces kudriavzevii",
+  "genus": "Saccharomyces",
+  "family": "Saccharomycetaceae",
+  "rank": "SPECIES"
+ },
+ "Salinivibrio costicola": {
+  "tax_id": 51367,
+  "current_name": "Salinivibrio costicola",
+  "genus": "Salinivibrio",
+  "family": "Vibrionaceae",
+  "rank": "SPECIES"
+ },
+ "Salmonella enterica": {
+  "tax_id": 28901,
+  "current_name": "Salmonella enterica",
+  "genus": "Salmonella",
+  "family": "Enterobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Salmonella enterica subsp. enterica serovar Typhimurium": {
+  "tax_id": 90371,
+  "current_name": "Salmonella enterica subsp. enterica serovar Typhimurium",
+  "genus": "Salmonella",
+  "family": "Enterobacteriaceae",
+  "rank": null
+ },
+ "Salmonella typhimurium": {
+  "tax_id": 90371,
+  "current_name": "Salmonella enterica subsp. enterica serovar Typhimurium",
+  "genus": "Salmonella",
+  "family": "Enterobacteriaceae",
+  "rank": null
+ },
+ "Schizosaccharomyces pombe": {
+  "tax_id": 4896,
+  "current_name": "Schizosaccharomyces pombe",
+  "genus": "Schizosaccharomyces",
+  "family": "Schizosaccharomycetaceae",
+  "rank": "SPECIES"
+ },
+ "Serratia": {
+  "tax_id": 2985502,
+  "current_name": "Serratia",
+  "genus": "Serratia",
+  "family": "Lampyridae",
+  "rank": "GENUS"
+ },
+ "Serratia fonticola": {
+  "tax_id": 47917,
+  "current_name": "Serratia fonticola",
+  "genus": "Serratia",
+  "family": "Yersiniaceae",
+  "rank": "SPECIES"
+ },
+ "Serratia marcescens": {
+  "tax_id": 615,
+  "current_name": "Serratia marcescens",
+  "genus": "Serratia",
+  "family": "Yersiniaceae",
+  "rank": "SPECIES"
+ },
+ "Shewanella algae": {
+  "tax_id": 38313,
+  "current_name": "Shewanella algae",
+  "genus": "Shewanella",
+  "family": "Shewanellaceae",
+  "rank": "SPECIES"
+ },
+ "Shewanella haliotis": {
+  "tax_id": 38313,
+  "current_name": "Shewanella algae",
+  "genus": "Shewanella",
+  "family": "Shewanellaceae",
+  "rank": "SPECIES"
+ },
+ "Shigella boydii": {
+  "tax_id": 621,
+  "current_name": "Shigella boydii",
+  "genus": "Shigella",
+  "family": "Enterobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Shigella dysenteriae": {
+  "tax_id": 622,
+  "current_name": "Shigella dysenteriae",
+  "genus": "Shigella",
+  "family": "Enterobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Shigella flexneri": {
+  "tax_id": 623,
+  "current_name": "Shigella flexneri",
+  "genus": "Shigella",
+  "family": "Enterobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Shigella sonnei": {
+  "tax_id": 624,
+  "current_name": "Shigella sonnei",
+  "genus": "Shigella",
+  "family": "Enterobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Spiroplasma citri": {
+  "tax_id": 2133,
+  "current_name": "Spiroplasma citri",
+  "genus": "Spiroplasma",
+  "family": "Spiroplasmataceae",
+  "rank": "SPECIES"
+ },
+ "Spiroplasma floricola": {
+  "tax_id": 216937,
+  "current_name": "Spiroplasma floricola",
+  "genus": "Spiroplasma",
+  "family": "Spiroplasmataceae",
+  "rank": "SPECIES"
+ },
+ "Spiroplasma melliferum": {
+  "tax_id": 2134,
+  "current_name": "Spiroplasma melliferum",
+  "genus": "Spiroplasma",
+  "family": "Spiroplasmataceae",
+  "rank": "SPECIES"
+ },
+ "Staphylococcus aureus": {
+  "tax_id": 1280,
+  "current_name": "Staphylococcus aureus",
+  "genus": "Staphylococcus",
+  "family": "Staphylococcaceae",
+  "rank": "SPECIES"
+ },
+ "Staphylococcus auricularis": {
+  "tax_id": 29379,
+  "current_name": "Staphylococcus auricularis",
+  "genus": "Staphylococcus",
+  "family": "Staphylococcaceae",
+  "rank": "SPECIES"
+ },
+ "Staphylococcus carnosus": {
+  "tax_id": 1281,
+  "current_name": "Staphylococcus carnosus",
+  "genus": "Staphylococcus",
+  "family": "Staphylococcaceae",
+  "rank": "SPECIES"
+ },
+ "Staphylococcus epidermidis": {
+  "tax_id": 1282,
+  "current_name": "Staphylococcus epidermidis",
+  "genus": "Staphylococcus",
+  "family": "Staphylococcaceae",
+  "rank": "SPECIES"
+ },
+ "Staphylococcus haemolyticus": {
+  "tax_id": 1283,
+  "current_name": "Staphylococcus haemolyticus",
+  "genus": "Staphylococcus",
+  "family": "Staphylococcaceae",
+  "rank": "SPECIES"
+ },
+ "Staphylococcus hominis": {
+  "tax_id": 1290,
+  "current_name": "Staphylococcus hominis",
+  "genus": "Staphylococcus",
+  "family": "Staphylococcaceae",
+  "rank": "SPECIES"
+ },
+ "Staphylococcus hyicus": {
+  "tax_id": 1284,
+  "current_name": "Staphylococcus hyicus",
+  "genus": "Staphylococcus",
+  "family": "Staphylococcaceae",
+  "rank": "SPECIES"
+ },
+ "Staphylococcus intermedius": {
+  "tax_id": 1285,
+  "current_name": "Staphylococcus intermedius",
+  "genus": "Staphylococcus",
+  "family": "Staphylococcaceae",
+  "rank": "SPECIES"
+ },
+ "Staphylococcus lugdunensis": {
+  "tax_id": 28035,
+  "current_name": "Staphylococcus lugdunensis",
+  "genus": "Staphylococcus",
+  "family": "Staphylococcaceae",
+  "rank": "SPECIES"
+ },
+ "Staphylococcus pseudintermedius": {
+  "tax_id": 283734,
+  "current_name": "Staphylococcus pseudintermedius",
+  "genus": "Staphylococcus",
+  "family": "Staphylococcaceae",
+  "rank": "SPECIES"
+ },
+ "Staphylococcus saprophyticus": {
+  "tax_id": 29385,
+  "current_name": "Staphylococcus saprophyticus",
+  "genus": "Staphylococcus",
+  "family": "Staphylococcaceae",
+  "rank": "SPECIES"
+ },
+ "Staphylococcus simulans": {
+  "tax_id": 1286,
+  "current_name": "Staphylococcus simulans",
+  "genus": "Staphylococcus",
+  "family": "Staphylococcaceae",
+  "rank": "SPECIES"
+ },
+ "Staphylococcus warneri": {
+  "tax_id": 1292,
+  "current_name": "Staphylococcus warneri",
+  "genus": "Staphylococcus",
+  "family": "Staphylococcaceae",
+  "rank": "SPECIES"
+ },
+ "Staphylococcus xylosus": {
+  "tax_id": 1288,
+  "current_name": "Staphylococcus xylosus",
+  "genus": "Staphylococcus",
+  "family": "Staphylococcaceae",
+  "rank": "SPECIES"
+ },
+ "Stenotrophomonas maltophilia": {
+  "tax_id": 40324,
+  "current_name": "Stenotrophomonas maltophilia",
+  "genus": "Stenotrophomonas",
+  "family": "Lysobacteraceae",
+  "rank": "SPECIES"
+ },
+ "Streptococcus agalactiae": {
+  "tax_id": 1311,
+  "current_name": "Streptococcus agalactiae",
+  "genus": "Streptococcus",
+  "family": "Streptococcaceae",
+  "rank": "SPECIES"
+ },
+ "Streptococcus anginosus": {
+  "tax_id": 1328,
+  "current_name": "Streptococcus anginosus",
+  "genus": "Streptococcus",
+  "family": "Streptococcaceae",
+  "rank": "SPECIES"
+ },
+ "Streptococcus canis": {
+  "tax_id": 1329,
+  "current_name": "Streptococcus canis",
+  "genus": "Streptococcus",
+  "family": "Streptococcaceae",
+  "rank": "SPECIES"
+ },
+ "Streptococcus dysgalactiae": {
+  "tax_id": 1334,
+  "current_name": "Streptococcus dysgalactiae",
+  "genus": "Streptococcus",
+  "family": "Streptococcaceae",
+  "rank": "SPECIES"
+ },
+ "Streptococcus equi": {
+  "tax_id": 1336,
+  "current_name": "Streptococcus equi",
+  "genus": "Streptococcus",
+  "family": "Streptococcaceae",
+  "rank": "SPECIES"
+ },
+ "Streptococcus equinus": {
+  "tax_id": 1335,
+  "current_name": "Streptococcus equinus",
+  "genus": "Streptococcus",
+  "family": "Streptococcaceae",
+  "rank": "SPECIES"
+ },
+ "Streptococcus gallolyticus": {
+  "tax_id": 315405,
+  "current_name": "Streptococcus gallolyticus",
+  "genus": "Streptococcus",
+  "family": "Streptococcaceae",
+  "rank": "SPECIES"
+ },
+ "Streptococcus gordonii": {
+  "tax_id": 1302,
+  "current_name": "Streptococcus gordonii",
+  "genus": "Streptococcus",
+  "family": "Streptococcaceae",
+  "rank": "SPECIES"
+ },
+ "Streptococcus iniae": {
+  "tax_id": 1346,
+  "current_name": "Streptococcus iniae",
+  "genus": "Streptococcus",
+  "family": "Streptococcaceae",
+  "rank": "SPECIES"
+ },
+ "Streptococcus intermedius": {
+  "tax_id": 1338,
+  "current_name": "Streptococcus intermedius",
+  "genus": "Streptococcus",
+  "family": "Streptococcaceae",
+  "rank": "SPECIES"
+ },
+ "Streptococcus lutetiensis": {
+  "tax_id": 150055,
+  "current_name": "Streptococcus lutetiensis",
+  "genus": "Streptococcus",
+  "family": "Streptococcaceae",
+  "rank": "SPECIES"
+ },
+ "Streptococcus mitis": {
+  "tax_id": 28037,
+  "current_name": "Streptococcus mitis",
+  "genus": "Streptococcus",
+  "family": "Streptococcaceae",
+  "rank": "SPECIES"
+ },
+ "Streptococcus mutans": {
+  "tax_id": 1309,
+  "current_name": "Streptococcus mutans",
+  "genus": "Streptococcus",
+  "family": "Streptococcaceae",
+  "rank": "SPECIES"
+ },
+ "Streptococcus oralis": {
+  "tax_id": 1303,
+  "current_name": "Streptococcus oralis",
+  "genus": "Streptococcus",
+  "family": "Streptococcaceae",
+  "rank": "SPECIES"
+ },
+ "Streptococcus pneumoniae": {
+  "tax_id": 1313,
+  "current_name": "Streptococcus pneumoniae",
+  "genus": "Streptococcus",
+  "family": "Streptococcaceae",
+  "rank": "SPECIES"
+ },
+ "Streptococcus pyogenes": {
+  "tax_id": 1314,
+  "current_name": "Streptococcus pyogenes",
+  "genus": "Streptococcus",
+  "family": "Streptococcaceae",
+  "rank": "SPECIES"
+ },
+ "Streptococcus salivarius": {
+  "tax_id": 1304,
+  "current_name": "Streptococcus salivarius",
+  "genus": "Streptococcus",
+  "family": "Streptococcaceae",
+  "rank": "SPECIES"
+ },
+ "Streptococcus sanguinis": {
+  "tax_id": 1305,
+  "current_name": "Streptococcus sanguinis",
+  "genus": "Streptococcus",
+  "family": "Streptococcaceae",
+  "rank": "SPECIES"
+ },
+ "Streptococcus sobrinus": {
+  "tax_id": 1310,
+  "current_name": "Streptococcus sobrinus",
+  "genus": "Streptococcus",
+  "family": "Streptococcaceae",
+  "rank": "SPECIES"
+ },
+ "Streptococcus suis": {
+  "tax_id": 1307,
+  "current_name": "Streptococcus suis",
+  "genus": "Streptococcus",
+  "family": "Streptococcaceae",
+  "rank": "SPECIES"
+ },
+ "Streptococcus uberis": {
+  "tax_id": 1349,
+  "current_name": "Streptococcus uberis",
+  "genus": "Streptococcus",
+  "family": "Streptococcaceae",
+  "rank": "SPECIES"
+ },
+ "Streptomyces coelicolor": {
+  "tax_id": 1902,
+  "current_name": "Streptomyces coelicolor",
+  "genus": "Streptomyces",
+  "family": "Streptomycetaceae",
+  "rank": "SPECIES"
+ },
+ "Streptomyces griseus": {
+  "tax_id": 1911,
+  "current_name": "Streptomyces griseus",
+  "genus": "Streptomyces",
+  "family": "Streptomycetaceae",
+  "rank": "SPECIES"
+ },
+ "Streptomyces lividans": {
+  "tax_id": 1916,
+  "current_name": "Streptomyces lividans",
+  "genus": "Streptomyces",
+  "family": "Streptomycetaceae",
+  "rank": "SPECIES"
+ },
+ "Stutzerimonas stutzeri": {
+  "tax_id": 316,
+  "current_name": "Stutzerimonas stutzeri",
+  "genus": "Stutzerimonas",
+  "family": "Pseudomonadaceae",
+  "rank": "SPECIES"
+ },
+ "Thomasclavelia spiroformis": {
+  "tax_id": 29348,
+  "current_name": "Thomasclavelia spiroformis",
+  "genus": "Thomasclavelia",
+  "family": "Coprobacillaceae",
+  "rank": "SPECIES"
+ },
+ "Trichoderma virens": {
+  "tax_id": 29875,
+  "current_name": "Trichoderma virens",
+  "genus": "Trichoderma",
+  "family": "Hypocreaceae",
+  "rank": "SPECIES"
+ },
+ "Trichoderma viride": {
+  "tax_id": 5547,
+  "current_name": "Trichoderma viride",
+  "genus": "Trichoderma",
+  "family": "Hypocreaceae",
+  "rank": "SPECIES"
+ },
+ "Trichomonas vaginalis": {
+  "tax_id": 5722,
+  "current_name": "Trichomonas vaginalis",
+  "genus": "Trichomonas",
+  "family": "Trichomonadidae",
+  "rank": "SPECIES"
+ },
+ "Trichophyton interdigitale": {
+  "tax_id": 101480,
+  "current_name": "Trichophyton interdigitale",
+  "genus": "Trichophyton",
+  "family": "Arthrodermataceae",
+  "rank": "SPECIES"
+ },
+ "Trichophyton mentagrophytes": {
+  "tax_id": 523103,
+  "current_name": "Trichophyton mentagrophytes",
+  "genus": "Trichophyton",
+  "family": "Arthrodermataceae",
+  "rank": "SPECIES"
+ },
+ "Trichophyton rubrum": {
+  "tax_id": 5551,
+  "current_name": "Trichophyton rubrum",
+  "genus": "Trichophyton",
+  "family": "Arthrodermataceae",
+  "rank": "SPECIES"
+ },
+ "Trypanosoma brucei": {
+  "tax_id": 5691,
+  "current_name": "Trypanosoma brucei",
+  "genus": "Trypanosoma",
+  "family": "Trypanosomatidae",
+  "rank": "SPECIES"
+ },
+ "Ureaplasma canigenitalium": {
+  "tax_id": 42092,
+  "current_name": "Ureaplasma canigenitalium",
+  "genus": "Ureaplasma",
+  "family": "Mycoplasmoidaceae",
+  "rank": "SPECIES"
+ },
+ "Ureaplasma urealyticum": {
+  "tax_id": 2130,
+  "current_name": "Ureaplasma urealyticum",
+  "genus": "Ureaplasma",
+  "family": "Mycoplasmoidaceae",
+  "rank": "SPECIES"
+ },
+ "Veillonella parvula": {
+  "tax_id": 29466,
+  "current_name": "Veillonella parvula",
+  "genus": "Veillonella",
+  "family": "Veillonellaceae",
+  "rank": "SPECIES"
+ },
+ "Vibrio": {
+  "tax_id": 662,
+  "current_name": "Vibrio",
+  "genus": "Vibrio",
+  "family": "Vibrionaceae",
+  "rank": "GENUS"
+ },
+ "Vibrio aestuarianus": {
+  "tax_id": 28171,
+  "current_name": "Vibrio aestuarianus",
+  "genus": "Vibrio",
+  "family": "Vibrionaceae",
+  "rank": "SPECIES"
+ },
+ "Vibrio alginolyticus": {
+  "tax_id": 663,
+  "current_name": "Vibrio alginolyticus",
+  "genus": "Vibrio",
+  "family": "Vibrionaceae",
+  "rank": "SPECIES"
+ },
+ "Vibrio anguillarum": {
+  "tax_id": 55601,
+  "current_name": "Vibrio anguillarum",
+  "genus": "Vibrio",
+  "family": "Vibrionaceae",
+  "rank": "SPECIES"
+ },
+ "Vibrio cholerae": {
+  "tax_id": 666,
+  "current_name": "Vibrio cholerae",
+  "genus": "Vibrio",
+  "family": "Vibrionaceae",
+  "rank": "SPECIES"
+ },
+ "Vibrio coralliilyticus": {
+  "tax_id": 190893,
+  "current_name": "Vibrio coralliilyticus",
+  "genus": "Vibrio",
+  "family": "Vibrionaceae",
+  "rank": "SPECIES"
+ },
+ "Vibrio crassostreae": {
+  "tax_id": 246167,
+  "current_name": "Vibrio crassostreae",
+  "genus": "Vibrio",
+  "family": "Vibrionaceae",
+  "rank": "SPECIES"
+ },
+ "Vibrio diabolicus": {
+  "tax_id": 50719,
+  "current_name": "Vibrio diabolicus",
+  "genus": "Vibrio",
+  "family": "Vibrionaceae",
+  "rank": "SPECIES"
+ },
+ "Vibrio fluvialis": {
+  "tax_id": 676,
+  "current_name": "Vibrio fluvialis",
+  "genus": "Vibrio",
+  "family": "Vibrionaceae",
+  "rank": "SPECIES"
+ },
+ "Vibrio harveyi": {
+  "tax_id": 669,
+  "current_name": "Vibrio harveyi",
+  "genus": "Vibrio",
+  "family": "Vibrionaceae",
+  "rank": "SPECIES"
+ },
+ "Vibrio mediterranei": {
+  "tax_id": 689,
+  "current_name": "Vibrio mediterranei",
+  "genus": "Vibrio",
+  "family": "Vibrionaceae",
+  "rank": "SPECIES"
+ },
+ "Vibrio metschnikovii": {
+  "tax_id": 28172,
+  "current_name": "Vibrio metschnikovii",
+  "genus": "Vibrio",
+  "family": "Vibrionaceae",
+  "rank": "SPECIES"
+ },
+ "Vibrio parahaemolyticus": {
+  "tax_id": 670,
+  "current_name": "Vibrio parahaemolyticus",
+  "genus": "Vibrio",
+  "family": "Vibrionaceae",
+  "rank": "SPECIES"
+ },
+ "Vibrio penaeicida": {
+  "tax_id": 104609,
+  "current_name": "Vibrio penaeicida",
+  "genus": "Vibrio",
+  "family": "Vibrionaceae",
+  "rank": "SPECIES"
+ },
+ "Vibrio shiloi": {
+  "tax_id": 689,
+  "current_name": "Vibrio mediterranei",
+  "genus": "Vibrio",
+  "family": "Vibrionaceae",
+  "rank": "SPECIES"
+ },
+ "Vibrio splendidus": {
+  "tax_id": 29497,
+  "current_name": "Vibrio splendidus",
+  "genus": "Vibrio",
+  "family": "Vibrionaceae",
+  "rank": "SPECIES"
+ },
+ "Vibrio tapetis": {
+  "tax_id": 52443,
+  "current_name": "Vibrio tapetis",
+  "genus": "Vibrio",
+  "family": "Vibrionaceae",
+  "rank": "SPECIES"
+ },
+ "Vibrio vulnificus": {
+  "tax_id": 672,
+  "current_name": "Vibrio vulnificus",
+  "genus": "Vibrio",
+  "family": "Vibrionaceae",
+  "rank": "SPECIES"
+ },
+ "Weissella cibaria": {
+  "tax_id": 137591,
+  "current_name": "Weissella cibaria",
+  "genus": "Weissella",
+  "family": "Lactobacillaceae",
+  "rank": "SPECIES"
+ },
+ "Weizmannia coagulans": {
+  "tax_id": 1398,
+  "current_name": "Heyndrickxia coagulans",
+  "genus": "Heyndrickxia",
+  "family": "Bacillaceae",
+  "rank": "SPECIES"
+ },
+ "Xanthomonas arboricola": {
+  "tax_id": 56448,
+  "current_name": "Xanthomonas arboricola",
+  "genus": "Xanthomonas",
+  "family": "Lysobacteraceae",
+  "rank": "SPECIES"
+ },
+ "Xanthomonas axonopodis": {
+  "tax_id": 53413,
+  "current_name": "Xanthomonas axonopodis",
+  "genus": "Xanthomonas",
+  "family": "Lysobacteraceae",
+  "rank": "SPECIES"
+ },
+ "Xanthomonas campestris": {
+  "tax_id": 339,
+  "current_name": "Xanthomonas campestris",
+  "genus": "Xanthomonas",
+  "family": "Lysobacteraceae",
+  "rank": "SPECIES"
+ },
+ "Xanthomonas oryzae": {
+  "tax_id": 347,
+  "current_name": "Xanthomonas oryzae",
+  "genus": "Xanthomonas",
+  "family": "Lysobacteraceae",
+  "rank": "SPECIES"
+ },
+ "Xanthomonas perforans": {
+  "tax_id": 442694,
+  "current_name": "Xanthomonas perforans",
+  "genus": "Xanthomonas",
+  "family": "Lysobacteraceae",
+  "rank": "SPECIES"
+ },
+ "Xanthomonas phaseoli": {
+  "tax_id": 1985254,
+  "current_name": "Xanthomonas phaseoli",
+  "genus": "Xanthomonas",
+  "family": "Lysobacteraceae",
+  "rank": "SPECIES"
+ },
+ "Xanthomonas vesicatoria": {
+  "tax_id": 56460,
+  "current_name": "Xanthomonas vesicatoria",
+  "genus": "Xanthomonas",
+  "family": "Lysobacteraceae",
+  "rank": "SPECIES"
+ },
+ "Xenorhabdus japonica": {
+  "tax_id": 53341,
+  "current_name": "Xenorhabdus japonica",
+  "genus": "Xenorhabdus",
+  "family": "Morganellaceae",
+  "rank": "SPECIES"
+ },
+ "Yarrowia lipolytica": {
+  "tax_id": 4952,
+  "current_name": "Yarrowia lipolytica",
+  "genus": "Yarrowia",
+  "family": null,
+  "rank": "SPECIES"
+ },
+ "Yersinia enterocolitica": {
+  "tax_id": 630,
+  "current_name": "Yersinia enterocolitica",
+  "genus": "Yersinia",
+  "family": "Yersiniaceae",
+  "rank": "SPECIES"
+ },
+ "Yersinia mollaretii": {
+  "tax_id": 33060,
+  "current_name": "Yersinia mollaretii",
+  "genus": "Yersinia",
+  "family": "Yersiniaceae",
+  "rank": "SPECIES"
+ },
+ "Yersinia pestis": {
+  "tax_id": 632,
+  "current_name": "Yersinia pestis",
+  "genus": "Yersinia",
+  "family": "Yersiniaceae",
+  "rank": "SPECIES"
+ },
+ "Abiotrophia defectiva": {
+  "tax_id": 46125,
+  "current_name": "Abiotrophia defectiva",
+  "genus": "Abiotrophia",
+  "family": "Aerococcaceae",
+  "rank": "SPECIES"
+ },
+ "Akkermansia muciniphila": {
+  "tax_id": 239935,
+  "current_name": "Akkermansia muciniphila",
+  "genus": "Akkermansia",
+  "family": "Akkermansiaceae",
+  "rank": "SPECIES"
+ },
+ "Aliarcobacter butzleri": {
+  "tax_id": 28197,
+  "current_name": "Aliarcobacter butzleri",
+  "genus": "Aliarcobacter",
+  "family": "Arcobacteraceae",
+  "rank": "SPECIES"
+ },
+ "Alistipes putredinis": {
+  "tax_id": 28117,
+  "current_name": "Alistipes putredinis",
+  "genus": "Alistipes",
+  "family": "Rikenellaceae",
+  "rank": "SPECIES"
+ },
+ "Anaerococcus vaginalis": {
+  "tax_id": 33037,
+  "current_name": "Anaerococcus vaginalis",
+  "genus": "Anaerococcus",
+  "family": "Peptoniphilaceae",
+  "rank": "SPECIES"
+ },
+ "Arcanobacterium haemolyticum": {
+  "tax_id": 28264,
+  "current_name": "Arcanobacterium haemolyticum",
+  "genus": "Arcanobacterium",
+  "family": "Actinomycetaceae",
+  "rank": "SPECIES"
+ },
+ "Bilophila wadsworthia": {
+  "tax_id": 35833,
+  "current_name": "Bilophila wadsworthia",
+  "genus": "Bilophila",
+  "family": "Desulfovibrionaceae",
+  "rank": "SPECIES"
+ },
+ "Borreliella burgdorferi": {
+  "tax_id": 139,
+  "current_name": "Borreliella burgdorferi",
+  "genus": "Borreliella",
+  "family": "Borreliaceae",
+  "rank": "SPECIES"
+ },
+ "Brevundimonas diminuta": {
+  "tax_id": 293,
+  "current_name": "Brevundimonas diminuta",
+  "genus": "Brevundimonas",
+  "family": "Caulobacteraceae",
+  "rank": "SPECIES"
+ },
+ "Brevundimonas vesicularis": {
+  "tax_id": 41276,
+  "current_name": "Brevundimonas vesicularis",
+  "genus": "Brevundimonas",
+  "family": "Caulobacteraceae",
+  "rank": "SPECIES"
+ },
+ "Capnocytophaga canimorsus": {
+  "tax_id": 28188,
+  "current_name": "Capnocytophaga canimorsus",
+  "genus": "Capnocytophaga",
+  "family": "Flavobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Capnocytophaga ochracea": {
+  "tax_id": 1018,
+  "current_name": "Capnocytophaga ochracea",
+  "genus": "Capnocytophaga",
+  "family": "Flavobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Cardiobacterium hominis": {
+  "tax_id": 2718,
+  "current_name": "Cardiobacterium hominis",
+  "genus": "Cardiobacterium",
+  "family": "Cardiobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Chryseobacterium gleum": {
+  "tax_id": 250,
+  "current_name": "Chryseobacterium gleum",
+  "genus": "Chryseobacterium",
+  "family": "Weeksellaceae",
+  "rank": "SPECIES"
+ },
+ "Chryseobacterium indologenes": {
+  "tax_id": 253,
+  "current_name": "Chryseobacterium indologenes",
+  "genus": "Chryseobacterium",
+  "family": "Weeksellaceae",
+  "rank": "SPECIES"
+ },
+ "Comamonas testosteroni": {
+  "tax_id": 285,
+  "current_name": "Comamonas testosteroni",
+  "genus": "Comamonas",
+  "family": "Comamonadaceae",
+  "rank": "SPECIES"
+ },
+ "Desulfovibrio piger": {
+  "tax_id": 901,
+  "current_name": "Desulfovibrio piger",
+  "genus": "Desulfovibrio",
+  "family": "Desulfovibrionaceae",
+  "rank": "SPECIES"
+ },
+ "Dietzia maris": {
+  "tax_id": 37915,
+  "current_name": "Dietzia maris",
+  "genus": "Dietzia",
+  "family": "Dietziaceae",
+  "rank": "SPECIES"
+ },
+ "Eggerthella lenta": {
+  "tax_id": 84112,
+  "current_name": "Eggerthella lenta",
+  "genus": "Eggerthella",
+  "family": "Eggerthellaceae",
+  "rank": "SPECIES"
+ },
+ "Eikenella corrodens": {
+  "tax_id": 539,
+  "current_name": "Eikenella corrodens",
+  "genus": "Eikenella",
+  "family": "Neisseriaceae",
+  "rank": "SPECIES"
+ },
+ "Erysipelothrix rhusiopathiae": {
+  "tax_id": 1648,
+  "current_name": "Erysipelothrix rhusiopathiae",
+  "genus": "Erysipelothrix",
+  "family": "Erysipelotrichaceae",
+  "rank": "SPECIES"
+ },
+ "Fannyhessea vaginae": {
+  "tax_id": 82135,
+  "current_name": "Fannyhessea vaginae",
+  "genus": "Fannyhessea",
+  "family": "Atopobiaceae",
+  "rank": "SPECIES"
+ },
+ "Finegoldia magna": {
+  "tax_id": 1260,
+  "current_name": "Finegoldia magna",
+  "genus": "Finegoldia",
+  "family": "Peptoniphilaceae",
+  "rank": "SPECIES"
+ },
+ "Gemella haemolysans": {
+  "tax_id": 1379,
+  "current_name": "Gemella haemolysans",
+  "genus": "Gemella",
+  "family": "Gemellaceae",
+  "rank": "SPECIES"
+ },
+ "Gemella morbillorum": {
+  "tax_id": 29391,
+  "current_name": "Gemella morbillorum",
+  "genus": "Gemella",
+  "family": "Gemellaceae",
+  "rank": "SPECIES"
+ },
+ "Gordonia bronchialis": {
+  "tax_id": 2054,
+  "current_name": "Gordonia bronchialis",
+  "genus": "Gordonia",
+  "family": "Gordoniaceae",
+  "rank": "SPECIES"
+ },
+ "Granulicatella adiacens": {
+  "tax_id": 46124,
+  "current_name": "Granulicatella adiacens",
+  "genus": "Granulicatella",
+  "family": "Carnobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Hafnia alvei": {
+  "tax_id": 569,
+  "current_name": "Hafnia alvei",
+  "genus": "Hafnia",
+  "family": "Hafniaceae",
+  "rank": "SPECIES"
+ },
+ "Helcococcus kunzii": {
+  "tax_id": 40091,
+  "current_name": "Helcococcus kunzii",
+  "genus": "Helcococcus",
+  "family": "Peptoniphilaceae",
+  "rank": "SPECIES"
+ },
+ "Kingella kingae": {
+  "tax_id": 504,
+  "current_name": "Kingella kingae",
+  "genus": "Kingella",
+  "family": "Neisseriaceae",
+  "rank": "SPECIES"
+ },
+ "Kluyvera ascorbata": {
+  "tax_id": 51288,
+  "current_name": "Kluyvera ascorbata",
+  "genus": "Kluyvera",
+  "family": "Enterobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Leclercia adecarboxylata": {
+  "tax_id": 83655,
+  "current_name": "Leclercia adecarboxylata",
+  "genus": "Leclercia",
+  "family": "Enterobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Leptospira interrogans": {
+  "tax_id": 173,
+  "current_name": "Leptospira interrogans",
+  "genus": "Leptospira",
+  "family": "Leptospiraceae",
+  "rank": "SPECIES"
+ },
+ "Magnusiomyces capitatus": {
+  "tax_id": 1095183,
+  "current_name": "Magnusiomyces capitatus",
+  "genus": "Magnusiomyces",
+  "family": "Dipodascaceae",
+  "rank": "SPECIES"
+ },
+ "Mobiluncus curtisii": {
+  "tax_id": 2051,
+  "current_name": "Mobiluncus curtisii",
+  "genus": "Mobiluncus",
+  "family": "Actinomycetaceae",
+  "rank": "SPECIES"
+ },
+ "Morganella morganii": {
+  "tax_id": 582,
+  "current_name": "Morganella morganii",
+  "genus": "Morganella",
+  "family": "Morganellaceae",
+  "rank": "SPECIES"
+ },
+ "Ochrobactrum anthropi": {
+  "tax_id": 529,
+  "current_name": "Brucella anthropi",
+  "genus": "Brucella",
+  "family": "Brucellaceae",
+  "rank": "SPECIES"
+ },
+ "Odoribacter splanchnicus": {
+  "tax_id": 28118,
+  "current_name": "Odoribacter splanchnicus",
+  "genus": "Odoribacter",
+  "family": "Odoribacteraceae",
+  "rank": "SPECIES"
+ },
+ "Pantoea agglomerans": {
+  "tax_id": 549,
+  "current_name": "Pantoea agglomerans",
+  "genus": "Pantoea",
+  "family": "Erwiniaceae",
+  "rank": "SPECIES"
+ },
+ "Parabacteroides distasonis": {
+  "tax_id": 823,
+  "current_name": "Parabacteroides distasonis",
+  "genus": "Parabacteroides",
+  "family": "Tannerellaceae",
+  "rank": "SPECIES"
+ },
+ "Plesiomonas shigelloides": {
+  "tax_id": 703,
+  "current_name": "Plesiomonas shigelloides",
+  "genus": "Plesiomonas",
+  "family": "Enterobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Pluralibacter gergoviae": {
+  "tax_id": 61647,
+  "current_name": "Pluralibacter gergoviae",
+  "genus": "Pluralibacter",
+  "family": "Enterobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Providencia alcalifaciens": {
+  "tax_id": 126385,
+  "current_name": "Providencia alcalifaciens",
+  "genus": "Providencia",
+  "family": "Morganellaceae",
+  "rank": "SPECIES"
+ },
+ "Providencia rettgeri": {
+  "tax_id": 587,
+  "current_name": "Providencia rettgeri",
+  "genus": "Providencia",
+  "family": "Morganellaceae",
+  "rank": "SPECIES"
+ },
+ "Providencia stuartii": {
+  "tax_id": 588,
+  "current_name": "Providencia stuartii",
+  "genus": "Providencia",
+  "family": "Morganellaceae",
+  "rank": "SPECIES"
+ },
+ "Roseomonas mucosa": {
+  "tax_id": 207340,
+  "current_name": "Roseomonas mucosa",
+  "genus": "Roseomonas",
+  "family": "Roseomonadaceae",
+  "rank": "SPECIES"
+ },
+ "Rothia dentocariosa": {
+  "tax_id": 2047,
+  "current_name": "Rothia dentocariosa",
+  "genus": "Rothia",
+  "family": "Micrococcaceae",
+  "rank": "SPECIES"
+ },
+ "Rothia mucilaginosa": {
+  "tax_id": 43675,
+  "current_name": "Rothia mucilaginosa",
+  "genus": "Rothia",
+  "family": "Micrococcaceae",
+  "rank": "SPECIES"
+ },
+ "Sphingomonas paucimobilis": {
+  "tax_id": 13689,
+  "current_name": "Sphingomonas paucimobilis",
+  "genus": "Sphingomonas",
+  "family": "Sphingomonadaceae",
+  "rank": "SPECIES"
+ },
+ "Streptobacillus moniliformis": {
+  "tax_id": 34105,
+  "current_name": "Streptobacillus moniliformis",
+  "genus": "Streptobacillus",
+  "family": "Leptotrichiaceae",
+  "rank": "SPECIES"
+ },
+ "Sutterella wadsworthensis": {
+  "tax_id": 40545,
+  "current_name": "Sutterella wadsworthensis",
+  "genus": "Sutterella",
+  "family": "Sutterellaceae",
+  "rank": "SPECIES"
+ },
+ "Treponema denticola": {
+  "tax_id": 158,
+  "current_name": "Treponema denticola",
+  "genus": "Treponema",
+  "family": "Treponemataceae",
+  "rank": "SPECIES"
+ },
+ "Trichosporon asahii": {
+  "tax_id": 82508,
+  "current_name": "Trichosporon asahii",
+  "genus": "Trichosporon",
+  "family": "Trichosporonaceae",
+  "rank": "SPECIES"
+ },
+ "Trueperella pyogenes": {
+  "tax_id": 1661,
+  "current_name": "Trueperella pyogenes",
+  "genus": "Trueperella",
+  "family": "Actinomycetaceae",
+  "rank": "SPECIES"
+ },
+ "Tsukamurella paurometabola": {
+  "tax_id": 2061,
+  "current_name": "Tsukamurella paurometabola",
+  "genus": "Tsukamurella",
+  "family": "Tsukamurellaceae",
+  "rank": "SPECIES"
+ },
+ "Yersinia ruckeri": {
+  "tax_id": 29486,
+  "current_name": "Yersinia ruckeri",
+  "genus": "Yersinia",
+  "family": "Yersiniaceae",
+  "rank": "SPECIES"
+ },
+ "Zygosaccharomyces bailii": {
+  "tax_id": 4954,
+  "current_name": "Zygosaccharomyces bailii",
+  "genus": "Zygosaccharomyces",
+  "family": "Saccharomycetaceae",
+  "rank": "SPECIES"
+ },
+ "Zygosaccharomyces rouxii": {
+  "tax_id": 4956,
+  "current_name": "Zygosaccharomyces rouxii",
+  "genus": "Zygosaccharomyces",
+  "family": "Saccharomycetaceae",
+  "rank": "SPECIES"
+ },
+ "Zymomonas mobilis": {
+  "tax_id": 542,
+  "current_name": "Zymomonas mobilis",
+  "genus": "Zymomonas",
+  "family": "Zymomonadaceae",
+  "rank": "SPECIES"
+ },
+ "[Haemophilus] ducreyi": {
+  "tax_id": 730,
+  "current_name": "[Haemophilus] ducreyi",
+  "genus": "Haemophilus",
+  "family": "Pasteurellaceae",
+  "rank": "SPECIES"
+ },
+ "Acinetobacter nosocomialis": {
+  "tax_id": 106654,
+  "current_name": "Acinetobacter nosocomialis",
+  "genus": "Acinetobacter",
+  "family": "Moraxellaceae",
+  "rank": "SPECIES"
+ },
+ "Acinetobacter pittii": {
+  "tax_id": 48296,
+  "current_name": "Acinetobacter pittii",
+  "genus": "Acinetobacter",
+  "family": "Moraxellaceae",
+  "rank": "SPECIES"
+ },
+ "Aspergillus terreus": {
+  "tax_id": 33178,
+  "current_name": "Aspergillus terreus",
+  "genus": "Aspergillus",
+  "family": "Aspergillaceae",
+  "rank": "SPECIES"
+ },
+ "Bacteroides caccae": {
+  "tax_id": 47678,
+  "current_name": "Bacteroides caccae",
+  "genus": "Bacteroides",
+  "family": "Bacteroidaceae",
+  "rank": "SPECIES"
+ },
+ "Candida haemulonii": {
+  "tax_id": 45357,
+  "current_name": "Candidozyma haemuli",
+  "genus": "Candidozyma",
+  "family": "Metschnikowiaceae",
+  "rank": "SPECIES"
+ },
+ "Citrobacter braakii": {
+  "tax_id": 57706,
+  "current_name": "Citrobacter braakii",
+  "genus": "Citrobacter",
+  "family": "Enterobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Corynebacterium amycolatum": {
+  "tax_id": 43765,
+  "current_name": "Corynebacterium amycolatum",
+  "genus": "Corynebacterium",
+  "family": "Corynebacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Corynebacterium urealyticum": {
+  "tax_id": 43771,
+  "current_name": "Corynebacterium urealyticum",
+  "genus": "Corynebacterium",
+  "family": "Corynebacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Enterobacter roggenkampii": {
+  "tax_id": 1812935,
+  "current_name": "Enterobacter roggenkampii",
+  "genus": "Enterobacter",
+  "family": "Enterobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Enterococcus avium": {
+  "tax_id": 33945,
+  "current_name": "Enterococcus avium",
+  "genus": "Enterococcus",
+  "family": "Enterococcaceae",
+  "rank": "SPECIES"
+ },
+ "Exophiala dermatitidis": {
+  "tax_id": 5970,
+  "current_name": "Exophiala dermatitidis",
+  "genus": "Exophiala",
+  "family": "Herpotrichiellaceae",
+  "rank": "SPECIES"
+ },
+ "Klebsiella variicola": {
+  "tax_id": 244366,
+  "current_name": "Klebsiella variicola",
+  "genus": "Klebsiella",
+  "family": "Enterobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Lichtheimia corymbifera": {
+  "tax_id": 42458,
+  "current_name": "Lichtheimia corymbifera",
+  "genus": "Lichtheimia",
+  "family": "Lichtheimiaceae",
+  "rank": "SPECIES"
+ },
+ "Lomentospora prolificans": {
+  "tax_id": 41688,
+  "current_name": "Lomentospora prolificans",
+  "genus": "Lomentospora",
+  "family": "Microascaceae",
+  "rank": "SPECIES"
+ },
+ "Mucor circinelloides": {
+  "tax_id": 36080,
+  "current_name": "Mucor circinelloides",
+  "genus": "Mucor",
+  "family": "Mucoraceae",
+  "rank": "SPECIES"
+ },
+ "Mycobacterium chimaera": {
+  "tax_id": 222805,
+  "current_name": "Mycobacterium intracellulare subsp. chimaera",
+  "genus": "Mycobacterium",
+  "family": "Mycobacteriaceae",
+  "rank": "SUBSPECIES"
+ },
+ "Nocardia brasiliensis": {
+  "tax_id": 37326,
+  "current_name": "Nocardia brasiliensis",
+  "genus": "Nocardia",
+  "family": "Nocardiaceae",
+  "rank": "SPECIES"
+ },
+ "Nocardia cyriacigeorgica": {
+  "tax_id": 135487,
+  "current_name": "Nocardia cyriacigeorgica",
+  "genus": "Nocardia",
+  "family": "Nocardiaceae",
+  "rank": "SPECIES"
+ },
+ "Prevotella bivia": {
+  "tax_id": 28125,
+  "current_name": "Prevotella bivia",
+  "genus": "Prevotella",
+  "family": "Prevotellaceae",
+  "rank": "SPECIES"
+ },
+ "Rhizopus arrhizus": {
+  "tax_id": 64495,
+  "current_name": "Rhizopus arrhizus",
+  "genus": "Rhizopus",
+  "family": "Rhizopodaceae",
+  "rank": "SPECIES"
+ },
+ "Rhizopus microsporus": {
+  "tax_id": 58291,
+  "current_name": "Rhizopus microsporus",
+  "genus": "Rhizopus",
+  "family": "Rhizopodaceae",
+  "rank": "SPECIES"
+ },
+ "Scedosporium apiospermum": {
+  "tax_id": 563466,
+  "current_name": "Scedosporium apiospermum",
+  "genus": "Scedosporium",
+  "family": "Microascaceae",
+  "rank": "SPECIES"
+ },
+ "Sporothrix schenckii": {
+  "tax_id": 29908,
+  "current_name": "Sporothrix schenckii",
+  "genus": "Sporothrix",
+  "family": "Ophiostomataceae",
+  "rank": "SPECIES"
+ },
+ "Staphylococcus capitis": {
+  "tax_id": 29388,
+  "current_name": "Staphylococcus capitis",
+  "genus": "Staphylococcus",
+  "family": "Staphylococcaceae",
+  "rank": "SPECIES"
+ },
+ "Staphylococcus caprae": {
+  "tax_id": 29380,
+  "current_name": "Staphylococcus caprae",
+  "genus": "Staphylococcus",
+  "family": "Staphylococcaceae",
+  "rank": "SPECIES"
+ },
+ "Streptococcus constellatus": {
+  "tax_id": 76860,
+  "current_name": "Streptococcus constellatus",
+  "genus": "Streptococcus",
+  "family": "Streptococcaceae",
+  "rank": "SPECIES"
+ },
+ "Acanthamoeba castellanii": {
+  "tax_id": 5755,
+  "current_name": "Acanthamoeba castellanii",
+  "genus": "Acanthamoeba",
+  "family": "Acanthamoebidae",
+  "rank": "SPECIES"
+ },
+ "Actinomadura madurae": {
+  "tax_id": 1993,
+  "current_name": "Actinomadura madurae",
+  "genus": "Actinomadura",
+  "family": "Thermomonosporaceae",
+  "rank": "SPECIES"
+ },
+ "Bartonella henselae": {
+  "tax_id": 38323,
+  "current_name": "Bartonella henselae",
+  "genus": "Bartonella",
+  "family": "Bartonellaceae",
+  "rank": "SPECIES"
+ },
+ "Cladophialophora carrionii": {
+  "tax_id": 86049,
+  "current_name": "Cladophialophora carrionii",
+  "genus": "Cladophialophora",
+  "family": "Herpotrichiellaceae",
+  "rank": "SPECIES"
+ },
+ "Entamoeba histolytica": {
+  "tax_id": 5759,
+  "current_name": "Entamoeba histolytica",
+  "genus": "Entamoeba",
+  "family": "Entamoebidae",
+  "rank": "SPECIES"
+ },
+ "Epidermophyton floccosum": {
+  "tax_id": 34391,
+  "current_name": "Epidermophyton floccosum",
+  "genus": "Epidermophyton",
+  "family": "Arthrodermataceae",
+  "rank": "SPECIES"
+ },
+ "Fonsecaea pedrosoi": {
+  "tax_id": 40355,
+  "current_name": "Fonsecaea pedrosoi",
+  "genus": "Fonsecaea",
+  "family": "Herpotrichiellaceae",
+  "rank": "SPECIES"
+ },
+ "Giardia intestinalis": {
+  "tax_id": 5741,
+  "current_name": "Giardia duodenalis",
+  "genus": "Giardia",
+  "family": "Hexamitidae",
+  "rank": "SPECIES"
+ },
+ "Madurella mycetomatis": {
+  "tax_id": 100816,
+  "current_name": "Madurella mycetomatis",
+  "genus": "Madurella",
+  "family": null,
+  "rank": "SPECIES"
+ },
+ "Sporothrix brasiliensis": {
+  "tax_id": 545650,
+  "current_name": "Sporothrix brasiliensis",
+  "genus": "Sporothrix",
+  "family": "Ophiostomataceae",
+  "rank": "SPECIES"
+ },
+ "Talaromyces marneffei": {
+  "tax_id": 37727,
+  "current_name": "Talaromyces marneffei",
+  "genus": "Talaromyces",
+  "family": "Trichocomaceae",
+  "rank": "SPECIES"
+ },
+ "Bartonella quintana": {
+  "tax_id": 803,
+  "current_name": "Bartonella quintana",
+  "genus": "Bartonella",
+  "family": "Bartonellaceae",
+  "rank": "SPECIES"
+ },
+ "Bordetella parapertussis": {
+  "tax_id": 519,
+  "current_name": "Bordetella parapertussis",
+  "genus": "Bordetella",
+  "family": "Alcaligenaceae",
+  "rank": "SPECIES"
+ },
+ "Bordetella pertussis": {
+  "tax_id": 520,
+  "current_name": "Bordetella pertussis",
+  "genus": "Bordetella",
+  "family": "Alcaligenaceae",
+  "rank": "SPECIES"
+ },
+ "Campylobacter coli": {
+  "tax_id": 195,
+  "current_name": "Campylobacter coli",
+  "genus": "Campylobacter",
+  "family": "Campylobacteraceae",
+  "rank": "SPECIES"
+ },
+ "Campylobacter fetus": {
+  "tax_id": 196,
+  "current_name": "Campylobacter fetus",
+  "genus": "Campylobacter",
+  "family": "Campylobacteraceae",
+  "rank": "SPECIES"
+ },
+ "Clostridium botulinum": {
+  "tax_id": 1491,
+  "current_name": "Clostridium botulinum",
+  "genus": "Clostridium",
+  "family": "Clostridiaceae",
+  "rank": "SPECIES"
+ },
+ "Haemophilus parainfluenzae": {
+  "tax_id": 729,
+  "current_name": "Haemophilus parainfluenzae",
+  "genus": "Haemophilus",
+  "family": "Pasteurellaceae",
+  "rank": "SPECIES"
+ },
+ "Mycobacterium leprae": {
+  "tax_id": 1769,
+  "current_name": "Mycobacterium leprae",
+  "genus": "Mycobacterium",
+  "family": "Mycobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Mycobacterium ulcerans": {
+  "tax_id": 1809,
+  "current_name": "Mycobacterium ulcerans",
+  "genus": "Mycobacterium",
+  "family": "Mycobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Neisseria lactamica": {
+  "tax_id": 486,
+  "current_name": "Neisseria lactamica",
+  "genus": "Neisseria",
+  "family": "Neisseriaceae",
+  "rank": "SPECIES"
+ },
+ "Salmonella bongori": {
+  "tax_id": 54736,
+  "current_name": "Salmonella bongori",
+  "genus": "Salmonella",
+  "family": "Enterobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Vibrio mimicus": {
+  "tax_id": 674,
+  "current_name": "Vibrio mimicus",
+  "genus": "Vibrio",
+  "family": "Vibrionaceae",
+  "rank": "SPECIES"
+ },
+ "Yersinia pseudotuberculosis": {
+  "tax_id": 633,
+  "current_name": "Yersinia pseudotuberculosis",
+  "genus": "Yersinia",
+  "family": "Yersiniaceae",
+  "rank": "SPECIES"
+ },
+ "Aeromonas caviae": {
+  "tax_id": 648,
+  "current_name": "Aeromonas caviae",
+  "genus": "Aeromonas",
+  "family": "Aeromonadaceae",
+  "rank": "SPECIES"
+ },
+ "Cedecea davisae": {
+  "tax_id": 158484,
+  "current_name": "Cedecea davisae",
+  "genus": "Cedecea",
+  "family": "Enterobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Cronobacter dublinensis": {
+  "tax_id": 413497,
+  "current_name": "Cronobacter dublinensis",
+  "genus": "Cronobacter",
+  "family": "Enterobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Cronobacter malonaticus": {
+  "tax_id": 413503,
+  "current_name": "Cronobacter malonaticus",
+  "genus": "Cronobacter",
+  "family": "Enterobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Cronobacter turicensis": {
+  "tax_id": 413502,
+  "current_name": "Cronobacter turicensis",
+  "genus": "Cronobacter",
+  "family": "Enterobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Escherichia albertii": {
+  "tax_id": 208962,
+  "current_name": "Escherichia albertii",
+  "genus": "Escherichia",
+  "family": "Enterobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Escherichia fergusonii": {
+  "tax_id": 564,
+  "current_name": "Escherichia fergusonii",
+  "genus": "Escherichia",
+  "family": "Enterobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Kosakonia cowanii": {
+  "tax_id": 208223,
+  "current_name": "Kosakonia cowanii",
+  "genus": "Kosakonia",
+  "family": "Enterobacteriaceae",
+  "rank": "SPECIES"
+ },
+ "Yokenella regensburgei": {
+  "tax_id": 158877,
+  "current_name": "Yokenella regensburgei",
+  "genus": "Yokenella",
+  "family": "Enterobacteriaceae",
+  "rank": "SPECIES"
+ }
+}

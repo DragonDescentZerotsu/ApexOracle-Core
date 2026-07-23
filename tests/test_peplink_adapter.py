@@ -14,7 +14,7 @@ def test_dependency_error_explains_pinned_package(
         raise ImportError(name)
 
     monkeypatch.setattr(peplink_adapter, "import_module", fail_import)
-    with pytest.raises(peplink_adapter.PepLinkDependencyError, match="PepLink==0.1.1"):
+    with pytest.raises(peplink_adapter.PepLinkDependencyError, match="PepLink==0.1.2"):
         peplink_adapter.load_peplink()
 
 
@@ -42,7 +42,7 @@ def test_dbaasp_adapter_uses_only_public_peplink_api(
 
 
 def test_release_provenance_is_frozen() -> None:
-    assert peplink_adapter.PEPLINK_VERSION == "0.1.1"
+    assert peplink_adapter.PEPLINK_VERSION == "0.1.2"
     assert len(peplink_adapter.PEPLINK_GIT_COMMIT) == 40
 
 

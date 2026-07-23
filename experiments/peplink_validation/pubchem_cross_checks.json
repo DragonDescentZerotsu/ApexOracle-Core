@@ -1,0 +1,55 @@
+{
+  "audit_date": "2026-07-20",
+  "purpose": "Independent spot checks for disputed ChatGPT-o1/OPSIN transformations; a PubChem miss is not treated as evidence of invalidity.",
+  "queries": [
+    {
+      "label": "nitrotyrosine",
+      "query": "3-nitro-L-tyrosine",
+      "status": "matched",
+      "pubchem_cid": 65124,
+      "molecular_formula": "C9H10N2O5",
+      "isomeric_smiles": "C1=CC(=C(C=C1C[C@@H](C(=O)O)N)[N+](=O)[O-])O",
+      "inchi_key": "FBTSQILOGYXGMD-LURJTMIESA-N",
+      "interpretation": "Confirms that nitrotyrosine retains the phenolic hydroxyl. The historical OPSIN pipeline produced C9H10N2O4 nitrophenylalanine and is not equivalent."
+    },
+    {
+      "label": "beta_methyltryptophan",
+      "query": "beta-methyltryptophan",
+      "status": "matched",
+      "pubchem_cid": 53748860,
+      "molecular_formula": "C12H14N2O2",
+      "isomeric_smiles": "CC(C1=CNC2=CC=CC=C21)[C@@H](C(=O)O)N",
+      "inchi_key": "CZSQAYAIWDEOSA-QRIDDKLISA-N",
+      "interpretation": "Confirms methylation at the beta carbon and the source formula. The historical OPSIN pipeline produced a different C12H16N2O2 fused-ring structure."
+    },
+    {
+      "label": "azidolysine",
+      "query": "N6-azido-L-lysine",
+      "status": "not_found_by_exact_name",
+      "interpretation": "No conclusion drawn from the exact-name miss."
+    },
+    {
+      "label": "carbamidomethyl_cysteine",
+      "query": "S-carbamidomethyl-L-cysteine",
+      "status": "not_found_by_exact_name",
+      "interpretation": "No conclusion drawn from the exact-name miss."
+    },
+    {
+      "label": "hydroxyasparagine",
+      "query": "D-3-hydroxyasparagine",
+      "status": "not_found_by_exact_name",
+      "interpretation": "No conclusion drawn from the exact-name miss."
+    },
+    {
+      "label": "n_methyl_d_tryptophan",
+      "query": "N-alpha-methyl-D-tryptophan",
+      "status": "not_found_by_exact_name",
+      "interpretation": "No conclusion drawn from the exact-name miss."
+    }
+  ],
+  "source": {
+    "service": "PubChem PUG REST",
+    "base_url": "https://pubchem.ncbi.nlm.nih.gov/rest/pug",
+    "request_tool": "pubchem-pug-skill/scripts/rest_request.py"
+  }
+}

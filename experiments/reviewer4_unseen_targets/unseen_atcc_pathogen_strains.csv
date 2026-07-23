@@ -1,0 +1,753 @@
+species,atcc_number,accepted_name,strain_designation,biosafety_level,has_genome,genome_url,type_strain,web_available,isolation_source,category
+Providencia stuartii,43664,Providencia stuartii,FP1527,BSL 1,True,https://genomes.atcc.org/genomes/23a05af9fef74d37,False,True,Bile,Bacteria
+Providencia stuartii,43665,Providencia stuartii,FP1528,BSL 1,True,https://genomes.atcc.org/genomes/a6d160e5476a4e9f,False,True,Bile,Bacteria
+Providencia stuartii,43258,Providencia stuartii,P306 carrying plasmid pUB2660,BSL 1,True,https://genomes.atcc.org/genomes/8d68548c58b4462c,False,True,,Bacteria
+Providencia stuartii,49809,Providencia stuartii,AmMS 256,BSL 1,True,https://genomes.atcc.org/genomes/5e9770fafca640b6,False,True,Clinical isolate,Bacteria
+Providencia stuartii,49762,Providencia stuartii,164,BSL 1,True,https://genomes.atcc.org/genomes/f71df647fef64076,False,True,Clinical isolate,Bacteria
+Providencia stuartii,29914,Providencia stuartii,CDC 2896-68,BSL 1,True,https://genomes.atcc.org/genomes/bac4c442bbed4a2f,True,True,,Bacteria
+Providencia stuartii,29851,Providencia stuartii,40,BSL 1,True,https://genomes.atcc.org/genomes/a1d76e4b43b04c72,False,True,Clinical isolate,Bacteria
+Providencia stuartii,33672,Providencia stuartii,495 [CDC N1083],BSL 1,True,https://genomes.atcc.org/genomes/83a6e1779cc948f9,False,True,,Bacteria
+Providencia stuartii,35031,Providencia stuartii,C141,BSL 1,True,https://genomes.atcc.org/genomes/e152cc0b7ec64a6e,False,True,,Bacteria
+Providencia stuartii,33700,Providencia stuartii,PV 63 [364],BSL 1,True,https://genomes.atcc.org/genomes/981c21f40f4448a5,False,True,Clinical isolate,Bacteria
+Providencia stuartii,25827,Providencia stuartii,NCDC 3646-51,BSL 1,True,https://genomes.atcc.org/genomes/3e3bd61460304601,False,True,Feces,Bacteria
+Providencia stuartii,25826,Providencia stuartii,NCDC 5394-50 [DSM 6676],BSL 1,False,,False,True,Feces,Bacteria
+Providencia stuartii,25825,Providencia stuartii,NCDC 247,BSL 1,False,,False,False,Pericardium at post mortem,Bacteria
+Providencia rettgeri,BAA-2525,Providencia rettgeri,bMx# 1103204,BSL 2,True,https://genomes.atcc.org/genomes/3356b84ff228483e,False,True,Clinical isolate from BioMerieux,Bacteria
+Providencia rettgeri,9250,Providencia rettgeri,"[ATCC 6907, IFO 13501, NCTC 1501]",BSL 2,False,,False,True,Dysentery,Bacteria
+Providencia rettgeri,51595,Providencia rettgeri,B1,BSL 2,True,https://genomes.atcc.org/genomes/433c5d6450ef402b,False,True,Nitramine explosive-contaminated soil,Bacteria
+Providencia rettgeri,43658,Providencia rettgeri,CDC 3120-1,BSL 1,False,,False,True,Clinical isolate,Bacteria
+Providencia rettgeri,43657,Providencia rettgeri,CDC 3191-1,BSL 1,False,,False,True,Clinical isolate,Bacteria
+Providencia rettgeri,9919,Providencia rettgeri,,BSL 1,False,,False,True,,Bacteria
+Providencia rettgeri,9918,Providencia rettgeri,,BSL 1,False,,False,True,,Bacteria
+Providencia rettgeri,29944,Providencia rettgeri,"1163 [CCUG 14804, CIP 103182, DSM 4542, JCM 1675, LMG 3259, NCTC 11801]",BSL 1,True,https://genomes.atcc.org/genomes/79f7311b3fd9409a,True,True,,Bacteria
+Providencia rettgeri,35565,Providencia rettgeri,69,BSL 1,False,,False,True,Bile,Bacteria
+Providencia rettgeri,33947,Providencia rettgeri,572-042,BSL 1,False,,False,True,,Bacteria
+Providencia rettgeri,21118,Providencia rettgeri,CTC 0261,BSL 1,False,,False,False,,Bacteria
+Providencia rettgeri,31052,Providencia rettgeri,FD 24746,BSL 1,False,,False,False,Derived from existing strain,Bacteria
+Providencia rettgeri,33671,Providencia rettgeri,CDC 57718,BSL 1,True,https://genomes.atcc.org/genomes/3a5c137f65e945e9,False,True,,Bacteria
+Providencia rettgeri,25932,Providencia rettgeri,NCDC 5431-69,BSL 1,True,https://genomes.atcc.org/genomes/387cc7e495354e59,False,True,Urine,Bacteria
+Providencia rettgeri,14505,Providencia rettgeri,FDA strain PCI 702,BSL 1,True,https://genomes.atcc.org/genomes/7851b17bf9aa4719,False,True,,Bacteria
+Providencia alcalifaciens,9886,Providencia alcalifaciens,,BSL 1,True,https://genomes.atcc.org/genomes/ec0f72bbe13f4a5c,True,True,Feces,Bacteria
+Providencia alcalifaciens,51902,Providencia alcalifaciens,GNI 3,BSL 2,True,https://genomes.atcc.org/genomes/9faf76eed33640f3,False,True,,Bacteria
+Providencia alcalifaciens,27970,Providencia alcalifaciens,CDC 3370-67,BSL 1,True,https://genomes.atcc.org/genomes/57e6e4ea7d5f4d35,False,True,Feces,Bacteria
+Providencia alcalifaciens,25828,Providencia alcalifaciens,NCDC strain EEB,BSL 1,False,,False,False,Feces,Bacteria
+Providencia alcalifaciens,27971,Providencia alcalifaciens,CDC 3055-67,BSL 1,True,https://genomes.atcc.org/genomes/acf2108eaf504fb0,False,True,Feces,Bacteria
+Morganella morganii,23585,Morganella morganii subsp. morganii,"NCTC 2815 [ATCC 8076a, M. Pelczar M1]",BSL 2,True,https://genomes.atcc.org/genomes/a9a153ea6c424bc4,False,True,Blood and intestinal contents of green-billed toucan,Bacteria
+Morganella morganii,23548,Morganella morganii subsp. morganii,NCTC 10041 [N-O-T1],BSL 2,False,,False,True,Floor polish,Bacteria
+Morganella morganii,51204,Morganella morganii subsp. morganii,CDC 2866-78 [K16 (Bacty)],BSL 2,True,https://genomes.atcc.org/genomes/4edaf2a24d4b4244,False,True,Sputum,Bacteria
+Morganella morganii,51202,Morganella morganii subsp. morganii,CDC 1939-76,BSL 2,True,https://genomes.atcc.org/genomes/fc232533a13b4e4c,False,True,Urine,Bacteria
+Morganella morganii,51203,Morganella morganii subsp. morganii,CDC 1427-73 [73-406],BSL 2,True,https://genomes.atcc.org/genomes/b696c5a67657434a,False,True,Sputum,Bacteria
+Morganella morganii,49994,Morganella morganii subsp. morganii,10109,BSL 2,True,https://genomes.atcc.org/genomes/ef8c890110ba4026,False,True,Patient with chronic struvite urolithiasis,Bacteria
+Morganella morganii,49993,Morganella morganii subsp. morganii,8066,BSL 2,True,https://genomes.atcc.org/genomes/f3a7fa922493462d,False,True,Patient with chronic struvite urolithiasis,Bacteria
+Morganella morganii,49991,Morganella morganii subsp. morganii,7650,BSL 2,True,https://genomes.atcc.org/genomes/f2b267a2d0f44b2d,False,True,Patient with chronic struvite urolithiasis,Bacteria
+Morganella morganii,49992,Morganella morganii subsp. morganii,2854-3,BSL 2,True,https://genomes.atcc.org/genomes/c715284e1fd04810,False,True,Patient with chronic struvite urolithiasis,Bacteria
+Morganella morganii,51596,Morganella morganii subsp. sibonii,B2,BSL 2,True,https://genomes.atcc.org/genomes/e2c3b5f266054854,False,True,Nitramine explosive-contaminated soil,Bacteria
+Morganella morganii,51205,Morganella morganii subsp. sibonii,CDC 8263-91 [AB 2429],BSL 2,True,https://genomes.atcc.org/genomes/763cb65eee6d42a0,False,True,Wound,Bacteria
+Morganella morganii,51206,Morganella morganii subsp. sibonii,CDC 3522-75 [RB 2405],BSL 2,True,https://genomes.atcc.org/genomes/3155992001d14159,False,True,Urine,Bacteria
+Morganella morganii,51207,Morganella morganii subsp. sibonii,CDC 8246-91 [44031/66],BSL 2,True,https://genomes.atcc.org/genomes/202deb3a3ffc4bb2,False,True,Pus,Bacteria
+Morganella morganii,49948,Morganella morganii subsp. sibonii,"CDC 8103-85 [AB 2048, DSM 14850]",BSL 2,True,https://genomes.atcc.org/genomes/777220bfbe1d48f9,True,True,Sputum,Bacteria
+Morganella morganii,9917,Morganella morganii subsp. morganii,,BSL 2,False,,False,True,,Bacteria
+Morganella morganii,9916,Morganella morganii subsp. morganii,,BSL 2,False,,False,True,,Bacteria
+Morganella morganii,9237,Morganella morganii subsp. morganii,M685,BSL 2,True,https://genomes.atcc.org/genomes/555f9ad2c437462f,False,True,Food poisoning,Bacteria
+Morganella morganii,79,Morganella morganii subsp. morganii,AMC J-33,BSL 2,True,https://genomes.atcc.org/genomes/d4a6d0bc3e164ef7,False,True,,Bacteria
+Morganella morganii,8019,Morganella morganii subsp. morganii,"21 [23, NCIB 10466]",BSL 2,True,https://genomes.atcc.org/genomes/3721318940dd45e2,False,True,,Bacteria
+Morganella morganii,8076c,Morganella morganii subsp. morganii,M3 [NCTC 679],BSL 2,False,,False,True,,Bacteria
+Morganella morganii,8076e,Morganella morganii subsp. morganii,M6 [NCTC 1707],BSL 2,False,,False,True,Feces,Bacteria
+Morganella morganii,8076b,Morganella morganii subsp. morganii,M2 [NCTC 2818],BSL 2,False,,False,True,Pine snake,Bacteria
+Morganella morganii,27975,Morganella morganii subsp. morganii,CDC 11-66 SC1,BSL 2,True,https://genomes.atcc.org/genomes/e4f1180512d14393,False,True,,Bacteria
+Morganella morganii,27974,Morganella morganii subsp. morganii,CDC 542-69 SC1,BSL 2,True,https://genomes.atcc.org/genomes/a1f28f6bb53c4c1d,False,True,Chimpanzee,Bacteria
+Morganella morganii,29884,Morganella morganii subsp. sibonii,345-57G,BSL 2,True,https://genomes.atcc.org/genomes/20ce34fc14004362,False,True,,Bacteria
+Morganella morganii,29853,Morganella morganii subsp. morganii,8,BSL 2,True,https://genomes.atcc.org/genomes/c600b187cb2c47ee,False,True,Clinical isolate,Bacteria
+Morganella morganii,35200,Morganella morganii subsp. morganii,AM-15,BSL 2,True,https://genomes.atcc.org/genomes/cab1de6f77004e7c,False,True,,Bacteria
+Morganella morganii,978,Morganella morganii subsp. morganii,Pirie 32,BSL 2,False,,False,False,,Bacteria
+Morganella morganii,977,Morganella morganii subsp. morganii,Pirie 3938,BSL 2,False,,False,False,,Bacteria
+Morganella morganii,976,Morganella morganii subsp. morganii,Pirie 44 B,BSL 2,False,,False,False,,Bacteria
+Morganella morganii,975,Morganella morganii subsp. morganii,Pirie 44 A,BSL 2,False,,False,False,,Bacteria
+Morganella morganii,974,Morganella morganii subsp. morganii,Pirie 35 B,BSL 2,False,,False,False,,Bacteria
+Morganella morganii,973,Morganella morganii subsp. morganii,Pirie 35 A,BSL 2,False,,False,False,,Bacteria
+Morganella morganii,33791,Morganella morganii subsp. morganii,Potter,BSL 2,True,https://genomes.atcc.org/genomes/7fff34d26c3843b4,False,True,BALB/c mouse intestine,Bacteria
+Morganella morganii,21116,Morganella morganii subsp. sibonii,CTC 1851,BSL 2,False,,False,False,,Bacteria
+Morganella morganii,25829,Morganella morganii subsp. morganii,"M4 [ATCC 8076d, DSM 6675, NCTC 417; AMNH 692]",BSL 2,True,https://genomes.atcc.org/genomes/36132a91f1dc47da,False,True,Stool from Providence City Hospital,Bacteria
+Morganella morganii,25830,Morganella morganii subsp. morganii,"M11 [33 M, ATCC 8076H, NCTC 235]",BSL 2,True,https://genomes.atcc.org/genomes/121db30f3c174593,True,True,Patient with summer diarrhea,Bacteria
+Morganella morganii,21720,Morganella morganii subsp. sibonii,AA-2,BSL 2,False,,False,True,,Bacteria
+Hafnia alvei,13337,Hafnia alvei,NCTC 8105 [NCDC 434-68],BSL 1,True,https://genomes.atcc.org/genomes/6bd184666f034741,True,True,Stuart's type 32011,Bacteria
+Hafnia alvei,BAA-2768,Hafnia alvei,bMx:8208040,BSL 1,True,https://genomes.atcc.org/genomes/a107250ee3954987,False,True,Food,Bacteria
+Hafnia alvei,51873,Hafnia alvei,HER 1272 [1672],BSL 1,True,https://genomes.atcc.org/genomes/17596e02f1f7404b,False,True,Feces,Bacteria
+Hafnia alvei,9760,Hafnia alvei,04414 [NCTC 6578],BSL 1,True,https://genomes.atcc.org/genomes/87b5c8b45c45469f,False,True,,Bacteria
+Hafnia alvei,51815,Hafnia alvei,C2,BSL 1,True,https://genomes.atcc.org/genomes/e4169e95872047f7,False,True,Milk,Bacteria
+Hafnia alvei,29926,Hafnia alvei,CDC 5632-72,BSL 1,True,https://genomes.atcc.org/genomes/3e0a5c6c478f474d,False,True,,Bacteria
+Hafnia alvei,51873-B1,Hafnia alvei bacteriophage 1672,1672 [HER 272],BSL 1,False,,False,True,Surface water,Viruses
+Hafnia alvei,11604,Hafnia alvei,3565 [Conn 3565],BSL 1,False,,False,False,,Bacteria
+Pantoea agglomerans,23374,Pantoea agglomerans,ICPB EM101,BSL 1,True,https://genomes.atcc.org/genomes/1e407241486d47f7,False,True,South African mango,Bacteria
+Pantoea agglomerans,14537,Pantoea agglomerans,AJ 2196 [IAM 1555],BSL 1,False,,False,True,Rice,Bacteria
+Pantoea agglomerans,13460,Pantoea agglomerans,"XB 2 [ICMP 437, ICMP 438, NCPPB 983]",BSL 1,False,,True,True,,Bacteria
+Pantoea agglomerans,12287,Pantoea agglomerans,[ICPB EH117],BSL 1,False,,False,True,,Bacteria
+Pantoea agglomerans,49012,Pantoea agglomerans,RR 87-131,BSL 1,False,,False,True,Plant-derived foodstuff,Bacteria
+Pantoea agglomerans,49016,Pantoea agglomerans,RR 87-164,BSL 1,True,https://genomes.atcc.org/genomes/391b74a6919d41d6,False,True,Plant-derived foodstuff,Bacteria
+Pantoea agglomerans,49008,Pantoea agglomerans,RR 87-162,BSL 1,False,,False,True,Plant-derived foodstuff,Bacteria
+Pantoea agglomerans,49174,Pantoea agglomerans,CL63,BSL 1,True,https://genomes.atcc.org/genomes/ad29a09054224525,True,True,"Soybean leaves, Glycine max",Bacteria
+Pantoea agglomerans,27988,Pantoea agglomerans,CDC 1377-71,BSL 1,False,,False,True,Urine,Bacteria
+Pantoea agglomerans,43348,Pantoea agglomerans,UCRDAC 1184-13,BSL 1,True,https://genomes.atcc.org/genomes/9a9eb60358044d31,False,True,Gypsophila paniculata galls,Bacteria
+Pantoea agglomerans,49020,Pantoea agglomerans,RR 87-142,BSL 1,True,https://genomes.atcc.org/genomes/9eafb9d883ec441a,False,True,Plant-derived foodstuff,Bacteria
+Pantoea agglomerans,49021,Pantoea agglomerans,RR 88-25,BSL 1,True,https://genomes.atcc.org/genomes/0adfb8aad1fc4fad,False,True,Plant-derived foodstuff,Bacteria
+Pantoea agglomerans,49019,Pantoea agglomerans,RR 87-133,BSL 1,True,https://genomes.atcc.org/genomes/8b716d1d44e24397,False,True,Plant-derived foodstuff,Bacteria
+Pantoea agglomerans,49018,Pantoea agglomerans,RR 88-34,BSL 1,True,https://genomes.atcc.org/genomes/37b81eec6ec94d16,False,True,Plant-derived foodstuff,Bacteria
+Pantoea agglomerans,29904,Pantoea agglomerans,CDC 6003-71 [E1240],BSL 1,True,https://genomes.atcc.org/genomes/a75eca9d69094d0f,False,True,,Bacteria
+Pantoea agglomerans,27155,Pantoea agglomerans,"CDC 1461-67 [CCUG 539, CFBP 3845, CIP 57.51, DSM 3493, ICMP 12534, ICPB 3435, JCM 1236, LMG 1286, NCTC 9381; Graham Price]",BSL 1,True,https://genomes.atcc.org/genomes/5c756d5547ed438d,True,True,Knee laceration,Bacteria
+Pantoea agglomerans,27994,Pantoea agglomerans,CDC 3072-74,BSL 1,False,,False,True,,Bacteria
+Pantoea agglomerans,27999,Pantoea agglomerans,CDC 156-74,BSL 1,False,,False,True,,Bacteria
+Pantoea agglomerans,27997,Pantoea agglomerans,CDC 1551-74,BSL 1,False,,False,True,,Bacteria
+Pantoea agglomerans,27987,Pantoea agglomerans,CDC 1400-74,BSL 1,True,https://genomes.atcc.org/genomes/00c48b41861f4b46,False,True,Ear,Bacteria
+Pantoea agglomerans,29002,Pantoea agglomerans,CDC 6-71,BSL 1,True,https://genomes.atcc.org/genomes/84321bde681d4ef0,False,True,Blood,Bacteria
+Pantoea agglomerans,29000,Pantoea agglomerans,CDC 258-71,BSL 1,False,,False,True,,Bacteria
+Pantoea agglomerans,29923,Pantoea agglomerans,CDC 3123-70 [E393],BSL 1,False,,False,True,,Bacteria
+Pantoea agglomerans,29001,Pantoea agglomerans,CDC 164-75,BSL 1,False,,False,True,Prostate,Bacteria
+Pantoea agglomerans,29921,Pantoea agglomerans,CDC 3482-71,BSL 1,False,,False,True,,Bacteria
+Pantoea agglomerans,33243,Pantoea agglomerans,"NCPPB 2971 [ICMP 272, PDDCC 272, ZP11; 4834]",BSL 1,True,https://genomes.atcc.org/genomes/d0dd7564b3f24c9d,True,True,,Bacteria
+Pantoea agglomerans,31901,Pantoea agglomerans,AST 49-4 [FERM-P 5543],BSL 1,False,,False,True,,Bacteria
+Pantoea agglomerans,39049,Pantoea agglomerans,"SC 12,638",BSL 1,True,https://genomes.atcc.org/genomes/a52b2016c15a4d8a,False,True,,Bacteria
+Pantoea agglomerans,53769,Pantoea agglomerans,NEB 368,BSL 1,False,,False,False,,Bacteria
+Pantoea agglomerans,27995,Pantoea agglomerans,CDC 4854-73,BSL 1,False,,False,True,,Bacteria
+Pantoea agglomerans,33261,Pantoea agglomerans,"NCPPB 2519 [EMO1, LMG 2660]",BSL 1,False,,True,True,Stem gall on Wisteria floribunda,Bacteria
+Pantoea agglomerans,21998,Pantoea agglomerans,A [FERM-P 2439],BSL 1,False,,False,False,Sesame seeds,Bacteria
+Pantoea agglomerans,21434,Pantoea agglomerans,AJ 2985,BSL 1,False,,False,False,,Bacteria
+Pantoea agglomerans,21433,Pantoea agglomerans,AJ 2973,BSL 1,False,,False,False,,Bacteria
+Pantoea agglomerans,19552,Pantoea agglomerans,2669,BSL 1,False,,False,False,Sewage,Bacteria
+Pantoea agglomerans,PTA-2740,Pantoea agglomerans,P102,BSL 1,False,,False,False,,Bacteria
+Pantoea agglomerans,PTA-2744,Pantoea agglomerans,P101,BSL 1,False,,False,False,,Bacteria
+Pantoea agglomerans,23215,Pantoea agglomerans,1784,BSL 1,False,,False,False,Drinking water,Bacteria
+Pantoea agglomerans,23375,Pantoea agglomerans,ICPB EM102 [D. Dye EQ1],BSL 1,False,,False,False,Milletia japonica,Bacteria
+Pantoea agglomerans,13329,Pantoea agglomerans,"TG 101 [Dowson 179, Starr TG 1]",BSL 1,True,https://genomes.atcc.org/genomes/1b325a483b674be5,False,True,,Bacteria
+Pantoea agglomerans,23372,Pantoea agglomerans,ICPB EC11,BSL 1,False,,False,False,Manihot sp.,Bacteria
+Leclercia adecarboxylata,700325,Leclercia adecarboxylata,LBM 84.05.644,BSL 1,True,https://genomes.atcc.org/genomes/dd95e41c13164507,False,True,,Bacteria
+Leclercia adecarboxylata,49024,Leclercia adecarboxylata,RR 87-173,BSL 1,False,,False,True,Plant-derived foodstuff,Bacteria
+Leclercia adecarboxylata,49023,Leclercia adecarboxylata,RR 87-155,BSL 1,False,,False,True,Plant-derived foodstuff,Bacteria
+Leclercia adecarboxylata,27984,Leclercia adecarboxylata,CDC 2674-72,BSL 1,True,https://genomes.atcc.org/genomes/b948cd2cbe1042d2,False,True,Urine,Bacteria
+Leclercia adecarboxylata,27983,Leclercia adecarboxylata,CDC 3791-74,BSL 1,False,,False,True,,Bacteria
+Leclercia adecarboxylata,49015,Leclercia adecarboxylata,RR 87-129,BSL 1,False,,False,True,Plant-derived foodstuff,Bacteria
+Leclercia adecarboxylata,49009,Leclercia adecarboxylata,RR 87-168,BSL 1,False,,False,True,Plant-derived foodstuff,Bacteria
+Leclercia adecarboxylata,23216,Leclercia adecarboxylata,1783,BSL 1,True,https://genomes.atcc.org/genomes/3e448c34b5bc4339,True,True,Drinking water,Bacteria
+Kluyvera ascorbata,33434,Kluyvera ascorbata,CDC 2221-78,BSL 2,True,https://genomes.atcc.org/genomes/747aaeb4cf1246c0,False,True,,Bacteria
+Kluyvera ascorbata,33433,Kluyvera ascorbata,CDC 0648-74,BSL 2,False,,True,True,Sputum,Bacteria
+Kluyvera ascorbata,14236,Kluyvera ascorbata,"2366 [6(beta), CDC 2567-61]",BSL 2,True,https://genomes.atcc.org/genomes/00b19fb84e014e48,False,True,Sewage,Bacteria
+Plesiomonas shigelloides,51903,Plesiomonas shigelloides,GNI 14,BSL 2,True,https://genomes.atcc.org/genomes/35bee58e543d485d,False,True,,Bacteria
+Plesiomonas shigelloides,51572,Plesiomonas shigelloides,CIP 69.35 [2886],BSL 2,True,https://genomes.atcc.org/genomes/ad3fee7ddf5c4486,False,True,Feces,Bacteria
+Plesiomonas shigelloides,14029,Plesiomonas shigelloides,"CDC 3085-55 [Bader M51, NCIB 9242, NCTC 10360, RH 798]",BSL 2,True,https://genomes.atcc.org/genomes/7aa4dfcb52ff4106,True,True,,Bacteria
+Plesiomonas shigelloides,14030,Plesiomonas shigelloides,"CDC 16408 [Ferguson and Henderson C 27, RH 864]",BSL 2,False,,False,False,,Bacteria
+Pluralibacter gergoviae,33028,Pluralibacter gergoviae,CDC 604-77 [CIP 76.01],BSL 2,True,https://genomes.atcc.org/genomes/2906502e7c0445a7,True,True,Urine,Bacteria
+Pluralibacter gergoviae,BAA-2770,Pluralibacter gergoviae,bMx:8212060,BSL 2,True,https://genomes.atcc.org/genomes/88afc943de9c40f9,False,True,,Bacteria
+Pluralibacter gergoviae,33427,Pluralibacter gergoviae,CDC 0610-77 [IP 20/75],BSL 2,True,https://genomes.atcc.org/genomes/aaa5445927484822,False,True,Urine,Bacteria
+Pluralibacter gergoviae,33428,Pluralibacter gergoviae,CDC 2787-76,BSL 2,True,https://genomes.atcc.org/genomes/eccdbed606914600,False,True,Sputum,Bacteria
+Pluralibacter gergoviae,33426,Pluralibacter gergoviae,CDC 0569-77 [77 GN143],BSL 2,True,https://genomes.atcc.org/genomes/b4889346b2b64b7d,False,True,Abscess,Bacteria
+Chryseobacterium indologenes,29897,Chryseobacterium indologenes,"NCTC 10796 [CDC 3716, GIFU 1347, RH 542]",BSL 2,True,https://genomes.atcc.org/genomes/30330eff90904e07,True,True,Trachea at autopsy,Bacteria
+Chryseobacterium gleum,49730,Chryseobacterium gleum,"NCTC 11433 [CL10/79, F129, JCM 2411]",BSL 2,False,,False,True,Wound swab,Bacteria
+Chryseobacterium gleum,29898,Chryseobacterium gleum,NCTC 10797 [CDC B1858],BSL 2,False,,False,True,Drinking fountain,Bacteria
+Chryseobacterium gleum,29896,Chryseobacterium gleum,NCTC 10795 [CDC 3531],BSL 2,False,,False,True,Sputum,Bacteria
+Chryseobacterium gleum,35910,Chryseobacterium gleum,"F93 [CL4/79, IFO 15054, JCM 2410, NCTC 11432]",BSL 2,False,,True,True,High vaginal swab,Bacteria
+Sphingomonas paucimobilis,29837,Sphingomonas paucimobilis,"NCTC 11030 [CL1/70, GIFU 2395, ICPB 4235, JCM 7516]",BSL 2,True,https://genomes.atcc.org/genomes/fd3604a665404579,True,True,Hospital respirator,Bacteria
+Sphingomonas paucimobilis,202027,Sphingomonas paucimobilis,SC 16113,BSL 1,False,,False,False,,Bacteria
+Sphingomonas paucimobilis,10829,Sphingomonas paucimobilis,NRRL B-54,BSL 1,True,https://genomes.atcc.org/genomes/c7682c01cc0640fa,True,True,,Bacteria
+Brevundimonas diminuta,17599,Brevundimonas diminuta,232 [AB265],BSL 1,False,,False,True,Throat swab,Bacteria
+Brevundimonas diminuta,13184,Brevundimonas diminuta,"470-4 [CCUG 2031, LMG 9561]",BSL 1,True,https://genomes.atcc.org/genomes/1a0b7292ff37489e,False,True,Buccal cavity,Bacteria
+Brevundimonas diminuta,BAA-2474,Brevundimonas diminuta,,BSL 1,False,,False,True,Kanamycin resistant derivative of ATCC 19146,Bacteria
+Brevundimonas diminuta,4335,Brevundimonas diminuta,"[IFO 13181, RH 2118]",BSL 1,False,,False,True,,Bacteria
+Brevundimonas diminuta,31452,Brevundimonas diminuta,G-139,BSL 1,False,,False,True,,Bacteria
+Brevundimonas diminuta,19146,Brevundimonas diminuta,"FDA strain PCI 818 [CCUG 24715, DSM 1635, LMG 10743]",BSL 1,True,https://genomes.atcc.org/genomes/947c18f477ce4f15,False,True,Contaminant in culture of Bacillus cereus,Bacteria
+Brevundimonas diminuta,11568,Brevundimonas diminuta,"DSM 7234 [CCEB 513, CCM 2657, CCTM 1850, CCUG 1427, CECT 317, CIP 63.27, HNCMB 173005, IAM 1513, IMET 10409, JCM 2788, LMG 2089, NCIB 9393, NCTC 8545, NRRL B-1496, R. Hugh 342, USCC 1337, VKM B-893]",BSL 1,True,https://genomes.atcc.org/genomes/1ad0dc12480c4a41,True,True,Freshwater,Bacteria
+Brevundimonas diminuta,17606,Brevundimonas diminuta,239 [AB1278],BSL 1,False,,False,True,Blood,Bacteria
+Brevundimonas diminuta,17605,Brevundimonas diminuta,238 [AB1268],BSL 1,False,,False,True,Pus from maxillary sinus,Bacteria
+Brevundimonas diminuta,17600,Brevundimonas diminuta,233 [AB328],BSL 1,False,,False,True,,Bacteria
+Brevundimonas diminuta,19146-MINI-PACK,Brevundimonas diminuta,"FDA strain PCI 818 [CCUG 24715, DSM 1635, LMG 10743]",BSL 1,True,https://genomes.atcc.org/genomes/947c18f477ce4f15,False,True,Contaminant in culture of Bacillus cereus,Bacteria
+Brevundimonas diminuta,17604,Brevundimonas diminuta,237 [AB1267],BSL 1,False,,False,False,Urine,Bacteria
+Brevundimonas diminuta,17601,Brevundimonas diminuta,234 [AB359],BSL 1,False,,False,False,,Bacteria
+Brevundimonas diminuta,17603,Brevundimonas diminuta,236 [AB1224],BSL 1,False,,False,False,Ascitic fluid,Bacteria
+Brevundimonas diminuta,17598,Brevundimonas diminuta,231 [AB236],BSL 1,False,,False,False,Spinal fluid,Bacteria
+Brevundimonas vesicularis,51560,Brevundimonas vesicularis,CCUG 28337 [LMG11141; H0930],BSL 1,False,,False,True,Pleural fluid,Bacteria
+Brevundimonas vesicularis,11426,Brevundimonas vesicularis,"[CCUG 2032, LMG 2350, NCTC 10900, Stanier 500]",BSL 1,True,https://genomes.atcc.org/genomes/3212a90120ee484d,True,True,"Urinary-bladder epithelium of leech, Hirudo medicinalis",Bacteria
+Brevundimonas vesicularis,17597,Brevundimonas vesicularis,230 [AB102],BSL 1,False,,False,False,Whooping-cough plate,Bacteria
+Comamonas testosteroni,25094,Comamonas testosteroni,N,BSL 1,True,https://genomes.atcc.org/genomes/e97e2f57edf54f41,False,True,Soil,Bacteria
+Comamonas testosteroni,17409,Comamonas testosteroni,27 [KA-11],BSL 1,False,,False,True,Soil,Bacteria
+Comamonas testosteroni,13474,Comamonas testosteroni,,BSL 1,False,,False,True,,Bacteria
+Comamonas testosteroni,11996,Comamonas testosteroni,"[567201, FHP 1343, NCIB 8955, NCPPB 1969, NCTC 10698, NRRL B-2611, R.Y. Stanier 78, RH 1104]",BSL 1,True,https://genomes.atcc.org/genomes/729288cfbc7446f7,True,True,Soil,Bacteria
+Comamonas testosteroni,49249,Comamonas testosteroni,PtL-5,BSL 1,False,,False,True,,Bacteria
+Comamonas testosteroni,700441,Comamonas testosteroni,JS42,BSL 1,True,https://genomes.atcc.org/genomes/e9493f3ee008480f,False,True,Soil and ground water,Bacteria
+Comamonas testosteroni,27911,Comamonas testosteroni,H-8,BSL 1,False,,False,True,Pond water,Bacteria
+Comamonas testosteroni,31492,Comamonas testosteroni,FD 26329 mutant 112B,BSL 1,False,,False,True,Mutant derived from strain FD 26329,Bacteria
+Comamonas testosteroni,33083,Comamonas testosteroni,ICPB 3181,BSL 1,False,,False,True,,Bacteria
+Comamonas testosteroni,17664,Comamonas testosteroni,298 [6084],BSL 1,False,,False,False,,Bacteria
+Comamonas testosteroni,17511,Comamonas testosteroni,139 [FD-32],BSL 1,False,,False,False,Soil,Bacteria
+Comamonas testosteroni,17454,Comamonas testosteroni,"79 [NCIB 8893, NCPPB 1976, RH 2664]",BSL 1,False,,False,False,,Bacteria
+Comamonas testosteroni,17437,Comamonas testosteroni,60 [A-35],BSL 1,False,,False,False,Pleural fluid,Bacteria
+Comamonas testosteroni,17410,Comamonas testosteroni,28 [KA14-2],BSL 1,False,,False,False,Soil,Bacteria
+Comamonas testosteroni,17407,Comamonas testosteroni,25 [IAM 1123],BSL 1,False,,False,False,Soil,Bacteria
+Comamonas testosteroni,55744,Comamonas testosteroni,5-MGAM-4D,BSL 1,False,,False,False,,Bacteria
+Comamonas testosteroni,53716,Comamonas testosteroni,132.6,BSL 1,False,,False,False,Soil,Bacteria
+Comamonas testosteroni,39525,Comamonas testosteroni,DBT4,BSL 1,False,,False,False,Soil,Bacteria
+Comamonas testosteroni,39523,Comamonas testosteroni,DBT2,BSL 1,False,,False,False,Soil,Bacteria
+Comamonas testosteroni,PTA-1853,Comamonas testosteroni,22-1,BSL 1,False,,False,False,,Bacteria
+Comamonas testosteroni,17510,Comamonas testosteroni,138 [FD-30],BSL 1,False,,False,True,Soil,Bacteria
+Comamonas testosteroni,15666,Comamonas testosteroni,"2169 [L.E. den Dooren de Jong 31, R.Y. Stanier 16]",BSL 1,True,https://genomes.atcc.org/genomes/0809cf7b3112405d,False,True,Soil,Bacteria
+Comamonas testosteroni,15667,Comamonas testosteroni,"2168 [L.E. den Dooren de Jong 21, R.Y. Stanier 15]",BSL 1,False,,False,True,Soil,Bacteria
+Roseomonas mucosa,BAA-3210,Roseomonas mucosa,RSM2015,BSL 1,True,https://genomes.atcc.org/genomes/833dd80ad10349a3,False,True,Skin of a healthy human,Bacteria
+Roseomonas mucosa,BAA-692,Roseomonas mucosa,MDA 5527 [NCTC 13291],BSL 2,True,https://genomes.atcc.org/genomes/783e3d1c04bd4224,True,True,"Blood culture performed at University of Texas M.D. Anderson Cancer Center; isolated January 18, 2000",Bacteria
+Ochrobactrum anthropi,49237,Ochrobactrum anthropi,SCRC C1-38,BSL 1,False,,False,True,Soil,Bacteria
+Ochrobactrum anthropi,49187,Ochrobactrum anthropi,"NCTC 12169 [CDC A8409, CL 361/73, LMG 394]",BSL 1,False,,False,True,Exudate,Bacteria
+Ochrobactrum anthropi,55855,Ochrobactrum anthropi,2906.E7,BSL 1,False,,False,False,,Bacteria
+Ochrobactrum anthropi,55846,Ochrobactrum anthropi,2906.G1,BSL 1,False,,False,False,,Bacteria
+Ochrobactrum anthropi,BAA-749,Brucella anthropi,"Vitek 109243 [API 8206095, NSB 1821]",BSL 1,True,https://genomes.atcc.org/genomes/48508f2260984b89,False,True,,Bacteria
+Ochrobactrum anthropi,BAA-749-MINI-PACK,Brucella anthropi,"Vitek 109243 [API 8206095, NSB 1821]",BSL 1,True,https://genomes.atcc.org/genomes/48508f2260984b89,False,False,,Bacteria
+Ochrobactrum anthropi,49188,Brucella anthropi,"NCTC 12168 [CIP 14970, CIP 82.115, CL 350/82, LMG 3331]",BSL 2,True,https://genomes.atcc.org/genomes/e0eef189b7204bd2,True,True,,Bacteria
+Ochrobactrum anthropi,49687,Brucella anthropi,Biolog 1185 [5085],BSL 1,False,,False,True,,Bacteria
+Ochrobactrum anthropi,21909,Brucella anthropi,M-30-M,BSL 1,False,,False,False,Oil-contaminated beach sample,Bacteria
+Ochrobactrum anthropi,19286,Brucella anthropi,A-405,BSL 1,False,,False,False,Soil containing hydrocarbons,Bacteria
+Ochrobactrum anthropi,29243,Brucella anthropi,IFO 13694,BSL 1,False,,False,True,Air,Bacteria
+Eikenella corrodens,23834,Eikenella corrodens,333/54-55,BSL 2,True,https://genomes.atcc.org/genomes/6d6faa094fca4ddf,True,True,Sputum; Dept. of Health and Environmental Control,Bacteria
+Eikenella corrodens,BAA-1152,Eikenella corrodens,Vitek #101889 [NSB #81355],BSL 2,True,https://genomes.atcc.org/genomes/a39702c057384864,False,True,Clinical specimen,Bacteria
+Eikenella corrodens,BAA-1152-MINI-PACK,Eikenella corrodens,Vitek #101889 [NSB #81355],BSL 2,False,,False,True,Clinical specimen,Bacteria
+Eikenella corrodens,51724,Eikenella corrodens,CCUG 29131 [PHL B2093],BSL 2,True,https://genomes.atcc.org/genomes/05ea155edee84641,False,True,Blood,Bacteria
+Eikenella corrodens,43278,Eikenella corrodens,,BSL 2,True,https://genomes.atcc.org/genomes/9f7343f0acdf44b5,False,True,Intraabdominal abscess,Bacteria
+Kingella kingae,23331,Kingella kingae,2941 [NCTC 10745],BSL 2,True,https://genomes.atcc.org/genomes/6c0d170699d34c6a,False,True,Blood,Bacteria
+Kingella kingae,23330,Kingella kingae,"4177/66 [CCUG 352, CIP 80.16, DSM 7536, NCTC 10529]",BSL 2,True,https://genomes.atcc.org/genomes/4233abc7a47a4737,True,True,Nose,Bacteria
+Kingella kingae,23332,Kingella kingae,5530 [NCTC 10746],BSL 2,True,https://genomes.atcc.org/genomes/6f7e168ed05b4d79,False,True,Blood,Bacteria
+Cardiobacterium hominis,14900,Cardiobacterium hominis,"Group II-D, 6815",BSL 2,False,,False,True,Patient with endocarditis,Bacteria
+Cardiobacterium hominis,29308,Cardiobacterium hominis,CDC D3490,BSL 2,False,,False,True,Blood,Bacteria
+Cardiobacterium hominis,29309,Cardiobacterium hominis,CDC C7014,BSL 2,False,,False,True,Blood,Bacteria
+Cardiobacterium hominis,29310,Cardiobacterium hominis,CDC B7188,BSL 2,False,,False,True,Blood,Bacteria
+Cardiobacterium hominis,29311,Cardiobacterium hominis,CDC C7913,BSL 2,False,,False,True,Blood,Bacteria
+Cardiobacterium hominis,15826,Cardiobacterium hominis,6573 [NCTC 10426],BSL 2,True,https://genomes.atcc.org/genomes/ebb0661dd45b4fbd,True,True,Blood,Bacteria
+Cardiobacterium hominis,15827,Cardiobacterium hominis,6574 [NCTC 10427],BSL 2,False,,False,False,Throat,Bacteria
+Capnocytophaga canimorsus,35979,Capnocytophaga canimorsus,"CDC 7120 [2340-2-61, CIP 103936]",BSL 2,True,https://genomes.atcc.org/genomes/1d112e1701c44621,True,True,Blood,Bacteria
+Capnocytophaga canimorsus,35978,Capnocytophaga canimorsus,CDC C8936 [324-1-74],BSL 2,False,,False,True,Blood,Bacteria
+Capnocytophaga ochracea,27872,Capnocytophaga ochracea,VPI 2845 [SS31],BSL 2,True,https://genomes.atcc.org/genomes/fee05e2f25ac4a9e,True,True,Oral cavity,Bacteria
+Capnocytophaga ochracea,33596,Capnocytophaga ochracea,25,BSL 2,False,,False,True,Periodontal lesion,Bacteria
+Streptobacillus moniliformis,14647,Streptobacillus moniliformis,"[9901, DSM 12112, NCTC 10651]",BSL 2,True,https://www.atcc.org/Products/All/14647,True,True,Human with rat-bite fever,Bacteria
+Streptobacillus moniliformis,14075,Streptobacillus moniliformis,L 1 Rat 30,BSL 2,False,,False,True,Derived from existing strain,Bacteria
+Streptobacillus moniliformis,49940,Streptobacillus moniliformis,K,BSL 2,False,,False,True,Otitis media of laboratory rats,Bacteria
+Streptobacillus moniliformis,49567,Streptobacillus moniliformis,747,BSL 2,False,,False,True,Septic arthritis of hock joint of C57BL/6 Han mouse,Bacteria
+Streptobacillus moniliformis,49480,Streptobacillus moniliformis,Bb 7372/89,BSL 2,False,,False,True,Blood,Bacteria
+Streptobacillus moniliformis,27747,Streptobacillus moniliformis,120-jt,BSL 2,False,,False,True,Turkey joint,Bacteria
+Streptobacillus moniliformis,25860,Streptobacillus moniliformis,MLS [ML5],BSL 2,False,,False,True,,Bacteria
+Streptobacillus moniliformis,25373,Streptobacillus moniliformis,Guest,BSL 2,False,,False,True,Laboratory rat-bite infection,Bacteria
+Rothia mucilaginosa,49042,Rothia mucilaginosa,CCM 2487 [2852/68],BSL 1,True,https://genomes.atcc.org/genomes/20268922b3e44c65,False,True,Bronchial secretion,Bacteria
+Rothia mucilaginosa,49040,Rothia mucilaginosa,CCM 2391 [3-58],BSL 1,True,https://genomes.atcc.org/genomes/15a89fadd572475f,False,True,Tongue,Bacteria
+Rothia mucilaginosa,49041,Rothia mucilaginosa,CCM 2393 [3],BSL 1,True,https://genomes.atcc.org/genomes/56158c93e3c24f9f,False,True,Tongue,Bacteria
+Rothia mucilaginosa,25296,Rothia mucilaginosa,"5762/67 [CCM 2417, DSM 20746, NCTC 10663, PCM 2415]",BSL 1,True,https://genomes.atcc.org/genomes/6d106fed56314878,True,True,Pharynx,Bacteria
+Rothia mucilaginosa,PTS-49040,Rothia mucilaginosa,CCM 2391 [3-58],BSL 1,False,,False,False,Tongue,Bacteria
+Rothia dentocariosa,14189,Rothia dentocariosa,24.2A,BSL 1,False,,False,True,Oral cavity,Bacteria
+Rothia dentocariosa,14191,Rothia dentocariosa,30.11A1,BSL 1,False,,False,True,Oral cavity,Bacteria
+Rothia dentocariosa,14190,Rothia dentocariosa,24.6A,BSL 1,False,,False,True,Oral cavity,Bacteria
+Rothia dentocariosa,BAA-907,Rothia dentocariosa,C5560,BSL 2,False,,False,True,Sputum (clinical specimen),Bacteria
+Rothia dentocariosa,31919,Rothia dentocariosa,Howland rough,BSL 1,False,,False,True,Nasopharynx of a healthy human,Bacteria
+Rothia dentocariosa,31918,Rothia dentocariosa,Howland smooth,BSL 1,False,,False,True,Nasopharynx of a healthy human,Bacteria
+Rothia dentocariosa,17931,Rothia dentocariosa,CDC X599 [XDIA],BSL 1,True,https://genomes.atcc.org/genomes/75b21b7752264c52,True,True,Carious teeth,Bacteria
+Rothia dentocariosa,19426,Rothia dentocariosa,NCTC 10207 [B 61],BSL 1,False,,False,True,,Bacteria
+Gemella haemolysans,10379,Gemella haemolysans,"NCTC 5414 [CCUG 37985, CIP 101126, LMG 18984, NCTC 12968]",BSL 1,True,https://genomes.atcc.org/genomes/85a99111b1224306,True,True,,Bacteria
+Gemella morbillorum,27824,Gemella morbillorum,VPI 5424 [2917B],BSL 2,True,https://genomes.atcc.org/genomes/7b659b719e624e04,True,True,,Bacteria
+Granulicatella adiacens,43205,Granulicatella adiacens,MC 2220,BSL 2,True,https://genomes.atcc.org/genomes/37afab72b43e4b56,False,True,Blood,Bacteria
+Granulicatella adiacens,49175,Granulicatella adiacens,"GaD [CIP 103243, DSM 9848]",BSL 2,True,https://genomes.atcc.org/genomes/28973c0388734a84,True,True,"Throat flora, urine, and blood of patients with endocarditis",Bacteria
+Abiotrophia defectiva,700209,Abiotrophia defectiva,CIP 103893 [PE7],BSL 2,True,https://genomes.atcc.org/genomes/a0ca6b22c5e641bc,False,True,Blood,Bacteria
+Abiotrophia defectiva,49176,Abiotrophia defectiva,SC10 [CIP 103242],BSL 2,True,https://genomes.atcc.org/genomes/130252a15510442f,True,True,Blood of bacterial endocarditis patient,Bacteria
+Erysipelothrix rhusiopathiae,11917,Erysipelothrix rhusiopathiae,,BSL 2,False,,False,True,Phalangeal joint of pig,Bacteria
+Erysipelothrix rhusiopathiae,11916,Erysipelothrix rhusiopathiae,,BSL 2,False,,False,True,Animal blood,Bacteria
+Erysipelothrix rhusiopathiae,10735,Erysipelothrix rhusiopathiae,422-1,BSL 2,True,https://genomes.atcc.org/genomes/a875db18418c4a37,False,True,,Bacteria
+Erysipelothrix rhusiopathiae,10734,Erysipelothrix rhusiopathiae,M3LP3,BSL 2,False,,False,True,,Bacteria
+Erysipelothrix rhusiopathiae,35456,Erysipelothrix rhusiopathiae,Tanzania III,BSL 2,True,https://genomes.atcc.org/genomes/d6cbf3a37c544323,False,True,"Parrot, Agapornis personata",Bacteria
+Erysipelothrix rhusiopathiae,35427,Erysipelothrix rhusiopathiae,Bano 36,BSL 2,True,https://genomes.atcc.org/genomes/b6a4c9b197b94827,False,True,Sheep dip,Bacteria
+Erysipelothrix rhusiopathiae,35424,Erysipelothrix rhusiopathiae,AN-4,BSL 2,True,https://genomes.atcc.org/genomes/28d0eaac2bbc44a6,False,True,,Bacteria
+Erysipelothrix rhusiopathiae,49712,Erysipelothrix rhusiopathiae,[CJPT-97],BSL 2,False,,False,True,Swine tonsil,Bacteria
+Erysipelothrix rhusiopathiae,49711,Erysipelothrix rhusiopathiae,[CJSF 14-2],BSL 2,False,,False,True,Fish,Bacteria
+Erysipelothrix rhusiopathiae,805,Erysipelothrix rhusiopathiae,BH2,BSL 2,False,,False,True,Skin lesions of swine with erysipelas,Bacteria
+Erysipelothrix rhusiopathiae,8139,Erysipelothrix rhusiopathiae,S-1,BSL 2,False,,False,True,,Bacteria
+Erysipelothrix rhusiopathiae,35452,Erysipelothrix rhusiopathiae,S-52,BSL 2,False,,False,True,Swine,Bacteria
+Erysipelothrix rhusiopathiae,35446,Erysipelothrix rhusiopathiae,P-43,BSL 2,False,,False,True,Swine tonsil,Bacteria
+Erysipelothrix rhusiopathiae,35461,Erysipelothrix rhusiopathiae,422-1E1,BSL 2,False,,False,True,Swine,Bacteria
+Erysipelothrix rhusiopathiae,35463,Erysipelothrix rhusiopathiae,715,BSL 2,False,,False,True,Swine spleen,Bacteria
+Erysipelothrix rhusiopathiae,35451,Erysipelothrix rhusiopathiae,SE-9,BSL 2,False,,False,True,,Bacteria
+Erysipelothrix rhusiopathiae,35442,Erysipelothrix rhusiopathiae,Pecs 67,BSL 2,False,,False,True,,Bacteria
+Erysipelothrix rhusiopathiae,35459,Erysipelothrix rhusiopathiae,Wittling E1,BSL 2,False,,False,True,"Fish, Gadus merlangus",Bacteria
+Erysipelothrix rhusiopathiae,35443,Erysipelothrix rhusiopathiae,Pecs 3597,BSL 2,False,,False,True,Swine tonsil,Bacteria
+Erysipelothrix rhusiopathiae,35458,Erysipelothrix rhusiopathiae,T-131,BSL 2,False,,False,True,Swine tonsil,Bacteria
+Erysipelothrix rhusiopathiae,35457,Erysipelothrix rhusiopathiae,Tuzok,BSL 2,False,,False,True,"Bird, Otis tarda",Bacteria
+Erysipelothrix rhusiopathiae,35449,Erysipelothrix rhusiopathiae,Rotzunge,BSL 2,False,,False,True,"Fish, Pleuronectes cynoglossus",Bacteria
+Erysipelothrix rhusiopathiae,35460,Erysipelothrix rhusiopathiae,IV-12/8,BSL 2,True,https://genomes.atcc.org/genomes/fdb31fccceb842b0,False,True,Swine tonsil,Bacteria
+Erysipelothrix rhusiopathiae,35464,Erysipelothrix rhusiopathiae,2017,BSL 2,False,,False,True,Swine spleen,Bacteria
+Erysipelothrix rhusiopathiae,35435,Erysipelothrix rhusiopathiae,Iszap 4,BSL 2,False,,False,True,Pond mud from Budapest Zoo,Bacteria
+Erysipelothrix rhusiopathiae,35447,Erysipelothrix rhusiopathiae,P-92,BSL 2,False,,False,True,Swine tonsil,Bacteria
+Erysipelothrix rhusiopathiae,35432,Erysipelothrix rhusiopathiae,E1-6P,BSL 2,False,,False,True,Swine,Bacteria
+Erysipelothrix rhusiopathiae,35462,Erysipelothrix rhusiopathiae,545,BSL 2,True,https://genomes.atcc.org/genomes/3dd31d10da44404b,False,True,Swine spleen,Bacteria
+Erysipelothrix rhusiopathiae,35454,Erysipelothrix rhusiopathiae,S-66,BSL 2,False,,False,True,Swine,Bacteria
+Erysipelothrix rhusiopathiae,35444,Erysipelothrix rhusiopathiae,P-23,BSL 2,False,,False,True,,Bacteria
+Erysipelothrix rhusiopathiae,35455,Erysipelothrix rhusiopathiae,S-192,BSL 2,False,,False,True,Swine,Bacteria
+Erysipelothrix rhusiopathiae,35465,Erysipelothrix rhusiopathiae,2553,BSL 2,False,,False,True,Swine spleen,Bacteria
+Erysipelothrix rhusiopathiae,35453,Erysipelothrix rhusiopathiae,S-61,BSL 2,False,,False,True,Swine,Bacteria
+Erysipelothrix rhusiopathiae,35448,Erysipelothrix rhusiopathiae,P-190,BSL 2,False,,False,True,Swine tonsil,Bacteria
+Erysipelothrix rhusiopathiae,35438,Erysipelothrix rhusiopathiae,ME-7,BSL 2,False,,False,True,,Bacteria
+Erysipelothrix rhusiopathiae,35450,Erysipelothrix rhusiopathiae,R32E11,BSL 2,False,,False,True,,Bacteria
+Erysipelothrix rhusiopathiae,35445,Erysipelothrix rhusiopathiae,P-32,BSL 2,False,,False,True,Swine tonsil,Bacteria
+Erysipelothrix rhusiopathiae,35429,Erysipelothrix rhusiopathiae,B4,BSL 2,False,,False,True,,Bacteria
+Erysipelothrix rhusiopathiae,35437,Erysipelothrix rhusiopathiae,Lengyel P [P],BSL 2,False,,False,True,,Bacteria
+Erysipelothrix rhusiopathiae,35434,Erysipelothrix rhusiopathiae,HC-585,BSL 2,False,,False,True,Commercial hog cholera virus,Bacteria
+Erysipelothrix rhusiopathiae,35439,Erysipelothrix rhusiopathiae,MEW 22N/5,BSL 2,False,,False,True,,Bacteria
+Erysipelothrix rhusiopathiae,35440,Erysipelothrix rhusiopathiae,NF-4E1,BSL 2,False,,False,True,,Bacteria
+Erysipelothrix rhusiopathiae,35441,Erysipelothrix rhusiopathiae,Pecs 9,BSL 2,False,,False,True,Swine tonsil,Bacteria
+Erysipelothrix rhusiopathiae,35433,Erysipelothrix rhusiopathiae,Goda,BSL 2,False,,False,True,"Black-tailed godwit, Limosa limosa",Bacteria
+Erysipelothrix rhusiopathiae,35428,Erysipelothrix rhusiopathiae,Bano 107,BSL 2,False,,False,True,Sheep dip,Bacteria
+Erysipelothrix rhusiopathiae,35436,Erysipelothrix rhusiopathiae,Kaparek,BSL 2,False,,False,True,Fish,Bacteria
+Erysipelothrix rhusiopathiae,35430,Erysipelothrix rhusiopathiae,Doggerscharbe,BSL 2,False,,False,True,"Fish, Drepanopsetta platessoides",Bacteria
+Erysipelothrix rhusiopathiae,35426,Erysipelothrix rhusiopathiae,A 360,BSL 2,False,,False,True,Swine,Bacteria
+Erysipelothrix rhusiopathiae,35431,Erysipelothrix rhusiopathiae,EW-2,BSL 2,False,,False,True,,Bacteria
+Erysipelothrix rhusiopathiae,35425,Erysipelothrix rhusiopathiae,AVR-9,BSL 2,False,,False,False,,Bacteria
+Erysipelothrix rhusiopathiae,19414,Erysipelothrix rhusiopathiae,NCTC 8163 [alpha-P15],BSL 2,True,https://genomes.atcc.org/genomes/dea99b89934a45ed,True,True,Spleen of pig with endocarditis,Bacteria
+Arcanobacterium haemolyticum,9345,Arcanobacterium haemolyticum,"11018 [IFO 15585, NCTC 8452]",BSL 2,True,https://genomes.atcc.org/genomes/0166f53805764e2e,True,True,,Bacteria
+Arcanobacterium haemolyticum,BAA-1784,Arcanobacterium haemolyticum,Vitek 1656,BSL 2,True,https://genomes.atcc.org/genomes/ebbde2d9edf7495c,False,True,Clinical isolate by University of Chicago,Bacteria
+Arcanobacterium haemolyticum,BAA-1784-MINI-PACK,Arcanobacterium haemolyticum,Vitek 1656,BSL 2,False,,False,False,Clinical isolate by University of Chicago,Bacteria
+Trueperella pyogenes,33157,Trueperella pyogenes,5,BSL 2,True,https://genomes.atcc.org/genomes/673513dc863c4453,False,True,Sheep,Bacteria
+Trueperella pyogenes,19411,Trueperella pyogenes,"NCTC 5224 [84, C-100, DSM 20630]",BSL 2,True,https://genomes.atcc.org/genomes/3932399928034ac4,True,True,Pig,Bacteria
+Helcococcus kunzii,51366,Helcococcus kunzii,"NCFB 2900 [IFO 15552, CCUG 32213, CIP 103932, DSM 10548, LMG 15123, NCIMB 702900]",BSL 1,True,https://genomes.atcc.org/genomes/47e7882bb6ba4dc7,True,True,Wound,Bacteria
+Gordonia bronchialis,29749,Gordonia bronchialis,PN-bb,BSL 2,False,,False,True,,Bacteria
+Gordonia bronchialis,25592,Gordonia bronchialis,3410 (Ohba) [NCTC 10667],BSL 2,True,https://genomes.atcc.org/genomes/9cd93ae9d8464585,True,True,Sputum of woman with cavitary disease of both upper lungs,Bacteria
+Tsukamurella paurometabola,8368,Tsukamurella paurometabola,[DSM 20162],BSL 1,True,https://genomes.atcc.org/genomes/48632a1c774a4a92,True,True,,Bacteria
+Tsukamurella paurometabola,15530,Tsukamurella paurometabola,WO-199,BSL 1,False,,False,False,Soil,Bacteria
+Tsukamurella paurometabola,25938,Tsukamurella paurometabola,"3462 [N663, NCTC 10741]",BSL 2,True,https://genomes.atcc.org/genomes/32d3e715c8b74c87,False,True,Sputum; Dept. of Health and Environmental Control,Bacteria
+Dietzia maris,BAA-2388,Dietzia maris,,BSL 1,True,https://genomes.atcc.org/genomes/f83138b734af417a,False,True,,Bacteria
+Dietzia maris,35013,Dietzia maris,"IMV 195 [AUCNM A-593, DSM 43672, JCM 6166]",BSL 1,False,,True,True,Soil,Bacteria
+Finegoldia magna,14955,Finegoldia magna,BU,BSL 1,True,https://genomes.atcc.org/genomes/84d95447a6c84bee,False,True,Draining sinus,Bacteria
+Finegoldia magna,29328,Finegoldia magna,WAL2508 [DSM 20470],BSL 1,True,https://genomes.atcc.org/genomes/deae1e5368a54e1b,False,True,Abdominal wound,Bacteria
+Finegoldia magna,53516,Finegoldia magna,312,BSL 1,False,,False,True,Vaginal discharge,Bacteria
+Finegoldia magna,14956,Finegoldia magna,U3,BSL 1,False,,False,False,Postpartum uterus,Bacteria
+Finegoldia magna,15794,Finegoldia magna,"2974 [ATCC 14904, DSM 20470, GIFU 7629, NCTC 11804]",BSL 1,True,https://genomes.atcc.org/genomes/0b529b3d2fa64ab4,True,True,Cystitis,Bacteria
+Anaerococcus vaginalis,51170,Anaerococcus vaginalis,"JCM 8138 [GIFU 12669, GIFU 7732]",BSL 1,True,https://genomes.atcc.org/genomes/d7352e6d1ea14027,True,True,Ovarian abscess,Bacteria
+Eggerthella lenta,43055,Eggerthella lenta,MSMC 77-67 [CIP 104211],BSL 1,True,https://genomes.atcc.org/genomes/0df64119a0184259,False,True,Abdominal wound,Bacteria
+Eggerthella lenta,25559,Eggerthella lenta,"VPI 0255 [1899B, DSM 2243, JCM 9979, NCTC 11813]",BSL 1,True,https://genomes.atcc.org/genomes/e67b5b15b9f14879,True,True,Rectal tumor,Bacteria
+Bilophila wadsworthia,49260,Bilophila wadsworthia,WAL 7959 [Lab 88-130H],BSL 2,True,https://genomes.atcc.org/genomes/2aa000d6efef4f31,True,True,Perforated appendiceal abscess,Bacteria
+Bilophila wadsworthia,51580,Bilophila wadsworthia,WAL 8571,BSL 2,True,https://genomes.atcc.org/genomes/cef5861324fc44ac,False,True,Abdominal fluid,Bacteria
+Bilophila wadsworthia,51581,Bilophila wadsworthia,WAL 9077,BSL 2,False,,False,True,Abdominal fluid,Bacteria
+Mobiluncus curtisii,35241,Mobiluncus curtisii,BV 345-16,BSL 1,True,https://genomes.atcc.org/genomes/45b6ff97ca584e91,True,True,Vagina,Bacteria
+Mobiluncus curtisii,51333,Mobiluncus curtisii,CNCTC An 17/88 [L1599],BSL 1,True,https://genomes.atcc.org/genomes/e298b94aa6734da3,False,True,Vaginal secretions,Bacteria
+Mobiluncus curtisii,43063,Mobiluncus curtisii,V125 [DSM 2711],BSL 2,False,,False,True,Vaginal secretions,Bacteria
+Mobiluncus curtisii,35242,Mobiluncus curtisii,BV 376-6,BSL 1,False,,True,True,Vagina,Bacteria
+Fannyhessea vaginae,BAA-55,Fannyhessea vaginae,"CCUG 38953 [CIP 106431, DSM 15829]",BSL 1,True,https://genomes.atcc.org/genomes/6849c842fff34cc8,True,True,Vaginal flora from healthy woman,Bacteria
+Alistipes putredinis,29800,Alistipes putredinis,"VPI 3293 [1Ando, CCUG 45780, CIP 104286, DSM 17216]",BSL 2,True,https://genomes.atcc.org/genomes/a7cab2d63ef84885,True,True,Feces,Bacteria
+Odoribacter splanchnicus,29572,Odoribacter splanchnicus,NCTC 10825 [1651/6],BSL 2,True,https://genomes.atcc.org/genomes/06e841af4261485b,True,True,Abdominal abscess,Bacteria
+Sutterella wadsworthensis,51579,Sutterella wadsworthensis,WAL 9799 [DSM 14016],BSL 2,True,https://genomes.atcc.org/genomes/f30f81550f174d11,True,True,Abdominal fluid,Bacteria
+Desulfovibrio piger,29098,Desulfovibrio piger,VPI C3-23 [DSM 749],BSL 1,True,https://genomes.atcc.org/genomes/cfb3e783b80d420d,True,True,Feces,Bacteria
+Parabacteroides distasonis,8503,Parabacteroides distasonis,[NCTC 11152],BSL 2,True,https://genomes.atcc.org/genomes/0a1687b7faf34e32,True,True,,Bacteria
+Parabacteroides distasonis,BAA-1295,Parabacteroides distasonis,Vitek 400127 [NSB 50047],BSL 2,True,https://genomes.atcc.org/genomes/5d5708dbae374be2,False,True,,Bacteria
+Parabacteroides distasonis,BAA-1295-MINI-PACK,Parabacteroides distasonis,Vitek 400127 [NSB 50047],BSL 2,False,,False,False,,Bacteria
+Akkermansia muciniphila,BAA-2869,Akkermansia muciniphila,m1-15,BSL 1,True,https://genomes.atcc.org/genomes/20ada2cae3484685,False,True,Cecal contents of a thirteen-lined ground squirrel (<em>Ictidomys tridecemlineatus</em>),Bacteria
+Akkermansia muciniphila,BAA-835,Akkermansia muciniphila,Muc [CIP 107961],BSL 1,True,https://genomes.atcc.org/genomes/3816bd2cca9f47d2,True,True,Feces,Bacteria
+Leptospira interrogans,23605,Leptospira interrogans,MAL 1556,BSL 2,False,,False,True,Gombak River water via hamster inoculation,Bacteria
+Leptospira interrogans,23606,Leptospira interrogans,Moulton,BSL 2,False,,False,True,Blood of dog via hamster inoculation,Bacteria
+Leptospira interrogans,23478,Leptospira interrogans,Pomona,BSL 2,False,,False,True,,Bacteria
+Leptospira interrogans,23470,Leptospira interrogans,Hond Utrecht IV,BSL 2,False,,False,True,Dog,Bacteria
+Leptospira interrogans,23610,Leptospira interrogans,MAL 1489,BSL 2,False,,False,True,River water via hamster inoculation,Bacteria
+Leptospira interrogans,23603,Leptospira interrogans,MAL 13KKB,BSL 2,False,,False,True,Kidney of Rattus whiteheadi,Bacteria
+Leptospira interrogans,23607,Leptospira interrogans,MAL 108,BSL 2,False,,False,True,Freshwater pool via hamster inoculation,Bacteria
+Leptospira interrogans,23608,Leptospira interrogans,MAL 198,BSL 2,False,,False,True,Gombak River water via hamster inoculation,Bacteria
+Leptospira interrogans,23609,Leptospira interrogans,MLS,BSL 2,False,,False,True,Cattle,Bacteria
+Leptospira interrogans,23602,Leptospira interrogans,MAL 1415,BSL 2,False,,False,True,Purified water via hamster inoculation,Bacteria
+Leptospira interrogans,23581,Leptospira interrogans,,BSL 2,True,https://genomes.atcc.org/genomes/dfd833ac230a4d1d,False,True,,Bacteria
+Leptospira interrogans,23578,Leptospira interrogans,Jez Bratislava,BSL 2,False,,False,True,"Hedgehog, Erinaceus sp.",Bacteria
+Leptospira interrogans,23482,Leptospira interrogans,3705,BSL 2,False,,False,True,,Bacteria
+Leptospira interrogans,23480,Leptospira interrogans,Salinem,BSL 2,False,,False,True,,Bacteria
+Leptospira interrogans,23476,Leptospira interrogans,Akiyami A,BSL 2,False,,False,True,,Bacteria
+Leptospira interrogans,43782,Leptospira interrogans,Ictero No.I,BSL 2,True,https://genomes.atcc.org/genomes/5438cd0989584e91,False,True,Blood,Bacteria
+Leptospira interrogans,43642,Leptospira interrogans,RGA,BSL 2,True,https://genomes.atcc.org/genomes/039063dede0c46dc,True,True,Human blood via guinea pig; isolated by Uhlenhuth and Fromme,Bacteria
+Leptospira interrogans,BAA-1198,Leptospira interrogans serovar Copenhageni,Fiocruz L1-130,BSL 2,True,https://genomes.atcc.org/genomes/71ffd81d4fe44a65,False,True,Patient with leptospirosis; isolated by A Ko,Bacteria
+Leptospira interrogans,700257,Leptospira interrogans,SBF 5,BSL 2,False,,False,True,"Ox; isolated August 24, 1988",Bacteria
+Treponema denticola,33521,Treponema denticola,11,BSL 1,True,https://genomes.atcc.org/genomes/7444bb089e934406,False,True,Subgingival plaque,Bacteria
+Treponema denticola,35405,Treponema denticola,"a [CIP 103919, DSM 14222]",BSL 1,True,https://genomes.atcc.org/genomes/52d4bcd092144a3a,True,True,Periodontal pocket,Bacteria
+Treponema denticola,700771,Treponema denticola,OMZ 834 [35M1],BSL 1,False,,False,True,Oral cavity,Bacteria
+Treponema denticola,700768,Treponema denticola,OMZ 830 [37H1A1],BSL 1,False,,False,True,Oral cavity,Bacteria
+Treponema denticola,35404,Treponema denticola,C [CIP 103920],BSL 1,True,https://genomes.atcc.org/genomes/45d506aa1d514d61,False,True,Periodontal pocket,Bacteria
+Treponema denticola,33520,Treponema denticola,W [CIP 103917],BSL 1,True,https://genomes.atcc.org/genomes/a537e178141745a2,False,True,Subgingival plaque,Bacteria
+Trichosporon asahii,201110,Trichosporon asahii,TIMM 1318 [Kobayashi-1],BSL 1,True,https://genomes.atcc.org/genomes/b7621150fd7849ee,False,True,Bird droppings,Fungi
+Trichosporon asahii,90039,Trichosporon asahii,CBS 2479 [JCM 2466],BSL 2,True,https://genomes.atcc.org/genomes/8a01bd4ec81448cf,True,True,Skin,Fungi
+Trichosporon asahii,MYA-1296,Trichosporon asahii,OMU239 [TIMM4014],BSL 2,False,,False,True,"Blood; isolated January 6, 1992",Fungi
+Magnusiomyces capitatus,200926,Magnusiomyces capitatus,4,BSL 2,False,,False,True,Blood of man with acute lymphoblastic leukemia,Fungi
+Magnusiomyces capitatus,200924,Magnusiomyces capitatus,2,BSL 2,False,,False,True,Urine of man with advanced prostatic cancer,Fungi
+Magnusiomyces capitatus,200923,Magnusiomyces capitatus,1,BSL 2,False,,False,True,Urine of man with advanced prostatic cancer,Fungi
+Magnusiomyces capitatus,201230,Magnusiomyces capitatus,,BSL 2,False,,False,True,Oral mucosa of 55-year-old man with acute myeloid leukemia,Fungi
+Magnusiomyces capitatus,200558,Magnusiomyces capitatus,2967,BSL 2,False,,False,True,Bovine mastitis secretions,Fungi
+Magnusiomyces capitatus,28576,Magnusiomyces capitatus,"CBS 5582 [CBS 578.82, IGC 3709]",BSL 1,True,https://genomes.atcc.org/genomes/5086273f3fac4d35,False,True,Sputum,Fungi
+Magnusiomyces capitatus,62964,Magnusiomyces capitatus,534,BSL 1,False,,False,True,Clinical isolate,Fungi
+Magnusiomyces capitatus,62963,Magnusiomyces capitatus,533,BSL 1,False,,False,True,Clinical isolate,Fungi
+Magnusiomyces capitatus,46132,Magnusiomyces capitatus,M425A [CBS 207.83],BSL 2,False,,True,True,Sputum,Fungi
+Magnusiomyces capitatus,28575,Magnusiomyces capitatus,CBS 2459 [CBS 572.82],BSL 1,False,,False,True,Wood pulp,Fungi
+Magnusiomyces capitatus,28591,Magnusiomyces capitatus,CBS 2460 [CBS 573.82],BSL 1,False,,False,True,Compressed yeast,Fungi
+Magnusiomyces capitatus,36553,Magnusiomyces capitatus,791/75 ,BSL 1,False,,False,True,Fingernail,Fungi
+Magnusiomyces capitatus,MYA-914,Magnusiomyces capitatus,1 [IHEM 17457],BSL 2,False,,False,True,Nail,Fungi
+Magnusiomyces capitatus,200929,Magnusiomyces capitatus,7,BSL 2,False,,False,True,Blood of man with myeloma,Fungi
+Magnusiomyces capitatus,200928,Magnusiomyces capitatus,6,BSL 2,False,,False,True,Blood of man with myeloma,Fungi
+Magnusiomyces capitatus,200927,Magnusiomyces capitatus,5,BSL 2,False,,False,True,Blood of man with acute lymphoblastic leukemia,Fungi
+Magnusiomyces capitatus,200925,Magnusiomyces capitatus,3,BSL 2,False,,False,True,Blood of man with acute lymphoblastic leukemia,Fungi
+Magnusiomyces capitatus,10663,Magnusiomyces capitatus,"NRRL Y-1487 [CBS 2364, CBS 571.82, FMJ 15014, IFO 1197, JCM 6258]",BSL 1,False,,True,True,Wood pulp,Fungi
+Rhizopus arrhizus,56536,Rhizopus arrhizus,"CBS 112.07 [NRRL 3133, VKM F-1414]",BSL 1,True,https://genomes.atcc.org/genomes/581fddf2c2d142d0,True,True,Postmortem lung issue of man with acute lymphoblastic leukemia,Fungi
+Rhizopus microsporus,1227b,Rhizopus microsporus,,BSL 1,False,,False,True,,Fungi
+Rhizopus microsporus,52814,Rhizopus microsporus,CBS 700.68 [VKM F-774],BSL 1,False,,False,True,Forest soil,Fungi
+Rhizopus microsporus,66276,Rhizopus microsporus,RV 62915 [B51321],BSL 2,False,,False,True,Dialysis patient with mucormycosis,Fungi
+Rhizopus microsporus,60742,Rhizopus microsporus,UNB 308 (+) ,BSL 1,False,,False,True,"Mutant derived from CBS 700.68, ATCC 52814",Fungi
+Rhizopus microsporus,60740,Rhizopus microsporus,UNB 306 (+) ,BSL 1,False,,False,True,"Mutant derived from CBS 700.68, ATCC 52814",Fungi
+Rhizopus microsporus,60743,Rhizopus microsporus,UNB 318 (-) ,BSL 1,False,,False,True,"Mutant derived from CBS 700.68, ATCC 52814",Fungi
+Rhizopus microsporus,60744,Rhizopus microsporus,UNB 319 (-) ,BSL 1,False,,False,True,"Mutant derived from CBS 700.68, ATCC 52814",Fungi
+Rhizopus microsporus,60745,Rhizopus microsporus,UNB 320 (+) ,BSL 1,False,,False,True,"Mutant derived from CBS 700.68, ATCC 52814",Fungi
+Rhizopus microsporus,60741,Rhizopus microsporus,UNB 307 (-) ,BSL 1,False,,False,True,"Mutant derived from CBS 700.68, ATCC 52814",Fungi
+Rhizopus microsporus,52812,Rhizopus microsporus,"CBS 262.28 [Scholer M214, VKM F-1360]",BSL 1,False,,False,True,,Fungi
+Rhizopus microsporus,52813,Rhizopus microsporus,CBS 699.68 [VKM F-733],BSL 1,False,,False,True,Soil,Fungi
+Rhizopus microsporus,52811,Rhizopus microsporus,"CBS 261.28 [Scholer M213, VKM F-1361]",BSL 1,False,,False,True,,Fungi
+Rhizopus microsporus,52804,Rhizopus microsporus,IMI 190511 ,BSL 1,False,,False,True,,Fungi
+Rhizopus microsporus,52806,Rhizopus microsporus,IMI 202612 ,BSL 1,False,,False,True,Pinus caribaea,Fungi
+Rhizopus microsporus,52805,Rhizopus microsporus,IMI 193591 ,BSL 1,False,,False,True,Soil,Fungi
+Rhizopus microsporus,58839,Rhizopus microsporus,UNB 309(+)ade-2 ,BSL 1,False,,False,True,,Fungi
+Rhizopus microsporus,58840,Rhizopus microsporus,UNB 310(-)arg ,BSL 1,False,,False,True,,Fungi
+Rhizopus microsporus,58838,Rhizopus microsporus,UNB 305(+)sul ,BSL 1,False,,False,True,,Fungi
+Rhizopus microsporus,58841,Rhizopus microsporus,UNB 312(-)ade-2 ,BSL 1,False,,False,True,,Fungi
+Rhizopus microsporus,58836,Rhizopus microsporus,UNB 303(+)ade-1 ,BSL 1,False,,False,True,,Fungi
+Rhizopus microsporus,58835,Rhizopus microsporus,UNB 302(-)ade-1 ,BSL 1,False,,False,True,,Fungi
+Rhizopus microsporus,58837,Rhizopus microsporus,UNB 304(-)sul ,BSL 1,False,,False,True,,Fungi
+Rhizopus microsporus,58834,Rhizopus microsporus,UNB 300(+)arg ,BSL 1,False,,False,True,,Fungi
+Rhizopus microsporus,46352,Rhizopus microsporus,NRRL 6256 ,BSL 1,False,,False,True,Rabbit dung,Fungi
+Rhizopus microsporus,46351,Rhizopus microsporus,NRRL 6255 ,BSL 1,False,,False,True,Sludge,Fungi
+Rhizopus microsporus,52807,Rhizopus microsporus,IMI 130842 [CBS 631.82],BSL 1,False,,True,True,Bread,Fungi
+Rhizopus microsporus,62417,Rhizopus microsporus,Rh-2 ,BSL 1,False,,False,True,Rice seedlings,Fungi
+Rhizopus microsporus,42475,Rhizopus microsporus,CCF 1509 [2670],BSL 2,False,,False,True,Fetal calf stomach contents,Fungi
+Rhizopus microsporus,52808,Rhizopus microsporus,IMI 158738 ,BSL 1,False,,False,True,Soil,Fungi
+Rhizopus microsporus,42222,Rhizopus microsporus,NRRL 2549 ,BSL 1,False,,False,True,,Fungi
+Rhizopus microsporus,52314,Rhizopus microsporus,NRRL 1471 ,BSL 1,False,,False,True,,Fungi
+Rhizopus microsporus,48608,Rhizopus microsporus,CBS 227.75,BSL 1,False,,False,True,Plus strain,Fungi
+Rhizopus microsporus,56022,Rhizopus microsporus,AS 3.2746 ,BSL 1,False,,False,True,,Fungi
+Rhizopus microsporus,56020,Rhizopus microsporus,AS 3.3608 ,BSL 1,False,,False,True,,Fungi
+Rhizopus microsporus,56029,Rhizopus microsporus,AS 3.2686 ,BSL 1,False,,False,True,,Fungi
+Rhizopus microsporus,56028,Rhizopus microsporus,AS 3.2685 ,BSL 1,False,,False,True,,Fungi
+Rhizopus microsporus,56018,Rhizopus microsporus,AS 3.948 ,BSL 1,False,,False,True,,Fungi
+Rhizopus microsporus,56019,Rhizopus microsporus,AS 3.2895 ,BSL 1,False,,False,True,,Fungi
+Rhizopus microsporus,46922,Rhizopus microsporus,,BSL 1,False,,False,True,Hibiscus leaves,Fungi
+Rhizopus microsporus,46436,Rhizopus microsporus,U-1 [OUT 1221],BSL 1,False,,False,True,,Fungi
+Rhizopus microsporus,46356,Rhizopus microsporus,NRRL 6260 ,BSL 1,False,,False,True,Ground corn,Fungi
+Rhizopus microsporus,46354,Rhizopus microsporus,NRRL 6258 ,BSL 1,False,,False,True,,Fungi
+Rhizopus microsporus,46355,Rhizopus microsporus,NRRL 6259 ,BSL 1,False,,False,True,Soil,Fungi
+Rhizopus microsporus,46350,Rhizopus microsporus,NRRL 6254 ,BSL 1,False,,False,True,Soil,Fungi
+Rhizopus microsporus,46349,Rhizopus microsporus,NRRL 6253 ,BSL 1,False,,False,True,Pocket mouse lung,Fungi
+Rhizopus microsporus,208864,Rhizopus microsporus var. tuberosus,R125 ,BSL 1,False,,True,True,Koji,Fungi
+Rhizopus microsporus,32620,Rhizopus microsporus,74-8524 ,BSL 2,False,,False,True,Bovine abomasum,Fungi
+Rhizopus microsporus,32619,Rhizopus microsporus,74-8054 ,BSL 2,False,,False,True,Porcine stomach ulcer,Fungi
+Rhizopus microsporus,42406,Rhizopus microsporus,1064,BSL 2,False,,False,False,,Fungi
+Rhizopus microsporus,11559,Rhizopus microsporus,CBS 344.29 [VKM F-1091],BSL 1,False,,True,True,,Fungi
+Rhizopus microsporus,MYA-3790,Rhizopus microsporus var. rhizopodiformis,191,BSL 2,False,,False,True,,Fungi
+Rhizopus microsporus,200758,Rhizopus microsporus,SUM 3104 ,BSL 1,False,,False,True,Gastric cancerous ulcer,Fungi
+Rhizopus microsporus,14050,Rhizopus microsporus,2176,BSL 2,False,,False,True,Fatal human Rhizopus infection,Fungi
+Rhizopus microsporus,22960,Rhizopus microsporus,NRRL 2870 ,BSL 1,False,,False,True,Fermented rice,Fungi
+Rhizopus microsporus,22958,Rhizopus microsporus,NRRL 3671 ,BSL 1,False,,False,True,,Fungi
+Rhizopus microsporus,76011,Rhizopus microsporus var. oligosporus,"UQM 145F [ACM 145F, ACM 4668, ATCC 96528, FRR 2458]",BSL 1,False,,False,True,,Fungi
+Rhizopus microsporus,60826,Rhizopus microsporus var. oligosporus,NRRL 5905,BSL 1,False,,False,True,Tempeh,Fungi
+Rhizopus microsporus,42649,Rhizopus microsporus var. oligosporus,NRRL 5865,BSL 1,False,,False,True,,Fungi
+Rhizopus microsporus,48109,Rhizopus microsporus var. oligosporus,,BSL 1,False,,False,True,Tempeh,Fungi
+Rhizopus microsporus,48010,Rhizopus microsporus var. oligosporus,"NRRL 6203 [CBS 339.62, NRRL A-9848, Scholer M 226, VKM F1415]",BSL 1,False,,False,True,Tempeh,Fungi
+Rhizopus microsporus,48012,Rhizopus microsporus var. oligosporus,NRRL 6495 [NRRL A-9868],BSL 1,False,,False,True,Tempeh,Fungi
+Rhizopus microsporus,48011,Rhizopus microsporus var. oligosporus,NRRL 6205 [NRRL A-9867],BSL 1,False,,False,True,Tempeh,Fungi
+Rhizopus microsporus,46348,Rhizopus microsporus var. oligosporus,"NRRL 514 [CBS 337.62, Scholer M 225]",BSL 1,False,,False,True,Tempeh,Fungi
+Rhizopus microsporus,64063,Rhizopus microsporus var. oligosporus,CT11K2,BSL 1,False,,False,True,Tempeh,Fungi
+Rhizopus microsporus,24793,Rhizopus microsporus,,BSL 2,False,,False,False,Mucormycosis of swine,Fungi
+Rhizopus microsporus,22959,Rhizopus microsporus var. oligosporus,"NRRL 2710 [CBS 338.62, IFO 8631, IMI 174457, Scholer M 140]",BSL 1,False,,False,True,,Fungi
+Mucor circinelloides,24905,Mucor circinelloides,"IM80 [CCUG 22422, CBS 416.77, CCM F-220, DSM 1191]",BSL 1,True,https://genomes.atcc.org/genomes/88c6e4886bf54865,False,True,Rice fermentations,Fungi
+Mucor circinelloides,26759,Mucor circinelloides f. circinelloides,1463(62) ,BSL 1,True,https://genomes.atcc.org/genomes/fda53d456ad146f8,False,True,Torn wounds,Fungi
+Mucor circinelloides,15242,Mucor circinelloides f. circinelloides,3423,BSL 1,False,,False,True,,Fungi
+Mucor circinelloides,1209b,Mucor circinelloides f. circinelloides,,BSL 1,False,,False,True,,Fungi
+Mucor circinelloides,22363,Mucor circinelloides f. griseocyanus,CBS 116.08 [NRRL A-7420],BSL 1,False,,True,True,Soil,Fungi
+Mucor circinelloides,22362,Mucor circinelloides f. janssenii,CBS 205.68 [NRRL 3826],BSL 1,False,,False,True,Forest soil,Fungi
+Mucor circinelloides,1207a,Mucor circinelloides f. griseocyanus," [CBS 223.56, FHP 753, IMI 116946]",BSL 1,False,,False,True,,Fungi
+Mucor circinelloides,1207b,Mucor circinelloides f. griseocyanus,,BSL 1,False,,False,True,,Fungi
+Mucor circinelloides,1216a,Mucor circinelloides f. lusitanicus," [CBS 276.49, NRRL 3629]",BSL 1,False,,False,True,,Fungi
+Mucor circinelloides,1216B,Mucor circinelloides f. lusitanicus," [CBS 277.49, NRRL 3631]",BSL 1,False,,False,True,,Fungi
+Mucor circinelloides,58260,Mucor circinelloides,"MW p 72 [1 M, WFCC 216]",BSL 1,False,,False,True,Soil,Fungi
+Mucor circinelloides,48558,Mucor circinelloides,,BSL 1,False,,False,True,Tomato in packing house,Fungi
+Mucor circinelloides,56640,Mucor circinelloides,NRRL 1405 ,BSL 1,False,,False,True,,Fungi
+Mucor circinelloides,8542,Mucor circinelloides f. circinelloides, [C81],BSL 1,False,,False,True,,Fungi
+Mucor circinelloides,8770,Mucor circinelloides f. circinelloides,208,BSL 1,False,,False,True,Corn seed,Fungi
+Mucor circinelloides,8097,Mucor circinelloides f. circinelloides,"704 [CBS 480.70 H, NRRL A-12315]",BSL 1,False,,False,True,,Fungi
+Mucor circinelloides,8540,Mucor circinelloides f. circinelloides, [C973],BSL 1,False,,False,True,,Fungi
+Mucor circinelloides,8541,Mucor circinelloides f. circinelloides," [C75, CBS 252.53, IMI 53584, VKM F-1232]",BSL 1,False,,False,True,,Fungi
+Mucor circinelloides,7941,Mucor circinelloides f. circinelloides,65 [IMI 78379],BSL 1,False,,False,True,Horse dung ,Fungi
+Mucor circinelloides,56649,Mucor circinelloides f. circinelloides,NRRL 1423 ,BSL 1,False,,False,True,,Fungi
+Mucor circinelloides,56647,Mucor circinelloides f. circinelloides,NRRL 1421 ,BSL 1,False,,False,True,,Fungi
+Mucor circinelloides,56641,Mucor circinelloides f. circinelloides,NRRL 1406 ,BSL 1,False,,False,True,,Fungi
+Mucor circinelloides,38313,Mucor circinelloides f. circinelloides,3,BSL 1,False,,False,True,Tomatoes,Fungi
+Mucor circinelloides,42258,Mucor circinelloides f. janssenii,"IFO 6746 [HUT 1154, KN-41]",BSL 1,False,,False,True,Soil,Fungi
+Mucor circinelloides,42257,Mucor circinelloides f. janssenii,IFO 5398 ,BSL 1,False,,False,True,Air,Fungi
+Mucor circinelloides,38592,Mucor circinelloides,NRRL 1545,BSL 1,False,,False,True,,Fungi
+Mucor circinelloides,MYA-4072,Mucor circinelloides,UNM C090803 ,BSL 1,False,,False,True,"Sabouraud dextran agar; isolated September 8, 2003",Fungi
+Mucor circinelloides,90680,Mucor circinelloides f. lusitanicus,R7B [107],BSL 1,False,,False,True,Derived from ATCC 1216b,Fungi
+Mucor circinelloides,56645,Mucor circinelloides f. griseocyanus,NRRL 1413 ,BSL 1,False,,False,True,,Fungi
+Mucor circinelloides,MYA-3788,Mucor circinelloides,185,BSL 2,False,,False,True,,Fungi
+Mucor circinelloides,MYA-3787,Mucor circinelloides,184,BSL 2,False,,False,True,,Fungi
+Mucor circinelloides,11010,Mucor circinelloides f. circinelloides,SS 192 [CBS 480.70G],BSL 1,False,,False,True,,Fungi
+Mucor circinelloides,18357,Mucor circinelloides f. janssenii,"VKM F-1092 [CBS 185.68, IMI 119347, IMI 129970, NRRL 3302, NRRL 5845, NRRL A-17767, VKM F-789]",BSL 1,False,,True,True,Soil,Fungi
+Mucor circinelloides,200787,Mucor circinelloides,R5A ,BSL 1,False,,False,True,,Fungi
+Mucor circinelloides,20132,Mucor circinelloides,KY402,BSL 1,False,,False,True,,Fungi
+Lichtheimia corymbifera,14058,Lichtheimia corymbifera,2058 [ATCC 14108],BSL 2,False,,False,True,Sputum,Fungi
+Lichtheimia corymbifera,8988,Lichtheimia corymbifera,217,BSL 1,False,,False,True,Peas,Fungi
+Lichtheimia corymbifera,46771,Lichtheimia corymbifera,NRRL 2981 [CBS 429.75],BSL 2,False,,True,True,Soil,Fungi
+Lichtheimia corymbifera,8991,Lichtheimia corymbifera,144,BSL 1,False,,False,True,Peas,Fungi
+Lichtheimia corymbifera,66996,Lichtheimia corymbifera,,BSL 2,False,,False,True,Kidney biopsy of 24-year-old AIDS patient,Fungi
+Lichtheimia corymbifera,66271,Lichtheimia corymbifera, [NCPF 2326],BSL 2,False,,False,True,Nose,Fungi
+Lichtheimia corymbifera,48749,Lichtheimia corymbifera,DSA 4DB ,BSL 1,False,,False,True,Dalbergia sp. bark,Fungi
+Lichtheimia corymbifera,48377,Lichtheimia corymbifera,A43 ,BSL 1,False,,False,True,Waste compost ,Fungi
+Lichtheimia corymbifera,46775,Lichtheimia corymbifera,NRRL 6252 ,BSL 2,False,,False,True,Clinical isolate,Fungi
+Lichtheimia corymbifera,46774,Lichtheimia corymbifera,NRRL 6251 ,BSL 2,False,,False,True,Clinical isolate,Fungi
+Lichtheimia corymbifera,46772,Lichtheimia corymbifera,NRRL 6249 ,BSL 1,False,,False,True,Calf with stomatitis,Fungi
+Lichtheimia corymbifera,46773,Lichtheimia corymbifera,NRRL 6250 ,BSL 2,False,,False,True,Clinical isolate,Fungi
+Lichtheimia corymbifera,44568,Lichtheimia corymbifera,V.77/60 ,BSL 2,False,,False,True,"Liver of bank vole, Clethrionomys glareolus",Fungi
+Lichtheimia corymbifera,7909,Lichtheimia corymbifera,,BSL 1,False,,False,True,,Fungi
+Lichtheimia corymbifera,8995,Lichtheimia corymbifera,146,BSL 1,False,,False,True,Peas,Fungi
+Lichtheimia corymbifera,8994,Lichtheimia corymbifera,145,BSL 1,False,,False,True,Peas,Fungi
+Lichtheimia corymbifera,28223,Lichtheimia corymbifera,74-2524 ,BSL 2,False,,False,True,Bovine fetal brain,Fungi
+Lichtheimia corymbifera,36512,Lichtheimia corymbifera,V 73/8 ,BSL 2,False,,False,True,Bovine stomach contents,Fungi
+Lichtheimia corymbifera,MYA-3783,Lichtheimia corymbifera,189,BSL 2,False,,False,True,,Fungi
+Lichtheimia corymbifera,MYA-3782,Lichtheimia corymbifera,188,BSL 2,False,,False,True,,Fungi
+Lichtheimia corymbifera,MYA-3781,Lichtheimia corymbifera,186,BSL 2,False,,False,True,,Fungi
+Lichtheimia corymbifera,32625,Lichtheimia corymbifera,75-2552 ,BSL 2,False,,False,True,Bovine placenta,Fungi
+Lichtheimia corymbifera,32624,Lichtheimia corymbifera,74-3730 ,BSL 2,False,,False,True,Bovine placenta,Fungi
+Lichtheimia corymbifera,22748,Lichtheimia corymbifera,NRRL 1561 ,BSL 1,False,,False,True,,Fungi
+Lichtheimia corymbifera,22750,Lichtheimia corymbifera,NRRL 1592 ,BSL 1,False,,False,True,,Fungi
+Lichtheimia corymbifera,22746,Lichtheimia corymbifera,NRRL 1335 ,BSL 1,False,,False,True,,Fungi
+Lichtheimia corymbifera,22747,Lichtheimia corymbifera,NRRL 1516 ,BSL 1,False,,False,True,,Fungi
+Lichtheimia corymbifera,22745,Lichtheimia corymbifera,NRRL 1334 ,BSL 1,False,,False,True,,Fungi
+Lichtheimia corymbifera,22744,Lichtheimia corymbifera,NRRL 1333 ,BSL 1,False,,False,True,,Fungi
+Lichtheimia corymbifera,22742,Lichtheimia corymbifera,NRRL 1318 ,BSL 1,False,,False,True,,Fungi
+Lichtheimia corymbifera,22743,Lichtheimia corymbifera,NRRL 1331 ,BSL 1,False,,False,True,,Fungi
+Lichtheimia corymbifera,14049,Lichtheimia corymbifera,2055,BSL 2,False,,False,True,Laboratory mouse,Fungi
+Lichtheimia corymbifera,22749,Lichtheimia corymbifera,NRRL 1590 ,BSL 1,False,,False,False,,Fungi
+Scedosporium apiospermum,24048,Scedosporium apiospermum,70/VH ,BSL 2,False,,False,True,Corneal ulcer in 41-year-old man,Fungi
+Scedosporium apiospermum,46173,Scedosporium apiospermum,"SM 1007 [IFO 31146, NCPH 2264]",BSL 2,False,,False,True,Spinal fluid,Fungi
+Scedosporium apiospermum,9468,Scedosporium apiospermum,IOC 1603 [Leao 1603],BSL 2,False,,False,True,,Fungi
+Scedosporium apiospermum,48398,Scedosporium apiospermum,M16 ,BSL 2,False,,False,True,Waste compost ,Fungi
+Scedosporium apiospermum,56034,Scedosporium apiospermum,813 [22029],BSL 2,False,,False,True,Cerebral abscess,Fungi
+Scedosporium apiospermum,56033,Scedosporium apiospermum,806,BSL 2,False,,False,True,Brain and spinal fluid of child with meningitis,Fungi
+Scedosporium apiospermum,56035,Scedosporium apiospermum,815 [68-15843],BSL 2,False,,False,True,Knee abscess,Fungi
+Scedosporium apiospermum,9258,Scedosporium apiospermum,8203,BSL 2,False,,False,True,Mycetoma,Fungi
+Scedosporium apiospermum,28256,Scedosporium apiospermum,VH/1781/68 ,BSL 2,False,,False,True,Discharge following mastoidectomy and removal of polyp in ear canal,Fungi
+Scedosporium apiospermum,28257,Scedosporium apiospermum,VH/14898/74 ,BSL 2,False,,False,True,Femoral vein and artery,Fungi
+Scedosporium apiospermum,MYA-3635,Scedosporium apiospermum,SC2 ,BSL 1,True,https://genomes.atcc.org/genomes/c90f3bc70dd24093,False,True,,Fungi
+Scedosporium apiospermum,MYA-2815,Scedosporium apiospermum,TB ,BSL 1,False,,False,True,Peat compost,Fungi
+Scedosporium apiospermum,20091,Scedosporium apiospermum,653,BSL 2,False,,False,False,Soil,Fungi
+Scedosporium apiospermum,MYA-4827,Scedosporium apiospermum,ZE-BA/MT,BSL 2,False,,False,True,Sputum of patient with cystic fibrosis; isolated December 2007,Fungi
+Scedosporium apiospermum,MYA-4768,Scedosporium apiospermum,2-3274,BSL 2,False,,False,True,Lung tissue; isolated January 2009,Fungi
+Scedosporium apiospermum,24132,Scedosporium apiospermum,313/11/71 ,BSL 2,False,,False,False,"Mycetoma of foot, 13-year-old female, Gilbert and Ellice Islands",Fungi
+Exophiala dermatitidis,66773,Exophiala dermatitidis,DCU 845 ,BSL 2,False,,False,True,Tofu,Fungi
+Exophiala dermatitidis,44503,Exophiala dermatitidis,JL-2 [Mel-2],BSL 2,False,,False,True,Mutant derived from ATCC 34100,Fungi
+Exophiala dermatitidis,44502,Exophiala dermatitidis,JL-1 [Mel-1],BSL 2,False,,False,True,Mutant derived from ATCC 34100,Fungi
+Exophiala dermatitidis,46435,Exophiala dermatitidis,SM 1518 ,BSL 2,False,,False,True,Chlomomycosis,Fungi
+Exophiala dermatitidis,46434,Exophiala dermatitidis,SM 1519 ,BSL 2,False,,False,True,Chlomomycosis,Fungi
+Exophiala dermatitidis,76088,Exophiala dermatitidis,OMH-F 9191.89,BSL 2,False,,False,True,Clinical isolate from patient from Mauritius,Fungi
+Exophiala dermatitidis,76204,Exophiala dermatitidis,UN/MCB/M/219 ,BSL 1,False,,False,True,,Fungi
+Exophiala dermatitidis,44504,Exophiala dermatitidis,JL-3 [Mel-3],BSL 2,False,,False,True,Albino mutant derived from ATCC 34100,Fungi
+Exophiala dermatitidis,42053,Exophiala dermatitidis,109,BSL 2,False,,False,True,"Spleen of bat, Myotis albescens",Fungi
+Exophiala dermatitidis,58059,Exophiala dermatitidis,Mel 5 ,BSL 2,False,,False,True,Albino mutant derived from ATCC 34100,Fungi
+Exophiala dermatitidis,58060,Exophiala dermatitidis,Mel 6 ,BSL 2,False,,False,True,Albino mutant derived from ATCC 34100,Fungi
+Exophiala dermatitidis,58058,Exophiala dermatitidis,Mel-4 ,BSL 2,False,,False,True,Mutant derived from ATCC 34100,Fungi
+Exophiala dermatitidis,46781,Exophiala dermatitidis,Mc 13/73 ,BSL 2,False,,False,True,,Fungi
+Exophiala dermatitidis,28869,Exophiala dermatitidis,"CBS 207.35 [IFO 6421, IMI 93967, NBRC 6421, NCPF 2422]",BSL 2,False,,True,True,Face,Fungi
+Exophiala dermatitidis,38715,Exophiala dermatitidis,Mc2 ,BSL 2,False,,False,True,Mutant derived from ATCC 34100,Fungi
+Exophiala dermatitidis,38714,Exophiala dermatitidis,Mc1 ,BSL 2,False,,False,True,Mutant derived from ATCC 34100,Fungi
+Exophiala dermatitidis,38716,Exophiala dermatitidis,Mc3 ,BSL 2,False,,False,True,Mutant derived from ATCC 34100,Fungi
+Exophiala dermatitidis,MYA-1385,Exophiala dermatitidis,VPCI 65 ,BSL 2,False,,False,True,Isolated January 2000,Fungi
+Exophiala dermatitidis,MYA-889,Exophiala dermatitidis,WdChs1deltaWdChs2deltaWdChs3delta-2 ,BSL 2,False,,False,True,"Mutant derived from ATCC 34100 by disruption of WdCHS1, WdCHS2, and WdCHS3",Fungi
+Exophiala dermatitidis,MYA-886,Exophiala dermatitidis,WdChs3delta-1 ,BSL 2,False,,False,True,Mutant derived from ATCC 34100 by disruption of WdCHS3,Fungi
+Exophiala dermatitidis,MYA-888,Exophiala dermatitidis,WdChs4delta-1 ,BSL 2,False,,False,True,Mutant derived from ATCC 34100 by disruption of WdCHS4,Fungi
+Exophiala dermatitidis,MYA-885,Exophiala dermatitidis,Hf1WdChs3delta-1 ,BSL 2,False,,False,True,Mutant derived from strain Hf1 (a temperature-sensitive Mutant of ATCC 34100) by disruption of WdCHS3,Fungi
+Exophiala dermatitidis,MYA-887,Exophiala dermatitidis,WdChs1deltaWdChs2delta-GB ,BSL 2,False,,False,True,Mutant derived from ATCC 34100 by disruption of WdCHS1 and WdCHS2,Fungi
+Exophiala dermatitidis,MYA-884,Exophiala dermatitidis,Mc3WdChs3delta-1 ,BSL 2,False,,False,True,Mutant derived from ATCC 38716 by disruption of WdCHS3,Fungi
+Exophiala dermatitidis,34100,Exophiala dermatitidis,"8656 [CBS 525.76, NIH/UT8656]",BSL 2,True,https://genomes.atcc.org/genomes/6f51498a200a4edb,False,True,,Fungi
+Exophiala dermatitidis,26653,Exophiala dermatitidis,88,BSL 2,False,,False,True,Culture,Fungi
+Exophiala dermatitidis,PTS-28869,Exophiala dermatitidis,"CBS 207.35 [IFO 6421, IMI 93967, NCPF 2422]",BSL 2,False,,True,False,Face,Fungi
+Exophiala dermatitidis,201306,Exophiala dermatitidis,BMU 3271 ,BSL 2,False,,False,True,Skin,Fungi
+Exophiala dermatitidis,201305,Exophiala dermatitidis,,BSL 2,False,,False,True,human cerebrospinal fluid,Fungi
+Sporothrix schenckii,26408,Sporothrix schenckii,,BSL 2,False,,False,True,"joint fluid, yeast form, post-treatment isolate",Fungi
+Sporothrix schenckii,201680,Sporothrix schenckii,JA-3 ,BSL 2,False,,False,True,Cutaneous lesion on a dog,Fungi
+Sporothrix schenckii,201681,Sporothrix schenckii,JAT-6 ,BSL 2,False,,False,True,Subcutaneous abscess in diabetic patient with disseminated sporotrichosis,Fungi
+Sporothrix schenckii,201679,Sporothrix schenckii,JA-2 ,BSL 2,False,,False,True,Lymphocutaneous tissue,Fungi
+Sporothrix schenckii,14805,Sporothrix schenckii,Cohen ,BSL 2,False,,False,True,Lymphangitis of hand and arm,Fungi
+Sporothrix schenckii,14804,Sporothrix schenckii,Fossler ,BSL 2,False,,False,True,Lymphangitis of hand and arm,Fungi
+Sporothrix schenckii,14096,Sporothrix schenckii,IM Hu 326 [CBS 356.29],BSL 2,False,,False,True,,Fungi
+Sporothrix schenckii,58251,Sporothrix schenckii,de Perez 2211183 ,BSL 2,True,https://genomes.atcc.org/genomes/ab355d00a18f4102,False,True,Clinical isolate,Fungi
+Sporothrix schenckii,7968,Sporothrix schenckii,105,BSL 2,False,,False,True,,Fungi
+Sporothrix schenckii,8307,Sporothrix schenckii,,BSL 2,False,,False,True,Sporotrichosis,Fungi
+Sporothrix schenckii,6243,Sporothrix schenckii,Williams ,BSL 2,False,,False,True,,Fungi
+Sporothrix schenckii,52408,Sporothrix schenckii,"JZ 6.2 [LBG P 2198, NRRL Y-11307]",BSL 2,False,,False,True,Sewage sludge of triazine herbicide processing plant,Fungi
+Sporothrix schenckii,62874,Sporothrix schenckii,Sp-1901/3a,BSL 2,False,,False,True,Lymphocutaneous lesion on arm of Indian woman,Fungi
+Sporothrix schenckii,62875,Sporothrix schenckii,Sp-1901/3b,BSL 2,False,,False,True,Lymphocutaneous lesion on arm of Indian woman,Fungi
+Sporothrix schenckii,28388,Sporothrix schenckii,IP 29 ,BSL 2,False,,False,True,,Fungi
+Sporothrix schenckii,28184,Sporothrix schenckii,338 [49471],BSL 2,False,,False,True,Arm lesion,Fungi
+Sporothrix schenckii,28183,Sporothrix schenckii,335 [Pike 41424],BSL 2,False,,False,True,,Fungi
+Sporothrix schenckii,28515,Sporothrix schenckii,128684,BSL 2,False,,False,True,Canine,Fungi
+Sporothrix schenckii,28906,Sporothrix schenckii,B- ,BSL 2,False,,False,True,Knee lesion ,Fungi
+Sporothrix schenckii,38573,Sporothrix schenckii,ADRI-306 ,BSL 2,False,,False,True,Ear of dog,Fungi
+Sporothrix schenckii,32283,Sporothrix schenckii,RV 14939 [358],BSL 2,False,,False,True,,Fungi
+Sporothrix schenckii,32286,Sporothrix schenckii,RV 14955 [432],BSL 2,False,,False,True,Pustule on hand,Fungi
+Sporothrix schenckii,32284,Sporothrix schenckii,RV 14940 [361],BSL 2,False,,False,True,Ulcerous leg lesion,Fungi
+Sporothrix schenckii,32285,Sporothrix schenckii,RV 14949 [379],BSL 2,False,,False,True,Lymphangitis of forearm,Fungi
+Sporothrix schenckii,38104,Sporothrix schenckii,,BSL 2,False,,False,True,cerebrospinal fluid,Fungi
+Sporothrix schenckii,34898,Sporothrix schenckii,UL ,BSL 2,False,,False,True,Chronic sporotrichosis of hand,Fungi
+Sporothrix schenckii,32937,Sporothrix schenckii,Kurume 23 ,BSL 2,False,,False,True,Soil,Fungi
+Sporothrix schenckii,32791,Sporothrix schenckii,KO 4804T ,BSL 2,False,,False,True,Cutaneous sporotrichosis,Fungi
+Sporothrix schenckii,32790,Sporothrix schenckii,KO 4606 ,BSL 2,False,,False,True,Cutaneous sporotrichosis,Fungi
+Sporothrix schenckii,32795,Sporothrix schenckii,IFO 5984 ,BSL 2,False,,False,True,,Fungi
+Sporothrix schenckii,MYA-4822,Sporothrix schenckii,M-64,BSL 2,False,,False,True,Skin,Fungi
+Sporothrix schenckii,MYA-4820,Sporothrix schenckii,IPEC 15383,BSL 2,False,,False,True,Disseminated cutaneous and osteoarticular sporotrichosis,Fungi
+Sporothrix schenckii,MYA-4821,Sporothrix schenckii,1099-18,BSL 2,False,,False,True,Subcutaneous tissue,Fungi
+Sporothrix schenckii,26331,Sporothrix schenckii,Nixon (C 31) ,BSL 2,False,,False,True,Sputum,Fungi
+Sporothrix schenckii,26334,Sporothrix schenckii,patient Spell (C 42) ,BSL 2,False,,False,True,Cerebrospinal fluid,Fungi
+Sporothrix schenckii,26337,Sporothrix schenckii,patient Boozer (C 45) ,BSL 2,False,,False,True,Sputum,Fungi
+Sporothrix schenckii,26333,Sporothrix schenckii,W 183 (C 33) ,BSL 2,False,,False,True,Hay,Fungi
+Sporothrix schenckii,26327,Sporothrix schenckii,180 (C 25) ,BSL 2,False,,False,True,,Fungi
+Sporothrix schenckii,PTS-10212,Sporothrix schenckii,NIH 7019 ,BSL 2,False,,False,False,Sporotrichosis,Fungi
+Sporothrix schenckii,16345,Sporothrix schenckii,Sinai L.S [F76],BSL 2,False,,False,True,Diffusing lung infection,Fungi
+Sporothrix schenckii,14284,Sporothrix schenckii,NIH 7042 ,BSL 2,False,,False,True,,Fungi
+Sporothrix schenckii,26338,Sporothrix schenckii,patient Despensa (C 46) ,BSL 2,False,,False,False,Aspirate from elbow,Fungi
+Sporothrix schenckii,26335,Sporothrix schenckii,patient Thornton (C 43) ,BSL 2,False,,False,False,Bone marrow from humerus,Fungi
+Sporothrix schenckii,26336,Sporothrix schenckii,patient Flucas (C 44) ,BSL 2,False,,False,False,Aspirate from knee,Fungi
+Sporothrix schenckii,26332,Sporothrix schenckii,70-76 (C 32) ,BSL 2,False,,False,False,Skin lesion,Fungi
+Sporothrix schenckii,26330,Sporothrix schenckii,45-618-70 (C 30) ,BSL 2,False,,False,False,Subcutaneous lymphangitic lesions,Fungi
+Sporothrix schenckii,26329,Sporothrix schenckii,1010 (C 27) ,BSL 2,False,,False,False,Greenhouse wood,Fungi
+Sporothrix schenckii,26328,Sporothrix schenckii,189 (C 26) ,BSL 2,False,,False,False,,Fungi
+Sporothrix schenckii,10268,Sporothrix schenckii,IOC 2066 [Leao 2066],BSL 2,False,,False,True,Lymphangitis of arm,Fungi
+Sporothrix schenckii,14285,Sporothrix schenckii,NIH 7043 ,BSL 2,False,,False,True,,Fungi
+Sporothrix schenckii,24647,Sporothrix schenckii,224,BSL 2,False,,False,False,Cold-stored frankfurter,Fungi
+Sporothrix schenckii,10213,Sporothrix schenckii,NIH 7020 ,BSL 2,False,,False,True,Sporotrichosis,Fungi
+Sporothrix schenckii,24646,Sporothrix schenckii,,BSL 2,False,,False,False,"Sporotrichosis, 6-year-old girl",Fungi
+Sporothrix schenckii,26402,Sporothrix schenckii,,BSL 2,False,,False,False,"Sporotrichosis in Cantonese male, Hong Kong",Fungi
+Sporothrix schenckii,10212,Sporothrix schenckii,NIH 7019 ,BSL 2,False,,False,True,Sporotrichosis,Fungi
+Sporothrix schenckii,18616,Sporothrix schenckii var. luriei,"NCDC B 1040 [CBS 937.72, IMI 139135]",BSL 2,False,,True,True,Cranial infection,Fungi
+Klebsiella variicola,BAA-3357,Klebsiella variicola,A3,BSL 2,True,https://genomes.atcc.org/genomes/bfa12e2477f44402,False,True,Aerial root mucilage of a sorghum plant,Bacteria
+Klebsiella variicola,BAA-2552,Klebsiella variicola,342,BSL 2,True,https://genomes.atcc.org/genomes/3402d1f06a094d92,False,True,Corn plant,Bacteria
+Klebsiella variicola,BAA-830,Klebsiella variicola,"F2R9 [CFNE 2004, DSM 15968]",BSL 1,True,https://genomes.atcc.org/genomes/21c5c1d709a64a91,True,True,Banana root; isolated March 2001,Bacteria
+Klebsiella variicola,21210,Klebsiella variicola,NM-18 [NCDC 1215],BSL 2,False,,False,False,Derived from existing strain,Bacteria
+Klebsiella variicola,31488-MINI-PACK,Klebsiella variicola,PS-53,BSL 2,False,,False,True,Soil,Bacteria
+Klebsiella variicola,31488,Klebsiella variicola,PS-53,BSL 2,True,https://genomes.atcc.org/genomes/526ae14a7d694ae3,False,True,Soil,Bacteria
+Klebsiella variicola,BAA-3426-NGS-PACK,Klebsiella variicola,GTVSS-026,BSL 2,True,https://genomes.atcc.org/genomes/fdc82ce96add490d,False,True,Garam masala hot spice mixture,Bacteria
+Acinetobacter pittii,11959,Acinetobacter pittii,[R. Hugh 485],BSL 2,True,https://genomes.atcc.org/genomes/c2ec26dcdce443b9,True,True,Fulminating septicemia,Bacteria
+Acinetobacter pittii,19004,Acinetobacter pittii,"57.071.228 [NCDC KC 739, R. Hugh 2425]",BSL 2,True,https://genomes.atcc.org/genomes/bb39a9872cfe4eb8,True,True,Cerebrospinal fluid,Bacteria
+Citrobacter braakii,12012,Citrobacter braakii,,BSL 1,True,https://genomes.atcc.org/genomes/4ff2857aa4174e9a,False,True,,Bacteria
+Citrobacter braakii,6750,Citrobacter braakii,M8BK [NCIB 8173 (Escherichia intermedia)],BSL 1,False,,False,True,Soil,Bacteria
+Citrobacter braakii,51113,Citrobacter braakii,CDC 80-58,BSL 1,True,https://genomes.atcc.org/genomes/1b2008d00d45442d,True,True,Snake,Bacteria
+Citrobacter braakii,BAA-3277,Citrobacter braakii,896955,BSL 2,True,https://genomes.atcc.org/genomes/27e87720abc344a8,False,True,Urine,Bacteria
+Citrobacter braakii,BAA-3037,Citrobacter braakii,896955,BSL 2,True,https://genomes.atcc.org/genomes/e7e432dc35774a54,False,True,Urine,Bacteria
+Citrobacter braakii,43162,Citrobacter braakii,MMS 4477,BSL 1,True,https://genomes.atcc.org/genomes/d73e101e77ea450b,False,True,Clinical isolate,Bacteria
+Citrobacter braakii,29219,Citrobacter braakii,CDC 239/75,BSL 1,True,https://genomes.atcc.org/genomes/b66ebed6e3e449e5,False,True,Kidney,Bacteria
+Citrobacter braakii,29063,Citrobacter braakii,,BSL 1,True,https://genomes.atcc.org/genomes/eeba22484e4c40c1,False,True,Haddock fillet,Bacteria
+Citrobacter braakii,BAA-3428-NGS-PACK,Citrobacter braakii,GTVSS-028,BSL 2,True,https://genomes.atcc.org/genomes/f6d55ed3252b46cf,False,True,Cilantro,Bacteria
+Citrobacter braakii,10787,Citrobacter braakii,"NCTC 7020 [BUCSAV 193, NCIB 7020 (Escherichia intermedia)]",BSL 1,False,,False,False,,Bacteria
+Citrobacter braakii,10625,Citrobacter braakii,ETS 107,BSL 1,True,https://genomes.atcc.org/genomes/ca5860aec21a457d,False,True,,Bacteria
+Citrobacter braakii,10053,Citrobacter braakii,5396/38,BSL 1,True,https://genomes.atcc.org/genomes/aabfa7ab5201465d,False,True,,Bacteria
+Staphylococcus capitis,146,Staphylococcus capitis,[NRRL B-2616],BSL 1,True,https://genomes.atcc.org/genomes/f4d42c9b43ea4803,False,True,,Bacteria
+Staphylococcus capitis,27840,Staphylococcus capitis subsp. capitis,LK 499,BSL 1,True,https://genomes.atcc.org/genomes/18749c7711004b68,True,True,Skin,Bacteria
+Staphylococcus capitis,27843,Staphylococcus capitis subsp. capitis,JL 45,BSL 1,True,https://genomes.atcc.org/genomes/8102a1bc769444a5,False,True,Skin,Bacteria
+Staphylococcus capitis,27842,Staphylococcus capitis subsp. capitis,MCS 11,BSL 1,False,,False,True,Skin,Bacteria
+Staphylococcus capitis,27841,Staphylococcus capitis subsp. capitis,DM 267,BSL 1,True,https://genomes.atcc.org/genomes/937d36a8b6794e9f,False,True,Skin,Bacteria
+Staphylococcus capitis,49324,Staphylococcus capitis subsp. urealyticus,CMM 8536,BSL 1,True,https://genomes.atcc.org/genomes/90e31949cf614056,False,True,External auditory meatus,Bacteria
+Staphylococcus capitis,49325,Staphylococcus capitis subsp. urealyticus,CB 8730,BSL 1,True,https://genomes.atcc.org/genomes/21d5a08ca5d443fc,False,True,Inguinal area,Bacteria
+Staphylococcus capitis,49326,Staphylococcus capitis subsp. urealyticus,MAW8436,BSL 1,True,https://genomes.atcc.org/genomes/576ad2a28afb4fa0,True,True,Skin,Bacteria
+Staphylococcus capitis,49327,Staphylococcus capitis subsp. ureolyticus,DEM 8530,BSL 1,False,,False,True,Inguinal area,Bacteria
+Staphylococcus capitis,35661,Staphylococcus capitis subsp. capitis,PRA 360 677,BSL 1,True,https://genomes.atcc.org/genomes/dcd7bfa1cc4e4a2c,False,True,,Bacteria
+Staphylococcus capitis,35661-MINI-PACK,Staphylococcus capitis subsp. capitis,LRA 360 677,BSL 1,False,,False,False,,Bacteria
+Staphylococcus caprae,BAA-3788,"Staphylococcus caprae
+",Hay,BSL 1,False,,False,True,Blood from a human infant with sepsis,Bacteria
+Staphylococcus caprae,55133,"Staphylococcus caprae
+",Hay,BSL 1,False,,False,False,Blood from a human infant with sepsis,Bacteria
+Staphylococcus caprae,51548,Staphylococcus caprae,2122,BSL 1,False,,False,True,Clinical isolate,Bacteria
+Staphylococcus caprae,51549,Staphylococcus caprae,3051,BSL 1,False,,False,True,Clinical isolate,Bacteria
+Staphylococcus caprae,35538,Staphylococcus caprae,143.22 [CCM 3573],BSL 1,True,https://genomes.atcc.org/genomes/342d00dc0f514eca,True,True,Goat milk,Bacteria
+Streptococcus constellatus,9963,Streptococcus constellatus ,NIH 966,BSL 1,True,https://genomes.atcc.org/genomes/d58ef350a3f94488,False,True,Patient with ethmoid sinusitis,Bacteria
+Streptococcus constellatus,27823,Streptococcus constellatus subsp. constellatus,"VPI 3810 [4055, CNCTC 6/89, SK 53]",BSL 2,True,https://genomes.atcc.org/genomes/f8d92ec70391444f,True,True,Probably from patient with purulent pleurisy,Bacteria
+Streptococcus constellatus,27513,Streptococcus constellatus subsp. constellatus,VPI 7712,BSL 2,True,https://genomes.atcc.org/genomes/57ddd26d1541447b,False,True,Gastrostomy tube,Bacteria
+Enterococcus avium,14025,Enterococcus avium,"NCTC 9938 [JCM 8722, NCDO 2369]",BSL 1,True,https://genomes.atcc.org/genomes/ad0a1fdbd71149e7,True,True,,Bacteria
+Enterococcus avium,9274,Enterococcus avium,2,BSL 1,True,https://genomes.atcc.org/genomes/0e98184775d245fd,False,True,Brain of hen,Bacteria
+Enterococcus avium,49603,Enterococcus avium,"NCDO 2370 [E6556, W18]",BSL 1,False,,False,True,,Bacteria
+Enterococcus avium,49602,Enterococcus avium,NCDO 2366 [W33],BSL 1,False,,False,True,,Bacteria
+Enterococcus avium,49463,Enterococcus avium,AmMS 112,BSL 1,False,,False,True,Clinical isolate,Bacteria
+Enterococcus avium,35665,Enterococcus avium,LRA 33 01 81 [DSM 20 063],BSL 1,False,,False,True,,Bacteria
+Corynebacterium amycolatum,6931,Corynebacterium amycolatum,NCTC 1914,BSL 2,True,https://genomes.atcc.org/genomes/0871d8112f864122,False,True,,Bacteria
+Corynebacterium amycolatum,700207,Corynebacterium amycolatum,CIP 103821,BSL 2,True,https://genomes.atcc.org/genomes/db0c69868a394411,False,True,Blood,Bacteria
+Corynebacterium amycolatum,700206,Corynebacterium amycolatum,CIP 100836,BSL 2,True,https://genomes.atcc.org/genomes/1866133f5a564e7f,False,True,Amniotic fluid,Bacteria
+Corynebacterium amycolatum,49368,Corynebacterium amycolatum,NCFB 2768 [S160],BSL 2,True,https://genomes.atcc.org/genomes/0a65209f13c54246,True,True,,Bacteria
+Corynebacterium urealyticum,43044,Corynebacterium urealyticum,3 [Garcia strain],BSL 2,True,https://genomes.atcc.org/genomes/58d99984b6aa47bb,False,True,Urine,Bacteria
+Corynebacterium urealyticum,43044-MINI-PACK,Corynebacterium urealyticum,3 [Garcia strain],BSL 2,False,,False,True,Urine,Bacteria
+Corynebacterium urealyticum,43043,Corynebacterium urealyticum,2 [Bajo strain],BSL 2,False,,False,True,Urine,Bacteria
+Corynebacterium urealyticum,43042,Corynebacterium urealyticum,"1 [Armendariz strain, NCTC 12011]",BSL 2,True,https://genomes.atcc.org/genomes/27897673db13406e,True,True,Bladder stone,Bacteria
+Corynebacterium urealyticum,33798,Corynebacterium urealyticum,205E,BSL 2,False,,False,True,Urine,Bacteria
+Nocardia brasiliensis,700358,Nocardia brasiliensis,HUJEG-1,BSL 2,False,,False,True,Mycetoma; isolated July 1989,Bacteria
+Nocardia brasiliensis,43748,Nocardia brasiliensis,UN/Mcb/M186,BSL 2,False,,False,True,Soil,Bacteria
+Nocardia brasiliensis,27936,Nocardia brasiliensis,SL 54 [IARI 1852],BSL 2,False,,False,True,Soil,Bacteria
+Nocardia brasiliensis,19296,Nocardia brasiliensis,"IMRU 845 [381; 631; 337, 842, IFO 14402]",BSL 2,True,https://genomes.atcc.org/genomes/632f76adf5b749cd,True,True,,Bacteria
+Nocardia brasiliensis,19295,Nocardia brasiliensis,IMRU 744 [409],BSL 2,False,,False,True,,Bacteria
+Nocardia brasiliensis,19297,Nocardia brasiliensis,IMRU 1117A,BSL 2,False,,False,True,Morphological variant derived from Bojalil's strain N-114,Bacteria
+Nocardia brasiliensis,19298,Nocardia brasiliensis,IMRU 1117B,BSL 2,False,,False,False,Morphological variant derived from Bojalil's strain N-114,Bacteria
+Nocardia brasiliensis,19019,Nocardia brasiliensis,CDC 45 [993; 413],BSL 2,True,https://genomes.atcc.org/genomes/0ad27cd6585747ad,False,True,Mycetoma of chest ,Bacteria
+Nocardia brasiliensis,15907,Nocardia brasiliensis,RIA 638,BSL 2,True,https://genomes.atcc.org/genomes/89ba4f99a4814777,False,True,,Bacteria
+Nocardia cyriacigeorgica,BAA-1537,Nocardia cyriacigeorgica,GUH-2,BSL 2,False,,False,True,Kidney transplant from fatal infection at Georgetown University Hospital; isolated by BL Beaman,Bacteria
+Nocardia cyriacigeorgica,BAA-1518,Nocardia cyriacigeorgica,06-51518,BSL 2,False,,False,True,"Lung biopsy of patient with pneumonia; isolated January 19, 2006",Bacteria
+Nocardia cyriacigeorgica,BAA-1516,Nocardia cyriacigeorgica,05-49102,BSL 2,False,,False,True,"Sputum; isolated August 19, 2005",Bacteria
+Nocardia cyriacigeorgica,BAA-1519,Nocardia cyriacigeorgica,00-12607,BSL 2,False,,False,True,"Biopsy of pharyngeal abscess; isolated April 14, 2000",Bacteria
+Nocardia cyriacigeorgica,BAA-1517,Nocardia cyriacigeorgica,02-50508,BSL 2,False,,False,True,"Tracheal aspirate of patient with Pneumonia; isolated March 26, 2002",Bacteria
+Bacteroides caccae,43185,Bacteroides caccae,"VPI 3452A [CIP 104201T, JCM 9498]",BSL 2,True,https://genomes.atcc.org/genomes/dac70f96b67f4abe,True,True,Feces,Bacteria
+Bacteroides caccae,700196,Bacteroides caccae,VPI 4227 [Prevot 2302],BSL 2,False,,False,True,Septicemia,Bacteria
+Bacteroides caccae,700189,Bacteroides caccae,VPI 3596,BSL 2,True,https://genomes.atcc.org/genomes/7a964daa79d344bd,False,True,Feces,Bacteria
+Prevotella bivia,29303,Prevotella bivia,"VPI 6822 [653C, NCTC 11156]",BSL 2,True,https://genomes.atcc.org/genomes/b25217f1ad3946b5,True,True,Endometrium,Bacteria
+Candida haemulonii,22991,Candidozyma haemuli,"M 274 [CBS 5149, CCY 26-60-2, IFO 10001, IGC 3025, JCM 3762, NRRL Y-6693]",BSL 1,False,,True,True,"Gut contents of fish, Haemulon sciurus",Fungi
+Aspergillus terreus,24921,Aspergillus terreus,P116 ,BSL 1,False,,False,True,Barley kernel,Fungi
+Aspergillus terreus,24839,Aspergillus terreus," [IMI 16043, NCTC 3911]",BSL 1,False,,False,True,,Fungi
+Aspergillus terreus,24548,Aspergillus terreus,61,BSL 1,False,,False,True,Poultry feed,Fungi
+Aspergillus terreus,20589,Aspergillus terreus,"3174M [FERM-P 4726, FH-1007, IFO 6123]",BSL 1,False,,False,True,,Fungi
+Aspergillus terreus,20516,Aspergillus terreus,G-2408 [NRRL 11156],BSL 1,False,,False,True,Soil,Fungi
+Aspergillus terreus,201533,Aspergillus terreus,AT1 ,BSL 2,False,,False,True,Bronchoalveolar lavage fluid,Fungi
+Aspergillus terreus,16794,Aspergillus terreus,"WB 680 [CBS 594.65, IMI 135817, NRRL 680; T-L-122, QM 7473]",BSL 1,False,,False,True,,Fungi
+Aspergillus terreus,12238,Aspergillus terreus,F839 ,BSL 1,False,,False,True,,Fungi
+Aspergillus terreus,32587,Aspergillus terreus,14/II ,BSL 1,True,https://genomes.atcc.org/genomes/e5ee5f4949984b2a,False,True,Gamma mutant of NRRL 1960,Fungi
+Aspergillus terreus,7860,Aspergillus terreus,USDA,BSL 1,False,,False,True,,Fungi
+Aspergillus terreus,66836,Aspergillus terreus,,BSL 2,False,,False,True,bovine fetus,Fungi
+Aspergillus terreus,66654,Aspergillus terreus,P-762 ,BSL 1,False,,False,True,Creosote-treated southern pine pole,Fungi
+Aspergillus terreus,62406,Aspergillus terreus,OKI 16/5 ,BSL 1,False,,False,True,Cellulose pulp,Fungi
+Aspergillus terreus,62405,Aspergillus terreus,TUB F-107 ,BSL 1,False,,False,True,Decaying reed,Fungi
+Aspergillus terreus,58135,Aspergillus terreus,TUB F-65 ,BSL 1,False,,False,True,Red soil,Fungi
+Aspergillus terreus,52293,Aspergillus terreus,,BSL 1,False,,False,True,,Fungi
+Aspergillus terreus,52430,Aspergillus terreus,,BSL 1,False,,False,True,decayed timber,Fungi
+Aspergillus terreus,42025,Aspergillus terreus,473,BSL 1,False,,False,True,Typha aungstata leaves,Fungi
+Aspergillus terreus,58095,Aspergillus terreus,IFO 4100 ,BSL 1,False,,False,True,,Fungi
+Aspergillus terreus,46941,Aspergillus terreus,952,BSL 2,False,,False,True,Sputum,Fungi
+Aspergillus terreus,46533,Aspergillus terreus,NRRL 1913 ,BSL 1,False,,False,True,,Fungi
+Aspergillus terreus,46503,Aspergillus terreus,NRRL 1921 ,BSL 1,False,,False,True,,Fungi
+Aspergillus terreus,46038,Aspergillus terreus,NRRL 6273 ,BSL 1,False,,False,True,Bale of hay,Fungi
+Aspergillus terreus,64107,Aspergillus terreus,UNG1-40 ,BSL 1,False,,False,True,Mutant derived from ATCC 52430,Fungi
+Aspergillus terreus,44678,Aspergillus terreus,RSP 691 ,BSL 2,False,,False,True,Leg of kori bustard,Fungi
+Aspergillus terreus,64029,Aspergillus terreus,67-1150 [CDC B-986],BSL 2,False,,False,True,Sputum,Fungi
+Aspergillus terreus,28865,Aspergillus terreus,S-712 ,BSL 1,False,,False,True,Soil of paddy field,Fungi
+Aspergillus terreus,28301,Aspergillus terreus,Cross 23-69 ,BSL 2,False,,False,True,Spinal fluid in meningitis,Fungi
+Aspergillus terreus,36364,Aspergillus terreus,3,BSL 1,False,,False,True,Clay soil,Fungi
+Aspergillus terreus,74135,Aspergillus terreus,AoAt/NBJ-V [AoAt-NBJ/5],BSL 1,False,,False,False,Derived from Aspergillus oryzae transformed with A. terreus DNA,Fungi
+Aspergillus terreus,MYA-3628,Aspergillus terreus,03-062-0736 ,BSL 2,False,,False,True,Boswell Hospital,Fungi
+Aspergillus terreus,34648,Aspergillus terreus,NRRL 3319 ,BSL 1,False,,False,True,,Fungi
+Aspergillus terreus,34571,Aspergillus terreus,CCF 55 [BUCSAV 86; 12/b],BSL 1,False,,False,True,,Fungi
+Aspergillus terreus,32626,Aspergillus terreus,75-2895 ,BSL 2,False,,False,True,Bovine placenta,Fungi
+Aspergillus terreus,32590,Aspergillus terreus,K ,BSL 1,False,,False,True,Gamma mutant of NRRL 1960,Fungi
+Aspergillus terreus,32589,Aspergillus terreus,25/III ,BSL 1,False,,False,True,Gamma mutant of NRRL 1960,Fungi
+Aspergillus terreus,32588,Aspergillus terreus,21/I ,BSL 1,False,,False,True,Gamma mutant of NRRL 1960,Fungi
+Aspergillus terreus,32515,Aspergillus terreus,20-2 ,BSL 1,False,,False,True,Sugarcane fuzz,Fungi
+Aspergillus terreus,32513,Aspergillus terreus,15-4 ,BSL 1,False,,False,True,Sugarcane fuzz,Fungi
+Aspergillus terreus,32514,Aspergillus terreus,6-6,BSL 1,False,,False,True,Sugarcane fuzz,Fungi
+Aspergillus terreus,20064,Aspergillus terreus,1960,BSL 1,False,,False,False,Soil,Fungi
+Aspergillus terreus,74064,Aspergillus terreus,MF5544 [PS-2-2R27],BSL 1,False,,False,False,,Fungi
+Aspergillus terreus,32359,Aspergillus terreus,K 26 ,BSL 1,False,,False,True,Derived from ATCC 10020,Fungi
+Aspergillus terreus,MYA-4898,Aspergillus terreus,IFO 7078,BSL 1,False,,False,True,,Fungi
+Aspergillus terreus,MYA-4897,Aspergillus terreus,TUB F-514,BSL 1,False,,False,True,Soil,Fungi
+Aspergillus terreus,16792,Aspergillus terreus var. africanus,"WB 2399 [CBS 130.55, IMI 61457, NRRL 2399, NRRL A-3175, QM 1913]",BSL 1,False,,True,True,Soil,Fungi
+Aspergillus terreus,11877,Aspergillus terreus var. aureus,,BSL 1,False,,False,True,Contaminant,Fungi
+Aspergillus terreus,20542,Aspergillus terreus,MF4845 ,BSL 1,True,https://genomes.atcc.org/genomes/5f89bf5b4afb422a,False,True,,Fungi
+Aspergillus terreus,26604,Aspergillus terreus,"patient 1, Scotland ",BSL 2,True,https://genomes.atcc.org/genomes/5ec79cd248c149eb,False,True,Ankylosing spondylitis,Fungi
+Aspergillus terreus,10029,Aspergillus terreus,"NRRL 265 [5474.F11, QM 1992, WB 265]",BSL 1,False,,False,True,Soil,Fungi
+Aspergillus terreus,20541,Aspergillus terreus,MF4833,BSL 1,False,,False,True,,Fungi
+Aspergillus terreus,11591,Aspergillus terreus,MD 2026 ,BSL 1,False,,False,True,,Fungi
+Aspergillus terreus,201901,Aspergillus terreus,MF 329/97 ,BSL 2,False,,False,True,Bronchoalveolar lavage and sputum from patient with aspergilloma,Fungi
+Aspergillus terreus,10070,Aspergillus terreus,NRRL 274 [5071.1],BSL 1,False,,False,True,Ear,Fungi
+Aspergillus terreus,1012,Aspergillus terreus,"NRRL 255 [144, ATCC 10071, CBS 601.65, IMI 17294, LSHB Ac24, NCTC 981, QM 1991, VKM F-67, WB 255]",BSL 1,False,,True,True,Soil,Fungi
+Aspergillus terreus,46560,Aspergillus terreus var. africanus,IFO 8835 ,BSL 1,False,,False,True,Soil,Fungi
+Aspergillus terreus,10690,Aspergillus terreus,"QM 82-j [CBS 377.64, DSM 1958, IFO 6346, IMI 321320, IMI 45543, NRRL 571, QM 82J]",BSL 1,True,https://genomes.atcc.org/genomes/f3cbe4e2307a4375,False,True,Haversack,Fungi

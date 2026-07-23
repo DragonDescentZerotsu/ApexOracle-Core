@@ -1,0 +1,96 @@
+{
+  "claim_boundary": {
+    "annotation_roundtrip": "PepLink reverse parser must recover the exact linear sequence or a cyclic rotation for head-to-tail peptides, with topology preserved.",
+    "reverse_scope": "PepLink 0.1.2: standard L/D residues, linear and head-to-tail cyclic monomer peptides only.",
+    "structural_roundtrip": "AA/peptide annotation -> PepLink SMILES and SELFIES; SELFIES must decode to the identical canonical isomeric molecular graph."
+  },
+  "curated_dbaasp_peptides": {
+    "annotation_roundtrip": {
+      "contract_scope": 4939,
+      "fail": 0,
+      "pass": 4939,
+      "ran_after_forward_success": 4939
+    },
+    "forward_error_class": {
+      "AtomValenceException": 51,
+      "EncoderError": 7,
+      "UnsupportedPeptideError": 268,
+      "ValidationError": 29
+    },
+    "forward_status": {
+      "failed": 355,
+      "success": 16075
+    },
+    "reverse_contract_scope": {
+      "out_of_scope_coordination_bond": 54,
+      "out_of_scope_multimer": 26,
+      "out_of_scope_noncanonical_sequence": 2581,
+      "out_of_scope_other_intrachain_bond": 1468,
+      "out_of_scope_terminal_modification": 7362,
+      "supported_head_to_tail": 523,
+      "supported_linear": 4416
+    },
+    "rows": 16430,
+    "structural_roundtrip": {
+      "denominator_forward_success": 16075,
+      "fail": 0,
+      "pass": 16075
+    },
+    "topology": {
+      "coordination_complex": 62,
+      "head_to_tail_cyclic": 980,
+      "linear": 13031,
+      "multimer": 26,
+      "other_intrachain_crosslinked": 2331
+    }
+  },
+  "detail_csv": "experiments/peplink_validation/peplink_0.1.2/roundtrip_records.csv",
+  "residue_definitions": {
+    "annotation_roundtrip": {
+      "contract_scope": 39,
+      "fail": 0,
+      "pass": 39,
+      "ran_after_forward_success": 39
+    },
+    "forward_error_class": {
+      "AtomValenceException": 7
+    },
+    "forward_status": {
+      "failed": 7,
+      "success": 452
+    },
+    "reverse_contract_scope": {
+      "out_of_scope_noncanonical_sequence": 420,
+      "supported_linear": 39
+    },
+    "rows": 459,
+    "structural_roundtrip": {
+      "denominator_forward_success": 452,
+      "fail": 0,
+      "pass": 452
+    },
+    "topology": {
+      "linear": 459
+    }
+  },
+  "schema_version": 1,
+  "software": {
+    "peplink_source": "external/PepLink",
+    "peplink_version": "0.1.2"
+  },
+  "sources": {
+    "aa_mapping": {
+      "path": "DataPrepare/Data/all_aa_smiles_new_handcrafted.csv",
+      "sha256": "42fe91726f2d6a8fb951d7ef7d27298f3151bb45bc5fa222c5d7d9d9e5777544"
+    },
+    "curated_mic": {
+      "path": "DataPrepare/Data/DBAASP_id_bact_name_SMILES_MIC_Evo.csv",
+      "sha256": "ebbe1b32a45460a2f88f112192627f80f9f7391c1d17dfc2ebf007fe6f6ef2aa",
+      "unique_dbaasp_ids": 16430
+    },
+    "dbaasp_json": {
+      "path": "DataPrepare/Data/all_peptides_data.json",
+      "sha256": "927ea275f40cdc2f79acdae6a87b0efc13ae5b7acee3901a50d2005a8f187ce0"
+    }
+  }
+}
