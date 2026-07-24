@@ -1,5 +1,5 @@
 schema_version: 1
-last_updated: 2026-07-19
+last_updated: 2026-07-23
 
 entries:
   - id: fig2b_molecule_encoders
@@ -86,16 +86,18 @@ entries:
       - DataPrepare/correct_SMILES_offered_by_DBAASP.py
       - https://github.com/DragonDescentZerotsu/PepLink
     destination:
-      - PyPI:PepLink==0.1.1
+      - PyPI:PepLink==0.1.2
       - src/apexoracle/data/peplink_adapter.py
+      - configs/data_pipeline/peplink_v0.1.2.yaml
       - configs/data_pipeline/peplink_v0.1.1.yaml
       - experiments/amp_data_pipeline
-    status: external_release_pinned_and_paper_compatibility_audited
+      - experiments/peplink_validation
+    status: v0.1.2_external_release_pinned_roundtrip_and_paper_compatibility_audited
     evidence:
       - experiments/amp_data_pipeline/README.md
       - experiments/amp_data_pipeline/peplink_compatibility_audit.json
     deletion_allowed: false
-    deletion_note: Legacy aa_seq_to_smiles remains until all in-repository callers and MIC/data-build scripts are migrated to the external package.
+    deletion_note: Legacy aa_seq_to_smiles remains until its tracked legacy callers (try.py, correct_SMILES_offered_by_DBAASP.py, APEX_in_house_to_SMILES.py, and APEX_in_house_to_SMILES_merge_w_DBAASP.py) are migrated or archived.
 
   - id: amp_mic_training_data_pipeline
     source:

@@ -1,12 +1,14 @@
 # ApexOracle / Synergy 代码库重构计划
 
 > 建立日期：2026-07-17  
-> 状态：执行中  
+> 状态：canonical 论文/审稿路径已完成；legacy `DataPrepare/` 收尾仍待后续批次
 > 适用范围：当前 `Synergy` 仓库，以及后续需要整合的 Evo-2 genome embedding、DLM/MDLM 和 guided generation 代码。
 
-当前执行焦点（2026-07-20）：generation 前的发布代码清理已经完成；正在本机、node001 和
-node002 上补齐 reviewer 要求的 Fig. 1b 完整 fine-tune/baseline ensemble。机器职责、代码同步、
-数据/权重和外部仓库位置以 `docs/COMPUTE_AND_ASSET_MAP.md` 为统一索引。
+当前执行焦点（2026-07-23）：Fig. 1b 完整 10-member/fold fine-tune 与 baseline、最终统计、
+图文修订，以及 PepLink 0.1.2 round-trip/ChatGPT-o1/OPSIN 审计和 Supplementary Data 均已完成。
+当前保留的主要未完成事项是 corrected AA successor dataset 的重新训练、Reviewer 4 target/
+multi-isolate panel 决策，以及 `DataPrepare/` legacy 脚本的迁移、去重和归档。机器职责、
+代码同步、数据/权重和外部仓库位置以 `docs/COMPUTE_AND_ASSET_MAP.md` 为统一索引。
 
 ## 1. 重构目标
 
@@ -121,12 +123,17 @@ ChemBERTa MLM mean-pooling 作为可选消融，不与论文主 comparator 混�
 ### 阶段 2：建立共享核心模块
 
 - [x] 建立可安装的 `src/` package 和最小依赖定义。
-- [ ] 抽取统一的数据 schema、label transform、mask、strain mapping 和 filtering；Fig. 2b 的 19-task schema、共享过滤和 fold 已先行完成。
-- [ ] 抽取 genome/text/molecule feature 接口。
-- [ ] 抽取 cross-attention/fusion、LoRA、regression/classification head。
-- [ ] 抽取指标、ensemble、checkpoint loading、seed 和设备选择逻辑。
-- [x] 建立 `configs/model_weights.yaml` 统一登记权重当前位置、SHA-256、消费实验和计划迁移路径；实际权重解析器与集中搬迁仍待实现。
-- [ ] 将硬编码路径迁移到 CLI 参数或 YAML 配置。
+- [x] 为已迁移的 canonical 论文路径抽取数据 schema、label transform、mask、strain mapping 和
+  filtering；未迁移的 `DataPrepare/` legacy 脚本不包含在此完成声明中。
+- [x] 为 canonical runner 抽取 genome/text/molecule feature 接口。
+- [x] 为 hierarchical MIC、Fig. 1b 和 synergy canonical runner 抽取
+  cross-attention/fusion、LoRA、regression/classification head。
+- [x] 为已迁移主路径抽取指标、ensemble、checkpoint loading、seed 和设备选择逻辑。
+- [x] 建立 `configs/model_weights.yaml` 统一登记权重当前位置、SHA-256、消费实验和计划迁移路径；
+  `src/apexoracle/resources/model_weights.py` 已实现 manifest ID 解析及 size/SHA-256 验证。
+  未完成的是其余历史权重的集中搬迁和再分发 URI/许可确认。
+- [x] canonical runner 的运行时路径已迁移到 CLI 参数或 YAML 配置；`DataPrepare/` legacy
+  脚本中的绝对路径留待后续归档清理。
 - [ ] 统一预测输出格式，至少包含 sample ID、fold、label、prediction 和模型元数据。
 
 执行进度（2026-07-19）：hierarchical MIC 路径已完成统一。strain-wise、论文中的
@@ -227,7 +234,9 @@ batch 的一轮训练/评估 smoke；以及 strict zero-shot group 0 / ensemble 
 checkpoint logit 与 capsule 在 batch size 70 下逐值完全一致。30 个 strict checkpoint 和
 150 个 molecule-only checkpoint 网格完整。最初本机单独审计只看到 77/150 个 fine-tune
 checkpoint；合并 node002 后恢复 104 个历史 checkpoint，随后补训 RN4220 fold 4 member 0，
-本轮开始前为 105/150。剩余 45 个 member 正在三机并行补齐；在完成前仍按证据不完整处理。
+本轮开始前为 105/150。剩余 45 个 member 已于 2026-07-21 补齐；最终 `150/150`
+checkpoint 网格、15 个 10-member fold prediction、matched baseline 和 paired statistics
+均已验证完成。
 详见 `experiments/fig1b_antibiotic_classification/`。
 
 Sequence similarity 已于 2026-07-19 完成迁移。canonical 入口为
@@ -242,8 +251,8 @@ tracked drivers/manifests 已删除并由 legacy tag 保留。详见
 `experiments/sequence_similarity/`。
 
 AMP/PepLink、synergy、modality ablation、k-mer 和其余 generation 前路径已经完成发布清理与
-证据冻结。当前下一项是完成 Fig. 1b reviewer 补实验并重新计算完整 ensemble 的 paired
-statistics；generation 外部仓库暂时只读审计，不在本阶段修改。
+证据冻结。Fig. 1b reviewer 补实验、完整 ensemble paired statistics 和最终文稿已完成；
+generation 外部仓库仍为只读/外部边界，不在本阶段修改。
 
 Reviewer 4 的 unseen-species 初筛已于 2026-07-20 插入 Fig. 1b 与 guidance 外部重构之间。
 已从 Mac 复制私有 in-house AMP workbook 到 Git ignored 目录并核验两端 SHA-256；canonical
@@ -259,22 +268,25 @@ species-level zero-shot target discovery，不能支持 reviewer 要求的 broad
 下一步必须先由作者和 microbiology 团队选择临床 target 与多-isolate panel，再由外部 Evo-2/text
 producer 生成并登记输入资产；在此之前不启动 guided sampler，也不修改 reviewer response 的结果段。
 
-PepLink 外部依赖边界已于 2026-07-19 完成。作者维护的独立仓库
-`DragonDescentZerotsu/PepLink` 已发布 PyPI `PepLink==0.1.1`，tag `v0.1.1` 和 commit
-`cec2a02427766e4ba95806924801af31bdcc9939`。ApexOracle 不使用 submodule，也不复制其
-2,300 行 chemistry core；仅保留 optional dependency、公开 API adapter 和版本/data SHA
-manifest。独立 PepLink 测试为 22 passed。179 条历史 structure correction 中 177 条输出
-逐字符串相同，另 2 条是 v0.1.1 明确移除 legacy 游离 fragment，全部 179 条均为 fragment
-parent equivalent。论文复现继续消费 frozen paper CSV；新数据现使用已发布 v0.1.2，且其 forward
-structure generation 与 v0.1.1 相同。
+PepLink 外部依赖边界始建于 2026-07-19，并于 2026-07-21 升级到当前版本。作者维护的独立仓库
+`DragonDescentZerotsu/PepLink` 已发布 PyPI `PepLink==0.1.2`、tag `v0.1.2` 和 commit
+`90f627cc7fd65daaf9c5d0a973d17b79bcd097d5`。ApexOracle 不使用 submodule，也不复制其
+chemistry core；仅保留 optional dependency、公开 API adapter 和版本/data SHA manifest。
+独立 PepLink 0.1.2 测试为 23 passed。0.1.1 仍作为历史兼容性审计版本：179 条历史
+structure correction 中 177 条输出逐字符串相同，另 2 条由其明确移除 legacy 游离 fragment，
+全部 179 条均为 fragment-parent equivalent。论文复现继续消费 frozen paper CSV；新数据使用
+0.1.2，且其 forward structure generation 与 0.1.1 相同。
 AMP MIC parsing、in-house merge 与 SELFIES/token filtering 也已于 2026-07-19 完成。
 canonical CLI 对原数据只读并拒绝覆盖输入；`paper_legacy` 显式保留 inhibition、censor 和
 structure-correction 执行顺序。105,547 行 DBAASP MIC 的 ID/strain/SMILES 精确一致，MIC
 最大绝对误差 `4.55e-13`；121,265 行合并表与 120,955 行 token cache 均逐字节一致。
 tokenizer revision 已固定。PepLink 重建 15,718 条 in-house row 与 legacy 的唯一差异是
 terminal `[OH]` 对 canonical `O`，归一化后全部一致；论文复现继续读取 frozen in-house
-long table。旧 `DataPrepare/aa_seq_to_smiles.py` 暂不删除，因为仍有 synergy 等未迁移 driver
-import 它。下一高置信度阶段改为 reviewer Evo-2 embedding scaling 分析的入口与发布审计。
+long table。旧 `DataPrepare/aa_seq_to_smiles.py` 的清理明确列为后续未完成事项：它仍被
+`try.py`、`correct_SMILES_offered_by_DBAASP.py`、`APEX_in_house_to_SMILES.py` 和
+`APEX_in_house_to_SMILES_merge_w_DBAASP.py` 四个 tracked legacy driver import，本批不删除。
+`discription_generation.py` 与 `discription_generation_w_ATCC.py` 的重复清理同样推迟到
+调用者迁移/归档之后。
 
 PepLink round-trip 与历史 ChatGPT-o1/OPSIN chemistry 审计已于 2026-07-20 完成，当前状态为
 `PepLink 0.1.2 released / reviewer Supplementary Data complete / corrected-data retraining pending`。
@@ -481,6 +493,10 @@ metrics 完全一致；group 1 当前动态 hash split 多 5 条，继续按既�
 
 #### 4.2 迁移前需要作者或原始结果进一步核验
 
+以下 Fig. 1b worker/ETA 条目是 2026-07-20--21 的历史运行记录；所有对应任务已经完成，
+最终状态以本节后续 2026-07-22 完成记录和 `experiments/fig1b_antibiotic_classification/`
+为准，不得据此重启 worker。
+
 - phylum-wise 候选均值 `0.3844` 与论文 `0.3744` 相差 `+0.0100`；作者决定暂不追查；
 - 11-cluster 合并两台机器后覆盖全部组，只有异常值 `-0.3467` 与绘图 `-0.1467` 不同；作者决定暂不追查；
 - fine-tuned Fig. 1b 合并两机后为 104/150 个历史 checkpoint；作者于 2026-07-20 改为要求最终
@@ -616,13 +632,13 @@ AAindex 因非营利研究许可边界保持为 ignored 本地 reference asset�
 
 ### 阶段 6：验证
 
-- [ ] Python compile/import 检查。
-- [ ] 数据单位转换、label transform、strain mapping、APEX 序列投影测试。
-- [ ] 共享交集和 fold 无泄漏测试。
-- [ ] mask、tensor shape、pooling 和指标测试。
-- [ ] 各主入口的小规模 smoke test。
-- [ ] 对可用旧 checkpoint 运行小样本等价性检查。
-- [ ] 密钥、绝对路径、超大文件和未跟踪实验产物扫描。
+- [x] Python compile/import 检查。
+- [x] 数据单位转换、label transform、strain mapping、APEX 序列投影测试。
+- [x] 共享交集和 fold 无泄漏测试。
+- [x] mask、tensor shape、pooling 和指标测试。
+- [x] 已迁移 canonical 主入口的小规模 smoke test。
+- [x] 对可用旧 checkpoint 运行小样本等价性检查。
+- [x] staged 密钥、绝对路径、超大文件和未跟踪实验产物扫描。
 
 本阶段默认不重新训练全部论文实验。Fig. 2b 公平 benchmark 是例外：完成代码和数据协议验证后，需要正式重新训练并将其作为 reviewer 要求的新结果。
 
@@ -644,10 +660,10 @@ logit 逐值一致验证。
 
 Synergy CV 本批新增 8 项 CPU 测试，覆盖 FICI label、双分子 token filter、Dataset/collate、
 分子顺序对称、BCE forward、LoRA-only checkpoint schema 以及 base/member round-trip。真实
-H100 checkpoint 两路 forward 与 1-member/1-epoch runner smoke 另行通过。全仓库当前为
+H100 checkpoint 两路 forward 与 1-member/1-epoch runner smoke 另行通过。当时全仓库为
 103 passed / 3 skipped；三个 skipped 均为沙箱内不可见 CUDA
-时跳过的测试，其中本批新增 CUDA test 已在宿主 H100 单独通过。阶段 6 仍未整体完成，因为
-其余未迁移实验尚无对应 smoke/checkpoint 验证。
+时跳过的测试，其中本批新增 CUDA test 已在宿主 H100 单独通过。该计数是 2026-07-19 的
+历史快照，不是当前测试总数。
 
 同日 APEX support migration 新增 3 项测试，覆盖 inline legacy forward、masked loss/R² 公式、
 真实 AAindex checksum、真实 checkpoint strict load 和固定 feature hash；另以 100-row、5-fold、
@@ -660,20 +676,26 @@ alias merge 与完整 row membership、`g1→t1→g2→t2` / `g1→g2→t1→t2`
 再次得到 `2320→2213` 与 `2789→2635`，输入及两份历史 checkpoint SHA-256 未变化；两个 4.1 GB
 checkpoint 的 H100 strict-load/forward 均通过，40-epoch fixed batch 与独立 inline legacy 公式
 逐值一致。完整训练默认写到 `results/`，不会覆盖历史产物，并要求显式确认 post-paper metric
-边界与动态 legacy row order。阶段收尾时全仓库回归为 119 passed / 5 skipped；本批 CUDA
+边界与动态 legacy row order。该批次收尾时全仓库回归为 119 passed / 5 skipped；本批 CUDA
 optimizer-step 已在宿主 H100 单独通过，两份 guidance checkpoint 的 independent inline legacy
 差异均为 0。
 
+最终状态（2026-07-23）：当前 tracked canonical 范围为 `147 passed`；PepLink 0.1.2 独立仓库
+为 `23 passed`。本阶段的完成声明覆盖已迁移 canonical 论文/审稿入口，不表示
+`DataPrepare/` 中每个 legacy 或探索脚本都已具备 smoke/checkpoint 验证。
+
 ### 阶段 7：文档和发布
 
-- [ ] 重写 README：研究目标、安装、数据准备、模型资源、复现命令和引用。
-- [ ] 提供论文图表到命令/config/checkpoint/数据 manifest 的映射表。
-- [ ] 标注 `fully supported`、`partially supported` 和 `missing/external`。
+- [x] 更新 README：研究目标、安装边界、数据准备、模型资源、复现命令和当前状态。
+- [x] 在 `AGENTS.md`、`experiments/` README 和 manifest 中提供论文图表到
+  command/config/checkpoint/data 的映射。
+- [x] 在 README、`AGENTS.md` 和各实验审计中区分 fully supported、partially supported 与
+  missing/external。
 - [ ] 为 MIC prediction 提供最小 quickstart。
-- [ ] generation 在外部 sampler 整合完成前明确标注不可端到端复现。
+- [x] generation 在外部 sampler 整合完成前明确标注不可端到端复现。
 - [x] Fig. 2b 当前正式修订已完成：正文、图注和 reviewer response 已更新公平 benchmark 数值；完整 `Fig2_2.pdf` 已换入 10,886 个共享分子的七模型结果和五折 sample s.d. error bars，并经渲染核对；最新 TeX 已完整编译为 28 页。当前图文对应 24-layer joint 正式结果。12-layer joint 容量匹配实验属于后续核验；若采用其结果，仍须同步更新图、正文、回复信和相对提升。
 - [ ] 确认 license、第三方模型许可、数据再分发条件和 citation。
-- [ ] 持续用中文维护 `AGENTS.md`，记录新的审计结论和迁移关系。
+- [x] 持续用中文维护 `AGENTS.md`，记录新的审计结论和迁移关系。
 
 ## 5. 计划提交序列
 

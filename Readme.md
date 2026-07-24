@@ -12,19 +12,30 @@
 - synergy 论文三折候选、modality ablation 绘图入口、k-mer producer/consumer 和论文前数据
   pipeline 的清理与证据冻结。
 
-当前进行中的 reviewer 补实验是 Fig. 1b fine-tune 完整 10-member/fold ensemble 与
-`20/10/20` no-RDKit 对照。实时查看本机、node001、node002：
+最近完成的 reviewer 修订包括：
 
-```bash
-watch -n 30 python scripts/reproduce/monitor_fig1b_revision.py
-```
+- Fig. 1b 的三个 target 均已完成固定 10-member/fold 的 ApexOracle fine-tune 和 matched
+  Chemprop baseline，最终 AUPRC-only panel、paired significance 和文稿已同步；
+- PepLink 0.1.2 的 AA→SELFIES→AA round-trip validation，以及历史
+  ChatGPT-o1/OPSIN residue-definition 审计和 reviewer Supplementary Data；
+- Reviewer 4 unseen-species 的公开候选筛选；后续 generation 仍需作者选择 target、
+  multi-isolate panel 并准备 exact-target embedding。
 
 机器职责、conda/venv、共享文件系统、数据/权重和外部仓库位置统一记录在
 `docs/COMPUTE_AND_ASSET_MAP.md`。
 
 PepLink 作为独立发布的 peptide↔SMILES 工具，不复制进本仓库。ApexOracle 固定可选依赖
-`PepLink==0.1.1` 并通过薄 adapter 调用；外部依赖决策和 179 条历史 structure correction
-兼容性审计见 `experiments/amp_data_pipeline/README.md`。
+`PepLink==0.1.2` 并通过薄 adapter 调用。0.1.1 的 179 条历史 structure-correction
+兼容性审计、0.1.2 的 round-trip 结果和 AA 数据血缘分别见
+`experiments/amp_data_pipeline/README.md` 与 `experiments/peplink_validation/README.md`。
+
+## Canonical 与 legacy 边界
+
+新运行和复现应优先使用 `src/apexoracle/`、`scripts/prepare_data/`、
+`scripts/reproduce/`、`configs/` 和 `experiments/` 中记录的 canonical 入口。
+`DataPrepare/` 仍包含论文时期和探索阶段的历史脚本，不是推荐 API；其中部分文件仍通过
+legacy import 相互依赖，因此本轮不删除。后续清理必须先迁移或归档剩余调用者，并用
+`legacy-code-snapshot-2026-07-17` 保留恢复路径。
 
 ## Lead peptide sequence similarity
 
@@ -101,7 +112,11 @@ conda run -n base pytest -q
 checkpoint 和大型结果文件不进入 Git；权重登记见 `configs/model_weights.yaml` 和
 `MODEL_WEIGHTS.md`。
 
-仍未完成或证据不足的部分包括正在运行的 fine-tuned Fig. 1b 完整 ensemble、synergy 的精确
-历史 checkpoint 身份、modality ablation 的精确训练 checkpoint 血缘、Evo-2 extraction producer、
-guided generation sampler 的自包含复现，以及产生论文 k-mer 单模型柱子的精确训练血缘。
-synergy、modality 和 k-mer 的发布代码清理已经完成，但不能因此把候选血缘写成精确历史复现。
+仍未完成或证据不足的部分包括 Fig. 2b 的容量匹配 objective comparison、部分历史 checkpoint
+身份、modality ablation 与论文 k-mer 单模型柱子的精确训练血缘、Evo-2 extraction producer、
+guided generation sampler 的自包含复现，以及 corrected AA successor dataset 的重新训练。
+synergy、modality、k-mer 和 Fig. 1b 的发布代码及 reviewer 补实验已经完成，但不能因此把
+证据不足的历史 producer 或 checkpoint 血缘写成精确复现。
+
+`DataPrepare/` legacy 脚本去重和归档明确列为后续未完成事项；它不阻塞当前 reviewer
+Supplementary Data 或 canonical runner 的使用。

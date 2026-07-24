@@ -7,8 +7,9 @@ PepLink 不会复制到 ApexOracle 仓库，也不作为 Git submodule。ApexOra
 pip install -e '.[peplink]'
 ```
 
-对应公开包为 `PepLink==0.1.1`，Git tag 为 `v0.1.1`，commit 为
-`cec2a02427766e4ba95806924801af31bdcc9939`。上游仓库：
+当前新数据入口固定使用 `PepLink==0.1.2`，Git tag 为 `v0.1.2`，commit 为
+`90f627cc7fd65daaf9c5d0a973d17b79bcd097d5`。0.1.1 仍作为论文数据兼容性审计的历史版本；
+其 commit 为 `cec2a02427766e4ba95806924801af31bdcc9939`。上游仓库：
 <https://github.com/DragonDescentZerotsu/PepLink>。
 
 ## 为什么不用 Git submodule
@@ -16,11 +17,11 @@ pip install -e '.[peplink]'
 PepLink 已经具备独立的 PyPI 发布、MIT license、公开 API、版本 tag 和测试。Git submodule
 只会把 source checkout 生命周期耦合到 ApexOracle，不能改善普通用户的安装体验。当前采用：
 
-- `pyproject.toml` optional dependency 固定 `PepLink==0.1.1`；
+- `pyproject.toml` optional dependency 固定 `PepLink==0.1.2`；
 - `src/apexoracle/data/peplink_adapter.py` 只调用 `from_dbaasp_record` 和
   `aa_seqs_to_smiles` 两个公开 API；
-- `configs/data_pipeline/peplink_v0.1.1.yaml` 固定 PyPI artifact、Git revision 和 paper data
-  SHA-256；
+- `configs/data_pipeline/peplink_v0.1.2.yaml` 固定当前 PyPI artifact、Git revision 和 paper
+  data SHA-256；`peplink_v0.1.1.yaml` 保留历史兼容性审计血缘；
 - PepLink 自身的升级和发布继续在独立仓库完成。
 
 ## 已由代码和真实数据验证的事实
@@ -44,8 +45,9 @@ PepLink 已经具备独立的 PyPI 发布、MIT license、公开 API、版本 ta
 - **论文复现：** 读取由 SHA-256 标识的 frozen
   `DBAASP_inhouse_AMP_SMILES_MIC_Evo.csv` / token cache，不用当前 PepLink 重新生成后冒充原始
   paper data。
-- **新数据构建：** 使用 PepLink 0.1.1 的规范化输出。两个游离 fragment 清理属于明确的
-  versioned data change。
+- **新数据构建：** 使用 PepLink 0.1.2。它沿用 0.1.1 的 forward structure generation；
+  0.1.2 只修复 reverse Histidine template。两个游离 fragment 清理来自 0.1.1 引入并由
+  0.1.2 保持的规范化规则，属于明确的 versioned data change。
 - **完整数据处理现状：** MIC parsing、in-house merge 和 SELFIES/token filtering 已迁移并
   完成真实数据验证，结果见 `paper_data_reconstruction_audit.json`。
 
@@ -103,7 +105,8 @@ python scripts/prepare_data/build_amp_training_dataset.py tokenize \
 - IBM SELFIES tokenizer 固定到 revision
   `55e83392264cb998f7aa5014847df29868aefeb8`；310 行因超过 1024 tokens 排除，invalid/UNK
   均为 0。最终 120,955 行 token cache 逐字节一致。
-- 用 PepLink 0.1.1 从 1,642 条 in-house sequence 新建结构时，ID、strain 和 MIC 全部一致；
+- 用 PepLink 0.1.1/0.1.2 的同一 forward builder 从 1,642 条 in-house sequence 新建结构时，
+  ID、strain 和 MIC 全部一致；
   legacy 结构各含一个显式 terminal `[OH]`，PepLink 输出等价 canonical `O`。归一化该写法后
   15,718/15,718 行一致。因此论文复现读取 frozen in-house long table，新数据使用 PepLink
   canonical 结构。

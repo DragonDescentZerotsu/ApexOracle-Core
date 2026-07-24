@@ -29,7 +29,9 @@ python scripts/reproduce/run_antibiotic_classification.py \
 - full-fusion 模式使用完整 MIC genome-text frame，同时再次把 genome-backed MIC 记录放入 text route；这会让这些 MIC 记录通过两个 route 各训练一次。统一 runner 明确保留该行为。
 - batch size 为 70，默认 25 epochs、10 ensembles、Adam `1e-5`、CosineAnnealingLR、`freeze_epochs=3000`。
 - strict zero-shot 的三个目标 checkpoint 网格完整，共 `3 × 10 = 30` 个文件，并有三个完整结束的日志。
-- fine-tune 预期 `3 × 10 × 5 = 150` 个 checkpoint，现存 77 个；14 个日志中只有 6 个包含最终五折汇总。因此它只能标记为历史证据不完整。
+- fine-tune 的完整目标为 `3 × 10 × 5 = 150` 个 checkpoint。最初本机只发现 77 个，跨机器恢复
+  后为 104 个；reviewer 修订阶段补齐其余 46 个后，最终 `150/150` 网格和 15 个 fold 的
+  10-member prediction 均完整。
 - molecule-only 的 `3 × 10 × 5 = 150` checkpoint 网格和 15 个日志均完整，但它是 molecule-only 对照。
 - strict zero-shot 日志最终 ensemble 指标为：`#004` 0.9360/0.5890，`17978` 0.7262/0.3243，RN4220 0.7679/0.1655（AUROC/AUPRC）。
 - 真实数据 dry-run 与旧日志中的 Dataset 计数逐项一致。以 `#004` 为例，512-token 过滤后的两路 MIC 为 77,372/89,118，辅助 genome/text 分类为 7,684/39,311，held target 为 2,335。
@@ -60,7 +62,8 @@ python scripts/audit/audit_antibiotic_classification_checkpoints.py \
 
 ## 仍待确认或不在本阶段声称的事项
 
-- fine-tune 结果证据不完整，不应从现存 77 个 checkpoint 推断完整五折正式结果。
+- 77 个 checkpoint 只是最初单机审计快照，不能用来描述当前最终网格；正式结果必须使用后续
+  验证完成的 `150/150` checkpoint 和固定 10-member/fold prediction。
 - 本阶段没有重新训练 30 个 strict zero-shot ensemble；保留并验证的是原行为和已有 checkpoint 推理。
 - strict checkpoint 的历史训练时 dropout prediction 仍不可逐 bit 恢复；当前 30 个 checkpoint
   已完成的是统一 `eval()` 契约下的确定性推理。
@@ -134,8 +137,8 @@ RDKit 2025.03.5、PyTorch 2.7.1+cu126、Pandas 2.2.2、scikit-learn 1.8.0。
 
 这里的完整 fine-tune 网格是 `3 strains × 5 outer folds × 10 members = 150 checkpoints`，
 不是 strict zero-shot 的 `3 × 10 = 30`。两台机器共恢复 104 个历史 checkpoint，另补完
-RN4220 fold 4 member 0 后已有 105 个，因此本轮只训练剩余 45 个 member。监控中的待补完成数
-只计算这 45 个新任务；例如 `0/45` 不表示已有 105 个资产不存在。
+RN4220 fold 4 member 0 后已有 105 个，因此本轮当时只训练剩余 45 个 member。监控中的待补完成数
+只计算这 45 个新任务；例如 `0/45` 不表示已有 105 个资产不存在。该队列现已全部完成。
 
 ApexOracle 完整 ensemble 已于 2026-07-21 完成。每个成功 member 固定完整训练 25 epochs，
 没有 early stopping。

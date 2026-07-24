@@ -34,10 +34,9 @@
   `/data2/tianang/projects/.venvs/fig1b-chemprop-v1` 和 node002
   `/data1/tianang/Projects/.venvs/fig1b-chemprop-v1`。两者核心版本均已核验为 Chemprop 1.5.2、
   Torch 2.7.1+cu126、NumPy 1.26.4、pandas 2.2.2、scikit-learn 1.8.0 和 RDKit 2025.03.5。
-- Fig. 1b 补实验实时状态统一使用
-  `python scripts/reproduce/monitor_fig1b_revision.py`；需要连续刷新时使用
-  `watch -n 30 python scripts/reproduce/monitor_fig1b_revision.py`。该入口只读本机和 node002
-  的日志/产物与 GPU 状态，不修改 checkpoint 或原始数据。
+- Fig. 1b 补实验已全部完成。`python scripts/reproduce/monitor_fig1b_revision.py` 只保留为
+  历史产物和节点状态的只读核验入口；当前不应据此重启任何训练 worker。该入口不修改
+  checkpoint 或原始数据。
 - **2026-07-20 node001 扩容事实：** node001 与 node002 共同挂载 `bright91:/data1`；release
   driver 的 inode/size/hash 一致，8 张 A100 80GB 和共享 base/Chemprop 环境已通过 CUDA import。
   node002 各队列的第 3 个待补 member 已各分配一个到 node001；训练进入 steady state 后利用率
@@ -46,7 +45,8 @@
   汇总一次任务进度，但分别显示 node001/node002 GPU，避免共享产物被重复计数。
 - **2026-07-21 Fig. 1b 负载重排事实：** Apex fine-tune 已达到 `150/150`，本轮 `45/45` 缺失
   member 均已完成，15 个 fold 的最终 10-member prediction 也已组装。RN4220/Wong baseline
-  folds 3/4 已完成并固定使用前 10 members；folds 0/1/2 当前分别在 node001 GPU0/1/2 运行。
+  folds 3/4 已完成并固定使用前 10 members；folds 0/1/2 当时分别在 node001 GPU0/1/2 运行，
+  并于 2026-07-22 全部完成。
   node002 后启动且会并发写共享 fold 3/4 的重复 worker 已停止。
   本机 Chemprop venv 已按 node producer commit 补齐 `descriptastorus 2.7.0.3`。作者随后决定
   三个 baseline 均与 ApexOracle 对齐为 10-member ensemble；RN4220 fold 0/1/2 已按 10 members
@@ -83,6 +83,15 @@
 ## Git 与发布状态
 
 - 当前 Codex 工作区的 `.git` 是只读保护挂载，本地可用 Git metadata 位于被忽略的 `.git-state/`；操作命令需要使用 `git --git-dir=.git-state --work-tree=.`。
+- **作者于 2026-07-23 确认的收尾边界：** 当前优先修正文档状态，不在本批加入 GitHub Actions、
+  pre-commit、lint/type-check 或 branch protection，也不移动本机 `Checkpoints/`、`results/`
+  和 `wandb/` 资产。
+- **2026-07-23 legacy cleanup 状态：** `DataPrepare/` 去重和归档仍未完成，本批不删除。
+  `aa_seq_to_smiles.py` 仍被四个 tracked legacy driver 直接 import：
+  `try.py`、`correct_SMILES_offered_by_DBAASP.py`、`APEX_in_house_to_SMILES.py` 和
+  `APEX_in_house_to_SMILES_merge_w_DBAASP.py`。`discription_generation.py` 与
+  `discription_generation_w_ATCC.py` 内容相同，且 `discription_generation_wo_ATCC.py`
+  import 后者；必须先迁移或归档调用者，再在后续批次清理。
 - 本地 `main` 已对齐并跟踪远程 `origin/main`；annotated tag `legacy-code-snapshot-2026-07-17` 指向脱敏 legacy 快照血缘，已完成的 Fig. 2b 重构分支为 `agent/paper-release-refactor`。
 - `DragonDescentZerotsu/Synergy` 已完成前两批发布：初始 PR #1 已合并到远程 `main`（merge commit `9427374`）；Fig. 2b paper-compatible wrappers、MolFormer revision 固定、正式 35-fold 结果和对应审计文档通过 PR #2 合并（merge commit `24d975c`）。
 - `agent/paper-release-refactor` 远程分支保留 PR #2 的提交历史；本地历史曾因 GitHub App 重建 parent 而拥有不同 commit SHA，但最终 tree 已在合并前逐层核验一致。判断早期同步内容一致性时应比较 tree SHA。

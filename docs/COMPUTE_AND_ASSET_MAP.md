@@ -1,8 +1,8 @@
 # 计算节点、代码版本与资源位置
 
-> 最后核验：2026-07-21。动态运行状态以
-> `python scripts/reproduce/monitor_fig1b_revision.py` 为准；本文记录稳定职责和路径，不把瞬时
-> GPU utilization 当作实验完成证据。
+> 最后核验：2026-07-23。Fig. 1b reviewer 补实验已经完成，当前没有需要重启的训练 worker。
+> `python scripts/reproduce/monitor_fig1b_revision.py` 仅用于只读核验历史产物与节点状态；
+> 本文记录稳定职责和路径，不把瞬时 GPU utilization 当作实验完成证据。
 
 ## 1. Canonical 代码与同步规则
 
@@ -39,9 +39,9 @@ ssh node002 'git -C /data1/tianang/Projects/Synergy_release rev-parse HEAD'
 
 | 机器 | GPU / 当前约束 | 应在此处运行的任务 | 环境 |
 | --- | --- | --- | --- |
-| 本机 `sn4622119311` | 4×H100 80GB；GPU0/2/3 可用于当前训练；GPU1 达到 90°C 并触发 thermal slowdown，本轮禁用 | canonical 单元测试、代码重构、数据/血缘审计；Fig. 1b H100 队列；`mdlm` 本地任务 | 默认 `/home/tianang/anaconda3` 的 `base`；`/data2/tianang/projects/mdlm` 必须用 `mdlm` conda env |
-| `node001` | 8×A100-SXM4-80GB | node002 后排 Fig. 1b member、随后 8 个完整 baseline fold | `/data1/tianang/anaconda3` 的 `base`；Chemprop venv `/data1/tianang/Projects/.venvs/fig1b-chemprop-v1` |
-| `node002` | 8×A100-SXM4-80GB | 原始 Fig. 1b 队列、剩余 baseline、历史 checkpoint 确定性推理；历史资产只读审计 | 与 node001 相同；不要复制共享 `/data1` 产物 |
+| 本机 `sn4622119311` | 4×H100 80GB；GPU1 有 90°C thermal-slowdown 历史，重新使用前必须复核 | canonical 单元测试、代码重构、数据/血缘审计；经确认后的新 H100 任务；`mdlm` 本地任务 | 默认 `/home/tianang/anaconda3` 的 `base`；`/data2/tianang/projects/mdlm` 必须用 `mdlm` conda env |
+| `node001` | 8×A100-SXM4-80GB | 后续经确认的 release runner/GPU 任务；Fig. 1b 历史任务已完成 | `/data1/tianang/anaconda3` 的 `base`；Chemprop venv `/data1/tianang/Projects/.venvs/fig1b-chemprop-v1` |
+| `node002` | 8×A100-SXM4-80GB | 历史 checkpoint 确定性推理和只读资产审计；Fig. 1b 历史任务已完成 | 与 node001 相同；不要复制共享 `/data1` 产物 |
 | SSH alias `Mac` | 论文绘图 | 只在新 notebook cell 生成独立 panel；论文总图由作者手工编辑 | `/Users/kirianozan/Documents/anaconda/anaconda3` 的 `base`；canonical notebook `/Users/kirianozan/Documents/Study/Penn/projects/local_figs/figs.ipynb` |
 
 本机 Fig. 1b Chemprop venv 是
@@ -49,7 +49,7 @@ ssh node002 'git -C /data1/tianang/Projects/Synergy_release rev-parse HEAD'
 1.5.2、Torch 2.7.1+cu126、NumPy 1.26.4、pandas 2.2.2、scikit-learn 1.8.0 和
 RDKit 2025.03.5。
 
-## 3. 当前 Fig. 1b 补实验
+## 3. Fig. 1b 补实验（已完成）
 
 ### 已验证协议
 
@@ -93,7 +93,7 @@ baseline session 已设置 `metrics.json` 完成保护，在共享文件系统�
   checkpoint。
 - **已验证事实：** 最后 5 个 Chemprop fold 为 RN4220/Wong 2024 profile。node001 已为
   fold 3/4 生成额外的 20-member 权重，最终 prediction 只消费前 10 members。fold 0/1/2
-  当前分别由 node001 GPU0/1/2 从干净输出目录训练 10 members。node002 曾在共享 `/data1` 上
+  当时分别由 node001 GPU0/1/2 从干净输出目录训练 10 members，随后均已完成。node002 曾在共享 `/data1` 上
   重复启动 fold 3/4；发现后已停止 node002 的后启动进程，只保留更早的 node001 owner，避免继续
   并发写同一目录。作者随后决定三个 baseline 均与 ApexOracle 对齐为 10-member ensemble；
   fold 0/1/2 已按 10 members 重启，fold 3/4 和 E. coli 的现存目录只选择
