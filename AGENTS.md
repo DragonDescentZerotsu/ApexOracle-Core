@@ -8,6 +8,223 @@
   `docs/COMPUTE_AND_ASSET_MAP.md`。任何机器或资产迁移都必须同步更新该文件；node001 与
   node002 共享同一个 `/data1/tianang/Projects/Synergy_release`，不得把它们当作两个独立 checkout
   同时执行 Git 更新。
+- 新增可调用代码功能时，必须在作用域最近的 `AGENTS.md` 中登记 canonical 入口、主要参数、
+  输出位置和验证命令；如果目录下没有更近的 `AGENTS.md`，则登记在本文件。审计脚本还应同步
+  更新 `scripts/audit/README.md`，复现实验入口还应同步更新对应的 `experiments/` README 或
+  manifest，避免代码存在但入口和产物血缘不可发现。
+- 需要 GPU 的新实验应先只读核验各节点实时可用性，再尽量并行使用本机当前可用的 4 张 GPU、
+  node001 的 8 张 A100 和 node002 的 8 张 A100。并行化不得改变科学协议；优先按
+  protocol/group/fold/ensemble 拆分独立任务。node001 与 node002 共享 `/data1`，每个 worker
+  必须有唯一 owner 和输出目录或原子完成标记，禁止两个节点并发写同一个 checkpoint、日志或
+  汇总文件。GPU 分配、环境、owner、命令和产物位置应同步登记到
+  `docs/COMPUTE_AND_ASSET_MAP.md`。
+- **ReMDM remasking schedule reviewer 实验入口（2026-07-28）：**
+  `scripts/reproduce/prepare_remasking_schedule_reviewer_tasks.py` 冻结 36-task manifest；
+  `scripts/reproduce/run_remasking_schedule_reviewer.py` 执行单个 GPU 生成任务；
+  `scripts/reproduce/orchestrate_remasking_schedule_reviewer.py` 按 host 为每张 GPU 建立一条顺序队列；
+  `scripts/reproduce/evaluate_remasking_schedule_reviewer.py` 使用同一 v1 peptide classifier 的
+  clean-input probability 和 clean MIC checkpoint 评估全部 raw attempts。正式协议为
+  5 个 window（含作者指定的 wider `0.55--0.25`）加 current-window
+  `gamma_peptide=0` effectiveness control，2 strains × 3 seeds × 100 attempts；
+  输出统一写入 `experiments/remasking_schedule_reviewer/`，完整参数、资产边界、任务分配和
+  验证命令见该目录 `README.md`。外部
+  `/data2/tianang/projects/discrete-diffusion-guidance` 只读导入，不得改写其历史 output。
+- **2026-07-29 ReMDM reviewer 补实验已完成：** 36/36 tasks、144/144 batches、
+  3,600/3,600 unique raw attempts 全部通过 completion-marker size/SHA-256 复核；
+  3,600 个 v1 clean-input classifier scores 与 2,355 个 RDKit-valid finite clean-MIC predictions
+  已完成。历史 operational label 下 current window 为213 classifier-positive /182 negative；
+  相对 `gamma_peptide=0` 的 valid classifier-positive yield 为35.5% vs33.0%。这些数字及原
+  predicted-MIC trade-off 已被后续 structure audit 限定，不能再写成真实 peptide yield、
+  usable peptide benefit 或已确定的 activity trade-off。完整数值与当前边界见
+  `experiments/remasking_schedule_reviewer/RESULTS.md` 和 `STRUCTURE_AUDIT.md`。node002 guard
+  已恢复为每卡约73.3GiB、7--8% utilization。
+- **2026-07-30 remasking-window 选择历史由作者确认：** 原始
+  $t_{\rm on}=0.55,t_{\rm off}=0.45$ 本来就是经过与当前相近的 empirical candidate-window
+  comparison 后选择，只是当时没有完整记录过程和结果。Reviewer reply 应说明修订现在展示了
+  该选择过程、可复核结果和 yield/predicted-MIC trade-off 逻辑；不得称为纯凭感觉的单点选择，
+  也不得称为 post-hoc sensitivity。同时，不能声称本次冻结的五窗口协议逐项就是当年已完整
+  归档的同一实验，且不声称该 interval 理论唯一或对所有 molecule 自适应最优。
+- **ReMDM reviewer 四面板图入口（2026-07-29）：**
+  `python scripts/audit/plot_remasking_schedule_reviewer.py` 消费冻结的
+  `experiments/remasking_schedule_reviewer/analysis/summary.json`，输出历史
+  PDF/SVG/PNG、exact plotted-data CSV 和 source/script/output SHA-256 manifest 到
+  `experiments/remasking_schedule_reviewer/figures/`。四个 panel 只展示 window sensitivity、
+  current vs `gamma_peptide=0` direct control 和 current-window valid-candidate composition；
+  不重新计算 classifier label 或 predicted MIC。默认保留 pooled-median bar 版本；
+  `--panel-b-style violin` 另读取冻结的本地 `analysis/evaluated_attempts.csv` 并写入独立的
+  `*_violin.*`，不会覆盖 bar 版本。panel a error bars 为三个 seed-level pooled rates 的
+  sample s.d.；panel c 只绘制 descriptive effect sizes。六个 matched `strain × seed` tasks
+  的 two-sided exact paired sign-flip p-values 只保留在 CSV/manifest/内部报告中。作者明确决定
+  后续 reviewer reply 和正文不加入“difference did not reach statistical significance”表述；
+  同时不得改写为显著改善或作任何 significance claim。正式验证命令为
+  `python -m pytest -q tests/test_remasking_schedule_reviewer.py`。
+- **2026-07-29 ReMDM reviewer peptide-label structure audit：**
+  canonical 入口为
+  `CUDA_VISIBLE_DEVICES=0 /home/tianang/anaconda3/bin/conda run --no-capture-output -n mdlm
+  python scripts/audit/audit_remasking_peptide_classifier_structure.py`；compact 输出为
+  `experiments/remasking_schedule_reviewer/analysis/peptide_structure_audit/summary.json`，逐
+  valid-row CSV 保持本地，完整解释边界见该实验的 `STRUCTURE_AUDIT.md`。**已由 checkpoint、
+  raw attempts 和 GPU 复算验证的事实：** generation/evaluation 使用的历史 v1 checkpoint
+  SHA-256 为 `40f638ca...945b`；reviewer classifier retrain 只共享该 frozen backbone，使用两个
+  重新训练的新 heads，其近乎完美来源标签 AUROC/AUPRC 不等于验证历史部署 head 或生成结构的
+  peptide identity。2,355 个 RDKit-valid structures 中，历史 full-token positive 为1,343；
+  可复核的1,341个 positives 中745个（55.6%）没有 RDKit general amide。current window 为
+  213 positives，其中125个无 general amide；first `[SEP]` 后统一 PAD 后为191 positives，其中
+  105个无 general amide。两个 reviewer-retrained heads 的 logit ensemble 在 current window
+  判220 positives，其中130个无 general amide。原 runner SMARTS 只检出622个，而 general amide
+  检出702个，漏80个，但这不足以解释 classifier/structure 冲突。**当前决策：** existing
+  reviewer four-panel figure 整体暂停使用：panel a/c/d 不能把 classifier label 解释成
+  peptide/small molecule，panel b 对全部 RDKit-valid/OOD structures 的 predicted MIC 也需在
+  structure-qualified subset 上复核。在 independent canonical-structure-based criterion 冻结并
+  重算前，`53.9% vs 46.1%` 不得作为真实 peptide composition。
+- **ReMDM reviewer 窄结构口径可视化入口（2026-07-29）：**
+  `MPLBACKEND=Agg /home/tianang/anaconda3/bin/conda run --no-capture-output -n mdlm
+  python scripts/audit/plot_remasking_structure_qualified_peptides.py`。该入口明确允许 B 与卤素，
+  使用至少一个 general amide、至少两个 `N–Cα–C(=O)` motif、单一组分和无自由基的窄筛选；
+  常见金属候选单列 manual-review、不计入主结果，其他异常元素排除。输出独立写入
+  `experiments/remasking_schedule_reviewer/figures/remasking_structure_qualified_peptides*`，
+  不覆盖历史四面板图。默认 `--layout with-context` 为三面板：新 structure-qualified yield、
+  原 all-RDKit-valid median predicted MIC、以及 current-vs-no-guidance direct control（第三行
+  改用与 panel a 相同定义的 peptide yield）。默认 panel a 只绘制再通过 SEP-padded classifier 的最严格
+  单系列；三个 panel 单行且标题居中。panel c 删除 v1 classifier-positive 行，只保留
+  RDKit-valid 与 peptide yield；后者使用相同的 structure screen + SEP-padded classifier
+联合定义。**2026-07-31 按作者要求，panel c 改为同一个三行 dot-and-interval
+坐标区，第三行为 current-vs-no-guidance all-RDKit-valid median predicted MIC；**yield
+和 predicted-MIC 横向误差条分别为三个 seed-level pooled rates 和三个 seed-level pooled
+median MIC 的 sample s.d.。panel c 是唯一保留 legend 的位置；legend 只含简短组名，
+  `gamma_peptide` 解释移入 caption，数值轴仅将5--25区间用显式断轴压缩，每行标签分别指明
+  `%` 或 $\mu\mathrm{M}$ 单位。panel b 的柱高为
+  all-RDKit-valid pooled median MIC，纵向误差条为三个 seed-level pooled median MIC 的 sample
+  s.d.。总标题和所有 panel descriptions 移入 `*_caption.md`；`--layout yield-only` 保留前一版
+  两面板产物。**作者已于 2026-07-29 将默认 `with-context` 三面板 stem 确认为 canonical
+  final reviewer figure；** yield-only 和历史四面板/violin stems 均原地保留为 legacy，不复制
+  `final.*` 或 `latest.*` 二进制别名。索引和 storage policy 位于
+  `experiments/remasking_schedule_reviewer/figures/README.md`。这里的 final 仅指图稿版本；该
+  peptide 联合口径尚未经 controls 验证，只能称为 preliminary narrow criterion。
+- **2026-08-01 remasking reviewer 文稿口径由作者确认：** Reviewer 1/2 回复和论文
+  Methods/Results/figure caption 中不展开 peptide 判定标准，直接报告 peptide yield、
+  RDKit-valid yield、精确计数与 predicted MIC。general amide、`N–Cα–C(=O)` motif、
+  SEP-padding、classifier threshold 及元素/金属规则只保留在内部
+  `experiments/remasking_schedule_reviewer/README.md`、`STRUCTURE_AUDIT.md`、绘图代码和
+  manifest 中。不得因为对外文稿简化而删除这些内部可复现记录。
+- **2026-08-02 remasking reviewer 正式文稿已完成：** 正式
+  `/data2/tianang/projects/ApexOracle_cleaned/docs/ApexOracle_Nat_Biotech/sn-article.tex` 已更新
+  Eq. 9 解释、Sampling Strategy、guided-generation Implementation Details、window sensitivity
+  Methods 和 Supplementary Fig. C4；canonical 图以
+  `Fig_SI_remasking_schedule.pdf` 写入论文目录，SHA-256 为
+  `23ce3a58f82b82f1fb1f458efd08152fbf1284f9b2e2f6b97cd2e1030e9bb847`。独立临时编译为
+  31 页，C3/C4/D1 编号已核验，正式论文 PDF 未覆盖。正式 response DOCX 已更新 Reviewer 1
+  remasking、Reviewer 2 domain imbalance/effectiveness 和 Reviewer 2 `$r_t$ schedule` 三处，
+  对应计划语气均改为完成时态；修改前备份为
+  `Response to reviewers letter_before_remasking_revision_20260802.docx`，独立渲染为 29 页。
+  论文与这三处回复均未暴露内部 peptide 判定细节，Campbell/ReMDM 展开比较只进入 Reviewer 1
+  回复。作者随后要求 Sampling Strategy 只用方法学口吻陈述五窗口比较与 trade-off 选择，删除
+  “为了展示选择过程/证据而报告”的 reviewer-response 语气；Methods 的 window-sensitivity 段已
+  直接引用 Supplementary Fig. C4。作者最终决定从 Results 删除两段 window/effectiveness 细节，
+  保留 prospective discovery 主线；正式回复的落点同步改为 protocol 位于 revised Methods、
+  denominated results 位于 Supplementary Fig. C4。TeX 和 DOCX 均重新独立渲染核验。完整落稿记录见
+  `experiments/remasking_schedule_reviewer/README.md` 第 13 节。
+- **2026-08-02 remasking/peptide-guidance reviewer 轮次暂时收束：** 跨仓库路径、GitHub remote、
+  发布白名单和统一公共 repo 建议已登记在
+  `experiments/remasking_schedule_reviewer/PUBLICATION_HANDOFF.md`。已核验的事实是：本轮 8 个
+  canonical 脚本/测试约 142 KB，当前未忽略 reviewer capsule 共 414,113 bytes，约 0.41 MB；
+  约 67 MB 本地实验目录
+  主要是受忽略保护的 raw runs、日志和图稿，不进入 Git。Synergy 为 private remote 且当前工作树
+  混有其他改动；MDLM 已有公开自有 remote `DragonDescentZerotsu/ApexOracle-MDLM`，但本轮未修改；
+  discrete-guidance 只有上游 remote，没有自有 fork，dirty producer 不得直接推送；正式文稿目录
+  `ApexOracle_cleaned` 不是 Git repo。本轮未执行 commit、push、fork 或 PR。后续提交必须从 clean
+  worktree 显式白名单移植，禁止整体 stage；未来统一公共 repo 不得复制 raw outputs、权重、数据或
+  两个外部 dirty checkout。
+- **2026-08-02 reviewer GitHub 发布防膨胀补充：** 用户决定把当前 reviewer 轮次按主题拆成多个
+  commit 后直接更新 `Synergy/main`。提交前发现
+  `experiments/peptide_classifier/reviewer_retrain/` 下五个 `.u1/.u8` split memmap 共约 911 MB，
+  其中 `molecule_hashes.u8` 约 662 MB，超过 GitHub 单文件限制。这些文件可由
+  `prepare_peptide_classifier_split.py` 确定性重建，已按精确目录加入 `.gitignore`；只发布其
+  compact manifest/audit、脚本和测试。不得先提交大文件再删除，因为 Git history 仍会永久保留
+  blob。
+- **Hierarchical MIC exact-molecule overlap audit 入口（2026-07-26）：**
+  `PYTHONPATH=src python scripts/audit/audit_hierarchical_mic_molecule_overlap.py --protocol all`。
+  共享逻辑为 `src/apexoracle/evaluation/hierarchical_mic_molecule_overlap.py`，输出到
+  `experiments/hierarchical_mic/molecule_overlap/`。strain 默认消费冻结的
+  `experiments/hierarchical_mic/strain/legacy_protocol_manifest.json` candidate，必须继续标记
+  为非精确 2025 membership；正式 molecule-disjoint 过滤以模型 stored-token input SHA-256 为
+  主口径，`DBAASP_id` 只作为旧 overlap 百分比的辅助复现口径。
+- **Hierarchical MIC molecule-disjoint checkpoint replay 入口（2026-07-26）：**
+  `scripts/reproduce/prepare_hierarchical_mic_inference_checkpoints.py` 生成带源文件
+  size/SHA-256 血缘的 inference-only checkpoint；可用 `--checkpoint-dir` 指定新训练权重根目录，
+  strain reconstruction 还应传
+  `--strain-manifest experiments/hierarchical_mic/strain/legacy_protocol_manifest.json`；
+  `scripts/reproduce/evaluate_hierarchical_mic_molecule_disjoint.py` 执行一个
+  `protocol × group × ensemble` 的确定性 `eval()` replay，输出逐测量预测、
+  exact-molecule overlap 标记及 train-peptide-mean baseline。strain 继续使用冻结的确定性候选
+  membership，必须标为 reconstruction，不能声称恢复了 2025 精确 split。
+- **2026-07-26 已验证的 molecule-disjoint sensitivity：** phylum 三组固定 membership 的
+  21 个 final MDLM checkpoint 已完成确定性 7-member replay。85,824 条 full test 中
+  79,309（92.41%）为 train-seen exact model input，严格 unseen 保留 6,515 条 / 3,491 个
+  exact molecules，其中 58.20% 为 MIC <=16 micromolar。严格 unseen pooled
+  R2/Spearman/Pearson 为 `0.0135/0.3326/0.3398`；三组 R2 为
+  `0.0109/0.0752/-0.1589`。2,000 次 molecule-cluster bootstrap 的 pooled R2 95% CI 为
+  `[-0.0429, 0.0602]`，相对 group-specific train-mean baseline 的 paired R2 delta CI 为
+  `[0.0598, 0.1559]`。正式解释必须写成“仍有 ranking signal，但 calibrated R2 明显下降”，
+  不得声称 molecule overlap 不影响性能。完整边界见
+  `experiments/hierarchical_mic/molecule_disjoint/REVIEWER_SENSITIVITY_REPORT.md`。
+- **Hierarchical MIC fixed strain-wise reviewer retrain（2026-07-26）：**
+  canonical 入口仍为 `scripts/reproduce/run_hierarchical_mic.py`，新增的运行控制为
+  `--strain-manifest`（直接消费冻结 membership）和可重复的 `--ensemble`（只拆分原7个 seeds，
+  不改变训练协议）。本次固定输入为
+  `experiments/hierarchical_mic/strain/legacy_protocol_manifest.json`，输出不得覆盖论文历史
+  checkpoint，统一写入 `experiments/hierarchical_mic/fixed_strain_retrain/`。21个任务的
+  owner/GPU/queue 冻结在该目录的 `task_manifest.json`。科学表述必须继续称为
+  `PYTHONHASHSEED=0` fixed-split reconstruction，不得升级为2025精确 membership。
+- **2026-07-26 fixed strain-wise sensitivity 已完成：** `3 × 7` 训练与确定性 replay 均为
+  `21/21`。86,358 条 eligible test measurements 中，60,086（69.58%）为 train-seen exact
+  model input，严格 unseen 为26,272条 / 8,259个 pooled distinct exact peptides，其中
+  53.12% 为 MIC <=16 micromolar。full/seen/unseen pooled R2 为
+  `0.4638/0.5672/0.0942`；unseen Spearman/Pearson 为 `0.4070/0.4130`，2,000次
+  exact-molecule cluster bootstrap 的 unseen R2 95% CI 为 `[0.0687, 0.1191]`。正式结论必须
+  同时披露 exact-peptide overlap 明显贡献 calibrated R2，以及 unseen peptide 上仍有较弱但
+  可测的 ranking signal。论文式 mean-across-folds full/seen/unseen R2 为
+  `0.5814/0.6283/0.1089`；不得把 pooled R2 `0.4638` 与论文 fold-mean `0.5793` 直接比较。
+  完整报告位于
+  `experiments/hierarchical_mic/fixed_strain_retrain/REVIEWER_SENSITIVITY_REPORT.md`。
+- **2026-07-27 fixed strain-wise sensitivity 文稿修改：** 正式
+  `/data2/tianang/projects/ApexOracle_cleaned/docs/ApexOracle_Nat_Biotech/sn-article.tex`
+  已将 strain-wise ensemble mean R2 从历史 `0.5793` 更新为固定重训的 `0.5814`；Results 新增
+  exact-peptide seen/unseen sensitivity，Methods 明确 pathogen split unit、scope 及 test-only
+  filtering，appendices 新增逐fold sensitivity table；加入MIC distribution section后其编译编号
+  为Appendix Table D1。三条generated lead的衔接句放在其
+  activity与sequence-similarity结果首次出现之后，不提前放入strain-wise结果段；figure caption
+  未增加无对应panel的sensitivity说明。临时独立目录编译通过为29页，正式论文PDF未覆盖。
+  **已由只读渲染核验的事实：** `Fig1.pdf` 与 `Fig2_2.pdf` 中的 Fig. 1a/2c 均未直接印出
+  `0.5793`，因此无需因本次 `0.5814` 更新修改 figure；本次未覆盖任何 figure 或论文总图。
+- **2026-07-27 metric Methods 最小修改：** 作者否决了把整条 split/imbalance reviewer response
+  搬入论文的扩展方案。正式 TeX 已恢复原有 Fig. 2b 与 hierarchical MIC split 段落的位置和内容，
+  仅在其后新增一个简短的 `Evaluation metrics and statistical analysis` 粗体段落，定义
+  transformed-label R2、Pearson、Spearman、AUPRC/AUROC，并说明 constant predictor 的 R2
+  上界、未使用 accuracy，以及五折 mean/sample s.d.。未新增独立 subsection，未加入完整
+  low-MIC/active prevalence 或 bootstrap/prediction-swap 段落。**已由文档复读验证的事实：**
+  response-letter docx 与对应 markdown draft 中的历史 strain-wise R2 `0.5793` 均已同步为
+  fixed strain-wise `0.5814`。
+- **Hierarchical MIC test-distribution Supplementary Figure 入口（2026-07-28）：**
+  `python scripts/audit/plot_hierarchical_mic_test_distribution.py`。默认消费
+  `experiments/hierarchical_mic/fixed_strain_retrain/analysis/ensemble_predictions.csv` 中
+  86,358条实际 eligible held-out measurements，输出 pooled MIC histogram、逐fold ECDF、
+  summary/bin CSV和输入SHA-256 manifest到
+  `experiments/hierarchical_mic/mic_distribution/`。默认low-MIC阈值为16 micromolar、横轴为
+  log2 MIC。**已由输出CSV和图像
+  核验的事实：** pooled 86,358条中40,596条（47.01%）MIC<=16 micromolar；fold 1/2/3分别为
+  47.25%/41.59%/51.02%。分布覆盖范围宽但不是严格均匀，512 micromolar附近有明显峰。
+  最终图已删除总标题和source脚注，居中的panel标题使用常规字重，并增加粗体`a/b` panel标记；
+  PDF已按相同SHA-256复制为正式文稿目录的`Fig_SI_MIC_distribution.pdf`。正式TeX在Methods
+  增加一条简洁的composition audit说明，并将图作为Supplementary Fig. C3；16 micromolar被
+  表述为比prospective wet-lab的64 micromolar activity criterion严格四倍的descriptive cutoff，
+  未加入作者否决的逐项免责声明。临时独立目录编译为29页且引用解析完成，未覆盖正式
+  `sn-article.pdf`。response-letter DOCX与markdown draft已同步引用Supplementary Fig. C3；
+  图PDF SHA-256为`2e35f86464a343ab21a7cf8df8ef605e8f9aa4fd4d60b9d1a188b70b5d4fc7a5`；
+  DOCX修改前备份为`Response to reviewers letter_before_mic_distribution_20260728.docx`。
+  作者随后要求revision标记可见：新增Supplementary Fig. C3与Appendix Table D1的section标题和
+  caption均以`\rev{}`显示红色，Table D1的表头、数值与规则线通过局部`\color{red}`显示红色；
+  嵌入式figure内部坐标文字保持原图配色。重新临时编译仍为29页且引用解析完成。
 
 ## 环境说明
 
@@ -37,6 +254,21 @@
 - Fig. 1b 补实验已全部完成。`python scripts/reproduce/monitor_fig1b_revision.py` 只保留为
   历史产物和节点状态的只读核验入口；当前不应据此重启任何训练 worker。该入口不修改
   checkpoint 或原始数据。
+- **2026-07-27 node002 非科学 GPU guard 运行例外：** 作者明确要求在
+  `node002:/data1/tianang/Projects/Synergy` 启动旧资源工具，因此仅对该历史目录中的 `run.py`
+  做了运行时修改；这不是论文复现代码，也不得同步到 release 工作树。原 memory-only 版本备份为
+  `run.py.backup_20260727_memory_only`（SHA-256
+  `b1372f5d82234e92856f837989b76f4036aea9c868e1c5041e2631ceea375a3b`），当前版本 SHA-256 为
+  `4c217c488bc41f5a4dc238e79c285adb24c8ca8677dbc38e2dff7d0134933993`。运行入口为
+  `run_full.py --gpus 0,1,2,3,4,5,6,7`，由它为每张空闲卡分别设置
+  `CUDA_VISIBLE_DEVICES` 后调用 `run.py`；`run.py` 主要参数为 `--memory-ratio`（默认0.90）、
+  `--target-utilization`（默认8%）、`--matrix-size`（默认4096）和 `--burst-seconds`
+  （默认0.002秒）。tmux 会话为 `synergy_gpu_guard_20260727`，日志为
+  `gpu_guard_node002_20260727.log`，无科学产物。验证命令为
+  `ssh node002 'nvidia-smi --query-gpu=index,utilization.gpu,memory.used,temperature.gpu --format=csv'`；
+  2026-07-27 连续15次每秒采样已验证8张A100稳定约7--8%利用率、每卡约73.3GB显存、
+  30--33°C。停止入口为
+  `ssh node002 'tmux kill-session -t synergy_gpu_guard_20260727'`。
 - **2026-07-20 node001 扩容事实：** node001 与 node002 共同挂载 `bright91:/data1`；release
   driver 的 inode/size/hash 一致，8 张 A100 80GB 和共享 base/Chemprop 环境已通过 CUDA import。
   node002 各队列的第 3 个待补 member 已各分配一个到 node001；训练进入 steady state 后利用率
@@ -119,6 +351,40 @@
 - **2026-07-18 已完成的 Fig. 2b 修订：** 回复信中关于各 encoder 是否使用相同数据、五折不确定性和原 27.1\% 表述的回答已经改为已完成实验及正式数值；论文 Fig. 2b 图注、Results 和 Methods 已同步修改。作者随后更新了完整 `Fig2_2.pdf`；经实际渲染核验，panel b 现为 10,886 个共享分子的七模型结果，显示五折 sample s.d. error bars，柱上三位小数与正式结果一致。最新 TeX 已再次完整编译为 28 页。
 - **当前正式结果：** 文稿、回复信和图片使用 24-layer joint DLM `0.5386 ± 0.0250` 与 12-layer DLM-only `0.3765 ± 0.0239`，相对第二名提升表述为 29.1\%。正文当前仍把优势解释为 joint DLM+MTR objective，但没有明确写出两个 DLM checkpoint 的容量不同；因此“objective 导致提升”仍应视为尚未完成容量控制核验的解释，而不是现有 benchmark 已证明的事实。
 - **仍待实验核验的事项：** 如果后续采用 12-layer joint 候选作为主比较，必须再次同步 Fig. 2b、Results、回复信结果段和 29.1\% 相对提升；在该实验完成前，当前 24-layer joint 正式结果和图片保持不变。
+
+## 2026-07-26 Reviewer 2 peptide classifier v1 血缘
+
+- **已由最终 CSV、Arrow shards、trainer 和 checkpoint 验证的事实：** 论文 guided generation
+  使用的 v1 classifier 数据共有 82,795,051 条；正类为 SmProt2 677,323、UniProt/UniRef
+  3,105,732 和 PeptideCLM generated 6,654,492，负类为 PubChem 72,357,504。标签按来源赋值，
+  不是 2025 年 6 月 v2 的结构 parser 标签。精确历史 trainer 位于
+  `node002:/data1/tianang/Projects/mdlm/guaidance_classifier_all_data_pad_no_mask.py`，checkpoint
+  位于本机外部 `mdlm/cls-guide-pad-no-mask-checkpoints/`。
+- **仍未恢复的文件：** 写出 `all_smiles_pep_SM_cls.csv` 标签列的临时脚本原文件未在当前工作树、
+  legacy tag、node002 项目目录或 shell history 中找到；但其实际四来源标签行为已由保存数据逐条
+  恢复。不得把“行为已恢复”升级为“producer 源码已恢复”。
+- **当前评估决定：** primary 为 canonical-molecule/sequence-cluster-disjoint clean AUROC/AUPRC；
+  noisy robustness 只增加 `t=0.5`，不把 peptide-like hard negatives 设为必要条件。完整血缘、
+  v2 边界和 `time_conditioning` 差异见 `experiments/peptide_classifier/README.md`。
+- **Reviewer retrain canonical 入口：**
+  `PYTHONPATH=src python scripts/reproduce/prepare_peptide_classifier_split.py` 依次执行
+  `extract-sequences`、`cluster-sequences` 和 `assign-splits`；split 验证命令为
+  `PYTHONPATH=src python scripts/audit/audit_peptide_classifier_split.py`。训练/评估入口为
+  `PYTHONPATH=src torchrun --standalone --nproc-per-node=4
+  scripts/reproduce/run_peptide_classifier_reviewer.py`。主要参数为 `--dataset-dir`、
+  `--split-dir`、`--producer-root`、`--v1-checkpoint`、`--seed` 和 `--output-dir`；
+  三个已冻结 task 的训练→test→同步→bootstrap 接力入口为
+  `python scripts/reproduce/orchestrate_peptide_classifier_reviewer.py`，状态写入
+  `pipeline_status.json`；
+  正式产物统一位于 `experiments/peptide_classifier/reviewer_retrain/`。原计划训练
+  3 个独立 seeds；seed 1 在完成 90,152 train steps 后于 epoch-end validation 遇到 NCCL
+  broadcast watchdog timeout。作者于 2026-07-27 明确决定不重跑，正式汇总只纳入两个完整
+  seeds（0 和 2）；排除原因是基础设施失败，不是 validation 指标。每 seed 4 GPUs、
+  global batch 900、2 epochs，在每 45,000 steps 和 epoch
+  结束时按 validation clean AUPRC
+  选择 checkpoint；`scripts/reproduce/summarize_peptide_classifier_reviewer.py` 对两个 seed
+  prediction 做 ensemble 与 1,000 次 molecule bootstrap。最终报告 clean 与固定 10 masks 的
+  `t=0.5` molecule-level AUROC/AUPRC。
 
 ## 2026-07-20 Reviewer 4 unseen-species 初筛
 

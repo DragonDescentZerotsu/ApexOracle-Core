@@ -4,9 +4,18 @@
 > 状态：canonical 论文/审稿路径已完成；legacy `DataPrepare/` 收尾仍待后续批次
 > 适用范围：当前 `Synergy` 仓库，以及后续需要整合的 Evo-2 genome embedding、DLM/MDLM 和 guided generation 代码。
 
-当前执行焦点（2026-07-23）：Fig. 1b 完整 10-member/fold fine-tune 与 baseline、最终统计、
+当前执行焦点（2026-07-28）：Fig. 1b 完整 10-member/fold fine-tune 与 baseline、最终统计、
 图文修订，以及 PepLink 0.1.2 round-trip/ChatGPT-o1/OPSIN 审计和 Supplementary Data 均已完成。
-当前保留的主要未完成事项是 corrected AA successor dataset 的重新训练、Reviewer 4 target/
+ReMDM remasking schedule 的 36-task reviewer 补实验和 3,600-attempt clean-model evaluation
+已完成，冻结协议、结果和表述边界位于 `experiments/remasking_schedule_reviewer/`。2026-07-29
+structure audit 证实历史 v1 classifier-positive 不能单独解释为 generated-structure peptide
+identity，随后冻结了窄结构筛选与正确 SEP-padding classifier 的联合内部口径，并重算 canonical
+三面板 reviewer figure。2026-08-02 正式 TeX、Supplementary Fig. C4 和三处对应 reviewer
+responses 均已落稿并独立渲染核验；对外文稿只报告 peptide/RDKit-valid yield、精确计数和
+predicted MIC，不展开内部判定规则。完整证据和正式文件记录见
+`experiments/remasking_schedule_reviewer/STRUCTURE_AUDIT.md` 与该实验 `README.md` 第 13 节。
+当前其余主要未完成事项是
+corrected AA successor dataset 的重新训练、Reviewer 4 target/
 multi-isolate panel 决策，以及 `DataPrepare/` legacy 脚本的迁移、去重和归档。机器职责、
 代码同步、数据/权重和外部仓库位置以 `docs/COMPUTE_AND_ASSET_MAP.md` 为统一索引。
 
@@ -696,6 +705,24 @@ optimizer-step 已在宿主 H100 单独通过，两份 guidance checkpoint 的 i
 - [x] Fig. 2b 当前正式修订已完成：正文、图注和 reviewer response 已更新公平 benchmark 数值；完整 `Fig2_2.pdf` 已换入 10,886 个共享分子的七模型结果和五折 sample s.d. error bars，并经渲染核对；最新 TeX 已完整编译为 28 页。当前图文对应 24-layer joint 正式结果。12-layer joint 容量匹配实验属于后续核验；若采用其结果，仍须同步更新图、正文、回复信和相对提升。
 - [ ] 确认 license、第三方模型许可、数据再分发条件和 citation。
 - [x] 持续用中文维护 `AGENTS.md`，记录新的审计结论和迁移关系。
+
+#### 2026-08-02 ReMDM reviewer capsule 收束状态
+
+- [x] 完成 peptide-guidance/remasking 补实验、结构审计、canonical reviewer figure、正式 Methods/
+  Supplementary Fig. C4 和三处 reviewer response。
+- [x] 建立 `experiments/remasking_schedule_reviewer/PUBLICATION_HANDOFF.md`，登记四个相关项目路径、
+  GitHub remotes、白名单/禁止项和防膨胀策略。
+- [x] 核验本轮 canonical 代码/测试约 142 KB，当前未忽略 reviewer capsule 为 414,113 bytes，
+  约 0.41 MB；raw runs、
+  日志、逐 attempt 表、权重和重复图稿不进入 Git。
+- [ ] 从 clean Synergy worktree 建立独立 reviewer branch，只移植本轮相关 file/hunk 并提交 PR；
+  当前 mixed worktree 不允许整体 stage。
+- [ ] 为 ApexOracle-specific `discrete-diffusion-guidance` 建立 clean fork/独立 remote，参数化路径、
+  添加最小 smoke test 并固定 producer commit。
+- [ ] 从公开 `ApexOracle-MDLM` remote 准备 clean release commit；发布时显式使用 `custom` remote，
+  不误推上游。
+- [ ] 决定统一 public ApexOracle repo 使用 clean release history/branch 还是新仓库；不得继续把完整
+  外部 checkout、数据和权重复制进约 235 MiB 的 legacy history。
 
 ## 5. 计划提交序列
 

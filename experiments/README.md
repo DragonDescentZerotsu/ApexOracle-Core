@@ -8,6 +8,8 @@ DOCX/PDF 和临时运行目录不进入本仓库。每个子目录均应有 READ
 
 | 目录 | 内容 | Canonical 入口 |
 | --- | --- | --- |
+| `peptide_classifier/` | Reviewer 2 peptide classifier 的 v1/v2 数据血缘、checkpoint 身份与最小评估边界 | `peptide_classifier/README.md` |
+| `remasking_schedule_reviewer/` | Reviewer 1/2 的 ReMDM window sweep、peptide-correction effectiveness、结构审计、正式文稿落稿与公共发布交接 | `remasking_schedule_reviewer/README.md`；发布边界见 `remasking_schedule_reviewer/PUBLICATION_HANDOFF.md` |
 | `peplink_validation/` | PepLink 0.1.2 round-trip、ChatGPT-o1/OPSIN 化学审计、AA/peptide 血缘及 56-peptide Supplementary Data | `peplink_validation/README.md` |
 | `reviewer4_unseen_targets/` | NCBI current taxonomy + ATCC catalogue 的 unseen species/genus 可购买靶点初筛 | `reviewer4_unseen_targets/README.md` |
 | `fig1b_antibiotic_classification/` | 三菌株小分子分类的 10-member ensemble、paired statistics 与 reviewer 文稿 | `fig1b_antibiotic_classification/README.md` |
@@ -22,3 +24,6 @@ DOCX/PDF 和临时运行目录不进入本仓库。每个子目录均应有 READ
 - 已退役的 PepLink 0.1.1/dev exploratory outputs 不作为当前 reviewer 证据；正式结果只引用
   `peplink_validation/peplink_0.1.2/`。
 - 结果 manifest 中的 SHA-256 用于验证本地冻结输入；数据二进制本身仍遵循根目录 `.gitignore`。
+- ReMDM reviewer capsule 只发布 canonical 脚本/测试和紧凑 summary/manifest；raw attempts、日志、
+  逐结构 CSV、checkpoint 和重复图片均保持本地。完整白名单和跨仓库 GitHub 状态见
+  `remasking_schedule_reviewer/PUBLICATION_HANDOFF.md`。

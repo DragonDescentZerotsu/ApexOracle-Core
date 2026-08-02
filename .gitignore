@@ -85,6 +85,39 @@ slurm-*.out
 !experiments/peplink_validation/supplementary_data/*.csv
 !experiments/peplink_validation/supplementary_data/*.xlsx
 !experiments/reviewer4_unseen_targets/*.csv
+!experiments/hierarchical_mic/molecule_overlap/*.csv
+!experiments/hierarchical_mic/molecule_disjoint/analysis/metrics.csv
+!experiments/hierarchical_mic/molecule_disjoint/analysis/cluster_bootstrap.csv
+!experiments/hierarchical_mic/molecule_disjoint/phylum_analysis/metrics.csv
+!experiments/hierarchical_mic/molecule_disjoint/phylum_analysis/cluster_bootstrap.csv
+!experiments/hierarchical_mic/fixed_strain_retrain/analysis/metrics.csv
+!experiments/hierarchical_mic/fixed_strain_retrain/analysis/cluster_bootstrap.csv
+
+# Hierarchical MIC checkpoint-replay intermediates remain local. Only compact
+# aggregate metrics/manifests are reviewer-facing versioned artifacts.
+experiments/hierarchical_mic/molecule_disjoint/inference_checkpoints/
+experiments/hierarchical_mic/molecule_disjoint/predictions/
+experiments/hierarchical_mic/molecule_disjoint/phylum_predictions/
+experiments/hierarchical_mic/molecule_disjoint/smoke/
+experiments/hierarchical_mic/molecule_disjoint/analysis/ensemble_predictions.csv
+experiments/hierarchical_mic/molecule_disjoint/phylum_analysis/ensemble_predictions.csv
+experiments/hierarchical_mic/fixed_strain_retrain/checkpoints/
+experiments/hierarchical_mic/fixed_strain_retrain/predictions/
+experiments/hierarchical_mic/fixed_strain_retrain/analysis/ensemble_predictions.csv
+
+# Reviewer peptide-classifier split memmaps are deterministic, locally
+# reproducible intermediates. Keep only their compact manifest and audit.
+experiments/peptide_classifier/reviewer_retrain/*.u1
+experiments/peptide_classifier/reviewer_retrain/*.u8
+
+# Remasking reviewer raw attempts, smoke runs, and host-local queue state stay
+# local. The frozen task manifest, protocol README, compact summary, and
+# provenance remain versionable.
+experiments/remasking_schedule_reviewer/runs/
+experiments/remasking_schedule_reviewer/smoke/
+experiments/remasking_schedule_reviewer/superseded_allocation_smoke_20260728/earlier__*/
+experiments/remasking_schedule_reviewer/superseded_allocation_smoke_20260728/queue_status_local_prebalance.json
+experiments/remasking_schedule_reviewer/analysis/evaluated_attempts.csv
 
 # Historical exploratory PepLink outputs remain local to avoid confusing them
 # with the released v0.1.2 and source-aware reviewer scope.

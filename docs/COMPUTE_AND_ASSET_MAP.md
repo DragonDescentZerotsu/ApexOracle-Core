@@ -1,6 +1,7 @@
 # 计算节点、代码版本与资源位置
 
-> 最后核验：2026-07-23。Fig. 1b reviewer 补实验已经完成，当前没有需要重启的训练 worker。
+> 最后核验：2026-08-02。Fig. 1b 与 ReMDM remasking schedule reviewer 补实验均已完成；
+> node002 原 GPU guard 已恢复。
 > `python scripts/reproduce/monitor_fig1b_revision.py` 仅用于只读核验历史产物与节点状态；
 > 本文记录稳定职责和路径，不把瞬时 GPU utilization 当作实验完成证据。
 
@@ -48,6 +49,145 @@ ssh node002 'git -C /data1/tianang/Projects/Synergy_release rev-parse HEAD'
 `/data2/tianang/projects/.venvs/fig1b-chemprop-v1`。两套 Chemprop 环境均固定为 Chemprop
 1.5.2、Torch 2.7.1+cu126、NumPy 1.26.4、pandas 2.2.2、scikit-learn 1.8.0 和
 RDKit 2025.03.5。
+
+### node002 非科学 GPU guard（2026-07-27）
+
+- **已由进程、日志和连续 GPU 采样验证的事实：** 作者授权在 node002 历史工作树中运行非科学
+  资源工具。owner 为 `tianang`，tmux 会话为 `synergy_gpu_guard_20260727`，命令为
+  `/data1/tianang/anaconda3/bin/conda run --no-capture-output -n base python -u run_full.py
+  --gpus 0,1,2,3,4,5,6,7`，工作目录为 `/data1/tianang/Projects/Synergy`，日志为同目录
+  `gpu_guard_node002_20260727.log`。
+- `run_full.py` 只在单卡显存低于250MB时启动一个独占该卡可见性的 `run.py`。当前 `run.py`
+  默认保留90%显存，并以4096方阵 BF16 GEMM、约2ms高频 burst 实现目标8% compute duty。
+  连续15次每秒采样为每卡约7--8% utilization、约73.3GB显存和30--33°C；这只能标记为
+  resource guard，不能作为模型训练或实验运行证据。
+- 历史目录通常只用于只读审计；本次是作者明确授权的单文件运行例外。原文件保存在
+  `run.py.backup_20260727_memory_only`，原/当前 SHA-256 分别为
+  `b1372f5d82234e92856f837989b76f4036aea9c868e1c5041e2631ceea375a3b` 和
+  `4c217c488bc41f5a4dc238e79c285adb24c8ca8677dbc38e2dff7d0134933993`。不得把该修改当作
+  2025 producer 源码，也不得同步到 `/data1/tianang/Projects/Synergy_release`。
+- 查看与停止：
+
+  ```bash
+  ssh node002 'tmux attach -t synergy_gpu_guard_20260727'
+  ssh node002 'tmux kill-session -t synergy_gpu_guard_20260727'
+  ```
+
+### ReMDM remasking schedule reviewer 实验（2026-07-28--29，已完成）
+
+- **已由 GPU 查询和 task manifest 验证的事实：** 本机 4 张 H100 与 node002 8 张 A100
+  共同承担 `experiments/remasking_schedule_reviewer/task_manifest.json` 中 36 个独立任务。
+  每卡唯一 owner 为一个 host-local orchestrator queue，每卡顺序运行 3 个 task；本机负责
+  12 tasks，node002 负责 24 tasks。每个 task 写唯一
+  `experiments/remasking_schedule_reviewer/runs/<task_id>/`，以 `completed.json` 和逐 batch
+  SHA-256 为完成条件，不存在跨 worker 共写 batch 文件。
+- **本机 owner：** tmux session `remasking_reviewer_local_20260728` 已正常完成并退出；
+  12/12 tasks、48/48 batches、1,200/1,200 raw attempts 均有 completion marker，4 张 H100
+  已释放。运行环境为 `/home/tianang/anaconda3/envs/mdlm`，外部 sampler
+  `/data2/tianang/projects/discrete-diffusion-guidance` 只读导入。
+- **node002 staging：** 运行资产隔离在
+  `/data1/tianang/Projects/remasking_schedule_reviewer_assets/`，包括从本机按文件复制的
+  DLM、v1 peptide classifier、guidance regressor 与 `conda-pack` 环境；正式启动前必须完成
+  size/SHA-256、`conda-unpack`、CUDA import 和单卡 smoke。代码只同步本次新增的 runner、
+  orchestrator 和 manifest 到历史 Synergy 工作树，不执行 Git 更新。
+- **已验证的 node002 staging 身份：** DLM、v1 classifier、guidance regressor SHA-256 分别为
+  `a509b94e...2615`、`40f638ca...45b`、`f24faf67...3a4`，与本机逐项相同；环境 archive 为
+  `26db6a7e...f740`，解包后版本为 Torch 2.3.1+cu121、flash-attn 2.6.3、Hydra 1.3.2、
+  Lightning 2.2.1、Transformers 4.49.0 和 RDKit 2024.09.6。两菌株的 genome/text embedding
+  四份文件也与本机逐项同 hash。
+- **producer 一致性修正：** 两台机器原外部 guidance checkout 虽然 HEAD 相同，但 dirty
+  `diffusion.py`、`models/dit.py` 和 `configs/config.yaml` 内容不同。没有修改 node002 历史
+  checkout；正式 node002 任务改用
+  `/data1/tianang/Projects/remasking_schedule_reviewer_assets/producer/` 中本机 smoke-tested
+  只读快照。其关键文件 SHA-256 与本机逐项相同：
+  `diffusion.py=929a2e41...df5f`、`classifier.py=5b7b5b65...1129`、
+  `models/dit.py=058d97e8...48a3`。
+- **guard 边界：** 资产 staging 期间保持 `synergy_gpu_guard_20260727` 运行；完成上述
+  CPU/文件核验后才按作者授权停止 guard、确认 8 卡显存释放、运行 smoke 并启动正式队列。
+  正式队列全部完成或失败退出后必须恢复原 guard session，并重新核验 8 张卡约 7--8%
+  utilization 与约 73.3GB 显存。停止/恢复的实际时间和核验结果记录如下。
+- **实际启动状态：** guard 于 `2026-07-28T23:23:17-04:00` 停止；停止前每卡
+  73,277--73,373 MiB、7--8%，8 秒后降至 18--114 MiB、0%。随后 GPU7 上的
+  BAA-3197 batch-1 smoke 完成，输出为 complete 且 RDKit-valid。正式 node002 owner 为 tmux
+  `remasking_reviewer_node002_20260728`，8 queues 已启动，共负责 24 tasks；状态文件为
+  `/data1/tianang/Projects/Synergy/experiments/remasking_schedule_reviewer/runs/queue_status_node002.json`。
+- **实际完成与恢复：** node002 24/24 tasks、96/96 batches、2,400/2,400 attempts 完成后，
+  结果无覆盖同步到本机并与本机 1,200 attempts 合并；36 个任务、144 个 batch 的 size/SHA-256
+  均通过 completion-marker 复核。正式 evaluator 完成 3,600 个 v1 peptide scores 和 2,355 个
+  finite clean-MIC predictions。guard 于 `2026-07-29T00:04:21-04:00` 恢复；复核为每卡
+  73,277--73,373 MiB、7--8% utilization、29--32°C，tmux
+  `synergy_gpu_guard_20260727` 正常运行。
+- **冻结协议：** 6 conditions × 2 strains × 3 seeds × 100 raw attempts，共 3,600；
+  windows 为 `0.75--0.65`、`0.55--0.45`、`0.35--0.25`、`0.525--0.475` 和
+  `0.55--0.25`，另有 current-window `gamma_peptide=0` direct control。正式结果不得加入
+  manifest 外的 exploratory ablation。
+- **2026-07-29 structure audit GPU 记录：** 本机只读核验确认4张H100均空闲后，临时使用
+  GPU0 和 `mdlm` 环境复算历史 v1 full-token/first-`[SEP]`-padded probabilities，并应用两个
+  reviewer-retrained heads；运行结束后 GPU 释放，无 tmux、无常驻 worker、无 checkpoint
+  写入。canonical 命令登记在
+  `scripts/audit/audit_remasking_peptide_classifier_structure.py`，compact 输出位于
+  `experiments/remasking_schedule_reviewer/analysis/peptide_structure_audit/summary.json`。
+  本次只读审计没有停止或修改 node002 guard。
+
+### ReMDM reviewer 正式文稿资产（2026-08-02，已完成）
+
+- 正式 TeX 和 response DOCX 位于
+  `/data2/tianang/projects/ApexOracle_cleaned/docs/ApexOracle_Nat_Biotech/`；TeX 已加入
+  Supplementary Fig. C4 及对应 Methods 修改，response 已更新三处 remasking 相关回答。作者最终
+  决定不在 Results 保留 window/effectiveness 两段细节；相关结果位于 Supplementary Fig. C4/
+  caption 和 reviewer response。
+- 正式图文件为 `Fig_SI_remasking_schedule.pdf`，与 Synergy canonical 源图
+  `experiments/remasking_schedule_reviewer/figures/remasking_structure_qualified_peptides_with_mic_control.pdf`
+  的 SHA-256 均为
+  `23ce3a58f82b82f1fb1f458efd08152fbf1284f9b2e2f6b97cd2e1030e9bb847`。
+- TeX 只在 `/tmp` 独立编译核验为 31 页，没有覆盖正式论文 PDF；response DOCX 修改前备份为
+  `Response to reviewers letter_before_remasking_revision_20260802.docx`，独立渲染核验为 29 页。
+- 本次只有文稿和 figure asset 变更，没有新增 GPU 任务、移动 checkpoint/data、修改 node002
+  guard 或改写外部 sampler。
+
+### ReMDM reviewer 发布交接与 remote 审计（2026-08-02）
+
+- 本轮 canonical reviewer 代码、紧凑结果和内部说明位于 Synergy；8 个脚本/测试约 142 KB，
+  当前未忽略 reviewer capsule 共 414,113 bytes，约 0.41 MB。实验目录约 67 MB 的主要占用为本地
+  raw runs、日志和图片，均受 `.gitignore` 保护，不需要删除取证资产，也不得进入 staged set。
+- 完整路径清单、提交白名单和统一公共仓库方案见
+  `experiments/remasking_schedule_reviewer/PUBLICATION_HANDOFF.md`。本轮尚未执行 commit、push、
+  fork 或 PR。
+- `Synergy` remote 为 private `DragonDescentZerotsu/Synergy`；当前工作树混有多个 reviewer/
+  refactor 改动，发布必须从 clean worktree 按 hunk 移植，禁止 `git add -A`。
+- `mdlm` 同时有上游 `kuleshov-group/mdlm` 和公开自有 remote
+  `DragonDescentZerotsu/ApexOracle-MDLM`；本轮没有修改该 checkout。其当前 branch 跟踪上游，
+  未来发布必须显式推向自有 remote。
+- `discrete-diffusion-guidance` 目前只有上游 remote，不存在自有同名 GitHub fork；当前 dirty
+  producer 不得直接推送。应先建立 clean fork/独立 repo、参数化绝对路径并固定可复现 commit。
+- public `DragonDescentZerotsu/ApexOracle` 的现有 legacy history 约 235 MiB，且已混入数据、模型和
+  外部仓库副本，不适合作为继续复制本轮 raw 资产的目标。未来统一发布应采用清理后的 release
+  history/layout，并以固定 commit/submodule 或版本化依赖连接 MDLM 与 guidance producer。
+
+### 当前 reviewer 轮次 GitHub 防膨胀检查（2026-08-02）
+
+- 在准备按主题提交当前 reviewer 轮次时，发现 peptide-classifier split 的五个本地 memmap
+  (`*.u1`/`*.u8`) 合计约 911 MB，其中 `molecule_hashes.u8` 约 662 MB。这些文件是
+  `prepare_peptide_classifier_split.py` 的确定性中间产物，不是 reviewer-facing 结果，并已按目录
+  加入 `.gitignore`。
+- Git 只保留 `split_manifest.json`、`split_audit.json`、紧凑训练/评估结果、代码和测试；manifest
+  继续记录本地 memmap 的 size/SHA-256。该边界避免可重建缓存进入永久 Git history，同时保留
+  split 复核能力。
+
+### 新 reviewer GPU 任务调度约束（2026-07-26）
+
+- 作者要求需要 GPU 的新实验尽量同时使用本机当前可用的 3 张 GPU、node001 的 8 张 A100 和
+  node002 的 8 张 A100；启动前仍须逐机核验进程、显存、温度和环境，实时不可用设备不得强行
+  加入。
+- 科学协议保持不变，只按可独立重现的 `protocol/group/fold/ensemble` 单元并行。每个任务必须
+  登记 machine、GPU、owner、完整命令、输入版本、输出目录和完成条件。
+- node001 与 node002 共享 `/data1`。两台机器可以并行消费同一只读代码和数据，但不得写同一个
+  checkpoint、日志、临时文件或汇总文件；输出路径必须包含唯一任务标识，最终汇总由单一 owner
+  在所有原子完成标记就绪后执行一次。
+- 本机与 `/data1` 不共享结果目录。跨机器汇总前必须按 manifest 核对任务键、文件大小和
+  SHA-256，不能只按文件名或数量判断完成。
+- 当前拟开展的 hierarchical MIC peptide-overlap audit 是 CPU/只读任务；后续
+  molecule-disjoint checkpoint replay 或 deterministic companion rerun 才进入上述 GPU 调度。
 
 ## 3. Fig. 1b 补实验（已完成）
 
@@ -145,6 +285,98 @@ watch -n 30 python scripts/reproduce/monitor_fig1b_revision.py
 
 ## 4. 数据、权重和外部仓库
 
+### 2026-07-26 hierarchical MIC molecule-disjoint sensitivity
+
+- **已验证事实：** 原始 21 个 strain-wise checkpoint 合计约 181 GB，单文件约
+  9.1--9.5 GB，包含本次推理不消费的 optimizer/classification payload。canonical producer
+  `scripts/reproduce/prepare_hierarchical_mic_inference_checkpoints.py` 已生成 21 个
+  inference-only 副本（单文件约 2.88 GB）；manifest 逐文件登记 source/inference size 和
+  SHA-256。派生文件不替代历史训练权重。
+- **任务分配：** 本机 H100 GPU 0/2/3 完成 strain group 1 ensembles 0/1/2，随后按
+  `0,3,6`、`1,4`、`2,5` 复用 feature load 运行 group 2；node001 A100 GPU 0/1/2/3 运行
+  group 0 ensembles 0/1/2/5，GPU 4 运行 group 1 ensemble 6；node002 A100 GPU 0/1/2
+  先运行 group 0 ensembles 3/4/6，再运行 group 1 ensembles 3/4/5。没有使用本机 GPU 1。
+- **共享写入边界：** node001/node002 只写共享 release 下唯一的
+  `experiments/hierarchical_mic/molecule_disjoint/predictions/strain_group_G_ensemble_E.{csv,json}`
+  和对应唯一日志；同一 `(G,E)` 没有双 owner。本机输出写当前 checkout 同名目录，完成后只读
+  rsync 汇总。每个任务以同时存在且 JSON `status=completed` 为完成条件。
+- **科学边界：** strain membership 来自冻结的 `PYTHONHASHSEED=0` candidate manifest，不是
+  未恢复的 2025 精确 membership；replay 使用确定性 `eval()`，不能把结果写成论文原始
+  train-mode-dropout evaluation 的逐值复现。
+- **正式 sensitivity 补充：** 为消除上述 strain membership 不确定性，另对 membership
+  可确定的 phylum-wise 三组 final MDLM checkpoint 运行 exact-molecule-disjoint replay。
+  node001 GPU 0/1 分别负责 Fungi/Pseudomonadati，node002 GPU 0 负责 Bacillati；每个进程复用
+  一次 feature load 后连续评估 7 members。源 checkpoint 位于共享历史资产
+  `/data1/tianang/Projects/Synergy/Checkpoints/genome_text_learnable_emb/3_species_w_SM/MDLM_MTR_fix_cls_wo_pad_7_fold_ensembles`，
+  唯一输出位于 shared release 的
+  `experiments/hierarchical_mic/molecule_disjoint/phylum_predictions/`。
+- **2026-07-26 完成事实：** phylum `3 × 7` replay 已全部完成并汇总回本机。
+  exact-peptide-unseen 共 6,515 条 / 3,491 个 molecules，low-MIC<=16 micromolar 为
+  58.20%；pooled R2/Spearman/Pearson 为 `0.0135/0.3326/0.3398`。三组 R2 分别为
+  `0.0109/0.0752/-0.1589`，因此必须披露 Bacillati 的负 R2。2,000 次 exact-molecule
+  cluster bootstrap 的 R2 CI 跨零，但模型相对 group-specific train-mean baseline 的 paired
+  delta CI 为正。compact 结果位于
+  `experiments/hierarchical_mic/molecule_disjoint/phylum_analysis/`。
+
+### 2026-07-26 fixed strain-wise reviewer retraining
+
+- **实时资源核验：** 启动前本机4张 H100 PCIe、node001 8张 A100 80GB、node002 8张
+  A100 80GB 均为0% utilization且无 hierarchical MIC worker；节点 base 环境均为
+  Torch `2.7.1+cu126`、CUDA可用。
+- **固定协议：** 读取
+  `experiments/hierarchical_mic/strain/legacy_protocol_manifest.json`，不动态重建 split；
+  模型、四路训练、batch size 80、25 epochs、7个原 seeds和 held-out R2 selection均保持
+  `configs/hierarchical_mic/legacy_mdlm.yaml` 契约。该实验是新 fixed-split reconstruction，
+  不是2025精确 membership。
+- **任务 ownership：** 完整 `3 × 7` 网格和唯一 owner 位于
+  `experiments/hierarchical_mic/fixed_strain_retrain/task_manifest.json`。本机 GPU0--3
+  负责 group0 members 0--3，GPU0随后串行 member6；node001 GPU0--6负责 group1全7个，
+  GPU7负责 group0 member4；node002 GPU0--6负责 group2全7个，GPU7负责 group0 member5。
+- **节点本地写入边界：** 首轮节点任务同时向共享NFS更新16个约9GB checkpoint，实测单epoch
+  被拉长到23--32分钟；该首轮在1--3 epochs后精确终止，已有共享文件保留但明确排除于分析。
+  node001/node002随后从相同seed的epoch 0重新启动，仅把输出分别改到
+  `/local/tianang/Synergy_fixed_strain_retrain/node001/checkpoints` 与
+  `/local/tianang/Synergy_fixed_strain_retrain/node002/checkpoints`。两台节点各有约1.6TB本地
+  NVMe空闲；模型、split和训练协议未改变。完成后在producer节点直接做推理，只同步compact
+  predictions/analysis，不搬运大型checkpoint。
+- **完成状态与结果：** 21/21训练任务和21/21 deterministic replay均已完成。group1的七个
+  8.5GB checkpoint 在node001提取为每个约2.7GB、带源size/SHA-256血缘的inference-only权重，
+  经本机临时中转到node002；group1/2 replay按作者指示与node002现有任务共存于GPU7，未发生
+  OOM或错误。compact结果已回收到
+  `experiments/hierarchical_mic/fixed_strain_retrain/analysis/`。full/seen/unseen pooled R2为
+  `0.4638/0.5672/0.0942`；unseen为26,272条 / 8,259个pooled distinct exact peptides，
+  Spearman/Pearson为`0.4070/0.4130`，R2 cluster-bootstrap 95% CI为
+  `[0.0687, 0.1191]`。论文式 mean-across-folds full/seen/unseen R2 为
+  `0.5814/0.6283/0.1089`；full 与历史论文 `0.5793` 一致。本机临时中转副本位于
+  `/data2/tianang/tmp/fixed_strain_group1_inference/`，属于可删除的派生缓存，不是canonical资产。
+- **2026-07-27 manuscript handoff：** 正式TeX已消费上述fixed strain结果：主文strain-wise
+  ensemble mean R2改为`0.5814`，Results/Methods分别增加sensitivity结果与split scope，
+  appendices增加逐fold sensitivity table；加入MIC distribution section后其编译编号为
+  Appendix Table D1。generation段在三条lead及低training-set identity
+  已介绍后再回扣joint unseen-peptide/unseen-strain证据。临时编译29页且cross-reference通过，
+  未覆盖正式`sn-article.pdf`或任何figure。已只读渲染核验`Fig1.pdf`与`Fig2_2.pdf`：
+  Fig. 1a/2c均未直接印出`0.5793`，无需为本次`0.5814`更新修改figure。
+- **2026-07-27 metric Methods handoff：** 作者要求撤销扩展版split/imbalance小节。正式TeX已
+  恢复既有split段落，仅新增一个简短粗体metric段落，涵盖transformed-label R2、
+  Pearson/Spearman、AUPRC/AUROC、constant predictor、accuracy未使用和五折mean/sample s.d.；
+  未新增独立subsection，也未搬入完整prevalence与resampling说明。response-letter docx仍有一个
+  待同步旧值：strain-wise R2 `0.5793`应改为`0.5814`。
+- **2026-07-28 MIC distribution Supplementary Figure：** CPU入口为
+  `python scripts/audit/plot_hierarchical_mic_test_distribution.py`，只读消费fixed strain-wise
+  ensemble replay逐测量CSV，输出到`experiments/hierarchical_mic/mic_distribution/`，不使用GPU、
+  不重训。实际response-letter docx与markdown draft中的strain-wise R2已从`0.5793`同步为
+  `0.5814`。输出核验为pooled 86,358条、MIC<=16 micromolar 47.01%；
+  三fold分别47.25%/41.59%/51.02%。分布宽但非严格均匀，512 micromolar附近存在明显峰。
+  最终图移除总标题和source脚注，panel标题居中且不加粗，并增加`a/b`标记。正式文稿资产为
+  `/data2/tianang/projects/ApexOracle_cleaned/docs/ApexOracle_Nat_Biotech/Fig_SI_MIC_distribution.pdf`，
+  与canonical输出SHA-256
+  `2e35f86464a343ab21a7cf8df8ef605e8f9aa4fd4d60b9d1a188b70b5d4fc7a5`
+  相同；TeX已将其作为Supplementary Fig. C3并在Methods引用。
+  reviewer response DOCX与markdown draft已同步fixed strain-wise composition和Fig. C3引用。
+  新增Fig. C3和Table D1的section标题/caption已使用`\rev{}`，Table D1正文使用局部
+  `\color{red}`；figure内部坐标文字保持原图配色。临时独立目录编译29页且cross-reference
+  通过，未覆盖正式`sn-article.pdf`。
+
 | 资源 | Canonical 位置 | 边界 |
 | --- | --- | --- |
 | 论文原始/冻结数据 | 本机 `DataPrepare/Data`；节点通过上述 symlink 读取历史目录 | 只读消费；重构输出写 `results/`，不得原地覆盖 |
@@ -153,6 +385,7 @@ watch -n 30 python scripts/reproduce/monitor_fig1b_revision.py
 | DLM/MDLM producer | `/data2/tianang/projects/mdlm` | 必须用 `mdlm` conda env；当前 checkout 有本地修改，不能直接作为 clean submodule |
 | Evo-2 producer | `/data2/tianang/projects/evo2` | 当前仓库只消费 `DataPrepare/Data/Genome_embs`；不重跑 extraction |
 | guided generation | `/data2/tianang/projects/discrete-diffusion-guidance` | sampler、DLM pretraining 同属外部边界；当前只读审计，不并入 Synergy |
+| Reviewer 2 peptide classifier | `experiments/peptide_classifier/README.md` | v1 数据血缘与论文 checkpoint 的 canonical 审计记录；node002 历史 producer 只读，v2 parser-label 数据不得反向解释 v1 checkpoint |
 | PepLink | `/data2/tianang/projects/PepLink` | clean 独立仓库；`PepLink==0.1.2` 已发布到 GitHub/PyPI，ApexOracle 新数据入口固定消费 0.1.2，论文复现仍读取 frozen CSV，不复制源码 |
 | AA/peptide reviewer 审计 | `experiments/peplink_validation/` | canonical 中文血缘为 `AA_AND_PEPTIDE_LINEAGE_ZH.md`；机器可读范围为 `reviewer_response_scope_summary.json`；56-peptide Supplementary Data 位于 `supplementary_data/`；不得用已退役的 forward-failure union 代替 source-aware scope |
 | 论文 TeX / reviewer response | `/data2/tianang/projects/ApexOracle_cleaned/docs/ApexOracle_Nat_Biotech` | Codex 不自动替换论文 PDF；作者决定何时采用新 panel |
@@ -165,6 +398,49 @@ watch -n 30 python scripts/reproduce/monitor_fig1b_revision.py
 （dirty）、Evo-2 HEAD `afd0dae`（dirty）、PepLink HEAD `90f627c`（clean；tag `v0.1.2`，
 GitHub Release 与 PyPI 均已发布）。这些 SHA 只记录当前
 候选状态，不反向证明 2025 论文运行的精确 producer commit。
+
+### 2026-07-26 Reviewer 2 peptide classifier retrain
+
+- **只读输入：** 本机 v1 Arrow 数据
+  `DataPrepare/MDLM/Data/hf_pep_SM_cls_1024`、raw labeled CSV、论文 classifier checkpoint；
+  node001 的训练副本固定写到本地 NVMe
+  `/local/tianang/peptide_classifier/hf_pep_SM_cls_1024`，复制完成后必须以
+  dataset state、shard 数和总 bytes 核验。本机/节点 checkpoint SHA-256 均为
+  `40f638ca5668f20a641a538035015b1741ab69cded300cba27f7148cc291945b`。
+  **已验证：** node001 本地副本为 515 个 `data-*.arrow` shards；本机与节点的
+  `filename + size` manifest SHA-256 均为
+  `fe38e00b54e6e61de276c54cbf4e93e4c008b57f5a8089664d732f339f117a95`，`state.json` 与
+  `dataset_info.json` 的 SHA-256 也逐项一致。
+- **node001 环境：** 该节点没有预存 `mdlm` conda env；本机环境用 `conda-pack` 固定为
+  `/local/tianang/peptide_classifier/mdlm-env`，archive SHA-256 为
+  `7fc5bed8113037953258a849081b3535961056e90ff087a9210ddf39f305307b`。解包后执行一次
+  `bin/conda-unpack`，并核验 Torch/flash-attn/OmegaConf/datasets 版本和 CUDA forward。
+- **CPU owner：** node001 负责 sequence extraction/MMseqs clustering，并在本地 NVMe 上完成
+  raw SMILES canonicalization、final Arrow 顺序联结与 split vector；node001 和本机分别执行
+  独立 split audit，本机保存正式副本。MMseqs binary
+  version 为 `17b688d21dda57fc5f5b7286ecba7ec003d4717f`，archive SHA-256 为
+  `9c4c946cae9c9213a5d85c1381a32d2eb41f47cafdee8e42a730bcfbd64c348b`。
+- **GPU ownership：** 本机 GPU0--3 唯一负责 seed 0；
+  node001 GPU0--3 唯一负责 seed 1，GPU4--7 唯一负责 seed 2。三个输出分别为
+  本机 `reviewer_retrain/runs/seed_0` 与 node001 本地 NVMe
+  `/local/tianang/peptide_classifier/runs/seed_{1,2}`，不得交叉写 checkpoint。node002 启动时
+  8 张卡均被既有任务占用，因此本轮不抢占；后续即使空闲也不重复启动已有 seed。
+- **训练完成条件：** 每 seed 完成 2 epochs，并在每 45,000 steps 与 epoch 结束时执行
+  validation；同时存在 `best.pt`、`last.pt`、`history.json` 和
+  `best_validation_metrics.json`；最终 test 必须从每 seed 的 `best.pt` 单独执行并产生
+  `test_metrics.json`。训练固定 2 epochs，不以接近时间预算作为完成条件。
+- **正式 split 与启动状态：** 两台机器的独立 audit 均通过；split 为
+  `81,137,648 / 830,022 / 827,381`（train/validation/test），manifest SHA-256 为
+  `410d73abda7ece85015a700ecb69c947973f07766dd167686ec9517df0f675cb`。三个任务于
+  2026-07-26 22:32 EDT 启动；首 1,000 steps 用时分别为 368.2、444.4、445.1 秒。
+- **2026-07-27 seed 1 失败边界与作者决定：** seed 1 在完成 epoch 0 的 90,152 train steps
+  后，于 epoch-end validation 的单元素 metric broadcast 触发 600 秒 NCCL watchdog timeout；
+  GPU0--3 随后释放。作者决定不重跑，正式汇总仅纳入完整 seed 0/2。失败 run 保留在
+  `/local/tianang/peptide_classifier/runs/seed_1`，不得将其写成低指标淘汰或完整 run。
+- **接力入口：** `python scripts/reproduce/orchestrate_peptide_classifier_reviewer.py` 只读取上述
+  冻结 task，等待 `2 × 90,152` train steps 完成后在原 GPU owner 上启动 clean/`t=0.5`
+  评估；node-local 结果同步到本机后执行 1,000 次 molecule bootstrap。运行状态写入
+  `experiments/peptide_classifier/reviewer_retrain/pipeline_status.json`。
 
 ### AA/SELFIES reviewer 当前任务
 
