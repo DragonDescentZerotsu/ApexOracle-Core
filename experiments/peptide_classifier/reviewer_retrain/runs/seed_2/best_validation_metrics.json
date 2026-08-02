@@ -1,0 +1,29 @@
+{
+  "epoch": 1,
+  "global_step": 180304,
+  "seconds": 42151.77296447754,
+  "step_in_epoch": 90152,
+  "train_loss": 0.021006802028439214,
+  "validation_clean": {
+    "auprc": 0.9999999999052989,
+    "auroc": 0.9999999999848168,
+    "balanced_accuracy_at_probability_0_5": 0.9999953193673656,
+    "excluded_conflicting_molecules": 0,
+    "molecules": 743698,
+    "negative_molecules": 640939,
+    "non_peptide_specificity_at_probability_0_5": 0.9999906387347314,
+    "peptide_recall_at_probability_0_5": 1.0,
+    "positive_molecules": 102759
+  },
+  "validation_t_0_5_one_mask": {
+    "auprc": 0.9999942065551339,
+    "auroc": 0.9999984249854978,
+    "balanced_accuracy_at_probability_0_5": 0.9998447986382002,
+    "excluded_conflicting_molecules": 0,
+    "molecules": 743698,
+    "negative_molecules": 640939,
+    "non_peptide_specificity_at_probability_0_5": 0.9997285233072102,
+    "peptide_recall_at_probability_0_5": 0.9999610739691901,
+    "positive_molecules": 102759
+  }
+}

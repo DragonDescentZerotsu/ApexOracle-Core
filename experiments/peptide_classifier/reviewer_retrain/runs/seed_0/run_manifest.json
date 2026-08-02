@@ -1,0 +1,26 @@
+{
+  "args": {
+    "batch_size": 225,
+    "checkpoint": null,
+    "dataset_dir": "DataPrepare/MDLM/Data/hf_pep_SM_cls_1024",
+    "epochs": 2,
+    "eval_batch_size": 225,
+    "evaluate_only": false,
+    "lr": 1e-05,
+    "noise_replicates": 10,
+    "num_workers": 8,
+    "output_dir": "experiments/peptide_classifier/reviewer_retrain/runs/seed_0",
+    "producer_root": "/data2/tianang/projects/mdlm",
+    "scheduler_epochs": 10,
+    "seed": 0,
+    "split_dir": "experiments/peptide_classifier/reviewer_retrain",
+    "v1_checkpoint": "/data2/tianang/projects/mdlm/cls-guide-pad-no-mask-checkpoints/epoch-epoch=1-step-step=134000-train_loss-train_loss=0.008.ckpt",
+    "validation_interval_steps": 45000
+  },
+  "backbone_checkpoint_sha256": "40f638ca5668f20a641a538035015b1741ab69cded300cba27f7148cc291945b",
+  "dataset_rows": 82795051,
+  "global_batch_size": 900,
+  "split_manifest_sha256": "410d73abda7ece85015a700ecb69c947973f07766dd167686ec9517df0f675cb",
+  "time_conditioning": true,
+  "world_size": 4
+}

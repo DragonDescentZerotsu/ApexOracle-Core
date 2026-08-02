@@ -1,0 +1,11 @@
+{
+  "audit_status": "passed",
+  "canonical_and_sequence_group_assignment_recomputed": true,
+  "file_hashes_verified": true,
+  "row_count": 82795051,
+  "split_counts": {
+    "test": 827381,
+    "train": 81137648,
+    "validation": 830022
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "created_at": "2026-07-26T20:30:00-04:00",
+  "global_batch_size": 900,
+  "launched_at": "2026-07-26T22:32:59-04:00",
+  "max_epochs": 2,
+  "selection_metric": "validation_clean_auprc",
+  "split_seed": 20260726,
+  "split_audit": {
+    "audit_status": "passed",
+    "row_count": 82795051,
+    "split_counts": {
+      "test": 827381,
+      "train": 81137648,
+      "validation": 830022
+    }
+  },
+  "protocol_amended_at": "2026-07-27T14:00:00-04:00",
+  "protocol_amendment": "Author elected to finish with the two complete seeds (0 and 2); seed 1 is excluded after an infrastructure NCCL timeout and is not excluded based on its validation metric.",
+  "status": "training_two_seed",
+  "tasks": [
+    {
+      "batch_size_per_gpu": 225,
+      "gpus": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "host": "sn4622119311",
+      "include_in_summary": true,
+      "first_1000_steps": {
+        "mean_loss": 0.15452994006220253,
+        "seconds": 368.1617786884308
+      },
+      "output_dir": "/data2/tianang/projects/Synergy/experiments/peptide_classifier/reviewer_retrain/runs/seed_0",
+      "owner": "root",
+      "seed": 0
+    },
+    {
+      "batch_size_per_gpu": 225,
+      "gpus": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "host": "node001",
+      "include_in_summary": false,
+      "exclusion_reason": "NCCL broadcast watchdog timeout during epoch-0 end validation after 90,152 completed train steps; author decided not to rerun.",
+      "first_1000_steps": {
+        "mean_loss": 0.1621860443521291,
+        "seconds": 444.42851543426514
+      },
+      "output_dir": "/local/tianang/peptide_classifier/runs/seed_1",
+      "owner": "root",
+      "seed": 1
+    },
+    {
+      "batch_size_per_gpu": 225,
+      "gpus": [
+        4,
+        5,
+        6,
+        7
+      ],
+      "host": "node001",
+      "include_in_summary": true,
+      "first_1000_steps": {
+        "mean_loss": 0.16104536916688084,
+        "seconds": 445.06942987442017
+      },
+      "output_dir": "/local/tianang/peptide_classifier/runs/seed_2",
+      "owner": "root",
+      "seed": 2
+    }
+  ],
+  "test_protocol": {
+    "clean_mask_replicates": 1,
+    "molecule_level_aggregation": true,
+    "noisy_t": 0.5,
+    "noisy_t_mask_replicates": 10
+  },
+  "time_conditioning": true
+}

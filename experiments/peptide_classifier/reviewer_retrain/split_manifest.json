@@ -1,0 +1,96 @@
+{
+  "canonical_identity": "RDKit canonical isomeric SMILES, BLAKE2b-128; raw:SMILES namespace fallback only when RDKit cannot parse a raw row",
+  "cluster_count_before_molecule_union": 2804874,
+  "conflicting_label_molecule_count": 1,
+  "conflicting_label_row_count": 491,
+  "dataset_dir": "/local/tianang/peptide_classifier/hf_pep_SM_cls_1024",
+  "elapsed_seconds": 1807.773849248886,
+  "files": {
+    "canonical_digest_128.bin": {
+      "bytes": 1324720816,
+      "sha256": "955aaa1b6d7004ac5bdd29e8b6d1e79ce62e437177fbae92b26fbabeb12022a6"
+    },
+    "labels.u1": {
+      "bytes": 82795051,
+      "sha256": "8c51582c33dd0ecd18b0de0452309987c2298268afa2fd9da1506f478aec26a1"
+    },
+    "molecule_hashes.u8": {
+      "bytes": 662360408,
+      "sha256": "3442a5fca4d8f4e48c4679483c3c301900a018a45b20da6c6f180953a0187aad"
+    },
+    "real_canonical_digest_128.bin": {
+      "bytes": 60157728,
+      "sha256": "7b3cf87fc58eb0dbc9fe8fc926a7da20c6cf9c71600ec6a90873ff3daf114ece"
+    },
+    "real_sequence_roots.u8": {
+      "bytes": 30078864,
+      "sha256": "33b5a1f34e7e21c26b0ef366140f462c0c738dc74b45f784bf4f1e6c64d51617"
+    },
+    "sources.u1": {
+      "bytes": 82795051,
+      "sha256": "4ec2578616c1c3eaf13238469481073a4bf780870f21b0832e5397c738ad4de1"
+    },
+    "split_codes.u1": {
+      "bytes": 82795051,
+      "sha256": "f8cd0904aeabdbf5b40a8b552dd530d28d1b20572c37d853aee5209cbbcf798f"
+    }
+  },
+  "final_raw_identity_fallback_rows": 252,
+  "group_assignment": "SplitMix64((canonical_digest_u64 xor seed) for ordinary molecules; (sequence_component_root xor seed xor 0xD1B54A32D192ED03) for real-peptide sequence components), modulo 10000",
+  "label_by_split": {
+    "0": {
+      "test": 724231,
+      "train": 70908110,
+      "validation": 725163
+    },
+    "1": {
+      "test": 103150,
+      "train": 10229538,
+      "validation": 104859
+    }
+  },
+  "raw_rdkit_parse_failures": 458,
+  "rdkit_version": "2023.09.6",
+  "row_count": 82795051,
+  "seed": 20260726,
+  "sequence_cluster": {
+    "coverage": 0.8,
+    "min_sequence_identity": 0.4,
+    "scope": [
+      "SmProt2",
+      "UniProt/UniRef"
+    ]
+  },
+  "source_by_split": {
+    "generated_peptideclm": {
+      "test": 66153,
+      "train": 6521823,
+      "validation": 66516
+    },
+    "pubchem": {
+      "test": 724231,
+      "train": 70908110,
+      "validation": 725163
+    },
+    "smprot2": {
+      "test": 6863,
+      "train": 663584,
+      "validation": 6876
+    },
+    "uniprot_uniref": {
+      "test": 30134,
+      "train": 3044131,
+      "validation": 31467
+    }
+  },
+  "split_code": {
+    "0": "train",
+    "1": "validation",
+    "2": "test"
+  },
+  "split_counts": {
+    "test": 827381,
+    "train": 81137648,
+    "validation": 830022
+  }
+}

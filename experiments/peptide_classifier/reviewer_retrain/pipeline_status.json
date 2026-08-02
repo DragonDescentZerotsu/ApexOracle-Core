@@ -1,0 +1,27 @@
+{
+  "elapsed_seconds": 32548.32740831375,
+  "expected_steps_per_epoch": 90152,
+  "summary_complete": true,
+  "summary_path": "/data2/tianang/projects/Synergy/experiments/peptide_classifier/reviewer_retrain/summary/summary.json",
+  "tasks": {
+    "seed_0": {
+      "evaluation_complete": true,
+      "evaluation_session_running": false,
+      "host": "sn4622119311",
+      "training_complete": true,
+      "training_session_running": false
+    },
+    "seed_1": {
+      "excluded": true,
+      "exclusion_reason": "NCCL broadcast watchdog timeout during epoch-0 end validation after 90,152 completed train steps; author decided not to rerun.",
+      "host": "node001"
+    },
+    "seed_2": {
+      "evaluation_complete": true,
+      "evaluation_session_running": true,
+      "host": "node001",
+      "training_complete": true,
+      "training_session_running": false
+    }
+  }
+}
