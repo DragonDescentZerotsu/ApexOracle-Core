@@ -1,0 +1,1068 @@
+{
+  "all_conditions": {
+    "attempt_count": 3600,
+    "general_amide_original_classifier_positive_count": 596,
+    "general_amide_sep_padded_classifier_positive_count": 583,
+    "nonpad_tokens_after_first_sep_quantiles": {
+      "max": 366.0,
+      "median": 1.0,
+      "min": 0.0,
+      "q25": 0.0,
+      "q75": 23.0
+    },
+    "original_classifier": {
+      "positive_count": 1343,
+      "structure_reparse_failed_count": 2,
+      "structure_reparsed_count": 1341,
+      "with_general_amide_count": 596,
+      "with_general_amide_fraction": 0.4444444444444444,
+      "without_general_amide_count": 745,
+      "without_general_amide_fraction": 0.5555555555555556
+    },
+    "original_negative_to_sep_padded_positive": 32,
+    "original_positive_to_sep_padded_negative": 166,
+    "original_probability_quantiles": {
+      "max": 1.0,
+      "median": 0.9870664477348328,
+      "min": 0.0,
+      "q25": 1.437186227803977e-07,
+      "q75": 0.9999915957450867
+    },
+    "rdkit_general_amide_positive_count": 702,
+    "rdkit_valid_count": 2355,
+    "reviewer_retrained_ensemble": {
+      "positive_count": 1353,
+      "structure_reparse_failed_count": 0,
+      "structure_reparsed_count": 1353,
+      "with_general_amide_count": 622,
+      "with_general_amide_fraction": 0.4597191426459719,
+      "without_general_amide_count": 731,
+      "without_general_amide_fraction": 0.5402808573540281
+    },
+    "reviewer_retrained_ensemble_probability_quantiles": {
+      "max": 0.9999999406232647,
+      "median": 0.9652892519385379,
+      "min": 2.064639199255543e-32,
+      "q25": 6.114084494372417e-05,
+      "q75": 0.9999807606285338
+    },
+    "runner_smarts_amide_positive_count": 622,
+    "runner_smarts_missed_general_amide_count": 80,
+    "sep_padded_classifier": {
+      "positive_count": 1209,
+      "structure_reparse_failed_count": 0,
+      "structure_reparsed_count": 1209,
+      "with_general_amide_count": 583,
+      "with_general_amide_fraction": 0.48221670802315963,
+      "without_general_amide_count": 626,
+      "without_general_amide_fraction": 0.5177832919768404
+    },
+    "sep_padded_probability_quantiles": {
+      "max": 1.0,
+      "median": 0.680161714553833,
+      "min": 0.0,
+      "q25": 1.0911828240978139e-07,
+      "q75": 0.9999916553497314
+    },
+    "structure_reparse_failed_count": 5,
+    "structure_reparsed_count": 2350
+  },
+  "by_condition": {
+    "current": {
+      "attempt_count": 600,
+      "general_amide_original_classifier_positive_count": 88,
+      "general_amide_sep_padded_classifier_positive_count": 86,
+      "nonpad_tokens_after_first_sep_quantiles": {
+        "max": 364.0,
+        "median": 1.0,
+        "min": 0.0,
+        "q25": 0.0,
+        "q75": 12.5
+      },
+      "original_classifier": {
+        "positive_count": 213,
+        "structure_reparse_failed_count": 0,
+        "structure_reparsed_count": 213,
+        "with_general_amide_count": 88,
+        "with_general_amide_fraction": 0.4131455399061033,
+        "without_general_amide_count": 125,
+        "without_general_amide_fraction": 0.5868544600938967
+      },
+      "original_negative_to_sep_padded_positive": 5,
+      "original_positive_to_sep_padded_negative": 27,
+      "original_probability_quantiles": {
+        "max": 1.0,
+        "median": 0.9712552428245544,
+        "min": 4.216770528645654e-34,
+        "q25": 3.140577042870518e-08,
+        "q75": 0.9999875426292419
+      },
+      "rdkit_general_amide_positive_count": 104,
+      "rdkit_valid_count": 395,
+      "reviewer_retrained_ensemble": {
+        "positive_count": 220,
+        "structure_reparse_failed_count": 0,
+        "structure_reparsed_count": 220,
+        "with_general_amide_count": 90,
+        "with_general_amide_fraction": 0.4090909090909091,
+        "without_general_amide_count": 130,
+        "without_general_amide_fraction": 0.5909090909090909
+      },
+      "reviewer_retrained_ensemble_probability_quantiles": {
+        "max": 0.9999998321423138,
+        "median": 0.9041741178794148,
+        "min": 4.907956639059448e-24,
+        "q25": 6.443980086794927e-05,
+        "q75": 0.9999726829965101
+      },
+      "runner_smarts_amide_positive_count": 88,
+      "runner_smarts_missed_general_amide_count": 16,
+      "sep_padded_classifier": {
+        "positive_count": 191,
+        "structure_reparse_failed_count": 0,
+        "structure_reparsed_count": 191,
+        "with_general_amide_count": 86,
+        "with_general_amide_fraction": 0.450261780104712,
+        "without_general_amide_count": 105,
+        "without_general_amide_fraction": 0.5497382198952879
+      },
+      "sep_padded_probability_quantiles": {
+        "max": 1.0,
+        "median": 0.2931593954563141,
+        "min": 4.216770528645654e-34,
+        "q25": 5.092373100978875e-08,
+        "q75": 0.9999879598617554
+      },
+      "structure_reparse_failed_count": 0,
+      "structure_reparsed_count": 395
+    },
+    "earlier": {
+      "attempt_count": 600,
+      "general_amide_original_classifier_positive_count": 83,
+      "general_amide_sep_padded_classifier_positive_count": 81,
+      "nonpad_tokens_after_first_sep_quantiles": {
+        "max": 364.0,
+        "median": 2.0,
+        "min": 0.0,
+        "q25": 0.0,
+        "q75": 132.0
+      },
+      "original_classifier": {
+        "positive_count": 210,
+        "structure_reparse_failed_count": 1,
+        "structure_reparsed_count": 209,
+        "with_general_amide_count": 83,
+        "with_general_amide_fraction": 0.39712918660287083,
+        "without_general_amide_count": 126,
+        "without_general_amide_fraction": 0.6028708133971292
+      },
+      "original_negative_to_sep_padded_positive": 6,
+      "original_positive_to_sep_padded_negative": 33,
+      "original_probability_quantiles": {
+        "max": 0.9999998807907104,
+        "median": 0.8373433947563171,
+        "min": 0.0,
+        "q25": 5.789306669612415e-07,
+        "q75": 0.9999879598617554
+      },
+      "rdkit_general_amide_positive_count": 95,
+      "rdkit_valid_count": 389,
+      "reviewer_retrained_ensemble": {
+        "positive_count": 206,
+        "structure_reparse_failed_count": 0,
+        "structure_reparsed_count": 206,
+        "with_general_amide_count": 86,
+        "with_general_amide_fraction": 0.4174757281553398,
+        "without_general_amide_count": 120,
+        "without_general_amide_fraction": 0.5825242718446602
+      },
+      "reviewer_retrained_ensemble_probability_quantiles": {
+        "max": 0.9999998500869316,
+        "median": 0.8071809735300199,
+        "min": 1.7586370014012645e-26,
+        "q25": 0.0001594573848640092,
+        "q75": 0.9999755890724685
+      },
+      "runner_smarts_amide_positive_count": 79,
+      "runner_smarts_missed_general_amide_count": 16,
+      "sep_padded_classifier": {
+        "positive_count": 183,
+        "structure_reparse_failed_count": 0,
+        "structure_reparsed_count": 183,
+        "with_general_amide_count": 81,
+        "with_general_amide_fraction": 0.4426229508196721,
+        "without_general_amide_count": 102,
+        "without_general_amide_fraction": 0.5573770491803278
+      },
+      "sep_padded_probability_quantiles": {
+        "max": 0.9999998807907104,
+        "median": 0.1995423287153244,
+        "min": 0.0,
+        "q25": 5.524627795239212e-07,
+        "q75": 0.9999868869781494
+      },
+      "structure_reparse_failed_count": 1,
+      "structure_reparsed_count": 388
+    },
+    "later": {
+      "attempt_count": 600,
+      "general_amide_original_classifier_positive_count": 96,
+      "general_amide_sep_padded_classifier_positive_count": 94,
+      "nonpad_tokens_after_first_sep_quantiles": {
+        "max": 366.0,
+        "median": 1.0,
+        "min": 0.0,
+        "q25": 0.0,
+        "q75": 5.0
+      },
+      "original_classifier": {
+        "positive_count": 224,
+        "structure_reparse_failed_count": 1,
+        "structure_reparsed_count": 223,
+        "with_general_amide_count": 96,
+        "with_general_amide_fraction": 0.4304932735426009,
+        "without_general_amide_count": 127,
+        "without_general_amide_fraction": 0.5695067264573991
+      },
+      "original_negative_to_sep_padded_positive": 1,
+      "original_positive_to_sep_padded_negative": 25,
+      "original_probability_quantiles": {
+        "max": 1.0,
+        "median": 0.9961072504520416,
+        "min": 5.311613675297916e-29,
+        "q25": 1.4816843498660637e-11,
+        "q75": 0.9999933242797852
+      },
+      "rdkit_general_amide_positive_count": 121,
+      "rdkit_valid_count": 388,
+      "reviewer_retrained_ensemble": {
+        "positive_count": 223,
+        "structure_reparse_failed_count": 0,
+        "structure_reparsed_count": 223,
+        "with_general_amide_count": 106,
+        "with_general_amide_fraction": 0.47533632286995514,
+        "without_general_amide_count": 117,
+        "without_general_amide_fraction": 0.5246636771300448
+      },
+      "reviewer_retrained_ensemble_probability_quantiles": {
+        "max": 0.9999999406232647,
+        "median": 0.9808430202815805,
+        "min": 1.4872469840099648e-19,
+        "q25": 2.389904800473912e-06,
+        "q75": 0.9999844275955456
+      },
+      "runner_smarts_amide_positive_count": 113,
+      "runner_smarts_missed_general_amide_count": 8,
+      "sep_padded_classifier": {
+        "positive_count": 200,
+        "structure_reparse_failed_count": 0,
+        "structure_reparsed_count": 200,
+        "with_general_amide_count": 94,
+        "with_general_amide_fraction": 0.47,
+        "without_general_amide_count": 106,
+        "without_general_amide_fraction": 0.53
+      },
+      "sep_padded_probability_quantiles": {
+        "max": 1.0,
+        "median": 0.866591215133667,
+        "min": 5.311613675297916e-29,
+        "q25": 8.841304945106376e-11,
+        "q75": 0.9999933242797852
+      },
+      "structure_reparse_failed_count": 2,
+      "structure_reparsed_count": 386
+    },
+    "narrower": {
+      "attempt_count": 600,
+      "general_amide_original_classifier_positive_count": 78,
+      "general_amide_sep_padded_classifier_positive_count": 74,
+      "nonpad_tokens_after_first_sep_quantiles": {
+        "max": 365.0,
+        "median": 2.0,
+        "min": 0.0,
+        "q25": 0.0,
+        "q75": 118.0
+      },
+      "original_classifier": {
+        "positive_count": 207,
+        "structure_reparse_failed_count": 0,
+        "structure_reparsed_count": 207,
+        "with_general_amide_count": 78,
+        "with_general_amide_fraction": 0.37681159420289856,
+        "without_general_amide_count": 129,
+        "without_general_amide_fraction": 0.6231884057971014
+      },
+      "original_negative_to_sep_padded_positive": 12,
+      "original_positive_to_sep_padded_negative": 28,
+      "original_probability_quantiles": {
+        "max": 0.9999998807907104,
+        "median": 0.9236609935760498,
+        "min": 0.0,
+        "q25": 9.388916737407271e-07,
+        "q75": 0.9999853372573853
+      },
+      "rdkit_general_amide_positive_count": 93,
+      "rdkit_valid_count": 381,
+      "reviewer_retrained_ensemble": {
+        "positive_count": 215,
+        "structure_reparse_failed_count": 0,
+        "structure_reparsed_count": 215,
+        "with_general_amide_count": 77,
+        "with_general_amide_fraction": 0.3581395348837209,
+        "without_general_amide_count": 138,
+        "without_general_amide_fraction": 0.641860465116279
+      },
+      "reviewer_retrained_ensemble_probability_quantiles": {
+        "max": 0.999999749784011,
+        "median": 0.846372729613467,
+        "min": 2.064639199255543e-32,
+        "q25": 0.00010945977524313952,
+        "q75": 0.9999745034513975
+      },
+      "runner_smarts_amide_positive_count": 78,
+      "runner_smarts_missed_general_amide_count": 15,
+      "sep_padded_classifier": {
+        "positive_count": 191,
+        "structure_reparse_failed_count": 0,
+        "structure_reparsed_count": 191,
+        "with_general_amide_count": 74,
+        "with_general_amide_fraction": 0.387434554973822,
+        "without_general_amide_count": 117,
+        "without_general_amide_fraction": 0.612565445026178
+      },
+      "sep_padded_probability_quantiles": {
+        "max": 0.9999998807907104,
+        "median": 0.5035590529441833,
+        "min": 0.0,
+        "q25": 2.451887723964319e-07,
+        "q75": 0.9999871253967285
+      },
+      "structure_reparse_failed_count": 0,
+      "structure_reparsed_count": 381
+    },
+    "no_peptide_correction": {
+      "attempt_count": 600,
+      "general_amide_original_classifier_positive_count": 79,
+      "general_amide_sep_padded_classifier_positive_count": 79,
+      "nonpad_tokens_after_first_sep_quantiles": {
+        "max": 365.0,
+        "median": 2.0,
+        "min": 0.0,
+        "q25": 0.0,
+        "q75": 121.0
+      },
+      "original_classifier": {
+        "positive_count": 198,
+        "structure_reparse_failed_count": 0,
+        "structure_reparsed_count": 198,
+        "with_general_amide_count": 79,
+        "with_general_amide_fraction": 0.398989898989899,
+        "without_general_amide_count": 119,
+        "without_general_amide_fraction": 0.601010101010101
+      },
+      "original_negative_to_sep_padded_positive": 6,
+      "original_positive_to_sep_padded_negative": 27,
+      "original_probability_quantiles": {
+        "max": 0.9999998807907104,
+        "median": 0.9847379922866821,
+        "min": 1.8604517306773096e-37,
+        "q25": 5.4208543431855105e-08,
+        "q75": 0.9999896287918091
+      },
+      "rdkit_general_amide_positive_count": 90,
+      "rdkit_valid_count": 355,
+      "reviewer_retrained_ensemble": {
+        "positive_count": 196,
+        "structure_reparse_failed_count": 0,
+        "structure_reparsed_count": 196,
+        "with_general_amide_count": 80,
+        "with_general_amide_fraction": 0.40816326530612246,
+        "without_general_amide_count": 116,
+        "without_general_amide_fraction": 0.5918367346938775
+      },
+      "reviewer_retrained_ensemble_probability_quantiles": {
+        "max": 0.9999998127647944,
+        "median": 0.8670628037234557,
+        "min": 9.934172446985038e-26,
+        "q25": 3.5389791475041576e-05,
+        "q75": 0.999975299845563
+      },
+      "runner_smarts_amide_positive_count": 75,
+      "runner_smarts_missed_general_amide_count": 15,
+      "sep_padded_classifier": {
+        "positive_count": 177,
+        "structure_reparse_failed_count": 0,
+        "structure_reparsed_count": 177,
+        "with_general_amide_count": 79,
+        "with_general_amide_fraction": 0.4463276836158192,
+        "without_general_amide_count": 98,
+        "without_general_amide_fraction": 0.5536723163841808
+      },
+      "sep_padded_probability_quantiles": {
+        "max": 0.9999998807907104,
+        "median": 0.4601430296897888,
+        "min": 1.8604517306773096e-37,
+        "q25": 1.318392577331906e-07,
+        "q75": 0.9999903440475464
+      },
+      "structure_reparse_failed_count": 1,
+      "structure_reparsed_count": 354
+    },
+    "wider": {
+      "attempt_count": 600,
+      "general_amide_original_classifier_positive_count": 172,
+      "general_amide_sep_padded_classifier_positive_count": 169,
+      "nonpad_tokens_after_first_sep_quantiles": {
+        "max": 364.0,
+        "median": 1.0,
+        "min": 0.0,
+        "q25": 0.0,
+        "q75": 3.0
+      },
+      "original_classifier": {
+        "positive_count": 291,
+        "structure_reparse_failed_count": 0,
+        "structure_reparsed_count": 291,
+        "with_general_amide_count": 172,
+        "with_general_amide_fraction": 0.5910652920962199,
+        "without_general_amide_count": 119,
+        "without_general_amide_fraction": 0.40893470790378006
+      },
+      "original_negative_to_sep_padded_positive": 2,
+      "original_positive_to_sep_padded_negative": 26,
+      "original_probability_quantiles": {
+        "max": 1.0,
+        "median": 0.9998445510864258,
+        "min": 9.467540346657217e-27,
+        "q25": 1.4633219961979194e-05,
+        "q75": 0.999995768070221
+      },
+      "rdkit_general_amide_positive_count": 199,
+      "rdkit_valid_count": 447,
+      "reviewer_retrained_ensemble": {
+        "positive_count": 293,
+        "structure_reparse_failed_count": 0,
+        "structure_reparsed_count": 293,
+        "with_general_amide_count": 183,
+        "with_general_amide_fraction": 0.6245733788395904,
+        "without_general_amide_count": 110,
+        "without_general_amide_fraction": 0.37542662116040953
+      },
+      "reviewer_retrained_ensemble_probability_quantiles": {
+        "max": 0.9999999294534069,
+        "median": 0.9995846065285338,
+        "min": 2.783399412166217e-17,
+        "q25": 0.00032238205764894656,
+        "q75": 0.9999926838551568
+      },
+      "runner_smarts_amide_positive_count": 189,
+      "runner_smarts_missed_general_amide_count": 10,
+      "sep_padded_classifier": {
+        "positive_count": 267,
+        "structure_reparse_failed_count": 0,
+        "structure_reparsed_count": 267,
+        "with_general_amide_count": 169,
+        "with_general_amide_fraction": 0.6329588014981273,
+        "without_general_amide_count": 98,
+        "without_general_amide_fraction": 0.36704119850187267
+      },
+      "sep_padded_probability_quantiles": {
+        "max": 1.0,
+        "median": 0.9995201826095581,
+        "min": 4.347538404491359e-27,
+        "q25": 2.906386669110361e-07,
+        "q75": 0.9999960660934448
+      },
+      "structure_reparse_failed_count": 1,
+      "structure_reparsed_count": 446
+    }
+  },
+  "canonical_representation_consistency": {
+    "historical_v1_original_full_token_label": {
+      "canonical_molecules_with_label_disagreement": 43,
+      "canonical_molecules_with_multiple_generated_rows": 109,
+      "example_disagreements": [
+        {
+          "canonical_smiles": "N[CH]F",
+          "positive_count": 58,
+          "row_count": 65
+        },
+        {
+          "canonical_smiles": "N[CH]Cl",
+          "positive_count": 27,
+          "row_count": 39
+        },
+        {
+          "canonical_smiles": "[CH]N",
+          "positive_count": 35,
+          "row_count": 39
+        },
+        {
+          "canonical_smiles": "C#N",
+          "positive_count": 23,
+          "row_count": 34
+        },
+        {
+          "canonical_smiles": "[HH]",
+          "positive_count": 5,
+          "row_count": 14
+        },
+        {
+          "canonical_smiles": "NC=O",
+          "positive_count": 7,
+          "row_count": 13
+        },
+        {
+          "canonical_smiles": "N",
+          "positive_count": 6,
+          "row_count": 12
+        },
+        {
+          "canonical_smiles": "N#[O+]",
+          "positive_count": 8,
+          "row_count": 11
+        },
+        {
+          "canonical_smiles": "[CH2-][CH]N",
+          "positive_count": 8,
+          "row_count": 9
+        },
+        {
+          "canonical_smiles": "C",
+          "positive_count": 3,
+          "row_count": 8
+        },
+        {
+          "canonical_smiles": "C=O",
+          "positive_count": 2,
+          "row_count": 7
+        },
+        {
+          "canonical_smiles": "[N-]=N",
+          "positive_count": 6,
+          "row_count": 7
+        },
+        {
+          "canonical_smiles": "CC",
+          "positive_count": 2,
+          "row_count": 6
+        },
+        {
+          "canonical_smiles": "NC#[O+]",
+          "positive_count": 4,
+          "row_count": 6
+        },
+        {
+          "canonical_smiles": "N=O",
+          "positive_count": 4,
+          "row_count": 5
+        },
+        {
+          "canonical_smiles": "NCCl",
+          "positive_count": 2,
+          "row_count": 5
+        },
+        {
+          "canonical_smiles": "NF",
+          "positive_count": 3,
+          "row_count": 5
+        },
+        {
+          "canonical_smiles": "[NH-][CH]N",
+          "positive_count": 4,
+          "row_count": 5
+        },
+        {
+          "canonical_smiles": "CC#N",
+          "positive_count": 2,
+          "row_count": 4
+        },
+        {
+          "canonical_smiles": "N[N+]#[O+]",
+          "positive_count": 3,
+          "row_count": 4
+        }
+      ],
+      "rows_in_label_disagreement_groups": 353,
+      "rows_in_multirow_canonical_groups": 510,
+      "unique_canonical_molecules": 1949
+    },
+    "historical_v1_sep_padded_label": {
+      "canonical_molecules_with_label_disagreement": 45,
+      "canonical_molecules_with_multiple_generated_rows": 109,
+      "example_disagreements": [
+        {
+          "canonical_smiles": "N[CH]F",
+          "positive_count": 57,
+          "row_count": 65
+        },
+        {
+          "canonical_smiles": "N[CH]Cl",
+          "positive_count": 24,
+          "row_count": 39
+        },
+        {
+          "canonical_smiles": "[CH]N",
+          "positive_count": 31,
+          "row_count": 39
+        },
+        {
+          "canonical_smiles": "C#N",
+          "positive_count": 16,
+          "row_count": 34
+        },
+        {
+          "canonical_smiles": "[HH]",
+          "positive_count": 5,
+          "row_count": 14
+        },
+        {
+          "canonical_smiles": "NC=O",
+          "positive_count": 7,
+          "row_count": 13
+        },
+        {
+          "canonical_smiles": "N",
+          "positive_count": 3,
+          "row_count": 12
+        },
+        {
+          "canonical_smiles": "N#[O+]",
+          "positive_count": 8,
+          "row_count": 11
+        },
+        {
+          "canonical_smiles": "[CH2-][CH]N",
+          "positive_count": 8,
+          "row_count": 9
+        },
+        {
+          "canonical_smiles": "C",
+          "positive_count": 2,
+          "row_count": 8
+        },
+        {
+          "canonical_smiles": "C=O",
+          "positive_count": 2,
+          "row_count": 7
+        },
+        {
+          "canonical_smiles": "[N-]=N",
+          "positive_count": 5,
+          "row_count": 7
+        },
+        {
+          "canonical_smiles": "CC",
+          "positive_count": 1,
+          "row_count": 6
+        },
+        {
+          "canonical_smiles": "NC#[O+]",
+          "positive_count": 4,
+          "row_count": 6
+        },
+        {
+          "canonical_smiles": "N=O",
+          "positive_count": 3,
+          "row_count": 5
+        },
+        {
+          "canonical_smiles": "NCCl",
+          "positive_count": 3,
+          "row_count": 5
+        },
+        {
+          "canonical_smiles": "NF",
+          "positive_count": 3,
+          "row_count": 5
+        },
+        {
+          "canonical_smiles": "N[CH]O",
+          "positive_count": 4,
+          "row_count": 5
+        },
+        {
+          "canonical_smiles": "[NH-][CH]N",
+          "positive_count": 3,
+          "row_count": 5
+        },
+        {
+          "canonical_smiles": "CC#N",
+          "positive_count": 2,
+          "row_count": 4
+        }
+      ],
+      "rows_in_label_disagreement_groups": 365,
+      "rows_in_multirow_canonical_groups": 510,
+      "unique_canonical_molecules": 1949
+    },
+    "reviewer_retrained_ensemble_sep_padded_label": {
+      "canonical_molecules_with_label_disagreement": 41,
+      "canonical_molecules_with_multiple_generated_rows": 109,
+      "example_disagreements": [
+        {
+          "canonical_smiles": "N[CH]F",
+          "positive_count": 61,
+          "row_count": 65
+        },
+        {
+          "canonical_smiles": "N[CH]Cl",
+          "positive_count": 31,
+          "row_count": 39
+        },
+        {
+          "canonical_smiles": "[CH]N",
+          "positive_count": 31,
+          "row_count": 39
+        },
+        {
+          "canonical_smiles": "C#N",
+          "positive_count": 20,
+          "row_count": 34
+        },
+        {
+          "canonical_smiles": "[HH]",
+          "positive_count": 6,
+          "row_count": 14
+        },
+        {
+          "canonical_smiles": "NC=O",
+          "positive_count": 8,
+          "row_count": 13
+        },
+        {
+          "canonical_smiles": "N",
+          "positive_count": 3,
+          "row_count": 12
+        },
+        {
+          "canonical_smiles": "N#[O+]",
+          "positive_count": 8,
+          "row_count": 11
+        },
+        {
+          "canonical_smiles": "C",
+          "positive_count": 2,
+          "row_count": 8
+        },
+        {
+          "canonical_smiles": "C=O",
+          "positive_count": 2,
+          "row_count": 7
+        },
+        {
+          "canonical_smiles": "[N-]=N",
+          "positive_count": 5,
+          "row_count": 7
+        },
+        {
+          "canonical_smiles": "CC",
+          "positive_count": 1,
+          "row_count": 6
+        },
+        {
+          "canonical_smiles": "NC#[O+]",
+          "positive_count": 4,
+          "row_count": 6
+        },
+        {
+          "canonical_smiles": "N=O",
+          "positive_count": 4,
+          "row_count": 5
+        },
+        {
+          "canonical_smiles": "NF",
+          "positive_count": 4,
+          "row_count": 5
+        },
+        {
+          "canonical_smiles": "N[CH]O",
+          "positive_count": 4,
+          "row_count": 5
+        },
+        {
+          "canonical_smiles": "[C-]#N",
+          "positive_count": 1,
+          "row_count": 5
+        },
+        {
+          "canonical_smiles": "[NH-][CH]N",
+          "positive_count": 4,
+          "row_count": 5
+        },
+        {
+          "canonical_smiles": "C[NH-]",
+          "positive_count": 3,
+          "row_count": 4
+        },
+        {
+          "canonical_smiles": "N=[NH2+]",
+          "positive_count": 3,
+          "row_count": 4
+        }
+      ],
+      "rows_in_label_disagreement_groups": 346,
+      "rows_in_multirow_canonical_groups": 510,
+      "unique_canonical_molecules": 1949
+    }
+  },
+  "checkpoint_identity": {
+    "important_model_difference": "The reviewer retrain froze the v1 backbone but initialized and trained new classification heads. Its AUROC/AUPRC do not evaluate the historical deployed v1 head used here.",
+    "same_v1_checkpoint_file_used_as_reviewer_retrain_backbone": true,
+    "saved_probability_max_abs_difference": 8.493661880493164e-07
+  },
+  "definitions": {
+    "classifier_threshold": 0.5,
+    "rdkit_general_amide": "rdMolDescriptors.CalcNumAmideBonds(mol) > 0",
+    "runner_smarts": "[NX3][CX3](=O)[#6]",
+    "sep_padded_input": "All token positions strictly after the first [SEP] are replaced by the tokenizer PAD id before clean t=0 scoring."
+  },
+  "high_confidence_sep_padded_positive_without_general_amide_examples": [
+    {
+      "canonical_smiles": "CC",
+      "condition": "wider",
+      "first_sep_index": 366,
+      "molecular_weight": 30.07,
+      "nonpad_tokens_after_first_sep": 1,
+      "original_probability": 1.0,
+      "reviewer_retrained_ensemble_probability": 0.9999999085080321,
+      "sep_padded_probability": 1.0,
+      "strain": "BAA-3170"
+    },
+    {
+      "canonical_smiles": "[CH]N",
+      "condition": "later",
+      "first_sep_index": 366,
+      "molecular_weight": 29.041999999999998,
+      "nonpad_tokens_after_first_sep": 1,
+      "original_probability": 1.0,
+      "reviewer_retrained_ensemble_probability": 0.25843882154585107,
+      "sep_padded_probability": 1.0,
+      "strain": "BAA-3170"
+    },
+    {
+      "canonical_smiles": "NC=NCCC=[S-]C=O",
+      "condition": "earlier",
+      "first_sep_index": 365,
+      "molecular_weight": 145.207,
+      "nonpad_tokens_after_first_sep": 2,
+      "original_probability": 0.9999997615814209,
+      "reviewer_retrained_ensemble_probability": 0.9999996004611786,
+      "sep_padded_probability": 0.9999998807907104,
+      "strain": "BAA-3170"
+    },
+    {
+      "canonical_smiles": "NC=NCCC=[S-]C=O",
+      "condition": "earlier",
+      "first_sep_index": 365,
+      "molecular_weight": 145.207,
+      "nonpad_tokens_after_first_sep": 2,
+      "original_probability": 0.9999997615814209,
+      "reviewer_retrained_ensemble_probability": 0.9999996004611786,
+      "sep_padded_probability": 0.9999998807907104,
+      "strain": "BAA-3170"
+    },
+    {
+      "canonical_smiles": "O=[Ti+2]",
+      "condition": "later",
+      "first_sep_index": 367,
+      "molecular_weight": 63.866,
+      "nonpad_tokens_after_first_sep": 0,
+      "original_probability": 0.9999998807907104,
+      "reviewer_retrained_ensemble_probability": 0.6831850296411047,
+      "sep_padded_probability": 0.9999998807907104,
+      "strain": "BAA-3170"
+    },
+    {
+      "canonical_smiles": "N[CH]F",
+      "condition": "later",
+      "first_sep_index": 366,
+      "molecular_weight": 48.04,
+      "nonpad_tokens_after_first_sep": 1,
+      "original_probability": 0.9999996423721313,
+      "reviewer_retrained_ensemble_probability": 0.9999989306187713,
+      "sep_padded_probability": 0.9999997615814209,
+      "strain": "BAA-3170"
+    },
+    {
+      "canonical_smiles": "[CH]N",
+      "condition": "earlier",
+      "first_sep_index": 362,
+      "molecular_weight": 29.041999999999998,
+      "nonpad_tokens_after_first_sep": 5,
+      "original_probability": 0.9999996423721313,
+      "reviewer_retrained_ensemble_probability": 0.9999993633420271,
+      "sep_padded_probability": 0.9999997615814209,
+      "strain": "BAA-3170"
+    },
+    {
+      "canonical_smiles": "C[Cl+3]C=[C]C[O-]",
+      "condition": "no_peptide_correction",
+      "first_sep_index": 366,
+      "molecular_weight": 105.544,
+      "nonpad_tokens_after_first_sep": 1,
+      "original_probability": 0.9999996423721313,
+      "reviewer_retrained_ensemble_probability": 0.9999989680310306,
+      "sep_padded_probability": 0.9999996423721313,
+      "strain": "BAA-3170"
+    },
+    {
+      "canonical_smiles": "N#Cc1c[nH]cn1",
+      "condition": "later",
+      "first_sep_index": 231,
+      "molecular_weight": 93.08899999999998,
+      "nonpad_tokens_after_first_sep": 0,
+      "original_probability": 0.9999996423721313,
+      "reviewer_retrained_ensemble_probability": 0.9999985575888619,
+      "sep_padded_probability": 0.9999996423721313,
+      "strain": "BAA-3197"
+    },
+    {
+      "canonical_smiles": "[8BH2][CH]ONCC[PoH2][Zr+2]=CC[C][C-]N",
+      "condition": "current",
+      "first_sep_index": 360,
+      "molecular_weight": 451.45860720000013,
+      "nonpad_tokens_after_first_sep": 7,
+      "original_probability": 0.9999992847442627,
+      "reviewer_retrained_ensemble_probability": 0.9999988251180371,
+      "sep_padded_probability": 0.9999996423721313,
+      "strain": "BAA-3170"
+    },
+    {
+      "canonical_smiles": "[CH2-][B-][C-]N",
+      "condition": "wider",
+      "first_sep_index": 367,
+      "molecular_weight": 52.873,
+      "nonpad_tokens_after_first_sep": 0,
+      "original_probability": 0.9999996423721313,
+      "reviewer_retrained_ensemble_probability": 0.9999987469737763,
+      "sep_padded_probability": 0.9999996423721313,
+      "strain": "BAA-3170"
+    },
+    {
+      "canonical_smiles": "[N+]=CN",
+      "condition": "current",
+      "first_sep_index": 367,
+      "molecular_weight": 43.049,
+      "nonpad_tokens_after_first_sep": 0,
+      "original_probability": 0.9999996423721313,
+      "reviewer_retrained_ensemble_probability": 0.9999985493054468,
+      "sep_padded_probability": 0.9999996423721313,
+      "strain": "BAA-3170"
+    },
+    {
+      "canonical_smiles": "N#[O+]",
+      "condition": "current",
+      "first_sep_index": 366,
+      "molecular_weight": 30.006,
+      "nonpad_tokens_after_first_sep": 1,
+      "original_probability": 0.9999995231628418,
+      "reviewer_retrained_ensemble_probability": 0.9999985740555456,
+      "sep_padded_probability": 0.9999995231628418,
+      "strain": "BAA-3170"
+    },
+    {
+      "canonical_smiles": "NCCCC[C@@H](N)C[ReH4]C=O",
+      "condition": "current",
+      "first_sep_index": 359,
+      "molecular_weight": 334.45700000000005,
+      "nonpad_tokens_after_first_sep": 8,
+      "original_probability": 0.9999992847442627,
+      "reviewer_retrained_ensemble_probability": 0.9999981784879256,
+      "sep_padded_probability": 0.9999995231628418,
+      "strain": "BAA-3170"
+    },
+    {
+      "canonical_smiles": "N[CH]F",
+      "condition": "current",
+      "first_sep_index": 367,
+      "molecular_weight": 48.04,
+      "nonpad_tokens_after_first_sep": 0,
+      "original_probability": 0.9999995231628418,
+      "reviewer_retrained_ensemble_probability": 0.9999986692113259,
+      "sep_padded_probability": 0.9999995231628418,
+      "strain": "BAA-3170"
+    },
+    {
+      "canonical_smiles": "C1=CC1",
+      "condition": "later",
+      "first_sep_index": 366,
+      "molecular_weight": 40.065000000000005,
+      "nonpad_tokens_after_first_sep": 1,
+      "original_probability": 0.9999992847442627,
+      "reviewer_retrained_ensemble_probability": 0.9999987899208417,
+      "sep_padded_probability": 0.9999994039535522,
+      "strain": "BAA-3170"
+    },
+    {
+      "canonical_smiles": "C=O",
+      "condition": "narrower",
+      "first_sep_index": 366,
+      "molecular_weight": 30.026,
+      "nonpad_tokens_after_first_sep": 1,
+      "original_probability": 0.9999994039535522,
+      "reviewer_retrained_ensemble_probability": 0.9999994805111051,
+      "sep_padded_probability": 0.9999994039535522,
+      "strain": "BAA-3170"
+    },
+    {
+      "canonical_smiles": "C[NH2+]N[CH]N",
+      "condition": "current",
+      "first_sep_index": 367,
+      "molecular_weight": 75.115,
+      "nonpad_tokens_after_first_sep": 0,
+      "original_probability": 0.9999994039535522,
+      "reviewer_retrained_ensemble_probability": 0.9999980503488377,
+      "sep_padded_probability": 0.9999994039535522,
+      "strain": "BAA-3170"
+    },
+    {
+      "canonical_smiles": "C[NH2+]N[CH]N",
+      "condition": "no_peptide_correction",
+      "first_sep_index": 367,
+      "molecular_weight": 75.115,
+      "nonpad_tokens_after_first_sep": 0,
+      "original_probability": 0.9999994039535522,
+      "reviewer_retrained_ensemble_probability": 0.9999980503488377,
+      "sep_padded_probability": 0.9999994039535522,
+      "strain": "BAA-3170"
+    },
+    {
+      "canonical_smiles": "N[CH]Cl",
+      "condition": "narrower",
+      "first_sep_index": 367,
+      "molecular_weight": 64.495,
+      "nonpad_tokens_after_first_sep": 0,
+      "original_probability": 0.9999994039535522,
+      "reviewer_retrained_ensemble_probability": 0.9999995058448384,
+      "sep_padded_probability": 0.9999994039535522,
+      "strain": "BAA-3170"
+    }
+  ],
+  "inputs": {
+    "evaluated_attempts": {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/analysis/evaluated_attempts.csv",
+      "sha256": "bd847bb5081a8851c0e87b44922a6bae1db25cabb6c6dfdec51ad3b685f05d8f",
+      "size": 834255
+    },
+    "historical_v1_checkpoint": {
+      "path": "/data2/tianang/projects/mdlm/cls-guide-pad-no-mask-checkpoints/epoch-epoch=1-step-step=134000-train_loss-train_loss=0.008.ckpt",
+      "sha256": "40f638ca5668f20a641a538035015b1741ab69cded300cba27f7148cc291945b",
+      "size": 393226092
+    },
+    "reviewer_retrain_backbone_checkpoint_sha256_values": [
+      "40f638ca5668f20a641a538035015b1741ab69cded300cba27f7148cc291945b"
+    ],
+    "reviewer_retrained_head_names": [
+      "seed_0",
+      "seed_2"
+    ]
+  },
+  "interpretation_boundaries": [
+    "The runner SMARTS is narrower than RDKit's general amide descriptor, so its negative result alone is not definitive.",
+    "Even the general amide test is only a necessary-like QC for ordinary multi-residue peptides, not a sufficient peptide definition and not a biological ground truth.",
+    "Classifier-positive must remain an operational model label until generated candidates are evaluated with an independent structure-based peptide criterion."
+  ],
+  "purpose": "Audit checkpoint identity, post-SEP token leakage, and amide-bond agreement; not a new peptide identity definition.",
+  "schema_version": 1
+}

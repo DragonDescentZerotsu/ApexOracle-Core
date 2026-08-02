@@ -1,0 +1,76 @@
+{
+  "definitions": {
+    "allowed_elements": [
+      "B",
+      "Br",
+      "C",
+      "Cl",
+      "F",
+      "H",
+      "I",
+      "N",
+      "O",
+      "P",
+      "S",
+      "Se"
+    ],
+    "classifier_support": "Historical v1 score >=0.5 after replacing all token positions strictly after the first [SEP] with PAD.",
+    "general_amide_minimum": 1,
+    "manual_review_metals": [
+      "Ca",
+      "Co",
+      "Cu",
+      "Fe",
+      "K",
+      "Li",
+      "Mg",
+      "Mn",
+      "Mo",
+      "Na",
+      "Ni",
+      "Zn"
+    ],
+    "radicals_allowed": false,
+    "residue_pattern": "[N;X3,X4+]-[C;X4]-[C;X3](=O)",
+    "residue_pattern_minimum": 2,
+    "single_component": true
+  },
+  "inputs": {
+    "audit_rows": {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/analysis/peptide_structure_audit/audited_valid_attempts.csv",
+      "sha256": "75b4c79d2c6e51d2f0f133cda6c0f401d5772bd7be2afc6265deaf4a4928707d"
+    },
+    "summary": {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/analysis/summary.json",
+      "sha256": "4a8597e64197044b330b391c78308d9fa8a3ca6c18fb52aa56429e0c3a9096ae"
+    }
+  },
+  "outputs": {
+    "remasking_structure_qualified_peptides.pdf": {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/figures/remasking_structure_qualified_peptides.pdf",
+      "sha256": "813dad3f7190c1b1a75cc79aaf58a0355ed2814da603f47830e53cf05769026f",
+      "size": 32683
+    },
+    "remasking_structure_qualified_peptides.png": {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/figures/remasking_structure_qualified_peptides.png",
+      "sha256": "70f6a04fd44c951156c7e5760765f8c62786cdc46c6744b3fedc42ad228d4815",
+      "size": 301494
+    },
+    "remasking_structure_qualified_peptides.svg": {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/figures/remasking_structure_qualified_peptides.svg",
+      "sha256": "21039570c0ec4cc4ecc105af51e02d60f5a5369829563d8846b4213f15fd25b1",
+      "size": 105893
+    },
+    "remasking_structure_qualified_peptides_plotted_data.csv": {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/figures/remasking_structure_qualified_peptides_plotted_data.csv",
+      "sha256": "cf25e894886fed7b322e86c3927e0a60d542ed3647d56b16818e6f8d5b9f1ae8",
+      "size": 3591
+    }
+  },
+  "schema_version": 1,
+  "script": {
+    "path": "/data2/tianang/projects/Synergy/scripts/audit/plot_remasking_structure_qualified_peptides.py",
+    "sha256": "7227518e04818f3f50e6f2242a7ec4cc08cd5aa253bf35a0893652d36d7e5e97"
+  },
+  "status": "Preliminary narrow structural screen; not yet validated as a general peptide ground-truth definition."
+}

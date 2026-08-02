@@ -1,0 +1,60 @@
+{
+  "figure_kind": "descriptive_reviewer_analysis_panel_b_violin",
+  "source": {
+    "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/analysis/summary.json",
+    "sha256": "4a8597e64197044b330b391c78308d9fa8a3ca6c18fb52aa56429e0c3a9096ae"
+  },
+  "script": {
+    "path": "/data2/tianang/projects/Synergy/scripts/audit/plot_remasking_schedule_reviewer.py",
+    "sha256": "a82d7101c99e7dac58f95a96bc2bbc8e3d447ead679eeccba62b64190260a196"
+  },
+  "outputs": [
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/figures/remasking_schedule_reviewer_violin.pdf",
+      "size": 58485,
+      "sha256": "92da710a7f1404b794324097a53a1d1a8304b0e248ffb1609f5117acf832d728"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/figures/remasking_schedule_reviewer_violin.svg",
+      "size": 250012,
+      "sha256": "afc0db55e869c1e1197ac54719db1b6f2df58c8e07d941aa72c619cede854678"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/figures/remasking_schedule_reviewer_violin.png",
+      "size": 694725,
+      "sha256": "3acbeaa02d11396b4afa19bf809df117c1a022c925b2de296ca16c231c021796"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/figures/remasking_schedule_reviewer_violin_data.csv",
+      "size": 303060,
+      "sha256": "a7e05efe8d019fe8098aadd4e4f4fbac2388715989afc910b78f88cb59186b27"
+    }
+  ],
+  "definitions": {
+    "peptide": "v1 peptide classifier clean-input probability >= 0.5",
+    "valid_peptide_yield_denominator": "all raw attempted generations",
+    "composition_denominator": "RDKit-valid generated candidates",
+    "predicted_mic": "clean MIC reporting model; micromolar; not wet-lab MIC",
+    "panel_a_error_bars": "sample standard deviation across 3 seed-level rates, each pooling 2 strains and 200 attempts",
+    "panel_c_tests": "two-sided exact paired sign-flip tests across 6 matched strain-by-seed tasks; no multiple-testing correction",
+    "panel_b_violin": "kernel density of all existing finite predicted MIC values among RDKit-valid candidates; rendered on log10 scale"
+  },
+  "statistics": {
+    "panel_a_seed_sd_percent": {
+      "earlier": 0.5,
+      "current": 1.3228756555322954,
+      "later": 5.299371031861549,
+      "narrower": 3.0,
+      "wider": 7.365459931328117
+    },
+    "panel_c_exact_pvalues": {
+      "classifier_positive": 1.0,
+      "rdkit_valid": 0.1875,
+      "valid_peptide_yield": 0.59375
+    }
+  },
+  "evaluated_attempts_source": {
+    "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/analysis/evaluated_attempts.csv",
+    "sha256": "bd847bb5081a8851c0e87b44922a6bae1db25cabb6c6dfdec51ad3b685f05d8f"
+  }
+}

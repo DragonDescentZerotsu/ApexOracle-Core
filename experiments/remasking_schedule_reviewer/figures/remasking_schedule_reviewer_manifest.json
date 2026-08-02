@@ -1,0 +1,55 @@
+{
+  "figure_kind": "descriptive_reviewer_analysis_panel_b_bar",
+  "source": {
+    "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/analysis/summary.json",
+    "sha256": "4a8597e64197044b330b391c78308d9fa8a3ca6c18fb52aa56429e0c3a9096ae"
+  },
+  "script": {
+    "path": "/data2/tianang/projects/Synergy/scripts/audit/plot_remasking_schedule_reviewer.py",
+    "sha256": "a82d7101c99e7dac58f95a96bc2bbc8e3d447ead679eeccba62b64190260a196"
+  },
+  "outputs": [
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/figures/remasking_schedule_reviewer.pdf",
+      "size": 37756,
+      "sha256": "9322a4da14238f6c4bff4b640d0d13d66d31ab070e7cadcd0460240dffc7f8d6"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/figures/remasking_schedule_reviewer.svg",
+      "size": 190724,
+      "sha256": "0c9d1021eafe278df5965beac18609bb9aee0ed39bb45bff38f4f8eaec2c3e1e"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/figures/remasking_schedule_reviewer.png",
+      "size": 586347,
+      "sha256": "fda4f0ab25107acdc01786795c29559ba8aa3d1421c49db6a09a6c0f530feafc"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/figures/remasking_schedule_reviewer_data.csv",
+      "size": 4415,
+      "sha256": "d0ce6ccb08b75ce88ef2e1a3e895b7a0133d1f91b6ef4b81769515b594df5607"
+    }
+  ],
+  "definitions": {
+    "peptide": "v1 peptide classifier clean-input probability >= 0.5",
+    "valid_peptide_yield_denominator": "all raw attempted generations",
+    "composition_denominator": "RDKit-valid generated candidates",
+    "predicted_mic": "clean MIC reporting model; micromolar; not wet-lab MIC",
+    "panel_a_error_bars": "sample standard deviation across 3 seed-level rates, each pooling 2 strains and 200 attempts",
+    "panel_c_tests": "two-sided exact paired sign-flip tests across 6 matched strain-by-seed tasks; no multiple-testing correction"
+  },
+  "statistics": {
+    "panel_a_seed_sd_percent": {
+      "earlier": 0.5,
+      "current": 1.3228756555322954,
+      "later": 5.299371031861549,
+      "narrower": 3.0,
+      "wider": 7.365459931328117
+    },
+    "panel_c_exact_pvalues": {
+      "classifier_positive": 1.0,
+      "rdkit_valid": 0.1875,
+      "valid_peptide_yield": 0.59375
+    }
+  }
+}

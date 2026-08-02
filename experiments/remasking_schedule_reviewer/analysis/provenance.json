@@ -1,0 +1,763 @@
+{
+  "arguments": {
+    "allow_incomplete": false,
+    "classifier_batch_size": 16,
+    "clean_mic_checkpoint": "/data2/tianang/projects/Synergy/Checkpoints/genome_text_learnable_emb/guidance_regressor_non_pad_clean/noise_guidance_best_R2_all_peptide_epoch_13.pth",
+    "mdlm_root": "/data2/tianang/projects/mdlm",
+    "mic_batch_size": 8,
+    "output_dir": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/analysis",
+    "peptide_classifier_checkpoint": "/data2/tianang/projects/mdlm/cls-guide-pad-no-mask-checkpoints/epoch-epoch=1-step-step=134000-train_loss-train_loss=0.008.ckpt",
+    "runs_root": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs",
+    "synergy_root": "/data2/tianang/projects/Synergy",
+    "task_manifest": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/task_manifest.json"
+  },
+  "clean_mic_checkpoint": {
+    "path": "/data2/tianang/projects/Synergy/Checkpoints/genome_text_learnable_emb/guidance_regressor_non_pad_clean/noise_guidance_best_R2_all_peptide_epoch_13.pth",
+    "sha256": "c0d7c2be49ef179a25a19dcd9c54c592c282b6961e51aff60e95fabc13786802",
+    "size": 9168011488
+  },
+  "created_unix": 1785297807.8735902,
+  "gpu_name": "NVIDIA H100 PCIe",
+  "host": "sn4622119311",
+  "input_files": [
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/earlier__baa-3170__seed20260728/batches/batch_00000.jsonl",
+      "sha256": "55bd0685c140dfc7dc459938f737defa044de9f2191c3963ad2f9bafc9d6aa41",
+      "size": 144679
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/earlier__baa-3170__seed20260728/batches/batch_00001.jsonl",
+      "sha256": "b8b33b23bfe510aef6511dd0b12faef1d1e24b2ee4bb55d610edb074878352fe",
+      "size": 131729
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/earlier__baa-3170__seed20260728/batches/batch_00002.jsonl",
+      "sha256": "c1e2113de052fba6624fbaef07b83aac7281a4f91c1f8aa658242cf862d7b620",
+      "size": 134376
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/earlier__baa-3170__seed20260728/batches/batch_00003.jsonl",
+      "sha256": "8b3e84e39bd9c5f10cd6715c9d9cbaec4042beef4ad69674770b46c824ec7e22",
+      "size": 148063
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/earlier__baa-3170__seed20260729/batches/batch_00000.jsonl",
+      "sha256": "d5f2259d5bca1687ae6bde3885c9acba82c1cd24ffeff39ed60c09b5d69375b2",
+      "size": 135743
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/earlier__baa-3170__seed20260729/batches/batch_00001.jsonl",
+      "sha256": "d16d56a8f5640e6e70be4f6c544c68514b92e68ac85ab4b1d513611bc811437a",
+      "size": 135151
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/earlier__baa-3170__seed20260729/batches/batch_00002.jsonl",
+      "sha256": "dca09a0d2a2820723fb7944c28a64425ab5be4559ab43b83f510ec10597f455d",
+      "size": 127807
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/earlier__baa-3170__seed20260729/batches/batch_00003.jsonl",
+      "sha256": "f68261746e17328854ff8e82227b2e25fcb4bd0f3d61e22b2d4936cc6ff7f258",
+      "size": 134944
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/earlier__baa-3170__seed20260730/batches/batch_00000.jsonl",
+      "sha256": "409051c78594db1c2baafcd7db0bf5a78fec79178b67e35e47eec6797fc4e4cf",
+      "size": 133071
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/earlier__baa-3170__seed20260730/batches/batch_00001.jsonl",
+      "sha256": "2cb610c1b8e2744839271466078a1052bdb15dcfd150c6a893e7f283b71888d9",
+      "size": 137765
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/earlier__baa-3170__seed20260730/batches/batch_00002.jsonl",
+      "sha256": "5be320dafc581f2c8871727e74ebd48326c22c29cca68ab422ba66afb0ac609e",
+      "size": 142556
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/earlier__baa-3170__seed20260730/batches/batch_00003.jsonl",
+      "sha256": "41caf6c4afb6fdb878ed46bbc1a890b5bb66147f575bb0ac7d93364372d29ae9",
+      "size": 138240
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/earlier__baa-3197__seed20260728/batches/batch_00000.jsonl",
+      "sha256": "52aef6f756256d8d50168e542bb65d98d1c4139689f1dbe9295c1d67261bc39a",
+      "size": 111973
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/earlier__baa-3197__seed20260728/batches/batch_00001.jsonl",
+      "sha256": "dc568ecf543d6ca06a12339a0aa31b72b2c524314b70091c7045c8045505ead2",
+      "size": 108126
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/earlier__baa-3197__seed20260728/batches/batch_00002.jsonl",
+      "sha256": "3ceaf3017377c387f2190c5851f1ebb0ed4b669cca15b017e8667c563abd06e8",
+      "size": 110939
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/earlier__baa-3197__seed20260728/batches/batch_00003.jsonl",
+      "sha256": "c815d5e0a93bf72ab68262ffee0c1ad4613cd3d0936cb04d35f43c97128e2741",
+      "size": 110432
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/earlier__baa-3197__seed20260729/batches/batch_00000.jsonl",
+      "sha256": "623615e735ca3ee83b09c5e36e7eaf449f1bbb8919f84dbe94918f1a4de4b82f",
+      "size": 109950
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/earlier__baa-3197__seed20260729/batches/batch_00001.jsonl",
+      "sha256": "235fbd72e0dddee581379c4c592bb69cf0c0ef88ec76ebee8c4bd25f11d32dac",
+      "size": 111618
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/earlier__baa-3197__seed20260729/batches/batch_00002.jsonl",
+      "sha256": "4fed56b8d09816d0324b67448e2af2e571cf565534b6f4d73dafcdca833dc770",
+      "size": 109979
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/earlier__baa-3197__seed20260729/batches/batch_00003.jsonl",
+      "sha256": "93920e6774667aac0d055b729bb87d2da7632a5f997bed40e5ee2c8f2a4680ad",
+      "size": 111680
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/earlier__baa-3197__seed20260730/batches/batch_00000.jsonl",
+      "sha256": "49e5d35c73c90041375adeb35e0df5248bb63ffba002435c00d60023149f9001",
+      "size": 111446
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/earlier__baa-3197__seed20260730/batches/batch_00001.jsonl",
+      "sha256": "d223ccb9dfb484b4a50357ae39c5830f696bf8ee4a3434ca2e5d5122f301e62f",
+      "size": 112987
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/earlier__baa-3197__seed20260730/batches/batch_00002.jsonl",
+      "sha256": "03732040d3cca9dec44f31308ad80b54b25bcbc3264ed2bad275f5a8a8c2e2a8",
+      "size": 110335
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/earlier__baa-3197__seed20260730/batches/batch_00003.jsonl",
+      "sha256": "4f3cff7ff9461bd0aa393f6e14e79db2cc6a3001845667597c5f0abcd8efb192",
+      "size": 114564
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/current__baa-3170__seed20260728/batches/batch_00000.jsonl",
+      "sha256": "78b3bb20aefaef2b839a6048a06a0b107ade51f13cd033cdf23ea4935dedd13c",
+      "size": 143270
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/current__baa-3170__seed20260728/batches/batch_00001.jsonl",
+      "sha256": "1c453ee489638dca64d0f7a0bff4278a5418a676d75ab2d87575eac64dc5cfb1",
+      "size": 150070
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/current__baa-3170__seed20260728/batches/batch_00002.jsonl",
+      "sha256": "f25067e83651fb89d7b12b0a6e4470c1445244761368e53d3c561ea80165bde5",
+      "size": 137189
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/current__baa-3170__seed20260728/batches/batch_00003.jsonl",
+      "sha256": "57e5c0a964cf99911aaff367eb59dca771deac237e9f379815ad9b995e7fea30",
+      "size": 144738
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/current__baa-3170__seed20260729/batches/batch_00000.jsonl",
+      "sha256": "73354c7d630cb450427aa91a5cdea4bb11b3c4d5aea2c9c1cbd5a0ac80827c73",
+      "size": 142293
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/current__baa-3170__seed20260729/batches/batch_00001.jsonl",
+      "sha256": "807bfb737b400e865179e48fefe5e03bcee19d9bfd63d6bcd47acb9d7ac774ee",
+      "size": 145691
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/current__baa-3170__seed20260729/batches/batch_00002.jsonl",
+      "sha256": "e4c9f91943e8e11057d88e17df4e7b3926f34512984dc9c12a13bc158c847416",
+      "size": 146859
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/current__baa-3170__seed20260729/batches/batch_00003.jsonl",
+      "sha256": "a2628940d80e3f6ce459f0218f5ad963c68f9f7e88add9f78f36089401272f1b",
+      "size": 133069
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/current__baa-3170__seed20260730/batches/batch_00000.jsonl",
+      "sha256": "7d50b3584d637f247992e7b6ef951aa58a6e57fbdfc1e9e6b27fcb5e442ae54b",
+      "size": 138642
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/current__baa-3170__seed20260730/batches/batch_00001.jsonl",
+      "sha256": "a40d3fd2ff614371ccd2dada279041e2ea144f9b21b5e3da0bdf47e699b4baba",
+      "size": 127662
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/current__baa-3170__seed20260730/batches/batch_00002.jsonl",
+      "sha256": "a20427b874533174a6c116f3372f61ff6a817b735b709d3f0121f2a458981d45",
+      "size": 141020
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/current__baa-3170__seed20260730/batches/batch_00003.jsonl",
+      "sha256": "21f94f6cfae7e512d60c140b221d3cf340d350d132381ca2b978da9ed7ad970a",
+      "size": 135500
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/current__baa-3197__seed20260728/batches/batch_00000.jsonl",
+      "sha256": "c2dd23e83b4d8efbf97c454ffc6bec01cbd8a90f35e87736f635eb286a251aa7",
+      "size": 113684
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/current__baa-3197__seed20260728/batches/batch_00001.jsonl",
+      "sha256": "a49b436d977777e3a0bff1cc842f7c3d8f52c68cfb0e4d100c215eedacdc90a6",
+      "size": 121241
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/current__baa-3197__seed20260728/batches/batch_00002.jsonl",
+      "sha256": "2599e50b4dc26d93c87bc4e597debb157b126311ed6676e5607e73d9d947cc53",
+      "size": 114882
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/current__baa-3197__seed20260728/batches/batch_00003.jsonl",
+      "sha256": "ac6d28760abee5fbd4ef45882672c5c26dcb7d7ee321001d8a53abd401e21fa3",
+      "size": 119685
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/current__baa-3197__seed20260729/batches/batch_00000.jsonl",
+      "sha256": "e78baeb0c142665045aceccd187f7c3e6c0cb028f7fdcdf9c649921748fc42b5",
+      "size": 109941
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/current__baa-3197__seed20260729/batches/batch_00001.jsonl",
+      "sha256": "16f7f6efa60dba1ae571740f970846e2612b10e64c9fff469491cd7d85edd4f9",
+      "size": 115518
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/current__baa-3197__seed20260729/batches/batch_00002.jsonl",
+      "sha256": "9d2900fad4536fdebefcc52b8c020283605ad07991fc783ce019f9066617b0b6",
+      "size": 110887
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/current__baa-3197__seed20260729/batches/batch_00003.jsonl",
+      "sha256": "d9d1f6901db32c130a246d9ced1031ebe35d928a65dc74ee4770f426946827e9",
+      "size": 115351
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/current__baa-3197__seed20260730/batches/batch_00000.jsonl",
+      "sha256": "7e3ff1a3fef62f8af307701f7a9c79c647d81e0f1baffc748ff29c2be83bd322",
+      "size": 110565
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/current__baa-3197__seed20260730/batches/batch_00001.jsonl",
+      "sha256": "89df3e5b7d4804fdf7bfc8b2c7cd6c3c3835c3e33d7c3e717302cfcb584591c3",
+      "size": 113546
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/current__baa-3197__seed20260730/batches/batch_00002.jsonl",
+      "sha256": "3a8f0fdcccc11623542ef934c52fb89ea6273eca67903d75390394e03f34f360",
+      "size": 118109
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/current__baa-3197__seed20260730/batches/batch_00003.jsonl",
+      "sha256": "5598686df48a248a13160ea5d5e9e989592683b6083cdd0a9d60d577383af58c",
+      "size": 116369
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/later__baa-3170__seed20260728/batches/batch_00000.jsonl",
+      "sha256": "a906dd0ffdcbcab10ba0323d4e5e55442bd129ac28a7bde2920e41a309d11e56",
+      "size": 139265
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/later__baa-3170__seed20260728/batches/batch_00001.jsonl",
+      "sha256": "2dbf20c3b5078507d9f24c7848f7e24d278e4219a320cb9e1808cee1aa0f4b9a",
+      "size": 147760
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/later__baa-3170__seed20260728/batches/batch_00002.jsonl",
+      "sha256": "d784507056d209fcc20cf165b056ceafa4ec5b5ace766efdf4af512d2c89e972",
+      "size": 139793
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/later__baa-3170__seed20260728/batches/batch_00003.jsonl",
+      "sha256": "727184bf448e1fd1aef0ec399edbb911bad3c5fbe9fb978fbc9aa4e522722da1",
+      "size": 139926
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/later__baa-3170__seed20260729/batches/batch_00000.jsonl",
+      "sha256": "89a9e391ea8abf45367c041d3cf7f5ae6a719553684ac98896415442ad097141",
+      "size": 147482
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/later__baa-3170__seed20260729/batches/batch_00001.jsonl",
+      "sha256": "9bf57fcd29ee3323146676db7d164142f7ece83f3e3c3e1e3d11490d47767d94",
+      "size": 141970
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/later__baa-3170__seed20260729/batches/batch_00002.jsonl",
+      "sha256": "b0cffb2d5cae2b71ab9fcfc7b11a1a0ebbb03acaaa0de8a3936bbdd3e9cf7edc",
+      "size": 140018
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/later__baa-3170__seed20260729/batches/batch_00003.jsonl",
+      "sha256": "af5230d7d89d335747c23344f2eb106cccf44ca79ca463c6623ea74112585991",
+      "size": 140593
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/later__baa-3170__seed20260730/batches/batch_00000.jsonl",
+      "sha256": "a0f3273e30b15cef1fc17dcdf7a1be457fb7ae242eec283dee068d58bbc8c759",
+      "size": 141408
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/later__baa-3170__seed20260730/batches/batch_00001.jsonl",
+      "sha256": "f24fde4b8b2cadcee3276cb5a80f7e79f4c4d2a428014b5f853006e399b5cb32",
+      "size": 145637
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/later__baa-3170__seed20260730/batches/batch_00002.jsonl",
+      "sha256": "e56dded10f9cb772f05b9706799cd718b4ec74f64b58e45bdc01f45dbf6f05ca",
+      "size": 141390
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/later__baa-3170__seed20260730/batches/batch_00003.jsonl",
+      "sha256": "c11b3f54e0b75949f64a8e97162cc407070b076b3c1803193a4822d1874a94ca",
+      "size": 143079
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/later__baa-3197__seed20260728/batches/batch_00000.jsonl",
+      "sha256": "944e36c716f8bf8c4fbab4f1258710ce7d4fcfc5581235bde3fef3099e005581",
+      "size": 122151
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/later__baa-3197__seed20260728/batches/batch_00001.jsonl",
+      "sha256": "0220f9303b54868b7371b11c362170b780fe797b0b618421f32b2c2724b58c2e",
+      "size": 123938
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/later__baa-3197__seed20260728/batches/batch_00002.jsonl",
+      "sha256": "fce04525654fcfd43c2d4dd236d11e9dd2f674b3c176f3a4e742d63f23247309",
+      "size": 113058
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/later__baa-3197__seed20260728/batches/batch_00003.jsonl",
+      "sha256": "bcf2e7063709497ed701f6a891433af734b9154478c9fd0ec78161855ef4384c",
+      "size": 118867
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/later__baa-3197__seed20260729/batches/batch_00000.jsonl",
+      "sha256": "e6d7a0cf8b62ae5f19d12c78a5e6f488d69594524100a24fe27b601587a33be4",
+      "size": 126609
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/later__baa-3197__seed20260729/batches/batch_00001.jsonl",
+      "sha256": "26669131bd2409cd718296125708418d743be2d1acf191fbafb1f6e3ccd5810c",
+      "size": 114764
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/later__baa-3197__seed20260729/batches/batch_00002.jsonl",
+      "sha256": "afb21f61408d61fd2a95d716abe639b8e99f5b26ec91f5229be8d4f45885f83a",
+      "size": 118419
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/later__baa-3197__seed20260729/batches/batch_00003.jsonl",
+      "sha256": "17f285ac3e188a48c23f82f4b8871003fa6ed797b304170d30037ac83fc229e5",
+      "size": 117962
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/later__baa-3197__seed20260730/batches/batch_00000.jsonl",
+      "sha256": "a841e919895c9599980406c7c572a2b387f259e7bbeef46570103834e7f0b0f6",
+      "size": 125647
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/later__baa-3197__seed20260730/batches/batch_00001.jsonl",
+      "sha256": "0ebf0a9919c6101f464a2090c387f2d55554c7341148b3ed81b65f74bafc6354",
+      "size": 123231
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/later__baa-3197__seed20260730/batches/batch_00002.jsonl",
+      "sha256": "4b69a299435d412a1b05b3699b3160a5735c99d33489d60fbca184befb1f6e92",
+      "size": 119542
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/later__baa-3197__seed20260730/batches/batch_00003.jsonl",
+      "sha256": "629ad95505587800acd4d23189c56d0c81d8005d4f7f3f14e03011ed59cbc25b",
+      "size": 123830
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/narrower__baa-3170__seed20260728/batches/batch_00000.jsonl",
+      "sha256": "fd48ad192e3940cffbddbf4de3dbe5d834543a5480ed84521daf5feb48c51776",
+      "size": 145130
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/narrower__baa-3170__seed20260728/batches/batch_00001.jsonl",
+      "sha256": "8d3b3cddcc62e8847efcf3fd6aba84f5cabee25a494a93ce58368a37c28d5119",
+      "size": 137048
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/narrower__baa-3170__seed20260728/batches/batch_00002.jsonl",
+      "sha256": "d33f91cd44e722f9a173ba05884b23b862ddfcece2b1bb7e4377696ec7af27ec",
+      "size": 141187
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/narrower__baa-3170__seed20260728/batches/batch_00003.jsonl",
+      "sha256": "16b78fcbac1777fa92a1f2ead2dffddc166091fbbbb8e6334d69552ae38ddaa4",
+      "size": 140120
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/narrower__baa-3170__seed20260729/batches/batch_00000.jsonl",
+      "sha256": "088443d263560e37df89c1513d0299fc980cc8e33de8a59556c1f648aee87176",
+      "size": 137564
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/narrower__baa-3170__seed20260729/batches/batch_00001.jsonl",
+      "sha256": "f268767bde8639365b62e7922766e7c0adf04875bc4d3a28ba60a7dbfd3d9643",
+      "size": 144945
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/narrower__baa-3170__seed20260729/batches/batch_00002.jsonl",
+      "sha256": "90451469cc8ae816a37022bf52c5d7b6f96e4e61c34aba9e148e76ddbbe37757",
+      "size": 141095
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/narrower__baa-3170__seed20260729/batches/batch_00003.jsonl",
+      "sha256": "74ad7b5c29257789c5bb2a1ed8a4d4d84036fbca4efba439dbd0d119796f1881",
+      "size": 129176
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/narrower__baa-3170__seed20260730/batches/batch_00000.jsonl",
+      "sha256": "50077f3704859fd2ff387fa352f2e4f3471e41a6888a5cb0b40b96b31e73a728",
+      "size": 138680
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/narrower__baa-3170__seed20260730/batches/batch_00001.jsonl",
+      "sha256": "b875e74795d9ae698703e8e6d311cffa4f2262f3c54400c6f89fbe15c7d51194",
+      "size": 142020
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/narrower__baa-3170__seed20260730/batches/batch_00002.jsonl",
+      "sha256": "0cfb7be175290ff3d884cbe79e4004003633b8a9f342a570c11be4860c158d9f",
+      "size": 142782
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/narrower__baa-3170__seed20260730/batches/batch_00003.jsonl",
+      "sha256": "d9a9fd5e69f3e5e16d15e5ccfcd68451794e023b8c2837bcde1f7dbf05efee66",
+      "size": 142584
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/narrower__baa-3197__seed20260728/batches/batch_00000.jsonl",
+      "sha256": "57e478faf17a113c6e29c7c076c6fb5d5c506ac10756b701557fd6d67d2d062c",
+      "size": 110686
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/narrower__baa-3197__seed20260728/batches/batch_00001.jsonl",
+      "sha256": "dce596e132af614c7cc6479489ab7fa774e6a1c28cc5d8772995ac2f05ab85c9",
+      "size": 109358
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/narrower__baa-3197__seed20260728/batches/batch_00002.jsonl",
+      "sha256": "e02553c10a913a9311b995da0516b888cd227f129f3668b62b9f238af9c22fa6",
+      "size": 110188
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/narrower__baa-3197__seed20260728/batches/batch_00003.jsonl",
+      "sha256": "b671220ba8dc039d57ec27ebc42627a4b32d75a616d4c0a984473b651a4a0a74",
+      "size": 111040
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/narrower__baa-3197__seed20260729/batches/batch_00000.jsonl",
+      "sha256": "8448df832c92e52323e7c93805fb1e52d4b5b16a078c15b7748da5dd2e8a0d79",
+      "size": 114665
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/narrower__baa-3197__seed20260729/batches/batch_00001.jsonl",
+      "sha256": "5f6663ea6fcd955b1eb5353ae132a3f9dde079311ec3e06d6aa420ef4e618939",
+      "size": 113453
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/narrower__baa-3197__seed20260729/batches/batch_00002.jsonl",
+      "sha256": "fec35a3aae5c126cda1650cd2c5397db391231f2297db1385f12520a5a14bb63",
+      "size": 113425
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/narrower__baa-3197__seed20260729/batches/batch_00003.jsonl",
+      "sha256": "0a2ceb9b0df8b6035474e4b90f0d2ba0c67e635ed1febae6052de29d546124ca",
+      "size": 114948
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/narrower__baa-3197__seed20260730/batches/batch_00000.jsonl",
+      "sha256": "bd2fd784a847b8bd82d5c9e92c05d9a1356b7219d99c26622ba3cd9900d5797c",
+      "size": 111529
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/narrower__baa-3197__seed20260730/batches/batch_00001.jsonl",
+      "sha256": "459ebb8e3a489b43e7d31a78ed41202b3f1cba58b588fc0cbebf44cbcfb18ca4",
+      "size": 107726
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/narrower__baa-3197__seed20260730/batches/batch_00002.jsonl",
+      "sha256": "19d8d26522b0e874d77010937bf263ba7cbc4cebc812c5f8f144503f46b8d033",
+      "size": 110981
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/narrower__baa-3197__seed20260730/batches/batch_00003.jsonl",
+      "sha256": "d90072ea99c5f8b86bc80529a0f19913e36158c0285b7f93b625f75949f98f69",
+      "size": 114645
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/wider__baa-3170__seed20260728/batches/batch_00000.jsonl",
+      "sha256": "7b1dd09cc4bc9815b14f52e24cc9f2c9cad4b3202ec64d5961a200467b82cd3f",
+      "size": 140918
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/wider__baa-3170__seed20260728/batches/batch_00001.jsonl",
+      "sha256": "2a0819253c279b5b4cece9fb98f6899fd5e3879298522b0137a7046e2da91b0d",
+      "size": 145204
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/wider__baa-3170__seed20260728/batches/batch_00002.jsonl",
+      "sha256": "30fcc6e5b69d9486961e5e33bab0c225f0c0c4f4e4f0b6259ae9572c4a1c7be7",
+      "size": 150384
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/wider__baa-3170__seed20260728/batches/batch_00003.jsonl",
+      "sha256": "80424b6aa1713346b7f5c9a480155d439a78ecdbbe0cfb41b3d84e1d08b1bfa7",
+      "size": 147515
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/wider__baa-3170__seed20260729/batches/batch_00000.jsonl",
+      "sha256": "1f0ca1921d76950ba5dbb669a59926082a705bf6f232e4a91b46641f4d755556",
+      "size": 143029
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/wider__baa-3170__seed20260729/batches/batch_00001.jsonl",
+      "sha256": "1565d56a02f46cf9e5a93861bc39cbb20ef64d080033ad1409ce63147521b58c",
+      "size": 137468
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/wider__baa-3170__seed20260729/batches/batch_00002.jsonl",
+      "sha256": "00299c025ca2e84881bcff1d6eac452c63200ea5be469cd1353fc976333726a8",
+      "size": 146343
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/wider__baa-3170__seed20260729/batches/batch_00003.jsonl",
+      "sha256": "e9c63325ddad0036b13e27449125ad0092cc02506dec99f4832aedf8c256fe9a",
+      "size": 144944
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/wider__baa-3170__seed20260730/batches/batch_00000.jsonl",
+      "sha256": "ffaddf09516623c8e2b6db8ab77404dbef3fcb77d845a82e54a52aed3e2363ff",
+      "size": 146389
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/wider__baa-3170__seed20260730/batches/batch_00001.jsonl",
+      "sha256": "734d8a5d6cfe3b90effb67f806b7643fec5ce6457f3cf5de741a2ee8a5fdc2fe",
+      "size": 143264
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/wider__baa-3170__seed20260730/batches/batch_00002.jsonl",
+      "sha256": "dd347c00ca2414e7f5207638261526362a2acb4f7356a4a1cea0ddd0cba6f6f5",
+      "size": 156184
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/wider__baa-3170__seed20260730/batches/batch_00003.jsonl",
+      "sha256": "d089c9580130a3662adce306ead18b5fc1f6862ee1c9c6660d0fca1cf5d35190",
+      "size": 147236
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/wider__baa-3197__seed20260728/batches/batch_00000.jsonl",
+      "sha256": "cbdec4d9a3884d851600140ec9de7fd583bcdf49562f4d6db210bba203ac4ca7",
+      "size": 125711
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/wider__baa-3197__seed20260728/batches/batch_00001.jsonl",
+      "sha256": "28ffa17a6f9b5fbf14ceb640f3123a4309e0d618ddfea0d315b857b0907da3f9",
+      "size": 121441
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/wider__baa-3197__seed20260728/batches/batch_00002.jsonl",
+      "sha256": "5a77536a133d32797aaeb08ab8f406abf367bb21c41ab1931bb2f953b09b0739",
+      "size": 124926
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/wider__baa-3197__seed20260728/batches/batch_00003.jsonl",
+      "sha256": "4ec8c9dcaec5291ab5e35c4ec841493eff54807327a8d5a4184ef9d5502a213e",
+      "size": 126992
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/wider__baa-3197__seed20260729/batches/batch_00000.jsonl",
+      "sha256": "465c91f8d3f441f1bfe47ab8cf280ee40a895b783dd015982eb70f2de12b0aab",
+      "size": 124254
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/wider__baa-3197__seed20260729/batches/batch_00001.jsonl",
+      "sha256": "90570e7d2751fc682b4f782a0a9c5854df2092a157338ded1c8e084c8d02a5db",
+      "size": 128232
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/wider__baa-3197__seed20260729/batches/batch_00002.jsonl",
+      "sha256": "4b2a7d6bc97ed7cc1b204efe2bb66c995eee90da376b79fa94c69c512910a4a1",
+      "size": 117520
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/wider__baa-3197__seed20260729/batches/batch_00003.jsonl",
+      "sha256": "3ab3f9fe337fbf1b13cb23db275307b9e20e977f8c73818369fda16ebe4d5103",
+      "size": 122457
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/wider__baa-3197__seed20260730/batches/batch_00000.jsonl",
+      "sha256": "54d9a98bd89ce98ba2e09463001ab7fe3beae31813eebd50c88fea7b61c988e6",
+      "size": 118533
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/wider__baa-3197__seed20260730/batches/batch_00001.jsonl",
+      "sha256": "f73fa831ebdbb4d4cce8dc89e1fbe84979e2adc7899668e703eb1f42f3c8f0b7",
+      "size": 123838
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/wider__baa-3197__seed20260730/batches/batch_00002.jsonl",
+      "sha256": "68d42c4181766e43a0e2013eb25d78c05d4820c02be3832706433aaa81930241",
+      "size": 121790
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/wider__baa-3197__seed20260730/batches/batch_00003.jsonl",
+      "sha256": "c78c8b420836117e9f94c4a4cf1a69331392fd698f57e26226829d5a0a68a219",
+      "size": 120445
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/no_peptide_correction__baa-3170__seed20260728/batches/batch_00000.jsonl",
+      "sha256": "84b5ac1d4309d867f6d0ce614336c5beb1a26ee43a58e0aad3e57f08fbee1ecf",
+      "size": 135388
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/no_peptide_correction__baa-3170__seed20260728/batches/batch_00001.jsonl",
+      "sha256": "b377088f75749a2717d38cb6a575722617c7d3858f5babf163cbb6b0a29e670d",
+      "size": 147419
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/no_peptide_correction__baa-3170__seed20260728/batches/batch_00002.jsonl",
+      "sha256": "25662c133a59af26517a31dfc1b852798709c6ff01498983f766b56e7a0e1cfd",
+      "size": 140832
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/no_peptide_correction__baa-3170__seed20260728/batches/batch_00003.jsonl",
+      "sha256": "aef527e47abe8595328e268f10677b0334e9c727e2c1795829a553820e731014",
+      "size": 139047
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/no_peptide_correction__baa-3170__seed20260729/batches/batch_00000.jsonl",
+      "sha256": "3342a9d0620f8f8255f856176ef3a2240fce254515faa9719a9a8ae105ba3f40",
+      "size": 141513
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/no_peptide_correction__baa-3170__seed20260729/batches/batch_00001.jsonl",
+      "sha256": "5364a39d044e1c98fab9659cbb76a56b838e41804b40f646d9c83690f78282ff",
+      "size": 140621
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/no_peptide_correction__baa-3170__seed20260729/batches/batch_00002.jsonl",
+      "sha256": "b52545c8227ffd3c9ac4821d4558cece35f30fd9cfa7864b71483043b26daa17",
+      "size": 137099
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/no_peptide_correction__baa-3170__seed20260729/batches/batch_00003.jsonl",
+      "sha256": "7d34323a127e2dcf5b537e0d641788cbde0af963252ae66ed464569c2b4cd821",
+      "size": 135629
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/no_peptide_correction__baa-3170__seed20260730/batches/batch_00000.jsonl",
+      "sha256": "d4e0d3c98a1b38a3f5b0b2f15c2aebf12a2e20c5f61f028846005b038ba79236",
+      "size": 140396
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/no_peptide_correction__baa-3170__seed20260730/batches/batch_00001.jsonl",
+      "sha256": "496d49ca5cc363ad5ec313fded2f77d00dcb1d745a231501869ac0d4f480878e",
+      "size": 147679
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/no_peptide_correction__baa-3170__seed20260730/batches/batch_00002.jsonl",
+      "sha256": "86b299a408c6d529bef2dc8158fee886aa2e86c50bdf271bfa36910f193a55b9",
+      "size": 138777
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/no_peptide_correction__baa-3170__seed20260730/batches/batch_00003.jsonl",
+      "sha256": "8d35bb19053098a7a848b9d0f6c3eaf6743cdf051b14ad6c8b53878aff92f034",
+      "size": 145271
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/no_peptide_correction__baa-3197__seed20260728/batches/batch_00000.jsonl",
+      "sha256": "54a00882e77217c3f43d4e3ba056e8b4ab8937bc2642d4161184c4c6120cc75b",
+      "size": 112183
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/no_peptide_correction__baa-3197__seed20260728/batches/batch_00001.jsonl",
+      "sha256": "94d7546f5b3e2d197ade5cda3cb3ce4265c70f5017227fa4b839e34bc747dca1",
+      "size": 107700
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/no_peptide_correction__baa-3197__seed20260728/batches/batch_00002.jsonl",
+      "sha256": "841821698c4c5b718b2e45b3cbf3a962d59c954fda9296e9f908de243f741a1f",
+      "size": 112354
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/no_peptide_correction__baa-3197__seed20260728/batches/batch_00003.jsonl",
+      "sha256": "2ed2eea4ca363a42baee2fc728be8e62bcb4b5cd41e4ce2a23e3aa45f8f76014",
+      "size": 112724
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/no_peptide_correction__baa-3197__seed20260729/batches/batch_00000.jsonl",
+      "sha256": "aa696f1542fd1d50d70eec46d5a2729d2beb25fd6137b0951b1d3dd5c7ec57e3",
+      "size": 110721
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/no_peptide_correction__baa-3197__seed20260729/batches/batch_00001.jsonl",
+      "sha256": "0f088d034722bfb09c3f76ea94464a2265f32181aa9f7443f8659dfc5cd12707",
+      "size": 107861
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/no_peptide_correction__baa-3197__seed20260729/batches/batch_00002.jsonl",
+      "sha256": "98df89b6aa81f6e0476182df5c3919b4d381809a0857d88b887664a3d38b7cc3",
+      "size": 111397
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/no_peptide_correction__baa-3197__seed20260729/batches/batch_00003.jsonl",
+      "sha256": "4dbbbd2f64bc9954d9a4f73da87ce881c41a798426a738e2f0422e00c10a152a",
+      "size": 113198
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/no_peptide_correction__baa-3197__seed20260730/batches/batch_00000.jsonl",
+      "sha256": "211a0f9fa16c9e585008b32cd0ee70ac37479a9b94b36c594ae0386963cf67ec",
+      "size": 107675
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/no_peptide_correction__baa-3197__seed20260730/batches/batch_00001.jsonl",
+      "sha256": "397d422fbe9b6a80c7e96a956c1294e49dce3be092a069fabbba00dcf39f1264",
+      "size": 110424
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/no_peptide_correction__baa-3197__seed20260730/batches/batch_00002.jsonl",
+      "sha256": "30487129f1ae590298bb2f3c8bcb40dadba2dc6ac7e9211b68301218adf4abc3",
+      "size": 107454
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/runs/no_peptide_correction__baa-3197__seed20260730/batches/batch_00003.jsonl",
+      "sha256": "87db250c3624cbc63ee9509db14a6ce79e5ed9f4d1574881bc7b1506fe3fc4a3",
+      "size": 111031
+    }
+  ],
+  "outputs": {
+    "evaluated_attempts.csv": {
+      "sha256": "bd847bb5081a8851c0e87b44922a6bae1db25cabb6c6dfdec51ad3b685f05d8f",
+      "size": 834255
+    },
+    "summary.json": {
+      "sha256": "4a8597e64197044b330b391c78308d9fa8a3ca6c18fb52aa56429e0c3a9096ae",
+      "size": 61751
+    }
+  },
+  "peptide_classifier_checkpoint": {
+    "path": "/data2/tianang/projects/mdlm/cls-guide-pad-no-mask-checkpoints/epoch-epoch=1-step-step=134000-train_loss-train_loss=0.008.ckpt",
+    "sha256": "40f638ca5668f20a641a538035015b1741ab69cded300cba27f7148cc291945b",
+    "size": 393226092
+  },
+  "row_count": 3600,
+  "schema_version": 1,
+  "task_manifest_sha256": "84463b4dd09b7c6e6e021468fba47dca850bf26eecbab7847767fe424c07b6e7",
+  "torch_version": "2.3.1+cu121"
+}

@@ -1,0 +1,89 @@
+{
+  "approval_date": "2026-07-31",
+  "artifact_status": "canonical_final_reviewer_figure",
+  "canonical_revision": "Panel c uses one three-row dot-and-interval axis for two yields and all-RDKit-valid median predicted MIC, with row-specific units and a 5--25 numerical axis break.",
+  "definitions": {
+    "allowed_elements": [
+      "B",
+      "Br",
+      "C",
+      "Cl",
+      "F",
+      "H",
+      "I",
+      "N",
+      "O",
+      "P",
+      "S",
+      "Se"
+    ],
+    "classifier_support": "Historical v1 score >=0.5 after replacing all token positions strictly after the first [SEP] with PAD.",
+    "general_amide_minimum": 1,
+    "manual_review_metals": [
+      "Ca",
+      "Co",
+      "Cu",
+      "Fe",
+      "K",
+      "Li",
+      "Mg",
+      "Mn",
+      "Mo",
+      "Na",
+      "Ni",
+      "Zn"
+    ],
+    "radicals_allowed": false,
+    "residue_pattern": "[N;X3,X4+]-[C;X4]-[C;X3](=O)",
+    "residue_pattern_minimum": 2,
+    "single_component": true
+  },
+  "inputs": {
+    "audit_rows": {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/analysis/peptide_structure_audit/audited_valid_attempts.csv",
+      "sha256": "75b4c79d2c6e51d2f0f133cda6c0f401d5772bd7be2afc6265deaf4a4928707d"
+    },
+    "evaluated_attempts": {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/analysis/evaluated_attempts.csv",
+      "sha256": "bd847bb5081a8851c0e87b44922a6bae1db25cabb6c6dfdec51ad3b685f05d8f"
+    },
+    "summary": {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/analysis/summary.json",
+      "sha256": "4a8597e64197044b330b391c78308d9fa8a3ca6c18fb52aa56429e0c3a9096ae"
+    }
+  },
+  "layout": "with-context",
+  "outputs": {
+    "remasking_structure_qualified_peptides_with_mic_control.pdf": {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/figures/remasking_structure_qualified_peptides_with_mic_control.pdf",
+      "sha256": "23ce3a58f82b82f1fb1f458efd08152fbf1284f9b2e2f6b97cd2e1030e9bb847",
+      "size": 25676
+    },
+    "remasking_structure_qualified_peptides_with_mic_control.png": {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/figures/remasking_structure_qualified_peptides_with_mic_control.png",
+      "sha256": "c0431d2544f22634349219c8b439b7c34cc713487b4145c4008a76ae0717eb82",
+      "size": 291998
+    },
+    "remasking_structure_qualified_peptides_with_mic_control.svg": {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/figures/remasking_structure_qualified_peptides_with_mic_control.svg",
+      "sha256": "dbbdd779dc690c542bcf136ad0fa89054f5d6a0d5cd8477480ebdfa2f1669b43",
+      "size": 95783
+    },
+    "remasking_structure_qualified_peptides_with_mic_control_caption.md": {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/figures/remasking_structure_qualified_peptides_with_mic_control_caption.md",
+      "sha256": "701656295f267de8994108be8b9063e80921ac2eada46ea29edfed24469aa357",
+      "size": 1173
+    },
+    "remasking_structure_qualified_peptides_with_mic_control_plotted_data.csv": {
+      "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/figures/remasking_structure_qualified_peptides_with_mic_control_plotted_data.csv",
+      "sha256": "294266c807a7841c15cf8dbe22d0b731a757384d0d41f2390c06b4076fc66073",
+      "size": 4889
+    }
+  },
+  "schema_version": 1,
+  "scientific_status": "Preliminary narrow structural screen; not yet validated as a general peptide ground-truth definition.",
+  "script": {
+    "path": "/data2/tianang/projects/Synergy/scripts/audit/plot_remasking_structure_qualified_peptides.py",
+    "sha256": "60458fdf53c6ec74d8d5961ac107bf110364c28c3934ff8423cb9318e1fd872a"
+  }
+}
