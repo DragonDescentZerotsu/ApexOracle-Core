@@ -10,6 +10,7 @@ import yaml
 from apexoracle.data.hierarchical_mic_preparation import (
     HoldoutSplit,
     PreparedHierarchicalMicData,
+    load_fixed_strain_holdout_manifest,
 )
 from apexoracle.training.hierarchical_mic_runner import (
     DEFAULT_CONFIG,
@@ -231,6 +232,46 @@ def test_canonical_entrypoint_does_not_execute_a_root_legacy_driver():
 def test_cli_requires_explicit_legacy_split_acknowledgement():
     with pytest.raises(SystemExit, match="Refusing an ambiguous rerun"):
         main(["--protocol", "strain", "--test-group", "0"])
+
+
+def test_fixed_strain_manifest_loader(tmp_path: Path):
+    manifest = tmp_path / "strain.json"
+    manifest.write_text(
+        """
+{
+  "protocol": "deterministic_legacy_codepath_candidate",
+  "historical_membership_status": "not_fully_recovered",
+  "folds": [
+    {"fold": 1, "test_strain_ids": ["b", "a", "a"]},
+    {"fold": 0, "test_strain_ids": ["c"]}
+  ]
+}
+""".strip()
+        + "\n",
+        encoding="utf-8",
+    )
+    split = load_fixed_strain_holdout_manifest(manifest)
+    assert split.protocol == "strain"
+    assert split.group_names == ("fold 1", "fold 2")
+    assert split.test_groups == (("c",), ("a", "b"))
+
+
+def test_run_holdout_rejects_invalid_ensemble_selection():
+    config = _small_config("strain")
+    with pytest.raises(ValueError, match="Duplicate ensemble"):
+        run_holdout(
+            config,
+            _prepared(),
+            HoldoutSplit(
+                protocol="strain",
+                group_names=("group",),
+                test_groups=(("g-held",),),
+            ),
+            RuntimeFeatures({}, {}, {}, {}, {}),
+            group=0,
+            device=torch.device("cpu"),
+            ensemble_indices=(0, 0),
+        )
 
 
 @pytest.mark.skipif(not torch.cuda.is_available(), reason="requires CUDA autocast")

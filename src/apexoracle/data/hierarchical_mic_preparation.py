@@ -282,6 +282,34 @@ def build_holdout_split(
     raise ValueError(f"Unknown hierarchical holdout protocol: {protocol}")
 
 
+def load_fixed_strain_holdout_manifest(path: Path) -> HoldoutSplit:
+    """Load a frozen strain-wise candidate without rebuilding unordered legacy sets."""
+
+    with path.open("r", encoding="utf-8") as handle:
+        payload = json.load(handle)
+    if payload.get("protocol") != "deterministic_legacy_codepath_candidate":
+        raise ValueError(f"Unexpected fixed strain manifest protocol in {path}")
+    if payload.get("historical_membership_status") != "not_fully_recovered":
+        raise ValueError(f"Unexpected fixed strain manifest provenance in {path}")
+    folds = sorted(payload["folds"], key=lambda row: int(row["fold"]))
+    expected = list(range(len(folds)))
+    observed = [int(row["fold"]) for row in folds]
+    if observed != expected:
+        raise ValueError(
+            f"Fixed strain manifest folds must be contiguous from zero: {observed}"
+        )
+    test_groups = tuple(
+        tuple(sorted(set(map(str, row["test_strain_ids"])))) for row in folds
+    )
+    if any(not group for group in test_groups):
+        raise ValueError(f"Fixed strain manifest contains an empty test group: {path}")
+    return HoldoutSplit(
+        protocol="strain",
+        group_names=tuple(f"fold {fold + 1}" for fold in expected),
+        test_groups=test_groups,
+    )
+
+
 def _filtered_length(records: pd.DataFrame, max_length: int = 512) -> int:
     return int(
         records["SMILES"]

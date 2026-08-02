@@ -20,6 +20,17 @@ REQUIRED_CHECKPOINT_KEYS = {
     "learnable_embedding_weight",
 }
 OPTIONAL_LEGACY_CHECKPOINT_KEYS = {"ChemBERTa_state_dict"}
+INFERENCE_CHECKPOINT_KEYS = {
+    "format",
+    "source_checkpoint",
+    "source_checkpoint_size",
+    "source_checkpoint_sha256",
+    "archived_r2",
+    "re_head_state_dict",
+    "co_cross_attn_genome",
+    "co_cross_attn_text",
+    "learnable_embedding_weight",
+}
 
 
 @dataclass
@@ -179,6 +190,94 @@ def load_legacy_hierarchical_checkpoint(
         ),
         archived_r2=float(checkpoint["R2"]),
     ).to(device)
+    return components, contract
+
+
+def load_hierarchical_inference_checkpoint(
+    path: Path,
+    *,
+    device: torch.device = torch.device("cpu"),
+    num_heads: int = 4,
+    attention_dropout: float = 0.1,
+    head_dropout: float = 0.2,
+    mmap: bool = True,
+) -> tuple[HierarchicalMicCheckpointComponents, dict]:
+    """Load a provenance-bearing inference-only copy of a legacy checkpoint."""
+
+    checkpoint = torch.load(
+        path,
+        map_location="cpu",
+        weights_only=False,
+        mmap=mmap,
+    )
+    missing = INFERENCE_CHECKPOINT_KEYS - set(checkpoint)
+    unexpected = set(checkpoint) - INFERENCE_CHECKPOINT_KEYS
+    if missing or unexpected:
+        raise ValueError(
+            "hierarchical MIC inference checkpoint contract mismatch: "
+            f"missing={sorted(missing)}, unexpected={sorted(unexpected)}"
+        )
+    if checkpoint["format"] != "apexoracle_hierarchical_mic_inference_v1":
+        raise ValueError(f"Unsupported inference checkpoint format: {checkpoint['format']}")
+
+    synthetic = {
+        "R2": checkpoint["archived_r2"],
+        "optimizer_state_dict": {},
+        "re_head_state_dict": checkpoint["re_head_state_dict"],
+        "cls_head_state_dict": checkpoint["re_head_state_dict"],
+        "co_cross_attn_genome": checkpoint["co_cross_attn_genome"],
+        "co_cross_attn_text": checkpoint["co_cross_attn_text"],
+        "learnable_embedding_weight": checkpoint["learnable_embedding_weight"],
+    }
+    contract = inspect_checkpoint_contract(synthetic)
+    genome_attention = FirstTokenAttentionGenome(
+        contract["molecule_dim"],
+        contract["genome_dim"],
+        num_heads,
+        attention_dropout,
+    )
+    text_attention = FirstTokenAttentionGenome(
+        contract["molecule_dim"],
+        contract["text_dim"],
+        num_heads,
+        attention_dropout,
+    )
+    regression_head = RegressionHead(
+        contract["head_input_dim"],
+        contract["hidden_dim_1"],
+        contract["hidden_dim_2"],
+        contract["num_targets"],
+        head_dropout,
+    )
+    classification_head = RegressionHead(
+        contract["head_input_dim"],
+        contract["hidden_dim_1"],
+        contract["hidden_dim_2"],
+        contract["num_targets"],
+        head_dropout,
+    )
+    genome_attention.load_state_dict(checkpoint["co_cross_attn_genome"], strict=True)
+    text_attention.load_state_dict(checkpoint["co_cross_attn_text"], strict=True)
+    regression_head.load_state_dict(checkpoint["re_head_state_dict"], strict=True)
+    classification_head.load_state_dict(checkpoint["re_head_state_dict"], strict=True)
+    components = HierarchicalMicCheckpointComponents(
+        regression_head=regression_head,
+        classification_head=classification_head,
+        genome_attention=genome_attention,
+        text_attention=text_attention,
+        missing_genome_embedding=nn.Parameter(
+            checkpoint["learnable_embedding_weight"].detach().clone()
+        ),
+        archived_r2=float(checkpoint["archived_r2"]),
+    ).to(device)
+    contract["inference_checkpoint_provenance"] = {
+        key: checkpoint[key]
+        for key in (
+            "source_checkpoint",
+            "source_checkpoint_size",
+            "source_checkpoint_sha256",
+        )
+    }
     return components, contract
 
 

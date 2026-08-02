@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "status": "completed",
+  "completed_at": "2026-07-26T23:41:00-04:00",
+  "purpose": "Retrain the original strain-wise hierarchical MIC task on one frozen candidate membership, then compare train-seen and train-unseen exact-peptide test performance.",
+  "scientific_scope": {
+    "split": "PYTHONHASHSEED=0 deterministic legacy-codepath candidate",
+    "historical_claim": "This is a new fixed-split reconstruction, not the unrecovered 2025 membership.",
+    "training_contract": "Unchanged legacy MDLM hierarchical MIC contract: 25 epochs, batch size 80, seven original seeds, four training routes, train-mode held-out evaluation, and highest held-out R2 checkpoint selection.",
+    "analysis": "Deterministic eval-mode replay of the newly trained checkpoints on full, train-seen, and train-unseen exact stored-token peptide cohorts."
+  },
+  "inputs": {
+    "config": "configs/hierarchical_mic/legacy_mdlm.yaml",
+    "strain_manifest": "experiments/hierarchical_mic/strain/legacy_protocol_manifest.json",
+    "strain_manifest_sha256": "e0faa7a90eb531eccfcf8ee16b6f1c433b6f6a30772bfcbbf7acfea8f75a57ad",
+    "runner_sha256": "78285a66dc58d6c2b46874a55b735f90e7ff127f28a08fc78a6ef8e1fb8e9136",
+    "preparation_sha256": "3a1371cabdd0152423b24941a48fc8a9eb6c13857317e1c6807478527d72839e",
+    "inference_checkpoint_preparer_sha256": "d8b8df441fa6aae354cf76818a3a08611fa9936ad6c6f5f4be6b42823b065f76",
+    "deterministic_replay_sha256": "40d4964080f002373f3d52271f679be6b3758f9e6a769e7c936ce7599bb57852",
+    "summarizer_sha256": "0fe2ad8941a83ddfacc0c55e3f88a4786f0171a0e3b09bc8033fb8ab0dd5a242"
+  },
+  "outputs": {
+    "local_checkpoint_root": "/data2/tianang/projects/Synergy/experiments/hierarchical_mic/fixed_strain_retrain/checkpoints",
+    "node001_checkpoint_root": "/local/tianang/Synergy_fixed_strain_retrain/node001/checkpoints",
+    "node002_checkpoint_root": "/local/tianang/Synergy_fixed_strain_retrain/node002/checkpoints",
+    "node001_inference_checkpoint_root": "/local/tianang/Synergy_fixed_strain_retrain/node001/inference_checkpoints",
+    "node002_inference_checkpoint_root": "/local/tianang/Synergy_fixed_strain_retrain/node002/inference_checkpoints",
+    "aborted_shared_attempt_root": "/data1/tianang/Projects/Synergy_release/experiments/hierarchical_mic/fixed_strain_retrain/checkpoints",
+    "prediction_root": "experiments/hierarchical_mic/fixed_strain_retrain/predictions",
+    "analysis_root": "experiments/hierarchical_mic/fixed_strain_retrain/analysis",
+    "metrics_sha256": "0b105da1d72a6360820740af13f0195fece6c2d625bc9cac898773dbe3a9dce4",
+    "cluster_bootstrap_sha256": "6b77d5c818e861fcdc3e2d4abb30681525d758e70c202194f27652ae566aa84a",
+    "analysis_manifest_sha256": "e1b18e0fa4c3a4db08fe318b366eaedee55d7f39ca23e0a81d4281f93784ad39"
+  },
+  "execution_notes": [
+    "The first node attempt wrote checkpoints to shared NFS and was terminated after one to three epochs because concurrent 9 GB checkpoint updates dominated runtime.",
+    "Those partial shared files are retained but excluded from all analysis.",
+    "Node tasks restart from epoch zero with identical seeds and protocol on node-local NVMe; only the output filesystem changed.",
+    "All 21 training tasks completed. Group 1 inference-only checkpoints retain the exact fusion/head states and record source checkpoint size and SHA-256; optimizer and unused classification payloads were removed only for transfer and deterministic replay.",
+    "All 21 checkpoints completed deterministic eval-mode replay. Group 1 and group 2 replay shared node002 GPU 7 with an unrelated running job at the author's direction; no OOM or replay error occurred."
+  ],
+  "result_summary": {
+    "full_test_measurements": 86358,
+    "train_seen_measurements": 60086,
+    "train_seen_fraction": 0.695778040251048,
+    "train_unseen_measurements": 26272,
+    "train_unseen_fraction": 0.304221959748952,
+    "train_unseen_distinct_exact_molecules_pooled": 8259,
+    "train_unseen_low_mic_16um_measurements": 13956,
+    "train_unseen_low_mic_16um_fraction": 0.5312119366626066,
+    "full_r2": 0.46384816349880953,
+    "train_seen_r2": 0.5671772167094156,
+    "train_unseen_r2": 0.09424510399628483,
+    "full_fold_mean_r2": 0.581426130081355,
+    "train_seen_fold_mean_r2": 0.6282611726787963,
+    "train_unseen_fold_mean_r2": 0.10888111577848736,
+    "train_unseen_spearman": 0.4069763767587733,
+    "train_unseen_pearson": 0.41298040018251175,
+    "train_unseen_r2_cluster_bootstrap_95ci": [
+      0.068737948792848,
+      0.11907944847518663
+    ],
+    "interpretation": "Exact-peptide overlap materially improves calibrated R2; the strict train-unseen cohort retains positive R2 and ranking correlation. This is a fixed-split reconstruction, not the unrecovered 2025 membership."
+  },
+  "tasks": [
+    {"group": 0, "ensemble": 0, "owner": "local", "gpu": 0, "queue_position": 1},
+    {"group": 0, "ensemble": 1, "owner": "local", "gpu": 1, "queue_position": 1},
+    {"group": 0, "ensemble": 2, "owner": "local", "gpu": 2, "queue_position": 1},
+    {"group": 0, "ensemble": 3, "owner": "local", "gpu": 3, "queue_position": 1},
+    {"group": 0, "ensemble": 4, "owner": "node001", "gpu": 7, "queue_position": 1},
+    {"group": 0, "ensemble": 5, "owner": "node002", "gpu": 7, "queue_position": 1},
+    {"group": 0, "ensemble": 6, "owner": "local", "gpu": 0, "queue_position": 2},
+    {"group": 1, "ensemble": 0, "owner": "node001", "gpu": 0, "queue_position": 1},
+    {"group": 1, "ensemble": 1, "owner": "node001", "gpu": 1, "queue_position": 1},
+    {"group": 1, "ensemble": 2, "owner": "node001", "gpu": 2, "queue_position": 1},
+    {"group": 1, "ensemble": 3, "owner": "node001", "gpu": 3, "queue_position": 1},
+    {"group": 1, "ensemble": 4, "owner": "node001", "gpu": 4, "queue_position": 1},
+    {"group": 1, "ensemble": 5, "owner": "node001", "gpu": 5, "queue_position": 1},
+    {"group": 1, "ensemble": 6, "owner": "node001", "gpu": 6, "queue_position": 1},
+    {"group": 2, "ensemble": 0, "owner": "node002", "gpu": 0, "queue_position": 1},
+    {"group": 2, "ensemble": 1, "owner": "node002", "gpu": 1, "queue_position": 1},
+    {"group": 2, "ensemble": 2, "owner": "node002", "gpu": 2, "queue_position": 1},
+    {"group": 2, "ensemble": 3, "owner": "node002", "gpu": 3, "queue_position": 1},
+    {"group": 2, "ensemble": 4, "owner": "node002", "gpu": 4, "queue_position": 1},
+    {"group": 2, "ensemble": 5, "owner": "node002", "gpu": 5, "queue_position": 1},
+    {"group": 2, "ensemble": 6, "owner": "node002", "gpu": 6, "queue_position": 1}
+  ]
+}

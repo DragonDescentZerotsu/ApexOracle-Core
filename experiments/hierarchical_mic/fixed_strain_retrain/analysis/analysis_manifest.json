@@ -1,0 +1,19 @@
+{
+  "bootstrap": {
+    "iterations": 2000,
+    "method": "paired cluster bootstrap retaining all MIC rows per sampled molecule",
+    "scope": "primary pooled train-unseen cohort",
+    "seed": 20260726,
+    "unit": "exact stored-token molecule identity"
+  },
+  "ensemble_members": 7,
+  "groups": 3,
+  "outputs": {
+    "cluster_bootstrap": "/data2/tianang/projects/Synergy/experiments/hierarchical_mic/fixed_strain_retrain/analysis/cluster_bootstrap.csv",
+    "ensemble_predictions": "/data2/tianang/projects/Synergy/experiments/hierarchical_mic/fixed_strain_retrain/analysis/ensemble_predictions.csv",
+    "metrics": "/data2/tianang/projects/Synergy/experiments/hierarchical_mic/fixed_strain_retrain/analysis/metrics.csv"
+  },
+  "protocol": "strain",
+  "schema_version": 1,
+  "status": "completed"
+}

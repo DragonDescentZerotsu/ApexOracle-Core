@@ -143,3 +143,132 @@ python scripts/reproduce/validate_hierarchical_mic_checkpoint.py \
   --checkpoint Checkpoints/genome_text_learnable_emb/strain_wise_w_SM_b_attn/MDLM_MTR_fix_7_fold_ensembles/genome_text_learnable_emb_Strain_wise_best_R2_group_0_ensemble_0.pth \
   --device cuda:0
 ```
+
+## Reviewer exact-molecule overlap audit
+
+Canonical CPU/只读入口：
+
+```bash
+PYTHONPATH=src python scripts/audit/audit_hierarchical_mic_molecule_overlap.py \
+  --protocol all
+```
+
+共享逻辑位于
+`src/apexoracle/evaluation/hierarchical_mic_molecule_overlap.py`，输出位于
+`experiments/hierarchical_mic/molecule_overlap/`。该入口不修改训练 split 或 checkpoint；
+它在与 legacy Dataset 相同的 512-token eligibility filter 后，分别按 `DBAASP_id` 和模型实际
+stored-token input SHA-256 统计 train/test exact-molecule overlap。strain 总数是三个 fold 的
+measurement instances，不能解释为跨 fold 去重后的唯一实验记录。
+
+## Reviewer molecule-disjoint checkpoint replay
+
+先生成不含 optimizer 和未使用 classification head 的推理副本：
+
+```bash
+PYTHONPATH=src python \
+  scripts/reproduce/prepare_hierarchical_mic_inference_checkpoints.py \
+  --protocol strain \
+  --output-dir experiments/hierarchical_mic/molecule_disjoint/inference_checkpoints/strain
+```
+
+再按一个 `protocol × group × ensemble` 任务运行：
+
+```bash
+PYTHONPATH=src python \
+  scripts/reproduce/evaluate_hierarchical_mic_molecule_disjoint.py \
+  --protocol strain --group 0 --ensemble 0 --device cuda:0 \
+  --inference-only \
+  --checkpoint-dir experiments/hierarchical_mic/molecule_disjoint/inference_checkpoints/strain \
+  --output-dir experiments/hierarchical_mic/molecule_disjoint/predictions
+```
+
+同一个 `--group` 可重复传入 `--ensemble`，使多个 member 复用一次大型 feature load，例如
+`--ensemble 0 --ensemble 1 --ensemble 2`。
+
+汇总 7-member sample-level ensemble、常数/peptide-mean baselines 和 exact-molecule cluster
+bootstrap：
+
+```bash
+PYTHONPATH=src python \
+  scripts/reproduce/summarize_hierarchical_mic_molecule_disjoint.py \
+  --protocol strain --groups 3 --members 7 \
+  --prediction-dir experiments/hierarchical_mic/molecule_disjoint/predictions \
+  --output-dir experiments/hierarchical_mic/molecule_disjoint/analysis
+```
+
+推理副本 manifest 记录源 checkpoint path、size、SHA-256 和派生文件的 size、SHA-256。replay
+不改变 pathogen holdout 或训练数据；它以精确 stored-token SHA-256 标记 full、train-seen 和
+train-unseen peptide test rows，并写出 train-peptide-mean baseline。推理使用确定性 `eval()`
+mode。strain 输出仍是冻结 candidate membership 上的 reconstruction，不能表述为已恢复的
+2025 精确 membership。
+
+正式 reviewer sensitivity 使用固定 membership 的 phylum `3 × 7` replay；compact 汇总位于
+`molecule_disjoint/phylum_analysis/`，解释边界和英文回复草稿见
+`molecule_disjoint/REVIEWER_SENSITIVITY_REPORT.md`。strain candidate 结果只作为内部
+secondary robustness evidence。
+
+## Reviewer fixed strain-wise retraining
+
+为消除 archived strain checkpoint 与未知 2025 hash membership 不一致的问题，固定 split
+重训使用冻结的 `PYTHONHASHSEED=0` candidate manifest，但不再动态重建 unordered legacy
+sets。单个 `group × ensemble` 的 canonical 命令为：
+
+```bash
+PYTHONPATH=src python scripts/reproduce/run_hierarchical_mic.py \
+  --protocol strain --test-group 0 --ensemble 0 --device 0 \
+  --strain-manifest experiments/hierarchical_mic/strain/legacy_protocol_manifest.json \
+  --output-dir experiments/hierarchical_mic/fixed_strain_retrain/checkpoints \
+  --acknowledge-dynamic-legacy-split
+```
+
+`--ensemble` 只拆分原7个 seeds 以便多 GPU 并行，不改变模型、数据、optimizer、25 epochs、
+held-out evaluation 或 checkpoint-selection contract。任务 ownership、GPU 和输出根目录冻结在
+`fixed_strain_retrain/task_manifest.json`；本机与共享 release 的 checkpoint 不互相覆盖。
+训练完成后，使用
+`scripts/reproduce/evaluate_hierarchical_mic_molecule_disjoint.py` 对新 checkpoint 运行
+deterministic `eval()` replay，再由
+`scripts/reproduce/summarize_hierarchical_mic_molecule_disjoint.py` 汇总 full、train-seen 和
+train-unseen exact-peptide 指标。
+
+本次 `3 × 7` 训练与 replay 已全部完成。正式 pooled full/seen/unseen R2 为
+`0.4638/0.5672/0.0942`；严格 unseen 有26,272条 measurements、8,259个 pooled distinct
+exact peptides，Spearman/Pearson 为 `0.4070/0.4130`，其中53.12%为 MIC<=16 micromolar。
+与论文口径一致的 mean-across-folds full/seen/unseen R2 为
+`0.5814/0.6283/0.1089`；full `0.5814` 与历史论文值 `0.5793` 一致，不能拿 pooled
+`0.4638` 直接和论文 fold mean 比较。
+2,000次 exact-peptide cluster bootstrap 的 unseen R2 95% CI 为 `[0.0687, 0.1191]`。
+完整结果、fold-level 边界和 reviewer 回复草稿见
+`fixed_strain_retrain/REVIEWER_SENSITIVITY_REPORT.md`。
+
+### Reviewer MIC test-distribution Supplementary Figure
+
+使用已完成的 fixed strain-wise 七成员 ensemble replay，绘制全部86,358条 eligible held-out
+measurements 的 pooled MIC histogram 和三个 test folds 的 ECDF：
+
+```bash
+python scripts/audit/plot_hierarchical_mic_test_distribution.py
+```
+
+默认输出到 `mic_distribution/`：PNG/PDF、逐 cohort summary、histogram bins 和输入 SHA-256
+manifest。横轴为 MIC micromolar 的 log2 scale，虚线为16 micromolar。最终版删除总标题和
+source脚注，panel标题居中且使用常规字重，并增加`a/b`标记。其PDF以相同SHA-256复制到正式
+文稿目录的`Fig_SI_MIC_distribution.pdf`，由TeX作为Supplementary Fig. C3引用；脚本仍只写
+`mic_distribution/`，不会自动覆盖文稿资产或论文总PDF。
+
+若大 checkpoint 位于非默认目录，可先生成保留源 size/SHA-256 血缘的 inference-only 权重：
+
+```bash
+PYTHONPATH=src python scripts/reproduce/prepare_hierarchical_mic_inference_checkpoints.py \
+  --protocol strain --group 1 \
+  --strain-manifest experiments/hierarchical_mic/strain/legacy_protocol_manifest.json \
+  --checkpoint-dir /path/to/checkpoints \
+  --output-dir /path/to/inference_checkpoints
+```
+
+验证命令：
+
+```bash
+PYTHONPATH=src pytest -q tests/test_hierarchical_mic_runner.py \
+  tests/test_strainwise_legacy_equivalence.py \
+  tests/test_hierarchical_mic_molecule_overlap.py
+```

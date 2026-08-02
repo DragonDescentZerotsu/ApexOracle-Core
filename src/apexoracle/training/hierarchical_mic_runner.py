@@ -47,6 +47,7 @@ from apexoracle.data.hierarchical_mic_preparation import (
     PreparedHierarchicalMicData,
     build_holdout_split,
     holdout_record_counts,
+    load_fixed_strain_holdout_manifest,
     prepare_hierarchical_mic_data,
 )
 from apexoracle.evaluation.hierarchical_mic import (
@@ -1233,7 +1234,25 @@ def run_holdout(
     *,
     group: int,
     device: torch.device,
+    ensemble_indices: Sequence[int] | None = None,
 ) -> dict[str, float]:
+    selected_ensembles = (
+        tuple(range(config.ensembles_per_group))
+        if ensemble_indices is None
+        else tuple(ensemble_indices)
+    )
+    if not selected_ensembles:
+        raise ValueError("At least one ensemble member must be selected")
+    if len(set(selected_ensembles)) != len(selected_ensembles):
+        raise ValueError(f"Duplicate ensemble members selected: {selected_ensembles}")
+    if any(
+        ensemble < 0 or ensemble >= config.ensembles_per_group
+        for ensemble in selected_ensembles
+    ):
+        raise ValueError(
+            f"Ensemble members must be in [0, {config.ensembles_per_group - 1}]: "
+            f"{selected_ensembles}"
+        )
     frames = prepare_holdout_frames(prepared, split, group)
     loaders, genome_dim, text_dim = build_holdout_loaders(
         frames, features, batch_size=config.batch_size
@@ -1245,7 +1264,7 @@ def run_holdout(
 
     ensemble_predictions_by_member = []
     final_labels: list[float] | None = None
-    for ensemble in tqdm(range(config.ensembles_per_group), desc=" Doing ensembles "):
+    for ensemble in tqdm(selected_ensembles, desc=" Doing ensembles "):
         torch.manual_seed(config.ensemble_seeds[ensemble])
         torch.cuda.manual_seed(config.ensemble_seeds[ensemble])
         LOGGER.info(" num of frozen epochs: %d\n", config.freeze_epochs)
@@ -1404,7 +1423,9 @@ def checkpoint_filename(
     )
 
 
-def configure_logging(output_dir: Path, group_label: str) -> None:
+def configure_logging(
+    output_dir: Path, group_label: str, *, ensemble_label: str | None = None
+) -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
     LOGGER.setLevel(logging.INFO)
     LOGGER.propagate = False
@@ -1412,8 +1433,11 @@ def configure_logging(output_dir: Path, group_label: str) -> None:
         handler.close()
         LOGGER.removeHandler(handler)
     formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+    suffix = (
+        f"_ensemble_{ensemble_label}" if ensemble_label is not None else ""
+    )
     file_handler = logging.FileHandler(
-        output_dir / f"log_group_{group_label}.log", mode="w"
+        output_dir / f"log_group_{group_label}{suffix}.log", mode="w"
     )
     file_handler.setFormatter(formatter)
     console_handler = logging.StreamHandler()
@@ -1566,6 +1590,15 @@ def build_parser() -> argparse.ArgumentParser:
         "--protocol", choices=["strain", "species", "phylum"], required=True
     )
     parser.add_argument("--test-group", type=int, required=True)
+    parser.add_argument(
+        "--ensemble",
+        type=int,
+        action="append",
+        help=(
+            "Train only the selected ensemble member; repeat to select multiple. "
+            "By default all configured members run serially."
+        ),
+    )
     parser.add_argument("--device", type=int, default=0)
     parser.add_argument("--epochs", type=int)
     parser.add_argument("--weight-decay", type=float)
@@ -1575,6 +1608,14 @@ def build_parser() -> argparse.ArgumentParser:
         help="Select a Fig. 2c online encoder profile when using the comparator config.",
     )
     parser.add_argument("--output-dir", type=Path)
+    parser.add_argument(
+        "--strain-manifest",
+        type=Path,
+        help=(
+            "For protocol=strain, consume a frozen candidate membership instead "
+            "of rebuilding the hash-order-dependent legacy split."
+        ),
+    )
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument(
         "--acknowledge-dynamic-legacy-split",
@@ -1616,14 +1657,23 @@ def main(argv: Sequence[str] | None = None) -> dict[str, Any] | None:
         mic_data_path=config.paths.mic_records,
         small_molecule_data_path=config.paths.small_molecule_records,
     )
-    split = build_holdout_split(
-        prepared,
-        repo_root,
-        args.protocol,
-        adapter=config.holdout_adapter,
-        group_names=config.holdout_group_names,
-        tree_path=config.holdout_tree,
-        num_clusters=config.holdout_clusters,
+    strain_manifest = args.strain_manifest
+    if strain_manifest is not None and not strain_manifest.is_absolute():
+        strain_manifest = repo_root / strain_manifest
+    if strain_manifest is not None and args.protocol != "strain":
+        raise SystemExit("--strain-manifest is only valid with --protocol strain")
+    split = (
+        load_fixed_strain_holdout_manifest(strain_manifest)
+        if strain_manifest is not None
+        else build_holdout_split(
+            prepared,
+            repo_root,
+            args.protocol,
+            adapter=config.holdout_adapter,
+            group_names=config.holdout_group_names,
+            tree_path=config.holdout_tree,
+            num_clusters=config.holdout_clusters,
+        )
     )
     if split.group_names != config.holdout_group_names:
         raise ValueError(
@@ -1634,6 +1684,20 @@ def main(argv: Sequence[str] | None = None) -> dict[str, Any] | None:
         raise SystemExit(
             f"--test-group must be between 0 and {len(split.group_names) - 1} "
             f"for {args.protocol}"
+        )
+    selected_ensembles = (
+        tuple(range(config.ensembles_per_group))
+        if args.ensemble is None
+        else tuple(args.ensemble)
+    )
+    if len(set(selected_ensembles)) != len(selected_ensembles):
+        raise SystemExit(f"Duplicate --ensemble values: {selected_ensembles}")
+    if any(
+        ensemble < 0 or ensemble >= config.ensembles_per_group
+        for ensemble in selected_ensembles
+    ):
+        raise SystemExit(
+            f"--ensemble must be between 0 and {config.ensembles_per_group - 1}"
         )
     if args.dry_run:
         report = dry_run_report(
@@ -1650,9 +1714,19 @@ def main(argv: Sequence[str] | None = None) -> dict[str, Any] | None:
     configure_logging(
         config.paths.output_dir,
         legacy_group_token(config, split, args.test_group),
+        ensemble_label=(
+            None
+            if args.ensemble is None
+            else "-".join(map(str, selected_ensembles))
+        ),
     )
     LOGGER.info("Start")
     LOGGER.info("Current test group: %s", split.group_names[args.test_group])
+    LOGGER.info("Selected ensemble members: %s", selected_ensembles)
+    LOGGER.info(
+        "Fixed strain manifest: %s",
+        None if strain_manifest is None else strain_manifest,
+    )
     features = load_runtime_features(config, device, repo_root)
     metrics = run_holdout(
         config,
@@ -1661,6 +1735,7 @@ def main(argv: Sequence[str] | None = None) -> dict[str, Any] | None:
         features,
         group=args.test_group,
         device=device,
+        ensemble_indices=selected_ensembles,
     )
     return metrics
 

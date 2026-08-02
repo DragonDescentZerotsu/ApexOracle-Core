@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "input_csv": "experiments/hierarchical_mic/fixed_strain_retrain/analysis/ensemble_predictions.csv",
+  "input_size_bytes": 18496228,
+  "input_sha256": "80f368923d365fb379e049a1bf083773115a2b38cb0e0620a1c58b3e75a8752a",
+  "measurement_rows": 86358,
+  "low_mic_threshold_um": 16.0,
+  "bin_width_log2": 0.5,
+  "outputs": {
+    "summary_csv": "experiments/hierarchical_mic/mic_distribution/mic_distribution_summary.csv",
+    "bins_csv": "experiments/hierarchical_mic/mic_distribution/mic_distribution_bins.csv",
+    "png": "experiments/hierarchical_mic/mic_distribution/fixed_strain_test_mic_distribution.png",
+    "pdf": "experiments/hierarchical_mic/mic_distribution/fixed_strain_test_mic_distribution.pdf"
+  }
+}
