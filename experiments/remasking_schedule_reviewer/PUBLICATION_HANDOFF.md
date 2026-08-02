@@ -1,7 +1,8 @@
 # ReMDM / peptide-guidance reviewer 轮次发布交接
 
 > 状态：2026-08-02 暂时收束。本轮补实验、结构审计、正式 reviewer 图、论文 Methods/
-> Supplementary Fig. C4 和三处 reviewer response 已完成；尚未执行 Git commit、push 或 PR。
+> Supplementary Fig. C4 和三处 reviewer response 已完成。用户决定按主题拆分提交并直接更新
+> `Synergy/main`；代码、紧凑证据和发布文档已经推送，未创建 PR。
 
 本文档只记录发布边界和跨仓库血缘。科学协议、精确数值及判定边界分别见
 `README.md`、`RESULTS.md` 和 `STRUCTURE_AUDIT.md`。
@@ -12,7 +13,7 @@
 
 | 项目路径 | 本轮角色 | 当前状态 |
 | --- | --- | --- |
-| `/data2/tianang/projects/Synergy` | reviewer 实验编排、评估、结构审计、绘图、测试和内部文档 | 本轮代码主仓库；工作树还混有其他 reviewer/refactor 改动，不能整体 stage |
+| `/data2/tianang/projects/Synergy` | reviewer 实验编排、评估、结构审计、绘图、测试和内部文档 | 本轮代码主仓库；已按主题提交并直接推送 `main`，本地与远程已对齐 |
 | `/data2/tianang/projects/discrete-diffusion-guidance` | 实际 MDLM/ReMDM guided-generation producer | 本轮只读消费；checkout 历史上已有大量本地修改，本轮没有在该仓库写代码 |
 | `/data2/tianang/projects/mdlm` | pretrained MDLM、clean MIC 和 peptide classifier 资产/实现来源 | 本轮只读消费；checkout 预先 dirty，本轮没有在该仓库写代码 |
 | `/data2/tianang/projects/ApexOracle_cleaned/docs/ApexOracle_Nat_Biotech` | 正式 TeX、response DOCX 和 Supplementary Fig. C4 | 非 Git 目录；正式文稿已修改并独立渲染核验，不能从当前位置直接 push |
@@ -52,13 +53,18 @@
 
 | Checkout | Remote / visibility | 已验证状态 | 本轮发布判断 |
 | --- | --- | --- | --- |
-| `Synergy` | `DragonDescentZerotsu/Synergy`，private | local `main` 与 `origin/main` 均为 `f52626b`; reviewer 文件尚未提交 | 可作为当前 capsule 的临时集成仓库，但必须从 clean worktree 做显式白名单提交 |
+| `Synergy` | `DragonDescentZerotsu/Synergy`，private | reviewer 内容已按主题直接推送 `main`；发布前 full test 为 `164 passed` | 当前 reviewer capsule 已有远程 Git 血缘；后续统一 public repo 仍需做公开边界筛选 |
 | `mdlm` | 上游 `kuleshov-group/mdlm`；自有 `DragonDescentZerotsu/ApexOracle-MDLM`，public | local HEAD 与自有 remote 的 `master` 均为 `7a6a7d1`；当前 branch 跟踪上游 `origin`，checkout dirty | 本轮没有需要推送的改动；未来清理后应显式 push 到 `custom`，不能误推上游 |
 | `discrete-diffusion-guidance` | 只有上游 `kuleshov-group/discrete-diffusion-guidance` | local HEAD/upstream main 为 `edb0f8c`；checkout 含 ApexOracle 历史修改且 dirty；不存在自有同名 GitHub fork | 当前不能推送；须先建立 clean fork/独立仓库并参数化机器路径，再固定 commit |
 | `ApexOracle_github` | `DragonDescentZerotsu/ApexOracle`，public | clean，但 packed history 约 235 MiB，已包含大数据、模型和外部仓库副本 | 不应把本轮工作直接复制进该 legacy monorepo，否则会继续膨胀并混淆 producer 血缘 |
 | `ApexOracle_cleaned` | 无 Git metadata | 正式论文修改只存在本地文件系统 | 后续若公开文稿，只迁移精简的 TeX/bib/必要 figure，不迁移编译缓存和 DOCX 备份 |
 
-本轮没有执行 commit、push、创建 fork 或 PR。
+本轮已直接更新 `Synergy/main`，没有创建 fork 或 PR。主题提交为：
+
+- `cd4af4a`：hierarchical MIC reviewer sensitivity；
+- `8bd06da`：peptide-classifier reviewer audit；
+- `750da4b`：remasking schedule reviewer analysis；
+- `3c58355`：共享 reviewer provenance 与 release boundaries。
 
 ## 2. 公共发布白名单与禁止项
 
@@ -91,15 +97,12 @@
 
 ## 3. 建议的公共仓库整合顺序
 
-### 阶段 A：隔离并提交本轮 reviewer capsule
+### 阶段 A：Synergy reviewer 轮次归档（已完成）
 
-1. 从 `Synergy` 当前远程 `main` 建立 clean worktree/branch；
-2. 只迁移第 2.1 节列出的 reviewer-specific 文件或 hunk，禁止 `git add -A`；
-3. 运行单元测试、入口帮助检查、敏感信息扫描和 staged-size 审计；
-4. 先提交到 `Synergy` 的独立 branch/PR，保持与其他未完成 reviewer 工作解耦。
-
-当前工作树中的共享文档同时包含多个 reviewer/refactor 更新，因此不能只凭文件名整体提交后声称
-它们只属于本轮；应在 clean worktree 中按 hunk 移植并复读。
+用户选择不建立独立 PR，而是在当前 `main` 上按主题显式 stage。实际提交分为 hierarchical MIC、
+peptide classifier、remasking schedule 和共享文档四组；提交前检查了每组 staged 文件、最大文件、
+疑似凭据和 whitespace，并在推送前运行全仓库测试。没有使用 `git add -A`，raw outputs、权重、
+逐 attempt 大表和约 911 MB 的 peptide-classifier split memmap 均未进入 Git history。
 
 ### 阶段 B：清理两个外部 producer
 
@@ -138,8 +141,8 @@ paper/                             # 如需公开，仅精简 TeX/bib/正式 fig
 5. 是否需要把 canonical Supplementary Fig. C4 PDF 纳入公共 repo，或仅保留可重建脚本、caption
    和 source hashes。
 
-在这些决定确认前，可以安全完成阶段 A 的 clean、path-scoped reviewer capsule，但不应把 dirty
-外部 checkout 或 legacy 大仓库做整体合并。
+阶段 A 已完成。这些待确认决定只影响后续统一公共 repo 和两个外部 producer 的发布；在确认前仍
+不应把 dirty 外部 checkout 或 legacy 大仓库做整体合并。
 
 ## 5. 发布前验证命令
 
@@ -150,7 +153,7 @@ git --git-dir=.git-state --work-tree=. status --short --ignored
 git --git-dir=.git-state --work-tree=. diff --cached --stat
 git --git-dir=.git-state --work-tree=. diff --cached --check
 
-# staged 文件大小和可疑凭据须在 clean worktree 中再次检查
+# staged 文件大小和可疑凭据须在每次后续发布前再次检查
 git --git-dir=.git-state --work-tree=. diff --cached --name-only
 ```
 

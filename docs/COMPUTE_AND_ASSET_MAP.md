@@ -151,10 +151,10 @@ RDKit 2025.03.5。
   当前未忽略 reviewer capsule 共 414,113 bytes，约 0.41 MB。实验目录约 67 MB 的主要占用为本地
   raw runs、日志和图片，均受 `.gitignore` 保护，不需要删除取证资产，也不得进入 staged set。
 - 完整路径清单、提交白名单和统一公共仓库方案见
-  `experiments/remasking_schedule_reviewer/PUBLICATION_HANDOFF.md`。本轮尚未执行 commit、push、
-  fork 或 PR。
-- `Synergy` remote 为 private `DragonDescentZerotsu/Synergy`；当前工作树混有多个 reviewer/
-  refactor 改动，发布必须从 clean worktree 按 hunk 移植，禁止 `git add -A`。
+  `experiments/remasking_schedule_reviewer/PUBLICATION_HANDOFF.md`。用户决定把当前 reviewer 轮次
+  按主题拆分后直接推送 `Synergy/main`；已完成四个主题提交，没有创建 fork 或 PR。
+- `Synergy` remote 为 private `DragonDescentZerotsu/Synergy`；发布时使用显式路径分组 stage，
+  没有使用 `git add -A`。推送前全仓库测试为 `164 passed`，本地与远程 `main` 已对齐。
 - `mdlm` 同时有上游 `kuleshov-group/mdlm` 和公开自有 remote
   `DragonDescentZerotsu/ApexOracle-MDLM`；本轮没有修改该 checkout。其当前 branch 跟踪上游，
   未来发布必须显式推向自有 remote。

@@ -132,9 +132,9 @@ median MIC 的 sample s.d.。panel c 是唯一保留 legend 的位置；legend �
   主要是受忽略保护的 raw runs、日志和图稿，不进入 Git。Synergy 为 private remote 且当前工作树
   混有其他改动；MDLM 已有公开自有 remote `DragonDescentZerotsu/ApexOracle-MDLM`，但本轮未修改；
   discrete-guidance 只有上游 remote，没有自有 fork，dirty producer 不得直接推送；正式文稿目录
-  `ApexOracle_cleaned` 不是 Git repo。本轮未执行 commit、push、fork 或 PR。后续提交必须从 clean
-  worktree 显式白名单移植，禁止整体 stage；未来统一公共 repo 不得复制 raw outputs、权重、数据或
-  两个外部 dirty checkout。
+  `ApexOracle_cleaned` 不是 Git repo。用户随后决定按主题直接更新 `Synergy/main`；本轮没有修改或
+  推送两个外部 checkout。未来统一公共 repo 不得复制 raw outputs、权重、数据或两个 external
+  dirty checkout。
 - **2026-08-02 reviewer GitHub 发布防膨胀补充：** 用户决定把当前 reviewer 轮次按主题拆成多个
   commit 后直接更新 `Synergy/main`。提交前发现
   `experiments/peptide_classifier/reviewer_retrain/` 下五个 `.u1/.u8` split memmap 共约 911 MB，
@@ -142,6 +142,11 @@ median MIC 的 sample s.d.。panel c 是唯一保留 legend 的位置；legend �
   `prepare_peptide_classifier_split.py` 确定性重建，已按精确目录加入 `.gitignore`；只发布其
   compact manifest/audit、脚本和测试。不得先提交大文件再删除，因为 Git history 仍会永久保留
   blob。
+- **2026-08-02 reviewer 轮次已推送 `Synergy/main`：** 按显式路径分为四个提交：`cd4af4a`
+  hierarchical MIC sensitivity、`8bd06da` peptide-classifier audit、`750da4b` remasking schedule
+  analysis、`3c58355` 共享 provenance/release 文档。没有使用 `git add -A`，没有创建 PR。推送前
+  `git diff --check` 通过，全仓库为 `164 passed`；四组发布文件在工作树中的总大小约 1.03 MB，
+  最大单文件 113,171 bytes。推送后本地与 `origin/main` 对齐。
 - **Hierarchical MIC exact-molecule overlap audit 入口（2026-07-26）：**
   `PYTHONPATH=src python scripts/audit/audit_hierarchical_mic_molecule_overlap.py --protocol all`。
   共享逻辑为 `src/apexoracle/evaluation/hierarchical_mic_molecule_overlap.py`，输出到

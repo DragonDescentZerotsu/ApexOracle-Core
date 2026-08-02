@@ -715,8 +715,8 @@ optimizer-step 已在宿主 H100 单独通过，两份 guidance checkpoint 的 i
 - [x] 核验本轮 canonical 代码/测试约 142 KB，当前未忽略 reviewer capsule 为 414,113 bytes，
   约 0.41 MB；raw runs、
   日志、逐 attempt 表、权重和重复图稿不进入 Git。
-- [ ] 从 clean Synergy worktree 建立独立 reviewer branch，只移植本轮相关 file/hunk 并提交 PR；
-  当前 mixed worktree 不允许整体 stage。
+- [x] 按作者决定在当前 `Synergy/main` 上用显式路径分为四个主题提交并直接推送；没有使用
+  `git add -A` 或创建 PR，推送前全仓库测试为 `164 passed`。
 - [ ] 为 ApexOracle-specific `discrete-diffusion-guidance` 建立 clean fork/独立 remote，参数化路径、
   添加最小 smoke test 并固定 producer commit。
 - [ ] 从公开 `ApexOracle-MDLM` remote 准备 clean release commit；发布时显式使用 `custom` remote，

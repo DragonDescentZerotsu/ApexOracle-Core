@@ -3,7 +3,8 @@
 > 状态：正式补实验、clean-model evaluation、structure audit、canonical reviewer figure、
 > 正式论文修改及对应 reviewer response 均已完成。第 11--12 节保留为交互定稿过程，正式落稿
 > 记录见第 13 节；跨仓库改动、GitHub 状态、提交白名单和统一公共仓库建议见
-> `PUBLICATION_HANDOFF.md`。外部 sampler、配置和历史结果均未修改，本轮尚未 commit/push。
+> `PUBLICATION_HANDOFF.md`。外部 sampler、配置和历史结果均未修改；本轮代码和紧凑证据已按主题
+> 直接推送到 `Synergy/main`。
 > 生成结果见 `RESULTS.md`，classifier/amide 冲突与当前使用边界见 `STRUCTURE_AUDIT.md`。
 > 建立日期：2026-07-28。
 > 目标：用同一套数学符号澄清 ReMDM、Campbell et al. (2024) 与实际 ApexOracle sampler 的关系，
@@ -1095,7 +1096,7 @@ molecules。
 - 本轮 peptide-guidance/remasking reviewer 问题至此暂时收束。代码与紧凑证据位于 Synergy，
   producer 仍只读位于外部 `mdlm` 和 `discrete-diffusion-guidance` checkout，正式文稿位于非 Git
   的 `ApexOracle_cleaned`。发布交接、remote 审计和防膨胀白名单见 `PUBLICATION_HANDOFF.md`；
-  尚未执行 commit、push、fork 或 PR。
+  reviewer 代码与紧凑证据已按主题直接推送 `Synergy/main`，没有创建 fork 或 PR。
 
 ### 13.2 表述边界
 
