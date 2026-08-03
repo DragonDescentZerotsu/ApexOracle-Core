@@ -147,6 +147,96 @@ median MIC 的 sample s.d.。panel c 是唯一保留 legend 的位置；legend �
   analysis、`3c58355` 共享 provenance/release 文档。没有使用 `git add -A`，没有创建 PR。推送前
   `git diff --check` 通过，全仓库为 `164 passed`；四组发布文件在工作树中的总大小约 1.03 MB，
   最大单文件 113,171 bytes。推送后本地与 `origin/main` 对齐。
+- **Guided-generation diversity reviewer 审计入口（2026-08-02）：**
+  `MPLBACKEND=Agg PYTHONPATH=src /home/tianang/anaconda3/bin/python
+  scripts/audit/analyze_generated_candidate_diversity.py`。该入口只读消费外部
+  `generated_mol_SELFIES_w_mic-new`、`generated_mol_SELFIES-new`、历史 MDLM peptide parser、
+  PepLink 0.1.2 和最终 `Summary_pathogens.xlsx`，输出到
+  `experiments/generated_candidate_diversity/`。作者确认 candidate-level 使用 73-row 副本：
+  8 个最近前体对应的 9 行替换为 final synthesized peptides，其余 64 行保留；24 条 final
+  peptides 必须全部 topology-aware 映射到该副本。Candidate level 穷举 2,628 pairs；generation
+  level 只纳入 `BAA-3170/3197` 的 84,226 条 MIC-guided outputs、pool 全部 lengths，精确
+  统计 distinct canonical structures。正式 generation distribution 由
+  `scripts/audit/compute_exact_generation_tanimoto.py --workers 64` 在 node002 流式穷举全部
+  3,546,967,425 个无序 non-self pairs；1,000,000-pair fixed-seed sample 只作为内部稳定性核验。
+  指纹冻结为 RDKit Morgan radius 2、2,048 bits、`includeChirality=True`，相似度为 Tanimoto。
+  正式验证命令为
+  `PYTHONPATH=src python -m pytest -q tests/test_generated_candidate_diversity.py
+  tests/test_exact_generation_tanimoto.py`。
+- **24 条 final peptide pairwise diversity 入口（2026-08-03）：**
+  `PYTHONPATH=src /home/tianang/anaconda3/bin/python
+  scripts/audit/analyze_selected_peptide_diversity.py`。该入口消费冻结的
+  `canonical_candidates/final_peptide_mapping.csv` 和 `candidates_73.csv`，输出到
+  `experiments/generated_candidate_diversity/selected_peptides_24/`。Sequence 使用论文三条 lead
+  对 training set 的 chirality-aware BLOSUM62 global alignment、gap penalties、case-sensitive
+  PID 和 cyclic-rotation 口径；linear--cyclic 不比较。为使无序 pair 不依赖 ID 方向，额外对调
+  target/query orientation 并保留更高 PID。已验证 24/24 structures unique；168 个同拓扑 pairs
+  的 median PID 为 `0.1719`，仅 ApexOracle-14/23 为 `>=0.5`（`17/19=0.8947`）；276 个结构
+  pairs 的 median Tanimoto 为 `0.4633`，15/2/0 个 pairs 分别为 `>=0.7/0.8/0.9`。这些结果支持
+  selected panel 并非 duplicate-dominated，但不能证明 selection 相对 random/top-predicted comparator
+  因果性地提高 diversity；selected median Tanimoto 高于 73-row pool 的 `0.375`，不得写成 selection
+  降低了 median Tanimoto。Canonical 双 panel 图为
+  `selected_peptides_24/selected_peptide_pairwise_similarity_violin.pdf`，PDF SHA-256 为
+  `8f6b5ba948c54f1f6bf48c1e62325e3de79f1e936ebfa3c8a080827e05f14744`。验证命令为
+  `PYTHONPATH=src /home/tianang/anaconda3/bin/python -m pytest -q
+  tests/test_generated_candidate_diversity.py tests/test_sequence_similarity.py`（11 passed）。
+  同一入口另生成严格按 `target strain × topology` 分组的 87-pair view：四组分别为 66/3/15/3
+  pairs，median PID 为 `0.1667/0.2500/0.2258/0.1818`，87/87 均 `<0.5`。原 pooled view 中唯一
+  PID `>=0.5` 的 ApexOracle-14/23 跨 BAA-3197/BAA-3170，在该口径中排除。Canonical stratified
+  PDF 为 `selected_peptides_24/selected_peptide_pairwise_similarity_by_strain_topology.pdf`，
+  SHA-256 为 `bb6f3d2d5328f59007221032f8e30d89d0552e4ceda013192fe87258fa970628`。
+- **Supplementary Fig. C5 三 panel 入口（2026-08-03）：**
+  `MPLBACKEND=Agg /home/tianang/anaconda3/bin/python
+  scripts/audit/plot_generated_candidate_diversity_figure.py`。输入为冻结的
+  `selected_peptides_24/pairwise_sequence_similarity.csv` 与
+  `tanimoto_histogram_plotted_data.csv`；输出单行 a/b/c 布局到
+  `experiments/generated_candidate_diversity/generated_candidate_diversity_three_panel.{pdf,svg,png}`
+  及 SHA-256 manifest。Panel 顺序按 Results 首次引用固定为 selected 24 PID、73-pool Tanimoto、
+  84,226-output Tanimoto；panel a 略宽以容纳四个 target/topology groups。Canonical/正式 PDF
+  的 PID 纵轴固定为 0--100\%，正式 target labels 为 `P. aeruginosa PA5257` 与
+  `E. coli AR-0349` 并置于 panel 上半部空白区；最右侧 median label 在本组上方居中，避免侵入
+  panel b。
+  SHA-256 为 `72c50e1649720233a3a45ba46d57d21df8fa68ffb2660aba886b3a4f491a8ab8`；旧两 panel PDF
+  备份为 `Fig_SI_generated_candidate_diversity_before_selected_pid_20260803.pdf`。
+- **2026-08-02 generated diversity/selection 正式论文已落稿：** 正式
+  `/data2/tianang/projects/ApexOracle_cleaned/docs/ApexOracle_Nat_Biotech/sn-article.tex` 已加入
+  84,226→73→24 peptide 分母链、44,608-entry small-molecule screen 与 MolPort matching/alert/
+  procurement 流程、intended-target hit rates、generated-set diversity Results/Methods 和
+  Supplementary Fig. C5；Fig. 3a 被明确限定为 predicted candidate distributions 的 *in silico*
+  comparison，prospective MIC 为 selected candidates 的直接实验评价。正式图
+  `Fig_SI_generated_candidate_diversity.pdf` 当前三 panel SHA-256 为
+  `72c50e1649720233a3a45ba46d57d21df8fa68ffb2660aba886b3a4f491a8ab8`；独立临时编译为 32 页，
+  C3/C4/C5 与 Appendix D 编号已核验，正式论文 PDF 未覆盖。修改前 TeX 备份为
+  `sn-article_before_generated_diversity_selection_20260802.tex`。两条 selection reviewer reply
+  已在 `experiments/generated_candidate_diversity/reviewer_response_draft.md` 补齐，并合并进正式
+  `Response to reviewers letter.docx`。2026-08-03 三 panel 同步后，diversity 回复改为
+  selected-panel/candidate-pool/generation-output 三层，另外两条 selection 回复均加入 C5a 的
+  87-pair 定量证据；C5 caption 明确正式 strain 编号、peptide/pair 数和 Lin./Cyc. 定义，
+  0--100\% PID 轴与 comparison exclusions 分别只保留在图和 Methods。最新修改前备份为
+  `Response to reviewers letter_before_selected_pid_c5_20260803.docx`，正式 DOCX SHA-256 为
+  `5da0fc9894c861733917438b07904cb22777f800cceece7185b067b0464473bc`；独立渲染为 30 页，
+  diversity 和两处 selection/hit-rate 回复的分页与格式已核验。
+  2026-08-03 作者进一步要求整理 Methods 顺序：post-generation peptide prioritization 与
+  small-molecule screen 现位于新 `Candidate prioritization and virtual screening` subsection；
+  alignment/PID 定义、lead-to-training novelty、selected-24 PID 和 73/84,226 structural diversity
+  现统一位于 `Sequence and structural diversity analyses`，PID 在首次使用前定义且重复 topology/
+  cyclic-rotation 描述已合并。科学协议与结果未变；修改前备份为
+  `sn-article_before_methods_reorganization_20260803.tex`，独立编译仍为 32 页且相关 Methods 页面
+  已目视核验，正式论文 PDF 未覆盖。
+  发布前膨胀审计确认 21 MiB fingerprint cache 已忽略；进一步将可重建的 81 个逐长度
+  `canonical_candidates/selfies_files/*.txt` 和被最终三 panel C5 取代的旧诊断图保持为 local-only。
+  Git 只发布 compact CSV/JSON/Markdown、四个 audit entrypoints、共享 evaluation module、测试和
+  canonical 三格式 C5 图；没有删除本地取证资产或改变任何计算功能。
+- **2026-08-02 Supplementary Fig. B2 全实验面板替换：** 作者提供的 Mac
+  `Fig_SI_heatmap_re_v4.pdf` 已替换正式 `Fig_SI_heatmap_re.pdf`，两者 SHA-256 为
+  `5ac3bd00e52958ecb06bc066e29de4752863b0f31d851e18df531954c1ae2693`。新 B2 以双栏
+  `figure*`/`\textwidth` 展示全部 24 条 peptides 和 18 个 small molecules 的 20-strain
+  MIC matrices；caption 以 revision color 说明完整分母。旧图与修改前 TeX 分别备份为
+  `Fig_SI_heatmap_re_before_all_candidates_20260802.pdf` 和
+  `sn-article_before_all_candidate_heatmap_20260802.tex`。独立编译为 32 页，B2 位于第 23 页，
+  C3--C5 编号不变，正式 `sn-article.pdf` 未覆盖。Reviewer 2/4 对应 selection 回复已
+  回指 complete B2 matrices，正式 response DOCX SHA-256 为
+  `5da0fc9894c861733917438b07904cb22777f800cceece7185b067b0464473bc`。
 - **Hierarchical MIC exact-molecule overlap audit 入口（2026-07-26）：**
   `PYTHONPATH=src python scripts/audit/audit_hierarchical_mic_molecule_overlap.py --protocol all`。
   共享逻辑为 `src/apexoracle/evaluation/hierarchical_mic_molecule_overlap.py`，输出到

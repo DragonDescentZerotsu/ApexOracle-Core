@@ -1,0 +1,9 @@
+# Python's csv module writes RFC-style CRLF records by default. Treat CR as
+# part of the line ending so Git whitespace checks do not flag audited CSVs.
+experiments/generated_candidate_diversity/*.csv whitespace=cr-at-eol
+experiments/generated_candidate_diversity/**/*.csv whitespace=cr-at-eol
+
+# Matplotlib's SVG serializer emits path commands with significant-looking
+# trailing spaces; preserve the hashed figure while excluding that generator
+# formatting from Git's source-code whitespace audit.
+experiments/generated_candidate_diversity/*.svg whitespace=-trailing-space

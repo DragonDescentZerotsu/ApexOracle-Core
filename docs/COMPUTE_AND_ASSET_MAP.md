@@ -145,6 +145,73 @@ RDKit 2025.03.5。
 - 本次只有文稿和 figure asset 变更，没有新增 GPU 任务、移动 checkpoint/data、修改 node002
   guard 或改写外部 sampler。
 
+### Guided-generation diversity reviewer 审计（2026-08-02）
+
+- CPU-only canonical 入口为
+  `MPLBACKEND=Agg PYTHONPATH=src /home/tianang/anaconda3/bin/python
+  scripts/audit/analyze_generated_candidate_diversity.py`，在本机 base 环境运行，不占用 GPU，
+  不影响 node002 guard。
+- 外部只读输入位于
+  `/data2/tianang/projects/discrete-diffusion-guidance/outputs/{generated_mol_SELFIES_w_mic-new,generated_mol_SELFIES-new}`、
+  `/data2/tianang/projects/mdlm/smiles_to_peptide.py`、`/data2/tianang/projects/PepLink` 和
+  `/data2/tianang/projects/ApexOracle_cleaned/docs/ApexOracle_Nat_Biotech/ApexOracle_MIC_data/Summary_pathogens.xlsx`。
+- Canonical corrected 73-row candidate copy、compact pairwise/plotted data、figure、summary 与
+  SHA-256 manifest 写入 `experiments/generated_candidate_diversity/`；不改写外部 sampler 历史
+  output。Generation-level scope 显式限制为 `BAA-3170/3197`，不纳入同目录的 107 条
+  `BAA-1556` 历史输出。
+- Exact generation all-pairs owner 为 node002 CPU task，隔离目录为
+  `/data1/tianang/Projects/generated_candidate_diversity_20260802/`。输入 fingerprint cache 为
+  84,226 × 2,048-bit、约 21 MiB，SHA-256
+  `a2b0a9789670057665ad124cb5c0fd9105c70030a809909c1a0b907074c764bf`；64 workers 穷举
+  3,546,967,425 pairs 的 compute/total time 为 21.72/22.62 秒，实际吞吐约 163.3 million
+  pairs/s。输出 histogram/summary 已按 SHA-256 同步回本机实验目录。该任务只使用 CPU，未停止、
+  修改或占用 node002 GPU guard。
+- **2026-08-03 final-peptide pairwise diversity：** 本机 base 环境 CPU-only 运行
+  `scripts/audit/analyze_selected_peptide_diversity.py`；无 GPU、node002 或外部 producer 写入。
+  输入为 `experiments/generated_candidate_diversity/canonical_candidates/` 下冻结的 mapping 和
+  73-row structures，compact 输出为 `selected_peptides_24/` 下 168-row sequence pairs、276-row
+  Tanimoto pairs、两份 24 × 24 matrices、nearest-neighbor CSV、PID/Tanimoto 双 panel violin
+  plot、`target strain × topology` stratified 87-pair summary/plot、summary/manifest。已验证 24 个
+  distinct structures、median PID `0.1719`、median Tanimoto `0.4633`；解释边界见该目录
+  `REPORT.md`。
+- **2026-08-03 Supplementary Fig. C5 三 panel 组图：** 本机 base CPU-only 入口为
+  `scripts/audit/plot_generated_candidate_diversity_figure.py`，只读消费冻结的 selected-peptide
+  PID CSV 和 Tanimoto plotted-data CSV，不重算 generation fingerprints。输出单行 a/b/c 图到
+  `experiments/generated_candidate_diversity/generated_candidate_diversity_three_panel.*`；canonical
+  PDF 与正式 `Fig_SI_generated_candidate_diversity.pdf` SHA-256 均为
+  `72c50e1649720233a3a45ba46d57d21df8fa68ffb2660aba886b3a4f491a8ab8`。
+- **正式文稿落稿状态：** 正式 TeX 已加入 selection denominator、peptide/small-molecule
+  prioritization、intended-target hit rate、generated-set diversity Results/Methods，以及将 Fig. 3a
+  限定为 predicted distributions 的 *in silico* comparison、将 prospective MIC 定义为 selected
+  candidates 的直接实验评价。Canonical 图已复制为
+  `/data2/tianang/projects/ApexOracle_cleaned/docs/ApexOracle_Nat_Biotech/Fig_SI_generated_candidate_diversity.pdf`
+  （当前三 panel SHA-256 `72c50e1649720233a3a45ba46d57d21df8fa68ffb2660aba886b3a4f491a8ab8`）。修改前
+  TeX 备份为 `sn-article_before_generated_diversity_selection_20260802.tex`；`/tmp` 独立编译为
+  32 页且图号为 Supplementary Fig. C5，没有覆盖正式 `sn-article.pdf`。正式 response DOCX
+  已合并本轮 selection/diversity replies，并回指完整 Supplementary Fig. B2 MIC matrices；
+  2026-08-03 又同步 C5a 的 87-pair PID 结果到 diversity 与两条 selection 回复，整体口径为
+  selected-panel/candidate-pool/generation-output 三层；
+  最终 SHA-256 为
+  `5da0fc9894c861733917438b07904cb22777f800cceece7185b067b0464473bc`，最新修改前备份为
+  `Response to reviewers letter_before_selected_pid_c5_20260803.docx`，独立渲染为 30 页并完成相关
+  页面核验。当前 canonical 回复草稿位于
+  `experiments/generated_candidate_diversity/reviewer_response_draft.md`。
+  2026-08-03 Methods 进一步按作者要求重排为独立的 candidate-prioritization 与
+  sequence/structural-diversity subsections，PID 定义移至首次使用之前并合并重复 topology 说明；
+  修改前备份为 `sn-article_before_methods_reorganization_20260803.tex`。独立编译仍为 32 页，
+  第 16--17 页已目视核验，正式 `sn-article.pdf` 未覆盖。
+  发布白名单审计后，21 MiB fingerprint cache、81 个可重建的逐长度 SELFIES provenance files
+  和 superseded diagnostic plots 均保持 local-only；canonical compact tables/manifests/docs、最终
+  三 panel C5、入口代码与测试可进入 Git。此调整不移动或删除本地/外部资产。
+- **Supplementary Fig. B2 全部实验候选 heatmap（2026-08-02）：** 作者提供的 Mac
+  `/Users/kirianozan/Documents/Study/Penn/projects/local_figs/Fig_SI_heatmap_re_v4.pdf` 已只读导入正式
+  `Fig_SI_heatmap_re.pdf`，两者 SHA-256 均为
+  `5ac3bd00e52958ecb06bc066e29de4752863b0f31d851e18df531954c1ae2693`。旧 4-candidate 图备份为
+  `Fig_SI_heatmap_re_before_all_candidates_20260802.pdf`。正式 TeX 使用双栏 `figure*` 和
+  `\textwidth`，展示全部 24 peptides 与 18 small molecules 的 20-strain MIC matrices；修改前
+  TeX 备份为 `sn-article_before_all_candidate_heatmap_20260802.tex`。`/tmp` 独立编译为
+  32 页，B2 位于第 23 页且 C3--C5 编号不变；正式 `sn-article.pdf` 未覆盖。
+
 ### ReMDM reviewer 发布交接与 remote 审计（2026-08-02）
 
 - 本轮 canonical reviewer 代码、紧凑结果和内部说明位于 Synergy；8 个脚本/测试约 142 KB，

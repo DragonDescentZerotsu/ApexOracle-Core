@@ -1,0 +1,106 @@
+{
+  "created_at_utc": "2026-08-03T04:38:05.691629+00:00",
+  "script": "/data2/tianang/projects/Synergy/scripts/audit/analyze_selected_peptide_diversity.py",
+  "script_sha256": "b6fb24cf8ea64260eafef3c7587ad38181828f6ebebf26e44396d6de820ec091",
+  "shared_code": [
+    {
+      "path": "/data2/tianang/projects/Synergy/src/apexoracle/evaluation/generated_candidate_diversity.py",
+      "size": 12144,
+      "sha256": "f1300b06ba487f2750090eaba561286bfb41792f442cedb33c93de3f9bfb6777"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/src/apexoracle/evaluation/sequence_similarity/alignment.py",
+      "size": 6563,
+      "sha256": "903e3997f7e9fbb822f5451f938f47f1e9931de92b10a5e97f741ed54db1bd03"
+    }
+  ],
+  "inputs": [
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/final_peptide_mapping.csv",
+      "size": 2175,
+      "sha256": "bbcfebf51a22ca39f0fd2bb8dd339e697d56e65d0a99b61ec9372bc104c0b2a4"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/candidates_73.csv",
+      "size": 325073,
+      "sha256": "935bc5264b0a7b3d13246b46580a5c8223a6d7febf66140ae6e85b3782105404"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/selected_peptides_24/pairwise_sequence_similarity.csv",
+      "size": 39167,
+      "sha256": "3f41b143c2a5fcf209380900e07ad446f6c1d5ef06213ddf2257b2a6077340a9"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/selected_peptides_24/pairwise_tanimoto.csv",
+      "size": 21823,
+      "sha256": "81dbfa5ff32d9beec646b6ce6cfa865fe48efe2e72585bceb578411c1008e786"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/selected_peptides_24/pairwise_sequence_pid_matrix.csv",
+      "size": 6761,
+      "sha256": "13b27aea3e2aa20a2ee52885b72bcdce98fe9ade41230776da0b6d037f687e8f"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/selected_peptides_24/pairwise_tanimoto_matrix.csv",
+      "size": 10987,
+      "sha256": "0d176d70b9186082fdf394e329cf2eeea30870ba6250297fbb767d6a35204143"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/selected_peptides_24/nearest_neighbors.csv",
+      "size": 2280,
+      "sha256": "42aacd28949c98ccf2fe2172d431d62a822a1eec296c3fca985d8fc01db7ee76"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/selected_peptides_24/pairwise_similarity_by_strain_topology_summary.csv",
+      "size": 2122,
+      "sha256": "7f87e9e2da5f370d1568fb9207341e59b81dca8b9bff1b99069ce1cbe1f99321"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/selected_peptides_24/summary.json",
+      "size": 8504,
+      "sha256": "24a2fb08ac10ee1af917d1a6d534630626001487349b789fb49533fb14cce1cd"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/selected_peptides_24/selected_peptide_pairwise_similarity_violin.pdf",
+      "size": 31238,
+      "sha256": "335dac2f7fb77c17aa8d65adefe4c2f21461971500bcb600c90987c46a819d2c"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/selected_peptides_24/selected_peptide_pairwise_similarity_violin.svg",
+      "size": 131844,
+      "sha256": "4075b07f1de35d7262dd11f73b03340721dc2dffa1a1b7b5914f0dfa6840138f"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/selected_peptides_24/selected_peptide_pairwise_similarity_violin.png",
+      "size": 288042,
+      "sha256": "e101eb9425cc1f383e26713201d281477957d37871ddf8ed78db5a055716c3a7"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/selected_peptides_24/selected_peptide_pairwise_similarity_violin_caption.md",
+      "size": 536,
+      "sha256": "e68ca3587a7343e48154a72cd5e09a5fc355c015b83a5bd495a5e386e68ec38f"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/selected_peptides_24/selected_peptide_pairwise_similarity_by_strain_topology.pdf",
+      "size": 35148,
+      "sha256": "bb6f3d2d5328f59007221032f8e30d89d0552e4ceda013192fe87258fa970628"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/selected_peptides_24/selected_peptide_pairwise_similarity_by_strain_topology.svg",
+      "size": 123195,
+      "sha256": "d4208b9b2de8c918e9c0edc8f498abb0034689b978e817cb830ca1d26ef96b12"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/selected_peptides_24/selected_peptide_pairwise_similarity_by_strain_topology.png",
+      "size": 261603,
+      "sha256": "1c14c40d07b57d335b317fd5bbe9870efb7ca779304cfb4680f637571e60a7dc"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/selected_peptides_24/selected_peptide_pairwise_similarity_by_strain_topology_caption.md",
+      "size": 730,
+      "sha256": "13cc6cd145eb0ca9798ccb7a497aa95b437964dde6db57114992fd955c752e66"
+    }
+  ]
+}

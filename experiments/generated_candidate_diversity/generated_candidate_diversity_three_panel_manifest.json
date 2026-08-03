@@ -1,0 +1,39 @@
+{
+  "created_at_utc": "2026-08-03T05:24:18.441244+00:00",
+  "script": "/data2/tianang/projects/Synergy/scripts/audit/plot_generated_candidate_diversity_figure.py",
+  "script_sha256": "6a790ca824f7c9d34a822c3b93b03f98684fc383f35282943dd448d59f47401e",
+  "inputs": [
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/selected_peptides_24/pairwise_sequence_similarity.csv",
+      "size": 39167,
+      "sha256": "3f41b143c2a5fcf209380900e07ad446f6c1d5ef06213ddf2257b2a6077340a9"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/tanimoto_histogram_plotted_data.csv",
+      "size": 3029,
+      "sha256": "1422410a32611eaf503ce9659f8b7744013c6f7ee8986367e52f153bb6a3b960"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/generated_candidate_diversity_three_panel.pdf",
+      "size": 36923,
+      "sha256": "72c50e1649720233a3a45ba46d57d21df8fa68ffb2660aba886b3a4f491a8ab8"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/generated_candidate_diversity_three_panel.svg",
+      "size": 118619,
+      "sha256": "10465e65ac82a4983707d4e2feb914d9b4894f868404317d8522d21ba41bc4f5"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/generated_candidate_diversity_three_panel.png",
+      "size": 254010,
+      "sha256": "75b4531518acd98ced8ad3d5f58166817fee43778731b79025a46be64b45b666"
+    }
+  ],
+  "panel_order": {
+    "a": "24 selected peptide PID, within target strain and topology",
+    "b": "73-candidate-pool Morgan/Tanimoto distribution",
+    "c": "84,226-output Morgan/Tanimoto distribution"
+  }
+}

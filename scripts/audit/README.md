@@ -151,3 +151,67 @@ PYTHONPATH=src python scripts/audit/audit_peptide_classifier_split.py \
 
 审计通过表示 canonical molecule 和 sequence component 的确定性 group assignment 可逐行复算；
 不能把 v1 来源标签重新解释为 v2 parser 标签。
+
+## Guided-generation candidate diversity
+
+```bash
+MPLBACKEND=Agg PYTHONPATH=src \
+  /home/tianang/anaconda3/bin/python \
+  scripts/audit/analyze_generated_candidate_diversity.py
+```
+
+`analyze_generated_candidate_diversity.py` 只读导入外部 guided-generation outputs、历史
+`smiles_to_peptide.py` 和 PepLink 0.1.2。入口首先生成作者确认的 73-row corrected peptide
+candidate 副本：8 个最近前体对应 9 个保存行替换为 final synthesized sequences；随后对全部
+73 行穷举 2,628 个 Morgan/Tanimoto pairs。Generation level pooled `BAA-3170` 与
+`BAA-3197` 的全部 84,226 条 guided outputs，精确计算 canonical structure uniqueness，并以
+固定 seed 抽取 1,000,000 个 non-self pairs 作 preliminary distribution/stability check。正式
+reviewer-facing distribution 使用下一入口的 exact all-pairs counts。输出、精确分母和解释边界见
+`experiments/generated_candidate_diversity/README.md`。
+
+24 条最终实验 peptides 的 pairwise diversity 使用：
+
+```bash
+PYTHONPATH=src /home/tianang/anaconda3/bin/python \
+  scripts/audit/analyze_selected_peptide_diversity.py
+```
+
+该入口只消费上述 canonical 73-row 副本中的 final-peptide mapping 和 structures，输出全部 168 个
+同拓扑 BLOSUM62 PID pairs、276 个 Morgan/Tanimoto pairs、24 × 24 matrices、nearest neighbors、
+summary、PID/Tanimoto 双 panel violin plot 和 SHA-256 manifest 到
+`experiments/generated_candidate_diversity/selected_peptides_24/`。
+Sequence 协议与论文 lead-versus-training 分析相同；linear--cyclic pairs 留空，cyclic pairs 穷举
+rotation，无序 pair 额外对称化 alignment orientation。入口同时生成不混合 generation target 或
+topology 的 87-pair stratified summary 与双 panel 图；四个组分别含 66、3、15、3 pairs。
+验证命令为：
+
+```bash
+PYTHONPATH=src /home/tianang/anaconda3/bin/python -m pytest -q \
+  tests/test_generated_candidate_diversity.py tests/test_sequence_similarity.py
+```
+
+正式 Supplementary Fig. C5 三 panel 图使用：
+
+```bash
+MPLBACKEND=Agg /home/tianang/anaconda3/bin/python \
+  scripts/audit/plot_generated_candidate_diversity_figure.py
+```
+
+该入口只消费冻结的 87-pair within-target PID rows 和 Tanimoto histogram plotted-data CSV，
+以单行 `a/b/c` 布局输出 selected-peptide PID、73-candidate-pool Tanimoto 和 84,226-output
+Tanimoto panels 到 `experiments/generated_candidate_diversity/generated_candidate_diversity_three_panel.*`，
+并写入 input/output SHA-256 manifest。Panel a 略宽；四组标签使用 Lin./Cyc. 与真实 pair 数，
+完整 peptide 数和 protocol 保留在 caption/Methods。
+
+正式 generation-level 分布另使用：
+
+```bash
+python scripts/audit/compute_exact_generation_tanimoto.py \
+  --fingerprint-cache experiments/generated_candidate_diversity/local_cache/generation_morgan_r2_2048_chiral.npz \
+  --output-dir experiments/generated_candidate_diversity \
+  --workers 64
+```
+
+该入口对 precomputed fingerprints 流式穷举全部 3,546,967,425 个无序 pairs，不保存逐 pair
+float 数组。再次运行主入口时，如果 exact histogram/summary 已存在，正式 panel b 自动使用
+all-pairs counts；1,000,000-pair sample 只保留为内部稳定性核验。

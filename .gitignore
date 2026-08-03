@@ -92,6 +92,21 @@ slurm-*.out
 !experiments/hierarchical_mic/molecule_disjoint/phylum_analysis/cluster_bootstrap.csv
 !experiments/hierarchical_mic/fixed_strain_retrain/analysis/metrics.csv
 !experiments/hierarchical_mic/fixed_strain_retrain/analysis/cluster_bootstrap.csv
+!experiments/generated_candidate_diversity/candidate_pairwise_tanimoto.csv
+!experiments/generated_candidate_diversity/generation_all_pairs_tanimoto_histogram.csv
+!experiments/generated_candidate_diversity/tanimoto_histogram_plotted_data.csv
+!experiments/generated_candidate_diversity/canonical_candidates/candidates_73.csv
+!experiments/generated_candidate_diversity/canonical_candidates/final_peptide_mapping.csv
+!experiments/generated_candidate_diversity/canonical_candidates/replacement_audit.csv
+!experiments/generated_candidate_diversity/selected_peptides_24/nearest_neighbors.csv
+!experiments/generated_candidate_diversity/selected_peptides_24/pairwise_sequence_pid_matrix.csv
+!experiments/generated_candidate_diversity/selected_peptides_24/pairwise_sequence_similarity.csv
+!experiments/generated_candidate_diversity/selected_peptides_24/pairwise_similarity_by_strain_topology_summary.csv
+!experiments/generated_candidate_diversity/selected_peptides_24/pairwise_tanimoto.csv
+!experiments/generated_candidate_diversity/selected_peptides_24/pairwise_tanimoto_matrix.csv
+!experiments/generated_candidate_diversity/generated_candidate_diversity_three_panel.pdf
+!experiments/generated_candidate_diversity/generated_candidate_diversity_three_panel.png
+!experiments/generated_candidate_diversity/generated_candidate_diversity_three_panel.svg
 
 # Hierarchical MIC checkpoint-replay intermediates remain local. Only compact
 # aggregate metrics/manifests are reviewer-facing versioned artifacts.
@@ -109,6 +124,9 @@ experiments/hierarchical_mic/fixed_strain_retrain/analysis/ensemble_predictions.
 # reproducible intermediates. Keep only their compact manifest and audit.
 experiments/peptide_classifier/reviewer_retrain/*.u1
 experiments/peptide_classifier/reviewer_retrain/*.u8
+experiments/generated_candidate_diversity/local_cache/
+experiments/generated_candidate_diversity/canonical_candidates/selfies_files/
+experiments/generated_candidate_diversity/selected_peptides_24/selected_peptide_pairwise_similarity_*
 
 # Remasking reviewer raw attempts, smoke runs, and host-local queue state stay
 # local. The frozen task manifest, protocol README, compact summary, and

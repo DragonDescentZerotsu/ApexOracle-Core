@@ -14,6 +14,92 @@ identity，随后冻结了窄结构筛选与正确 SEP-padding classifier 的联
 responses 均已落稿并独立渲染核验；对外文稿只报告 peptide/RDKit-valid yield、精确计数和
 predicted MIC，不展开内部判定规则。完整证据和正式文件记录见
 `experiments/remasking_schedule_reviewer/STRUCTURE_AUDIT.md` 与该实验 `README.md` 第 13 节。
+2026-08-02 新增 guided-generation diversity reviewer 审计：冻结作者确认的 73-row corrected
+peptide candidate pool，并对两个最终 target 的 84,226 条 guided-generation outputs 计算 exact
+canonical-structure uniqueness 与可复核 Morgan/Tanimoto distributions；canonical 入口和边界见
+`experiments/generated_candidate_diversity/README.md`。
+作者确认的论文落稿计划已执行：在三条 representative leads 的 training-set sequence-similarity
+结果后加入 generated-set diversity Results，报告 73-row peptide candidate pool 的 71 个 distinct
+canonical isomeric structures（97.3% unique、median Tanimoto 0.375）和 84,226 条
+MIC-guided outputs 的 83,433 个 distinct structures（99.1% unique、median Tanimoto 0.190），并
+引用新增的 Supplementary Fig. C5。前面 hierarchical MIC Results 保留更直观的
+`we additionally evaluated exact-peptide overlap` 及其 train-seen/train-unseen 解释；后续原
+`Together with the exact-peptide-disjoint strain-wise sensitivity analysis described above` 改为
+`Together with the strain-wise sensitivity analysis on peptides absent from the corresponding
+training folds, ...`，继续明确它是 MIC predictor sensitivity 而非
+generation-diversity test。Results 还明确 Fig. 3a 是 predicted candidate distributions 的
+*in silico* comparison，prospective MIC 才是 selected candidates 的直接实验评价。
+同一轮还完成了 18 条 purchased small molecules 的历史资产审计：冻结 prediction tables 对相同
+44,608 个唯一 SMILES entries（39,995 个 RDKit-valid canonical structures）分别预测两个 targets，
+`predicted MIC <=15 µM` 后为 1,554/395 rows、
+合并 canonical 去重为 1,535 个 structures；与 MolPort exact canonical-structure matching 得到
+179 个 available structures，其中 80 个未命中 PAINS/BRENK/custom structural alerts。19 个
+quote-stage compounds 位于 19 个不同 Butina clusters；最终实验 18 条相对 quote 只排除了单价
+显著高于其余条目的 `Molport-002-070-273`。现有 quote 不支持“因运输时间过长排除候选”，正式
+文稿只写 procurement feasibility/cost。完整事实、推断和待确认边界记录在
+`experiments/generated_candidate_diversity/molport_selection_audit.md`。正式 TeX 已按本轮
+selection/diversity 计划修改；两条 selection reviewer replies 已在
+`reviewer_response_draft.md` 中按同一分母和 manuscript revisions 补齐，并已合并进正式
+`Response to reviewers letter.docx`。修改前备份为
+`Response to reviewers letter_before_generated_diversity_selection_20260802.docx`；独立渲染为 30 页，
+三处新回复的分页和格式已核验。
+进一步核验确认 44,608 是 processed screening collection 的唯一 SMILES-entry 数，对应 39,995 个
+canonical structures，并非 MolPort 全库；本地历史 MolPort snapshot 为 5,887,458 个唯一 IDs。
+其上游已由逐字节/逐集合复核闭合：Fig. 1b 的三套公开 small-molecule classification data 按
+2,335/7,684/39,312 rows 合并为 49,331 molecule--strain rows；`DataPrepare/debug.py` 只抽取 SMILES
+并逐条转为 SELFIES，两个 unseen-target input files 均为相同的 49,331 lines 和相同 SHA-256，按
+唯一 SELFIES 汇总后恰为 prediction tables 的 44,608 entries。原二分类 labels 不进入本次 MIC
+scoring；44,608 不是 generated molecules。shell history 只证明运行顺序，未保存当时 mutable
+producer script 的 byte-exact launch snapshot，因此不声称完整恢复原 command line。
+Reviewer 4 的相似 selection/hit-rate comment 与本轮共用同一组 manuscript revisions：删除
+`spanning a range of predicted MIC values`，明确 73 条均先满足 predicted MIC `<=15 µM`，再按
+diversity/feasibility 选 24 条；以 intended-target experimental MIC `<=64 µM` 定义 hit 时，peptides
+为 10/24（41.7%；PA5257 4/15、AR-0349 6/9；4/8/16/32/64 µM 分别 1/3/1/2/3 条），small
+molecules 为 1/18（5.6%；2-fluoroadenosine 对 AR-0349 为 16 µM）。两条 reviewer response 分开
+写，但引用同一 Results/Methods/Supplementary 修改和完全相同的分母。正式 TeX 的新增图为
+`Fig_SI_generated_candidate_diversity.pdf`（当前三 panel SHA-256
+`72c50e1649720233a3a45ba46d57d21df8fa68ffb2660aba886b3a4f491a8ab8`）；独立编译为 32 页，图号
+已核验为 Supplementary Fig. C5，未覆盖正式论文 PDF。修改前 TeX 备份为
+`sn-article_before_generated_diversity_selection_20260802.tex`。
+正式 Supplementary Fig. B2 随后已由只展示 4 个 featured candidates 替换为全部 24 条
+synthesized peptides 和 18 个 purchased small molecules 在 20 个 strains 上的 MIC heatmaps。作者
+提供的 Mac v4 PDF 与正式 `Fig_SI_heatmap_re.pdf` SHA-256 均为
+`5ac3bd00e52958ecb06bc066e29de4752863b0f31d851e18df531954c1ae2693`；TeX 改为双栏
+`figure*`/`\textwidth`，caption 以 revision color 明确全部实验分母。独立编译为 32 页，
+B2 位于第 23 页，C3--C5 编号不变；正式 `sn-article.pdf` 保持原内容。两条 selection
+reviewer replies 亦已同步回指 complete B2 MIC matrices。
+2026-08-03 已新增 24 条 final peptide 的 pairwise diversity audit：完全复用论文 lead
+sequence-similarity 的 BLOSUM62/gap/PID/topology/cyclic-rotation 口径，并对无序 pair 做方向对称化；
+结构指标继续使用同一 Morgan/Tanimoto 协议。结果为 24/24 structures unique、168 个同拓扑
+sequence pairs 的 median PID `0.1719`（仅 ApexOracle-14/23 为高相似 near-neighbor）、276 个
+结构 pairs 的 median Tanimoto `0.4633`。该结果可支持 selected panel 的 descriptive diversity，
+但不能写成 selection 相对 random/top-predicted comparator 已证明提高 diversity；完整边界和产物见
+`experiments/generated_candidate_diversity/selected_peptides_24/REPORT.md`。同一入口另生成共享
+0--1 纵轴的 PID/Tanimoto 双 panel violin plot，便于直接审阅完整 pairwise distributions。
+2026-08-03 同一 audit 新增不混合 target strain 的严格分层视图：按
+`BAA-3197/BAA-3170 × linear/cyclic` 得到 66/3/15/3 pairs，四组 median PID 为
+`0.1667/0.2500/0.2258/0.1818`，87/87 均低于 `0.5`。原 pooled high-PID pair
+ApexOracle-14/23 跨 target strain，因此不进入该 selection-stratified 口径。
+2026-08-03 已将这组 within-target PID 作为新 panel a 加入 Supplementary Fig. C5，原 candidate-pool
+与 generation-level Tanimoto panels 顺延为 b/c。最终采用作者指定的三 panel 单行布局；Results
+按 24→73→84,226 的顺序引用，Methods 新增 selected-peptide sequence-diversity protocol。Canonical
+PDF SHA-256 为 `72c50e1649720233a3a45ba46d57d21df8fa68ffb2660aba886b3a4f491a8ab8`；独立编译为
+32 页，C5 位于第 24 页且正式论文 PDF 未覆盖。C5 caption 已明确正式 strain 编号、四组
+peptide/pair 数和 Lin./Cyc. 定义；0--100\% PID 轴与 comparison exclusions 分别只保留在图和
+Methods。Reviewer diversity
+回复和两条 selection 回复均加入 C5a 的 87-pair 定量证据。正式 response DOCX 最新 SHA-256 为
+`5da0fc9894c861733917438b07904cb22777f800cceece7185b067b0464473bc`，修改前备份为
+`Response to reviewers letter_before_selected_pid_c5_20260803.docx`，独立渲染为 30 页并完成目视核验。
+2026-08-03 新增 Methods 已按作者要求重排：guided generation/remasking 留在 architecture/training；
+candidate selection 与 small-molecule screen 进入独立 `Candidate prioritization and virtual screening`；
+PID 在 `Sequence and structural diversity analyses` 开头统一定义，随后依次描述 lead-to-training、
+selected-24 sequence 和 73/84,226 structural analyses，删除重复的 topology/cyclic-rotation 说明。
+协议和结果未改变；修改前 TeX 备份为 `sn-article_before_methods_reorganization_20260803.tex`，
+独立编译仍为 32 页，相关 Methods 页面已目视核验且正式论文 PDF 未覆盖。
+发布前完成膨胀审计：21 MiB fingerprint cache、81 个可由外部只读输入重建的逐长度 SELFIES
+provenance files、旧两 panel/selected diagnostic plots 均保持 local-only；Git capsule 只纳入
+compact tables/manifests/docs、canonical 三 panel C5、四个入口、共享 module 与测试。该收紧只
+改变发布白名单，不删除本地资产，也不改变任何分析功能或结果。
 当前其余主要未完成事项是
 corrected AA successor dataset 的重新训练、Reviewer 4 target/
 multi-isolate panel 决策，以及 `DataPrepare/` legacy 脚本的迁移、去重和归档。机器职责、

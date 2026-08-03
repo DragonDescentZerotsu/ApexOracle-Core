@@ -1,0 +1,64 @@
+{
+  "created_at_utc": "2026-08-02T16:42:51.085126+00:00",
+  "population_size": 84226,
+  "unordered_nonself_pairs": 3546967425,
+  "workers": 64,
+  "fine_histogram_bins": 1000,
+  "fingerprint_cache": "/data1/tianang/Projects/generated_candidate_diversity_20260802/input/generation_morgan_r2_2048_chiral.npz",
+  "fingerprint_cache_sha256": "a2b0a9789670057665ad124cb5c0fd9105c70030a809909c1a0b907074c764bf",
+  "runner": "/data1/tianang/Projects/generated_candidate_diversity_20260802/compute_exact_generation_tanimoto.py",
+  "runner_sha256": "afc18c36b7c8c8379fcf2cc5849b6c35dd62230b1a66ee68f27c7b1ca62c83c0",
+  "host": "node002",
+  "python": "3.12.7",
+  "numpy": "1.26.4",
+  "rdkit": "2023.09.6",
+  "load_seconds": 0.8635336486622691,
+  "compute_seconds": 21.72365114185959,
+  "total_seconds": 22.617994271218777,
+  "throughput_pairs_per_second": 163276762.3562736,
+  "mean": 0.20788351199863628,
+  "sample_sd": 0.10836921821632371,
+  "min": 0.0,
+  "max": 1.0,
+  "q05_histogram": {
+    "estimate": 0.0655,
+    "lower": 0.065,
+    "upper": 0.066
+  },
+  "q25_histogram": {
+    "estimate": 0.1205,
+    "lower": 0.12,
+    "upper": 0.121
+  },
+  "median_histogram": {
+    "estimate": 0.1895,
+    "lower": 0.189,
+    "upper": 0.19
+  },
+  "q75_histogram": {
+    "estimate": 0.2775,
+    "lower": 0.277,
+    "upper": 0.278
+  },
+  "q95_histogram": {
+    "estimate": 0.4115,
+    "lower": 0.411,
+    "upper": 0.412
+  },
+  "threshold_counts": {
+    "0.5": 29269730,
+    "0.7": 101432,
+    "0.8": 8638,
+    "0.9": 2823,
+    "0.95": 2240,
+    "1.0": 2039
+  },
+  "threshold_fractions": {
+    "0.5": 0.008252043645424796,
+    "0.7": 2.859682310163872e-05,
+    "0.8": 2.435319799983785e-06,
+    "0.9": 7.95891154822207e-07,
+    "0.95": 6.31525393836962e-07,
+    "1.0": 5.748572669792703e-07
+  }
+}

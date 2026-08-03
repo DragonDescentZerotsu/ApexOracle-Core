@@ -15,6 +15,7 @@ DOCX/PDF 和临时运行目录不进入本仓库。每个子目录均应有 READ
 | `fig1b_antibiotic_classification/` | 三菌株小分子分类的 10-member ensemble、paired statistics 与 reviewer 文稿 | `fig1b_antibiotic_classification/README.md` |
 | `fig2b_molecule_encoders/` | 共享分子五折 encoder benchmark | `fig2b_molecule_encoders/README.md` |
 | `evo2_genome_embeddings/` | 预计算 Evo-2 embedding 的身份、消费范围和 scaling 审计 | `evo2_genome_embeddings/README.md` |
+| `generated_candidate_diversity/` | 两个 MIC-guided targets 的 73-row corrected peptide candidate pool、84,226-output generation-level uniqueness 与 Tanimoto 分布 | `generated_candidate_diversity/README.md` |
 
 ## 发布边界
 

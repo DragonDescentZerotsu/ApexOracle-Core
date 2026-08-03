@@ -1,0 +1,1295 @@
+{
+  "created_at_utc": "2026-08-02T17:51:36.857705+00:00",
+  "script": "/data2/tianang/projects/Synergy/scripts/audit/analyze_generated_candidate_diversity.py",
+  "script_sha256": "a87245a97bb81e60eb95bb319a09432665c148ce7acf4c74af79559487df6230",
+  "inputs": [
+    {
+      "path": "/data2/tianang/projects/ApexOracle_cleaned/docs/ApexOracle_Nat_Biotech/ApexOracle_MIC_data/Summary_pathogens.xlsx",
+      "size": 15414,
+      "sha256": "6f9b5b15a9db76fc5df744f9f51524f57f24e09662cc79a0655b3b0d42c80f22"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3170_MIC_1_length_256_noise.txt",
+      "size": 1315,
+      "sha256": "910cb2e4cdbcd8c0379feccddf67aab520c318a762575f4732da58475dc1bfca"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3170_MIC_1_length_260_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3170_MIC_1_length_264_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3170_MIC_1_length_268_noise.txt",
+      "size": 1363,
+      "sha256": "f3fcedfeba072a906d9dc8b88dbf48a46970f9971bcbcbefc977220b7c1006bc"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3170_MIC_1_length_272_noise.txt",
+      "size": 2737,
+      "sha256": "17f28a04eec3b1f688069da9182b04c4d9980d85b4a33364d2168a3f9272b359"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3170_MIC_1_length_276_noise.txt",
+      "size": 1411,
+      "sha256": "83a14f6b0af3c4ed2f0bf4bf69bdb54fdf4cabc6c883cb17aafd81270c443795"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3170_MIC_1_length_280_noise.txt",
+      "size": 1356,
+      "sha256": "b939df95477be328ef0685fdb0feb762f22de55cab6d70abe9bb7409a4d7d97c"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3170_MIC_1_length_284_noise.txt",
+      "size": 1391,
+      "sha256": "3b926e1c4fcd2bc9688ae737fdbbe02fc5228d8582546c32ab389e73f9bb400c"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3170_MIC_1_length_288_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3170_MIC_1_length_292_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3170_MIC_1_length_296_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3170_MIC_1_length_300_noise.txt",
+      "size": 1550,
+      "sha256": "202f4f97d6361813aeddb5e100eef62924022bba551ce19c14fb7792c891066a"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3170_MIC_1_length_304_noise.txt",
+      "size": 1513,
+      "sha256": "5bb6245221d2ea84e5803c01c8f97205fd30b9f4e28903bf5de915aaf546ac5f"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3170_MIC_1_length_308_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3170_MIC_1_length_312_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3170_MIC_1_length_316_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3170_MIC_1_length_320_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3170_MIC_1_length_324_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3170_MIC_1_length_328_noise.txt",
+      "size": 1652,
+      "sha256": "094cfbbec6142835df75d27aa90fd9c547469f9f8266a95ca95328e101625bc8"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3170_MIC_1_length_332_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3170_MIC_1_length_336_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3170_MIC_1_length_340_noise.txt",
+      "size": 1744,
+      "sha256": "aab998d4dfa7e0ff22bd39cbfde2368370b3873e014fc45defbc3a42b21594ce"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3170_MIC_1_length_344_noise.txt",
+      "size": 3456,
+      "sha256": "2062380e29b147222f723b9e8bdd4db6243fd7e29614b5114cc477a940156183"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3170_MIC_1_length_348_noise.txt",
+      "size": 1727,
+      "sha256": "20340c2997d49a911083344f71ab39dd369b11748497eaa7e0b1742601e7d501"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3170_MIC_1_length_352_noise.txt",
+      "size": 1744,
+      "sha256": "1f6d0c7f0cf6844dec1cf87014bf904bc432e05be2c6c26f81941227e9f05a1b"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3170_MIC_1_length_356_noise.txt",
+      "size": 3639,
+      "sha256": "e9d411866b2b52aadacd8e519213c397bd0ab62616c73d2f4299df54a0853a0f"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3170_MIC_1_length_360_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3170_MIC_1_length_364_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3170_MIC_1_length_368_noise.txt",
+      "size": 1850,
+      "sha256": "e6b353476adc07f395d2b50030defac00f66519421c830f5418158f6d7ba4d1c"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3170_MIC_1_length_372_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3170_MIC_1_length_376_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3170_MIC_1_length_380_noise.txt",
+      "size": 1875,
+      "sha256": "c9f3476d86087de352003fe35d0d265525f61060782daf5d1c08076958b4fda7"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3170_MIC_1_length_384_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3170_MIC_1_length_388_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3170_MIC_1_length_392_noise.txt",
+      "size": 4007,
+      "sha256": "9c91410f8c2e73069bb847df1b4ff903934142576a8d0c0be66023909930e075"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3170_MIC_1_length_396_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3170_MIC_1_length_400_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3170_MIC_1_length_404_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3170_MIC_1_length_408_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3170_MIC_1_length_412_noise.txt",
+      "size": 1875,
+      "sha256": "4b69d3b546e6d9e04ea3517d9c84ecef5cf418e04493466a4a31254d558eff42"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3170_MIC_1_length_416_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3197_MIC_1_length_256_noise.txt",
+      "size": 1271,
+      "sha256": "890040fff1cc6e7fd1a2e9c3bc4c0d42c60221dfe9701abdb56d96349642d37f"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3197_MIC_1_length_264_noise.txt",
+      "size": 1347,
+      "sha256": "dee600df894431509491d22823cc190cd496730e39465d84944a3002f613d482"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3197_MIC_1_length_268_noise.txt",
+      "size": 1382,
+      "sha256": "4fdfd7de8b5824da099567909d7e213bc0080f72434e958f688889ab16894742"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3197_MIC_1_length_272_noise.txt",
+      "size": 2677,
+      "sha256": "af108e8cc20044cc5058bdea36714af3a38d615bbe85790099515c590cb62881"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3197_MIC_1_length_276_noise.txt",
+      "size": 1350,
+      "sha256": "7f9944431c06e920c0f792e3a9273e3caf75af6690ac09a8edb4b2eec1a1f16e"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3197_MIC_1_length_280_noise.txt",
+      "size": 2398,
+      "sha256": "0cfcb724b266f8d9b565c0112623b8d7b626b1e8026ee297e977987cf5bed17b"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3197_MIC_1_length_284_noise.txt",
+      "size": 1421,
+      "sha256": "2b6a41ecbdaa1f00e90b9f8f499663a64dbae21f4ccf52f380e144fafe2f5664"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3197_MIC_1_length_288_noise.txt",
+      "size": 2904,
+      "sha256": "2a3529fc9d32ba0b3d71f4e1e7c4a7dc0d97efaea5bc1437c744e4b0c2db685a"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3197_MIC_1_length_292_noise.txt",
+      "size": 1478,
+      "sha256": "454b71c4d1f4e5c0ea1ea0cf58b657b44c3b789d94aec7e1da2aa818da854522"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3197_MIC_1_length_296_noise.txt",
+      "size": 4499,
+      "sha256": "1aa1928c7a5a5feaafab6c48eafb98d8091b90d015503962e3380d3b593614fb"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3197_MIC_1_length_300_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3197_MIC_1_length_304_noise.txt",
+      "size": 3112,
+      "sha256": "590bcc66ccd482ad88ae4e22707e58c0d1cb71f5af050e594596b8ca9726ee41"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3197_MIC_1_length_308_noise.txt",
+      "size": 4748,
+      "sha256": "b4178f72b75acbcbc5804239cb3ef0edc1aefb8b8abb5da550279c180dfc24ea"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3197_MIC_1_length_312_noise.txt",
+      "size": 3180,
+      "sha256": "2b73ed2ad47ea4982257d96736ca6deee14315f436a90bd345bd76387b79176a"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3197_MIC_1_length_316_noise.txt",
+      "size": 1574,
+      "sha256": "d7451ddb2426ebd70e05f116f0cd32f6416ded0695b59b50d66a410661f4e230"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3197_MIC_1_length_320_noise.txt",
+      "size": 3272,
+      "sha256": "b5b4ed6760b31d1f1dcec22afbc1c0a408e5072134c209dd760f38d35a842c20"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3197_MIC_1_length_324_noise.txt",
+      "size": 1631,
+      "sha256": "74632ccc0cf9916e40ba871e65e8c1f906a694561c3ec4cb0c96c6fd2535070e"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3197_MIC_1_length_328_noise.txt",
+      "size": 1624,
+      "sha256": "48b95981fa2bd09fa82a15aee5250a147357988f847547c77125351a85da7555"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3197_MIC_1_length_332_noise.txt",
+      "size": 1648,
+      "sha256": "741c095f0196fd470071406419649b133778b143b8c79c8b621980093efe76f0"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3197_MIC_1_length_336_noise.txt",
+      "size": 1653,
+      "sha256": "fa10bda25e3971205aa35b99c0944be6fcbe681abb1477f2a526c284c3225f6b"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3197_MIC_1_length_340_noise.txt",
+      "size": 1755,
+      "sha256": "b0f38609eb86aa5f87955c0d054bd6907393f34233422d7cabbba28324e7be9f"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3197_MIC_1_length_344_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3197_MIC_1_length_348_noise.txt",
+      "size": 1787,
+      "sha256": "c6d8aed4738be71c631ffbe7670bfc3792906ef1d52e258a816ba7cdcba76602"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3197_MIC_1_length_352_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3197_MIC_1_length_356_noise.txt",
+      "size": 1811,
+      "sha256": "6f7cba523f2f14cd5298fec26881000b489d43a20e43b0eaebc9ca938c7b27a1"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3197_MIC_1_length_360_noise.txt",
+      "size": 1785,
+      "sha256": "f6d85914d9444180ff09cf7b2d1ddaa6adc3f96095e032c62a4ce182402527e0"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3197_MIC_1_length_364_noise.txt",
+      "size": 3698,
+      "sha256": "13d9f9c9ac80e769190b531833df1a68676ec3b05355212483b1b852f50344c9"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3197_MIC_1_length_368_noise.txt",
+      "size": 1865,
+      "sha256": "f417ff65dc0325092933745acdb70a210854cc8a8ab16edd2426105863fb5bc5"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3197_MIC_1_length_372_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3197_MIC_1_length_376_noise.txt",
+      "size": 3789,
+      "sha256": "ae99b3c5b8ba132277ab762ebcbe57636be5335c37f380610e033e9cd814c235"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3197_MIC_1_length_380_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3197_MIC_1_length_384_noise.txt",
+      "size": 1929,
+      "sha256": "c74cd8123543fafaeb5d6471a060edd40ed03d5c482db13c4b8f3b405ba6c6ee"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3197_MIC_1_length_388_noise.txt",
+      "size": 5864,
+      "sha256": "82102d4eb5b2b69ca696e3e0ebcc7409186c5d7f5ffc53aed699136f6968c481"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3197_MIC_1_length_392_noise.txt",
+      "size": 1973,
+      "sha256": "98c45b2bd90f31287b32e8189035e7043efcaa13ef3d4f8b022f15da0aeecfb9"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3197_MIC_1_length_396_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3197_MIC_1_length_400_noise.txt",
+      "size": 2039,
+      "sha256": "6b2e4687b4d34090b42893b6e116888b77404a16ee809288d4b060243b53360e"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3197_MIC_1_length_404_noise.txt",
+      "size": 2008,
+      "sha256": "db7021b8eef0404e27dda8865a92b66e5457977d01fabfdcad5d42f9577053e0"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3197_MIC_1_length_408_noise.txt",
+      "size": 2091,
+      "sha256": "bc2710cabc013f6290ef7f72d7e93b3adfd71821f03094f08c11361eeea9d004"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3197_MIC_1_length_412_noise.txt",
+      "size": 8301,
+      "sha256": "461b23c72d541bb498d4d3da5f64ebb1f1bd880fe7268da0849b43183e00f903"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES_w_mic-new/strain_BAA-3197_MIC_1_length_416_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3170_MIC_1_length_256_noise.txt",
+      "size": 1940754,
+      "sha256": "c43a8a13823fc4dce250f2f2a57b26717e6a7839a4815fd12c0d4b4bdf31f407"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3170_MIC_1_length_260_noise.txt",
+      "size": 2079513,
+      "sha256": "7428e878003a5ec4417e56741b212762a5c03b5b23f755f6c66e93357438bc2b"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3170_MIC_1_length_264_noise.txt",
+      "size": 2092285,
+      "sha256": "54c613701f1aba8b0ad60d89a85460ede06870455ae45b3410d0dfcc891c0b82"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3170_MIC_1_length_268_noise.txt",
+      "size": 2181600,
+      "sha256": "4ceb87dc69c68f16ca91c26cf2ca8e30ca66266401dfca167dd060c21ec8a530"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3170_MIC_1_length_272_noise.txt",
+      "size": 2226902,
+      "sha256": "7b25e894833d5d24223a66a9b886d8bd87738bce896cf10023fda6d2593f700c"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3170_MIC_1_length_276_noise.txt",
+      "size": 2265850,
+      "sha256": "a1007fcd968063f2aa55c09ddb07ad76fe090630125237b5136e2dfe8100bb7e"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3170_MIC_1_length_280_noise.txt",
+      "size": 2341110,
+      "sha256": "a0d34a847e7b6d64fc247a9fb2703c57cae0a994e03204d3d5153c98befe4ec8"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3170_MIC_1_length_284_noise.txt",
+      "size": 2367521,
+      "sha256": "6f8df889244e6890446fe17ca2c76be87032191217a273b47653c130612d667b"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3170_MIC_1_length_288_noise.txt",
+      "size": 2412566,
+      "sha256": "a80c57fb0ecec08bb0078cafdbe9835b53ac33ecbacb5a069ab8958cf69985e2"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3170_MIC_1_length_292_noise.txt",
+      "size": 2480271,
+      "sha256": "571b3ecf21ea0c3143da4029b7f045647c48e47a32794aa67e9ba98479f10f6e"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3170_MIC_1_length_296_noise.txt",
+      "size": 2393752,
+      "sha256": "3e3eb2dfa206b9f02c7954f90fc51aa9745df91cb5e895d0f3be0d51b69112f7"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3170_MIC_1_length_300_noise.txt",
+      "size": 2508603,
+      "sha256": "a31571e01f76398424bbf291c8e0a26066dc5ceae1233683e328087ebd6d665c"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3170_MIC_1_length_304_noise.txt",
+      "size": 2511427,
+      "sha256": "d475d4e58be1ee8e5262a7cb30344ea9c328dd983c3e163deeea5fa5183e05ae"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3170_MIC_1_length_308_noise.txt",
+      "size": 2485243,
+      "sha256": "3da29fb3afab1d9404841a48f16838a1998f90d89abcae77cbcd247b467516c9"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3170_MIC_1_length_312_noise.txt",
+      "size": 2485899,
+      "sha256": "782c1042302df765c171359a75ae8155acc052d372dac8380d442cc2d9720600"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3170_MIC_1_length_316_noise.txt",
+      "size": 2498440,
+      "sha256": "47627459b7dedbe5c1f464d35eb416f9db62802829a408612eaee4548634c60d"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3170_MIC_1_length_320_noise.txt",
+      "size": 2374556,
+      "sha256": "21f54ece094661b41d18892cd04fbeb47f000e5f3a507772761a34288470b08c"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3170_MIC_1_length_324_noise.txt",
+      "size": 2385951,
+      "sha256": "dc64eb3cb38c86c3a8d79c36fac50f97a4459325cad2e6cb3ca2e458adc4257b"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3170_MIC_1_length_328_noise.txt",
+      "size": 2322804,
+      "sha256": "176e3966349096c05ed4f55111996928ee1927652a3d81a14e7598d2e3402a91"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3170_MIC_1_length_332_noise.txt",
+      "size": 2339782,
+      "sha256": "6441357c3836d07f4f97dea240d12b20ab848ea85101ef68cc0bbe1ebca0d990"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3170_MIC_1_length_336_noise.txt",
+      "size": 2443494,
+      "sha256": "f36e9707ef15502922ed12ed10c340b857165fd91ff92b97757e3b1f1493dc53"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3170_MIC_1_length_340_noise.txt",
+      "size": 2351977,
+      "sha256": "a736c57464cde5e6810c3da431f6438a9252d5a8984f8bf25bd7133cba59c99c"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3170_MIC_1_length_344_noise.txt",
+      "size": 2402749,
+      "sha256": "db8ebc4ba5ca879734a9d74de0574714bd6a944f84faac29dd16afb63407df54"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3170_MIC_1_length_348_noise.txt",
+      "size": 2443219,
+      "sha256": "e89aafe93a389efe72959161a0209ef3be677d01187e14102fe65ef81fbf99a2"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3170_MIC_1_length_352_noise.txt",
+      "size": 2326434,
+      "sha256": "4f1027fc81b1f2b385104137ba6de98318d3807da124e845a112c443532414da"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3170_MIC_1_length_356_noise.txt",
+      "size": 2489216,
+      "sha256": "da9508fa354c90dcf6295c1d3c8e7ec6cb96be3614b1fa9a1010c88a270ce766"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3170_MIC_1_length_360_noise.txt",
+      "size": 2582373,
+      "sha256": "732ae4ceb6985f18b0765158a5f5aef92bc0637e89c3cc6e72f6fd83e0ae79f9"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3170_MIC_1_length_364_noise.txt",
+      "size": 2410136,
+      "sha256": "290a5fa04c48e4e7b261d66a29443f66760200253c96d60a596f0f184e83128e"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3170_MIC_1_length_368_noise.txt",
+      "size": 2446997,
+      "sha256": "db03c00481f526dc78426a5cb1e142b81462c4985f0a6bfe7d2126c4e8ece10e"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3170_MIC_1_length_372_noise.txt",
+      "size": 2425115,
+      "sha256": "691bbf46bd586812fac5f6f7baefbf9d230a234f93b5dc28b0b8f73c6052ab37"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3170_MIC_1_length_376_noise.txt",
+      "size": 2251162,
+      "sha256": "b61872e49f688d4d02ed37262fd5d1018f466aabe4e982b44451bb100536990c"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3170_MIC_1_length_380_noise.txt",
+      "size": 2312308,
+      "sha256": "7c587615a52fbdf949e0758b59cca254470a5e9d443f4f9cd81f2977cb77d93e"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3170_MIC_1_length_384_noise.txt",
+      "size": 2360804,
+      "sha256": "57165dcbda97c4201791d89bb939a009052ec9c0ca5173f284d6f528f615cfd5"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3170_MIC_1_length_388_noise.txt",
+      "size": 2337773,
+      "sha256": "a459bccd2d15707d4a1da3d8187c873711a9620a24b83477860557f68890a4bf"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3170_MIC_1_length_392_noise.txt",
+      "size": 2576655,
+      "sha256": "501621467d3bd48df5c58f80bb40da39f1366ae3c166f1c7df1c46a2a03c7957"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3170_MIC_1_length_396_noise.txt",
+      "size": 2417031,
+      "sha256": "266e41ea2ff15bb7568fbdac46fa19c2dea70c349995ae67dada28dd28845a5e"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3170_MIC_1_length_400_noise.txt",
+      "size": 2296081,
+      "sha256": "d58133876574a79ba28d981512abcf42ec5ab1e114cd48a2959c49e316859770"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3170_MIC_1_length_404_noise.txt",
+      "size": 2287736,
+      "sha256": "71677ea3f30502b0125d53a36bde94364af97f72d2fc345183adbb8605913e06"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3170_MIC_1_length_408_noise.txt",
+      "size": 2376496,
+      "sha256": "ec2efb940786ad354cfaa2cf04e387877a5da6235ca93498fc6d2b16dbef4005"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3170_MIC_1_length_412_noise.txt",
+      "size": 2427692,
+      "sha256": "f0bcdac2bb356c847e53362135471c17501b24891e3e7808ca958c9b1c5e4f04"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3170_MIC_1_length_416_noise.txt",
+      "size": 2555648,
+      "sha256": "2262dbf93053f796049d3539fea6d559989b9a38deaabc5763a60ea2872ce71f"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3197_MIC_1_length_256_noise.txt",
+      "size": 598899,
+      "sha256": "7c0731c40311d44ce1bf8cc9a5f369155aa021870b0ddabcdc10f78eb337d491"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3197_MIC_1_length_264_noise.txt",
+      "size": 665067,
+      "sha256": "8f603239b019efe56717d22ddfb495dedb9b87f26dbbca43c38909800e21e278"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3197_MIC_1_length_268_noise.txt",
+      "size": 698796,
+      "sha256": "861bcbdeeae3197110cf6e6a18da322d0fed08b38664e26a9cff53e5e3dfefc6"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3197_MIC_1_length_272_noise.txt",
+      "size": 744468,
+      "sha256": "e9872a53872af6f3bc9641a0b9ae3b26b237941de5105bae30aa0881b46e45f0"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3197_MIC_1_length_276_noise.txt",
+      "size": 731603,
+      "sha256": "4a5a7089e25be3fc21f9b56fe6a0bdef93882f679ee3075a9840837b1139143a"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3197_MIC_1_length_280_noise.txt",
+      "size": 840035,
+      "sha256": "56b132dd63793a5dac1fdf3c6374ffa792a021f420f4ee2a8c4965dd5e29b6e8"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3197_MIC_1_length_284_noise.txt",
+      "size": 829786,
+      "sha256": "555d4c601310aa736dee0fe51f75c7c5b5e7a0f2f9a5d8ba8f004c6b9e284d7c"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3197_MIC_1_length_288_noise.txt",
+      "size": 883137,
+      "sha256": "533d77194e34e5ce86a7c6c44c4972580784b0127037def68e1b736c60be1c5f"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3197_MIC_1_length_292_noise.txt",
+      "size": 823305,
+      "sha256": "d083254adbdcc8c48ffbfa0d6b4a303a4275fc62b4448158398ea6615143cf52"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3197_MIC_1_length_296_noise.txt",
+      "size": 902892,
+      "sha256": "f8a40607c3d98e1e360eb7f52e597a5e196aa5113ae7a5dd3056ec28139da8c9"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3197_MIC_1_length_300_noise.txt",
+      "size": 951253,
+      "sha256": "4b271afa0b049062cc17290908f990e05775624cfc7f44ed7df0113001c6b051"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3197_MIC_1_length_304_noise.txt",
+      "size": 986501,
+      "sha256": "b1176cfda6e87945f96971bd500b3357b65cb930e8bdff7d44df9e54767e009a"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3197_MIC_1_length_308_noise.txt",
+      "size": 953366,
+      "sha256": "b92edb67cc3479a12babd2bb6c869587d169a28ca6ac631143087dc9292ac2e0"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3197_MIC_1_length_312_noise.txt",
+      "size": 949316,
+      "sha256": "9a2187ed30fd1e87b57608c8981b8faa4e949684fb47b1db60b9e58277a90703"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3197_MIC_1_length_316_noise.txt",
+      "size": 988681,
+      "sha256": "d9c8d2a57b9c6f08874486c3048e3682f9d8799d9f94a90acf126f3cc1dfd72b"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3197_MIC_1_length_320_noise.txt",
+      "size": 978608,
+      "sha256": "f9e673294f27101c585e81fcb5969b9c9594c46a3de65a61b63a371ffaf9901a"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3197_MIC_1_length_324_noise.txt",
+      "size": 1016209,
+      "sha256": "152d74889eef38beb3ea7dba121ab3cba9808d28a266294233d89483124f1083"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3197_MIC_1_length_328_noise.txt",
+      "size": 926375,
+      "sha256": "1a49820a6b92cefb1a2f8e7b723feb95beda7c2f735ea460d55ac425bc937bf4"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3197_MIC_1_length_332_noise.txt",
+      "size": 872304,
+      "sha256": "b48eaa1afcd12ee4866a6df568887f4a65155d1b869f537a1f994484916c6e38"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3197_MIC_1_length_336_noise.txt",
+      "size": 936964,
+      "sha256": "96886f9215997e9893860aa42a2ed378843f86836030328497e3bd9da264a915"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3197_MIC_1_length_340_noise.txt",
+      "size": 1009922,
+      "sha256": "5b96dd5fb0006cf15c857a45a60cc72cdf175f6eeb8afb8a9385f8ef210f9a4b"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3197_MIC_1_length_344_noise.txt",
+      "size": 989511,
+      "sha256": "3f54ef4ca11b97f263b49571596eccade96cdb4c50f254799bac3262d97f945d"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3197_MIC_1_length_348_noise.txt",
+      "size": 976167,
+      "sha256": "a0e50aa42c16276882e0313a83cbd9abd7bab6d2e9945e2e1dd8b52ab8285ee1"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3197_MIC_1_length_352_noise.txt",
+      "size": 951591,
+      "sha256": "3b562e7872ee841e38d430b05349dfec84b141cff9b0962468228b1bbe95494b"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3197_MIC_1_length_356_noise.txt",
+      "size": 989036,
+      "sha256": "a903c75c7c94aa5179fbe4a77f7f9c1627a9ec8b8303cf454843cc54042383a5"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3197_MIC_1_length_360_noise.txt",
+      "size": 934896,
+      "sha256": "180e492839135216f7faf5aa4441b427e637ef9aafcefc91a7f1d2622716c57e"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3197_MIC_1_length_364_noise.txt",
+      "size": 1030587,
+      "sha256": "0207ef7b681e7fbb239f91e5de3ada16427d6db9ffbbbd3ce98640f9fce1bd6f"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3197_MIC_1_length_368_noise.txt",
+      "size": 1020576,
+      "sha256": "1d66fbe6c0e423785aaf0519e27a29e53102415d05f8e66bd41321ec59cec015"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3197_MIC_1_length_372_noise.txt",
+      "size": 997449,
+      "sha256": "107b2653d99dc71c8f838940d02904c776b976b46b29621e599c239e0c807dea"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3197_MIC_1_length_376_noise.txt",
+      "size": 984374,
+      "sha256": "2c958a38378d9f938f0fa68f6a1380d0bd4ce073a70d82cf9c5581554afae9e7"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3197_MIC_1_length_380_noise.txt",
+      "size": 911276,
+      "sha256": "94bd7cd8fedefa4c8c3df9669e49fa0e0dacb1b6ae336c073e57e12bc8aac755"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3197_MIC_1_length_384_noise.txt",
+      "size": 991624,
+      "sha256": "4c5ef8eaf90a41aa30fa5ca2c283762dbffb4b34d5727e3d4ae9dfe6de7729c7"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3197_MIC_1_length_388_noise.txt",
+      "size": 997517,
+      "sha256": "fd4ccd29f1542164c5cf9fc9a67b63830856937cbc48f538b6653acedac12acc"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3197_MIC_1_length_392_noise.txt",
+      "size": 1112869,
+      "sha256": "355205eb8a13ed58d63e407d513fea6f39eebe5387cc25826be018d9db44ec1a"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3197_MIC_1_length_396_noise.txt",
+      "size": 1020635,
+      "sha256": "c049c51e41792e64f4355ed408e0375b27aa400d21e4010c0e73ca8e6ab126f3"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3197_MIC_1_length_400_noise.txt",
+      "size": 1143766,
+      "sha256": "843bc1b22732c50db016181a1f595eafceb3e53f56bbb5181ed3f48ba0d2f707"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3197_MIC_1_length_404_noise.txt",
+      "size": 1138866,
+      "sha256": "6fece4f8cab801e0c3a420f17f4afdbdc14e3c0a01c031065d1e6a605239fe54"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3197_MIC_1_length_408_noise.txt",
+      "size": 1258350,
+      "sha256": "f48c188fae3615333964a40624f95fe192f1a35322692d1821917c23aa5934b2"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3197_MIC_1_length_412_noise.txt",
+      "size": 1302439,
+      "sha256": "ae3f4efba39a2229dc16eebd5f5b12b5833807633b2dba19f26a6de0c47f8149"
+    },
+    {
+      "path": "/data2/tianang/projects/discrete-diffusion-guidance/outputs/generated_mol_SELFIES-new/strain_BAA-3197_MIC_1_length_416_noise.txt",
+      "size": 1204148,
+      "sha256": "3dbab57eb0cea945505529d72b5cd0d490a7ffc427b5c225b1f6e125c63932df"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/generation_all_pairs_tanimoto_histogram.csv",
+      "size": 47964,
+      "sha256": "fa00fb097661a2fce38d450876ba81338f292818b89c05b94c5420f5dbbdabd2"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/generation_all_pairs_tanimoto_summary.json",
+      "size": 1776,
+      "sha256": "9d3e3c83fb428495b6c1e6d9139319e998228f51796588772a6a19b1ad9e846d"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/candidates_73.csv",
+      "size": 325073,
+      "sha256": "935bc5264b0a7b3d13246b46580a5c8223a6d7febf66140ae6e85b3782105404"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/replacement_audit.csv",
+      "size": 41511,
+      "sha256": "591f676a12fbffff7f58d12d5fe0c18e26fac4194afc6940b4e090f7212af10f"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/final_peptide_mapping.csv",
+      "size": 2175,
+      "sha256": "bbcfebf51a22ca39f0fd2bb8dd339e697d56e65d0a99b61ec9372bc104c0b2a4"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/candidate_pairwise_tanimoto.csv",
+      "size": 66262,
+      "sha256": "f77d159cee3c5ccdd3e7e1632e6093441ef88a850ddfb5bff31c71ffbb0e57cf"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/tanimoto_histogram_plotted_data.csv",
+      "size": 3029,
+      "sha256": "1422410a32611eaf503ce9659f8b7744013c6f7ee8986367e52f153bb6a3b960"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/summary.json",
+      "size": 4726,
+      "sha256": "f4c1fca11539030d0897333af3da195a638bee4cd6a9d4a636bfa4a91ba6d22e"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/local_cache/generation_morgan_r2_2048_chiral.npz",
+      "size": 21562134,
+      "sha256": "a2b0a9789670057665ad124cb5c0fd9105c70030a809909c1a0b907074c764bf"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3170_MIC_1_length_256_noise.txt",
+      "size": 1316,
+      "sha256": "51788dbc2a4b088894c51e7008d626ccd710a4b729ec09126b2defffc35928d1"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3170_MIC_1_length_260_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3170_MIC_1_length_264_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3170_MIC_1_length_268_noise.txt",
+      "size": 1364,
+      "sha256": "3708bc287e574ca101d4a98de9b7711ff8bf298b8c85a41ff74d3ab55c88ca05"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3170_MIC_1_length_272_noise.txt",
+      "size": 2738,
+      "sha256": "e73be7fe20f4e123f990d23cddcf14f75a89085a37ed1dde51ef8388fa427537"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3170_MIC_1_length_276_noise.txt",
+      "size": 1412,
+      "sha256": "4bb500a099b3b5857216a32d01de8ded2d04f5ccb521fb28bc4090acf63d1f93"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3170_MIC_1_length_280_noise.txt",
+      "size": 1357,
+      "sha256": "6775899eb3d2ad3a12e3fb9a123740b7ad1850d0681b35d6ca52137933f7b1b8"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3170_MIC_1_length_284_noise.txt",
+      "size": 1582,
+      "sha256": "4056b8c40aaa3924ad9c4708571ddb3f05d7338f1a6cada8d74e827101f86955"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3170_MIC_1_length_288_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3170_MIC_1_length_292_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3170_MIC_1_length_296_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3170_MIC_1_length_300_noise.txt",
+      "size": 1551,
+      "sha256": "ccfe952281eb5a599ea66d2e1d421bc03e60351858861669e3362abe59ae57ea"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3170_MIC_1_length_304_noise.txt",
+      "size": 1514,
+      "sha256": "e694bb7efef56a773c8088bc912a756e5868a7766a2fcea569954613d3cfdba7"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3170_MIC_1_length_308_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3170_MIC_1_length_312_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3170_MIC_1_length_316_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3170_MIC_1_length_320_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3170_MIC_1_length_324_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3170_MIC_1_length_328_noise.txt",
+      "size": 1653,
+      "sha256": "63d0cfcedba13250472f5b78a502b44e226fefab71ad5cfcb2ba25738fffe92e"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3170_MIC_1_length_332_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3170_MIC_1_length_336_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3170_MIC_1_length_340_noise.txt",
+      "size": 1745,
+      "sha256": "1701685bc7c3f193e7f791066f2b96aacd357597c08b094533cbc124891eca1d"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3170_MIC_1_length_344_noise.txt",
+      "size": 3457,
+      "sha256": "b9ee98593d01ad9ac313e18f7f943519ec595c6f8b36b2fff73ee3f43754eb27"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3170_MIC_1_length_348_noise.txt",
+      "size": 1728,
+      "sha256": "daa68c3a69e55bcaa4733862510fcd1b8c31c3ba6987b6ea2c8b2a1403c6b776"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3170_MIC_1_length_352_noise.txt",
+      "size": 1745,
+      "sha256": "1206a9b5f5836afa8a556efe9544b749f82d65b391395db2480a915f88844909"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3170_MIC_1_length_356_noise.txt",
+      "size": 3640,
+      "sha256": "4da920f505993c29f930008d118ea2ddf5cc82a129584b36fc56ecdd345c6494"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3170_MIC_1_length_360_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3170_MIC_1_length_364_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3170_MIC_1_length_368_noise.txt",
+      "size": 1851,
+      "sha256": "4094ee3e7343e838a2b3f89d91cd7541ae785f48843a14da630bbb93cb627f74"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3170_MIC_1_length_372_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3170_MIC_1_length_376_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3170_MIC_1_length_380_noise.txt",
+      "size": 1876,
+      "sha256": "4e635e68fb008ceac8abea633cf07dc8991edecdb6ae37fdf3b96b6dd7cf427a"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3170_MIC_1_length_384_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3170_MIC_1_length_388_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3170_MIC_1_length_392_noise.txt",
+      "size": 4089,
+      "sha256": "3303f122e82b76b0e5f00b4e699dc312ead5c5bfe20a60bf5d69d312aee01b2c"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3170_MIC_1_length_396_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3170_MIC_1_length_400_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3170_MIC_1_length_404_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3170_MIC_1_length_408_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3170_MIC_1_length_412_noise.txt",
+      "size": 1876,
+      "sha256": "550d2666e2276950b18a914869f2f39ad5ad1f41894f7945b80290e84c64bdf3"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3170_MIC_1_length_416_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3197_MIC_1_length_256_noise.txt",
+      "size": 1272,
+      "sha256": "c5fa69143fb2d41137450cdf706f3d083d044fdbf8a9a17cd0c2258ffba9404c"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3197_MIC_1_length_264_noise.txt",
+      "size": 1348,
+      "sha256": "f3cc32cfec7a17e7d8ab238203626c0fcfff82a9a7e684bd332639ed07580bb7"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3197_MIC_1_length_268_noise.txt",
+      "size": 1383,
+      "sha256": "0490c164818d569446e1ef19666f6fee87e62bb1579e7f0e0b8295dd390bcd92"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3197_MIC_1_length_272_noise.txt",
+      "size": 2735,
+      "sha256": "33e678037457034e8f60815a3234cceba6cccde45aafa4be5d6e9c438359c3c5"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3197_MIC_1_length_276_noise.txt",
+      "size": 1408,
+      "sha256": "db6ca298bef4b189b6a59118cb82fcc2d157dbed8c24370a8656f1d209742015"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3197_MIC_1_length_280_noise.txt",
+      "size": 2399,
+      "sha256": "2b4dbf4c7946b21c92c63d4b3a80ee0b088b7c4cdf89d1b981aba37d44d4da19"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3197_MIC_1_length_284_noise.txt",
+      "size": 1423,
+      "sha256": "abf7b9b3d9e0160574170736323900b13e7fc9409f1565478012c67836fc27ad"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3197_MIC_1_length_288_noise.txt",
+      "size": 2905,
+      "sha256": "803ba879d0fdee60ccd6e0704cff4fcbecdb6bfa150a4b50296049b1689c34b0"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3197_MIC_1_length_292_noise.txt",
+      "size": 1479,
+      "sha256": "d626bd900685da911da16a7f3158cc6158dc21d8ff44b65290eaf1004c1814f3"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3197_MIC_1_length_296_noise.txt",
+      "size": 4500,
+      "sha256": "04b8fa71aa75a591a1ad95e1b6d91cf60da5f108ff7639e8c38b40fd8af4f074"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3197_MIC_1_length_300_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3197_MIC_1_length_304_noise.txt",
+      "size": 3113,
+      "sha256": "3fbdaa468f6b32cc150d87372a5ec8dd45a1cb7ceffdcec92d1471a30f4f5b34"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3197_MIC_1_length_308_noise.txt",
+      "size": 4749,
+      "sha256": "447d810860efe12fdb75e04354273fa9895704f57f1e6bf6aab764b59ca12a4e"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3197_MIC_1_length_312_noise.txt",
+      "size": 3181,
+      "sha256": "a4f3b4a1b29786207b2d17c8e7997cd697a8836d38c2d096492eceb1405212b3"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3197_MIC_1_length_316_noise.txt",
+      "size": 1575,
+      "sha256": "ab5cca0d8a910bd7f816cbdba7546e4dbcdc83b7fcce240dd8ba26287a3b1270"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3197_MIC_1_length_320_noise.txt",
+      "size": 3273,
+      "sha256": "ec9f780ad70cd84f7498c500985acde147f0c2346d6af470f8a29e639c27d367"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3197_MIC_1_length_324_noise.txt",
+      "size": 1574,
+      "sha256": "c8f8bd18080f3893d1d4b4f370c7b547b1b840c85d9c6127831d0cee844cd04f"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3197_MIC_1_length_328_noise.txt",
+      "size": 1625,
+      "sha256": "0e694a36b903ca8da44a58310459522fb6a8d67561cc5ca9c2fd908a2770dd34"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3197_MIC_1_length_332_noise.txt",
+      "size": 1649,
+      "sha256": "335359c1905f10bc01cd45d7b91e894a7fb685c3d6a03030dd3d19d3ce268544"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3197_MIC_1_length_336_noise.txt",
+      "size": 1654,
+      "sha256": "93071faa6e14e49db53e75d5ce843280775114c9adfde21e8911a36420bdf9b7"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3197_MIC_1_length_340_noise.txt",
+      "size": 1756,
+      "sha256": "545fb1c13feb923093b760f87f1f51c39eb56a8a1e72f4adc51b983a141a86d6"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3197_MIC_1_length_344_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3197_MIC_1_length_348_noise.txt",
+      "size": 1788,
+      "sha256": "8bd1932d8998cc313bfcd6f9477e78048a4ae56de7459f7be3de7cb6be2dc51a"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3197_MIC_1_length_352_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3197_MIC_1_length_356_noise.txt",
+      "size": 1812,
+      "sha256": "9b9f1183de003d1ade1afb513fcaba3a6efa27e803b8c339b94a3ba747ae3458"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3197_MIC_1_length_360_noise.txt",
+      "size": 1786,
+      "sha256": "fcb407a122af1b28ffabbc8bf41ed596d59ab157b27750aaf7c1abc61da889ec"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3197_MIC_1_length_364_noise.txt",
+      "size": 3699,
+      "sha256": "be1f364682c8fe6e1438cbd33575670885d6960762c288498134e6a7d893ce66"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3197_MIC_1_length_368_noise.txt",
+      "size": 1866,
+      "sha256": "9b5557576c3fc57569e1fc25e6e97d5603369644b5c1ce20c2bb3a425b3149f6"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3197_MIC_1_length_372_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3197_MIC_1_length_376_noise.txt",
+      "size": 3859,
+      "sha256": "b3858a090260cd0a2b71daeb32e7d973990ecc7f7961d68d0dc18b82a43295eb"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3197_MIC_1_length_380_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3197_MIC_1_length_384_noise.txt",
+      "size": 1930,
+      "sha256": "c0e2b2bec8e94c01517cf50b24115670c8c77821a594072cc6ce646f97f68789"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3197_MIC_1_length_388_noise.txt",
+      "size": 5847,
+      "sha256": "2961fc98ca6ab25ba854959d63a9de125a0853bd8be93a3cf4ee92f05e949e7a"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3197_MIC_1_length_392_noise.txt",
+      "size": 1983,
+      "sha256": "1a2385020348bb26a722d8a86f0db9f7792a9a2533c6bc556125146ba73ada15"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3197_MIC_1_length_396_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3197_MIC_1_length_400_noise.txt",
+      "size": 2040,
+      "sha256": "0fa4788e6b019c3b075528cdcdf9f84011ca165a3eea070d63478b93ec098310"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3197_MIC_1_length_404_noise.txt",
+      "size": 2009,
+      "sha256": "22a0ef085c40cfdd8501660910b36e458bf469f80fafe8198811f2786eaa517e"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3197_MIC_1_length_408_noise.txt",
+      "size": 2092,
+      "sha256": "61965f17d4c0593fb323641a5cc474c9df9f573df9ba367c328113396151de0e"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3197_MIC_1_length_412_noise.txt",
+      "size": 8302,
+      "sha256": "657e42b1a59cf64353521574f29921ae9cac851f7047b7f9b367e3db57da426b"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/canonical_candidates/selfies_files/strain_BAA-3197_MIC_1_length_416_noise.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/guided_generation_tanimoto_distributions.png",
+      "size": 108243,
+      "sha256": "4e827d108945985f66bd14727bab1a659427d2ac1603014ad9668ee92f6a6391"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/guided_generation_tanimoto_distributions.pdf",
+      "size": 17878,
+      "sha256": "024d95d9d776b3988100827f4a2c94d866b0a977efe7854eeaccaf7539f2d296"
+    },
+    {
+      "path": "/data2/tianang/projects/Synergy/experiments/generated_candidate_diversity/guided_generation_tanimoto_distributions.svg",
+      "size": 57767,
+      "sha256": "c2b883bdca242c9550230c01385d3e2d89790802135cf1557c7872b4d6d35791"
+    }
+  ],
+  "external_code": {
+    "legacy_parser": "/data2/tianang/projects/mdlm/smiles_to_peptide.py",
+    "legacy_parser_sha256": "ce4dc6d36d59a71e71ba75c7f63b1b77d81ee5473f2ce515040ad72ad2c10cbc",
+    "peplink_root": "/data2/tianang/projects/PepLink",
+    "peplink_version": "0.1.2"
+  }
+}
