@@ -64,5 +64,9 @@ not change analysis behavior or outputs.
 
 ## Publication record
 
-The user authorized direct publication to `DragonDescentZerotsu/Synergy` `main`. Final commit identifiers and
-post-push alignment are recorded in the repository-level `AGENTS.md` after publication.
+The user authorized direct publication to `DragonDescentZerotsu/Synergy` `main`. The 41-file analysis capsule
+was published directly as commit `808493e` (`feat: add generated candidate diversity audit`), without a PR or
+`git add -A`. The versioned files occupy 1,469,672 bytes in the working tree; the largest is the 325,073-byte
+`canonical_candidates/candidates_73.csv`. Pre-push whitespace, credential and 100 MB file-size checks passed,
+and the first post-push fetch confirmed `HEAD...origin/main = 0 0`. The repository-level `AGENTS.md` records the
+same release boundary and validation results.

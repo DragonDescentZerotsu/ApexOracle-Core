@@ -227,6 +227,13 @@ median MIC 的 sample s.d.。panel c 是唯一保留 legend 的位置；legend �
   `canonical_candidates/selfies_files/*.txt` 和被最终三 panel C5 取代的旧诊断图保持为 local-only。
   Git 只发布 compact CSV/JSON/Markdown、四个 audit entrypoints、共享 evaluation module、测试和
   canonical 三格式 C5 图；没有删除本地取证资产或改变任何计算功能。
+- **2026-08-03 generated diversity/selection capsule 已推送 `Synergy/main`：** 核心提交为
+  `808493e`（`feat: add generated candidate diversity audit`），按显式路径发布 41 个文件，工作树
+  文件总大小 1,469,672 bytes，最大单文件为 325,073-byte `candidates_73.csv`；没有使用
+  `git add -A`，也没有创建 PR。发布前 `git diff --cached --check`、凭据扫描和 100 MB 单文件检查
+  均通过；focused tests 为 13 passed，全仓库为 171 passed（14 条既有 dependency/runtime
+  warnings）。推送后 `HEAD...origin/main` 为 `0 0`。21 MiB fingerprint cache、81 个逐长度
+  provenance 文件及 superseded/exploratory figures 继续受 `.gitignore` 保护并保留在本地。
 - **2026-08-02 Supplementary Fig. B2 全实验面板替换：** 作者提供的 Mac
   `Fig_SI_heatmap_re_v4.pdf` 已替换正式 `Fig_SI_heatmap_re.pdf`，两者 SHA-256 为
   `5ac3bd00e52958ecb06bc066e29de4752863b0f31d851e18df531954c1ae2693`。新 B2 以双栏
