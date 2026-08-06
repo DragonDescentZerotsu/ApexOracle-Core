@@ -1,0 +1,32 @@
+{
+  "asset_directory_contract_sha256": "3c8a27d3a47cccb05670cb9d45951ff2d095ab60b3b8f928a506fe24a2b95fe5",
+  "output_sha256": {
+    "compatible_genomes": "575cf08f09b836fe3b3c7000953be2e415ad7d8eb740facbcb85fc1819938de6",
+    "fragment_annotation_labels": "4d2cb3bfa6e6015c34e6482acc99ec69be64cb75372013cbb585901d6806530b"
+  },
+  "outputs": {
+    "compatible_genomes": "compatible_genomes.csv",
+    "fragment_annotation_labels": "fragment_annotation_labels.csv"
+  },
+  "schema_version": 1,
+  "scope": "all paper-dataset-matched bacterial embeddings with exact FASTA/GenBank sequence order and saved-tensor-compatible window reconstruction",
+  "source_sha256": {
+    "entrypoint": "e1715ea823956a8f177c8f5c9ed1027d1183400d361e68feef2c0121da051053",
+    "fragment_validation_module": "9975c356c68ea7e5488cdc1d28f86a5b4cb434860c318f3c3890bacba246bec4",
+    "window_reconstruction_module": "3338b1107ad6828ce9ecb626ba9d3e801dc5905ede6e1815c2e5cc9a5ed4ea9a"
+  },
+  "status": "completed",
+  "summary": {
+    "amr_positive_fragments": 1217,
+    "compatible_bacterial_genomes": 264,
+    "compatible_fragments": 96716,
+    "excluded": {
+      "fasta_genbank_sequence_or_order_mismatch": 213,
+      "missing_matching_genbank": 24,
+      "not_annotated_as_bacteria": 62
+    },
+    "mge_positive_fragments": 8843,
+    "paper_matched_embedding_ids": 563,
+    "window_reconstruction": "saved_tensor_compatible"
+  }
+}

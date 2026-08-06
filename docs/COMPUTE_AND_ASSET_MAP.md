@@ -256,6 +256,107 @@ RDKit 2025.03.5。
 - 当前拟开展的 hierarchical MIC peptide-overlap audit 是 CPU/只读任务；后续
   molecule-disjoint checkpoint replay 或 deterministic companion rerun 才进入上述 GPU 调度。
 
+### Genome-condition reviewer 实验（2026-08-04，已完成）
+
+- **已由实时只读查询验证的资源事实：** 本机 4 张 H100 PCIe 均约 81 GiB free、0% utilization；
+  node001 的 A100 GPU 0/3 有其他 Python workload，1/2/4/5/6/7 空闲；node002 8 张 A100 均已有
+  vLLM service 占用约 76 GiB，因此本轮不抢占 node002 GPU。当前实现和全部数据位于本机 checkout，
+  swap replay 按唯一 owner 分配给本机 GPU0--3；node001/node002 只在各自 `/local` 上用 CPU 从
+  原 fixed strain checkpoint 提取 inference-only payload，不写共享 checkpoint 或 replay 结果。
+- **GPU owner：** `experiments/genome_condition_reviewer/task_manifest.json` 冻结 GPU0=group0
+  ensembles 0--6、GPU1=group1 ensembles 0--6、GPU2=group2 ensembles 0--3、GPU3=group2
+  ensembles 4--6。每个 member 写唯一 CSV/JSON 到
+  `experiments/genome_condition_reviewer/replay/`；21/21 completion 后仅由本机 root task 汇总一次。
+  实际执行中 group1/2 的 14 members 先完成；原 GPU0 group0 串行 worker 在写出任何 member 前停止，
+  随后 group0 按 `0--1/2--3/4--5/6` 重新分配到 GPU0--3。该调度变更、未产生输出的 stopped
+  worker 和最终命令均登记在 task manifest，科学协议与 member ownership 未改变。
+- **权重与工具位置：** inference-only 权重统一中转到
+  `/data2/tianang/tmp/genome_condition_reviewer_inference_checkpoints/`，是带原 source size/SHA-256
+  的可重建大文件，不进入 Git；`skani 0.3.1` 安装在
+  `.external/envs/genome_condition_reviewer/`，base 环境未修改。
+- **完成事实：** 21/21 swap members 与两个五折 probes 均已完成，GPU worker 已退出，本机四张
+  H100 已释放。Swap donor cohort 为 292 个 target-fold pairs、42 species、67,794
+  measurements，ANI median/range 为 99.57%/95--100%；effective train/test 无重叠。Probe 精确
+  兼容子集为 162 bacterial genomes、58,717 fragments，AMR/MGE-associated positives 为
+  722/4,520。Correct/swapped pooled R² 为 `0.419880/0.420045`，paired MAE delta bootstrap
+  95% CI 为 `[-0.000142, 0.000158]`，是近零效应；AMR/MGE OOF AUPRC 为
+  `0.2010/0.3863`，对应 sampled prevalence 为 `0.1667/0.1866`。完整边界见
+  本地忽略的内部分析目录。最终 focused tests 为 5 passed，全仓为
+  176 passed（14 条既有 warning），artifact/format/`git diff --check` 均通过。
+- **文稿决策：** 作者已决定 swap replay 仅保留为内部诊断历史，不用于 reviewer response 或论文；
+  上述 162-genome probe 也被后续 264-genome saved-window probe 取代。正式证据使用新 probe
+  与全 embedding homologous-fragment analysis。
+
+### Bacterial genome/text 四条件 replay（2026-08-05，已完成）
+
+- **实时资源事实：** 启动前本机 GPU0--3 均为约 81 GiB free、0% utilization；因此没有跨节点复制
+  数据或占用 node001/node002。推理阶段四卡各约使用 27.6 GiB。
+- **cohort 与条件：** 268 bacterial target strains、36 species、64,646 measurements；target 与
+  nearest same-species donor 均未出现在对应 fold 的训练 frame。四条件为 correct/correct、
+  donor-genome/correct-text、correct-genome/donor-text、donor/donor，不重训任何参数。
+- **GPU owner：** GPU0/1/2 分别负责 group0 ensembles `0--1`/`2--3`/`4--5`；GPU3 先负责
+  group0 ensemble 6，再串行完成 group1/2 全部 ensembles。唯一输出目录为
+  `experiments/genome_condition_reviewer/condition_replay/`，完整命令和 completion contract 见
+  `condition_task_manifest.json`；21/21 完成后仅由 root task 汇总到 `condition_analysis/`。
+- **完成事实：** 21 CSV + 21 JSON completion markers 构成完整 3×7 grid；汇总器验证每行七成员、
+  metadata 一致且预测有限。Correct/genome-only/text-only/whole-condition pooled R² 为
+  `0.429559/0.429742/0.410544/0.410647`，MAE 为
+  `0.550197/0.550100/0.561588/0.561517`；genome-only paired ΔMAE CI 跨 0，而 text-only 与
+  whole-condition CI 均为正。四张 H100 已全部释放，最终数值与解释边界见
+  本地忽略的 `condition_analysis/`。最终 focused tests 为 7 passed，全仓为
+  178 passed（14 条既有 warnings），artifact/format/JSON/`git diff --check` 均通过。
+- **文稿决策：** 该四条件 replay 同样不用于 reviewer response 或论文。
+
+### Evo-2 homologous-fragment variation（2026-08-05，已完成）
+
+- **计算与工具：** 本机 CPU 16 workers；未占用 GPU。`minimap2 2.31-r1302` 位于项目隔离 prefix
+  `.external/envs/genome_condition_reviewer/`，`edlib 1.3.9.post1` 位于
+  `.external/python/genome_condition_reviewer/`。Canonical 命令和 owner 见
+  `experiments/genome_condition_reviewer/fragment_variation_task_manifest.json`。
+- **Saved-tensor compatibility：** 受测试的 window reconstruction 与 567/567 tensor shapes 一致，
+  其中 370 个为 multi-record FASTA。结果只代表 saved fragment condition，不外推到其余 sequence。
+- **pair preparation：** `prepare_all_genome_fragment_variation_pairs.py --threads 64` 使用本机 CPU
+  与项目隔离的 `skani 0.3.1`。567 个 embedding/FASTA/species 交集中有 539 个 bacterial assets；
+  379 个来自 71 个 multi-strain species。360 个 genomes 通过 ANI/coverage 最近邻阈值，去重为
+  255 个 unordered pairs、67 species，ANI median/range 为 `99.36%/95.05--100%`。
+- **完成事实：** 255 个 pairs 全部处理；166 pairs/53 species 产生 6,625 个分析 homologous
+  fragments，其中 4,649 个含变异。Variable-fragment pooled sequence-divergence/cosine-distance Spearman 为
+  `0.6954`，ANI `>=99%` 子集为 `0.7137`；99.94% homologous fragments 比同 donor genome 的
+  deterministic random fragment 更近。24,605 raw rows 与 6,625 analysis rows 的 finite/schema/
+  uniqueness/summary contract 已通过。原 185-pair strain-wise pilot 已移动到
+  `fragment_variation/strainwise_pilot/`。最终 focused tests 为 10 passed、全仓为 181 passed
+  （14 条既有 warnings）；完整表述边界见
+  `experiments/genome_condition_reviewer/RESULTS.md`。
+- **Historical-window probes：** 本机CPU依次运行
+  `prepare_historical_genome_annotation_probes.py`和`run_historical_genome_annotation_probes.py`，
+  未占用GPU。563个paper-matched embedding IDs中264个bacterial genomes、96,716 fragments通过
+  saved-window精确兼容。AMR/MGE positives为
+  1,217/8,843，OOF AUPRC为`0.2033/0.4456`，OOF AUROC为`0.5775/0.7415`。输出和owner见
+  `experiments/genome_condition_reviewer/historical_probe/task_manifest.json`。最终focused 11 passed、
+  全仓182 passed（14条既有warnings）；fragment/OOF artifact contract与独立metric重算通过。
+- **论文候选图：** 本机 CPU 只读运行
+  `MPLBACKEND=Agg PYTHONPATH=src python scripts/audit/plot_genome_representation_validation.py`；
+  不重训 probe、不重算 embedding。三面板 PDF/SVG/PNG、caption、plotted-data 与 SHA-256 manifest
+  位于 `experiments/genome_condition_reviewer/figures/`。Panel a 按作者要求排除 identical
+  fragments，仅绘制 4,649 个连续 variable fragments，不使用bins或拟合趋势线，cosine distance
+  使用 log scale；panel b/c 使用正式 264-genome saved-window probes 展示 5-fold performance 与基线。
+  canonical 图已目视 QA；focused 13 passed、全仓 184 passed（14 条既有 warnings）。Panel a 的
+  log y 轴下限为 `1e-8`（最小观测值 `5.86e-8`）；ANI `>=99%` 的4,156个 fragments为蓝色圆点，
+  其余493个为灰色叉号。作者决定删除 linear-scale 对照及入口。
+- **正式文稿资产（2026-08-06，已完成）：** canonical figure 已复制到
+  `/data2/tianang/projects/ApexOracle_cleaned/docs/ApexOracle_Nat_Biotech/Fig_SI_genome_representation_validation.pdf`
+  并在正式 TeX 中编号为 Supplementary Fig. C6；其 SHA-256 为
+  `0c1cf2307a93c8c9cc1b53d2d29e4f04efdc2e65df1d5bcb136acb0165abf68f`。同目录的
+  `sn-article.tex`、`sn-bibliography.bib` 和 `Response to reviewers letter.docx` 已按冻结草稿
+  更新，修改前均保留 `before_genome_representation_revision_20260806` 备份。独立编译/渲染产物
+  只位于 `/tmp/apexoracle_genome_revision_*`，正式 `sn-article.pdf` 未覆盖。论文编译为 34 页，
+  C6 位于第 26 页且无 undefined citation/reference；回复渲染为 31 页，新增回复位于第 7--9 页。
+- **公共发布边界（2026-08-06）：** annotation manifest 与 L2 probe 的共享逻辑已独立到
+  `src/apexoracle/evaluation/genome_fragment_validation.py`；正式 entrypoints 不再读取本机绝对路径
+  下的外部 producer 源码。Genome/text swaps、旧 162-genome probe 和 strain-wise pilot 仅保留本地
+  取证，不发布其 scripts、逐 member completion markers 或 superseded summaries。公共 capsule 只含
+  正式 scripts/shared modules/tests、compact formal manifests/summaries、文稿记录和 canonical figure。
+
 ## 3. Fig. 1b 补实验（已完成）
 
 ### 已验证协议

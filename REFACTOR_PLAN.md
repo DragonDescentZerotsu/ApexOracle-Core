@@ -105,6 +105,21 @@ corrected AA successor dataset 的重新训练、Reviewer 4 target/
 multi-isolate panel 决策，以及 `DataPrepare/` legacy 脚本的迁移、去重和归档。机器职责、
 代码同步、数据/权重和外部仓库位置以 `docs/COMPUTE_AND_ASSET_MAP.md` 为统一索引。
 
+2026-08-06 genome-condition reviewer 轮次已完成并进入发布整理。正式证据仅包含两个
+representation-level analyses：全部合格 bacterial embeddings 的 homologous-fragment variation，
+以及 264-genome/96,716-fragment AMR/MGE linear probes。前者在 4,649 个 variable fragments 上的
+pooled Spearman 为 `0.6954`（whole-genome `ANI >=99%` 子集 `0.7137`）；后者 AMR/MGE OOF
+AUPRC 为 `0.2033/0.4456`，相对 prevalence `0.1667/0.1977`。Canonical 三面板图、正式命令、
+输出和解释边界见 `experiments/genome_condition_reviewer/README.md`。
+
+发布前维护审计将 annotation-manifest 与 linear-probe 逻辑从弃用的 swap scripts 解耦到
+`src/apexoracle/evaluation/genome_fragment_validation.py`，并移除了正式入口对本机绝对 producer
+路径的依赖。Genome/text swaps、162-genome probe 和 strain-wise fragment pilot 只保留本地内部
+取证，不进入公共 capsule；公共代码只保留正式 pair preparation、fragment analysis、annotation
+probes、figure 和 tests。正式 manuscript、Supplementary Fig. C6、三条新增引用和 reviewer response
+均已落稿并独立编译/渲染验证；`REVIEWER_RESPONSE_AND_MANUSCRIPT_DRAFT.md` 现为实施记录，不再是
+待确认草稿。
+
 ## 1. 重构目标
 
 本次重构的目标不是简单删除旧文件，而是把当前以实验脚本副本为主的研究代码整理成一个可审计、可复用、可复现且适合公开发布的代码库：

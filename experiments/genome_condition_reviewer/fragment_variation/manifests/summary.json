@@ -1,0 +1,51 @@
+{
+  "canonical_command": [
+    "skani",
+    "triangle",
+    "-E",
+    "-t",
+    "64",
+    "-l",
+    "experiments/genome_condition_reviewer/fragment_variation/manifests/eligible_bacterial_fastas.txt",
+    "-o",
+    "experiments/genome_condition_reviewer/fragment_variation/manifests/all_bacterial_skani_sparse.tsv"
+  ],
+  "eligibility": {
+    "bacterial_assets": 539,
+    "eligible_bacterial_assets": 379,
+    "eligible_species": 71,
+    "embedding_fasta_species_intersection": 567,
+    "excluded_non_bacterial_assets": 28,
+    "excluded_singleton_species_bacterial_assets": 160
+  },
+  "output_sha256": {
+    "nearest_pairs_directed": "32fdf4198455d18038e6cbc6088f717cb3ebf4943494ee95f95d368e8bbb6c42",
+    "nearest_pairs_unordered": "b7635793e05c86c38a3a7d2f36b674571d8b0fb1e34407f819710afdd29df30b"
+  },
+  "outputs": {
+    "directed": "nearest_pairs_directed.csv",
+    "unordered": "nearest_pairs_unordered.csv"
+  },
+  "schema_version": 1,
+  "scope": "all eligible bacterial frozen genome embeddings",
+  "selection": {
+    "ani_maximum": 100.0,
+    "ani_median": 99.36,
+    "ani_minimum": 95.05,
+    "directed_species": 67,
+    "directed_targets_selected": 360,
+    "minimum_ani": 95.0,
+    "minimum_bidirectional_aligned_fraction": 50.0,
+    "unordered_nearest_pairs": 255,
+    "unordered_species": 67
+  },
+  "source_sha256": {
+    "entrypoint": "c3200a444325a7a0035d267e75f5ddecea122e0b3bb527fb1464beb7e4e6efe9",
+    "fasta_list": "8295611bb3305ec31f75aeb55cead1c0ea8df782252720124610dbeb3c179dfc",
+    "skani_sparse": "7646748fa9b2cd029ba279044636254aa9f1f383af5c77bd4ce2e043393a886b"
+  },
+  "status": "completed",
+  "tools": {
+    "skani": "skani 0.3.1"
+  }
+}

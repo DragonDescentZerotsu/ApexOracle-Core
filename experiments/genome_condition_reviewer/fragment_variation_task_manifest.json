@@ -1,0 +1,41 @@
+{
+  "schema_version": 2,
+  "created_at": "2026-08-05",
+  "status": "completed",
+  "owner": "Codex root task",
+  "design": "all-embedding homologous-fragment sequence versus embedding variation",
+  "eligibility": {
+    "embedding_fasta_species_intersection": 567,
+    "bacterial_assets": 539,
+    "eligible_multi_strain_bacterial_assets": 379,
+    "nearest_neighbor_targets_passing_thresholds": 360,
+    "eligible_species": 71
+  },
+  "input_pairs": 255,
+  "input_pair_species": 67,
+  "workers": 16,
+  "compute": "sn4622119311 CPU only; no GPU allocated",
+  "canonical_command": "PYTHONPATH=src python scripts/audit/analyze_genome_fragment_variation.py --minimap2 /path/to/minimap2 --workers 16",
+  "output_dir": "experiments/genome_condition_reviewer/fragment_variation/all_embeddings",
+  "completion_contract": {
+    "saved_tensor_window_shape_matches": "567/567",
+    "pair_scope": "255 unique nearest same-species bacterial strain pairs across all eligible embeddings",
+    "required_outputs": [
+      "fragment_pairs.csv",
+      "pair_summary.csv",
+      "summary.json"
+    ]
+  },
+  "completion": {
+    "saved_tensor_shape_audit": "567/567 exact; 370 multi-record FASTAs",
+    "pairs_with_homologous_fragments": 166,
+    "species_with_homologous_fragments": 53,
+    "analysis_homologous_fragment_pairs": 6625,
+    "variable_fragment_pairs": 4649,
+    "pooled_spearman": 0.6953624693848706,
+    "ani_ge_99_pooled_spearman": 0.7136540506458453,
+    "focused_tests": "13 passed",
+    "full_repository_tests": "184 passed, 14 existing dependency/runtime warnings",
+    "artifact_contract": "24,605 raw rows; 6,625 finite analysis rows; 166 unique analysis pairs; all checks passed"
+  }
+}

@@ -18,6 +18,102 @@
   必须有唯一 owner 和输出目录或原子完成标记，禁止两个节点并发写同一个 checkpoint、日志或
   汇总文件。GPU 分配、环境、owner、命令和产物位置应同步登记到
   `docs/COMPUTE_AND_ASSET_MAP.md`。
+- **Genome-condition reviewer 历史内部诊断入口（2026-08-04；正式文稿弃用）：**
+  `scripts/audit/prepare_genome_condition_reviewer.py` 使用同 fold effective held-out genomes 与
+  `skani triangle -E` 冻结 nearest same-species donor，并构建 FASTA/GenBank/tensor 精确兼容的
+  fragment annotation manifest；`scripts/reproduce/evaluate_heldout_genome_swap.py` 只替换 genome
+  key-value bank，保持 molecule 与 target text 不变，执行一个 `group × ensemble` replay；
+  `scripts/audit/analyze_genome_condition_reviewer.py` 汇总 21 members、做 strain-paired bootstrap，
+  并以同一 genome 不跨 train/test 的五折 L2 logistic regression 评估 AMR/MGE annotation 的 fragment-level
+  linear decodability。输出统一位于 `experiments/genome_condition_reviewer/` 的本地忽略目录；这些
+  scripts/manifests 仅用于内部追溯，不再列为该目录 README 的公共入口。验证命令为
+  `PYTHONPATH=src python -m pytest -q tests/test_genome_condition_reviewer.py`。
+- **2026-08-04 genome-condition reviewer 完成边界：** 21/21 swap replay 与两个五折 linear
+  probes 已完成。Correct/swapped pooled R² 为 `0.419880/0.420045`、MAE 为
+  `0.550865/0.550776`，strain-paired MAE delta 95% CI 为 `[-0.000142, 0.000158]`；该 control
+  不支持当前 MIC predictor 强依赖正确 nearest-strain genome。AMR/MGE probe OOF AUPRC/AUROC 为
+  `0.2010/0.5980` 和 `0.3863/0.7296`，sampled prevalence 为 `0.1667/0.1866`；只能分别解释为
+  较弱和中等的线性可解码 annotation signal。不得写成 swap 降低性能、完整 ARG/MGE catalogue
+  验证或 single-gene attribution。作者已决定 swap 不用于 reviewer response 或论文；完整内部结果见
+  本地弃用产物。该 162-genome probe 已被后续 264-genome saved-window 正式结果取代，不得继续用于
+  文稿。
+- **Genome/text 四条件 reviewer sensitivity（2026-08-05，已完成）：**
+  `scripts/reproduce/evaluate_heldout_genome_swap.py --condition-protocol factorial` 使用
+  `manifests/heldout_nearest_ani_donors_bacteria.csv` 对 bacterial-only cohort 同时 replay
+  correct/correct、donor-genome/correct-text、correct-genome/donor-text、donor/donor 四个条件；
+  target 与 donor 均必须是对应 fold 未见过的 held-out genomes。汇总入口为
+  `scripts/audit/analyze_genome_text_condition_swap.py`，输出到 `condition_analysis/`，GPU owner 与
+  completion contract 见 `condition_task_manifest.json`。whole-condition swap 回答完整 strain
+  condition 替换问题；它不能单独归因 genome，必须与两个 single-modality controls 一起解释。
+  21/21 replay 已完成；bacterial-only cohort 为 268 strains、36 species、64,646 measurements。
+  Correct/genome-only/text-only/whole-condition pooled R² 为
+  `0.429559/0.429742/0.410544/0.410647`，MAE 为
+  `0.550197/0.550100/0.561588/0.561517`。相应 strain-paired ΔMAE 95% CI 为 genome-only
+  `[-0.000090, 0.000169]`、text-only `[0.004614, 0.037076]`、whole-condition
+  `[0.004686, 0.037204]`；text-only mean absolute prediction change 是 genome-only 的 88.8 倍。
+  **已验证结论：** 完整 condition swap 的 aggregate decline 几乎全部由 text 解释，不能作为
+  genome strain-discriminability 证据；作者已决定该实验不用于 reviewer response 或论文。完整内部
+  表格仅保留在本地忽略的 `condition_analysis/`。
+- **Evo-2 homologous-fragment variation（2026-08-05，已完成）：** 共享函数
+  `build_saved_tensor_windows` 已按 saved-tensor indexing convention 精确解释 567/567 tensor
+  shapes。先运行
+  `PYTHONPATH=src python scripts/audit/prepare_all_genome_fragment_variation_pairs.py --threads 64`
+  冻结全部合格 bacterial nearest pairs，再运行
+  `PYTHONPATH=src python scripts/audit/analyze_genome_fragment_variation.py --workers 16`。正式 cohort
+  对 255 个 bacterial nearest same-species unordered pairs 只比较实际编码的 mutual-best homologous 11-kb
+  fragments；输出和完成条件见 `fragment_variation_task_manifest.json`。该实验检验 representation
+  是否响应近缘 strain sequence variation，不检验未编码 contigs、功能因果或 MIC downstream use。
+  255 pairs 中 166 pairs/53 species 产生 6,625 个 homologous fragments；4,649 个 variable
+  fragments 的 variable-only pooled divergence/cosine-distance Spearman 为 `0.6954`，94 个可计算 pair-level
+  correlations 中 89.4% 为正（median `0.3768`）。Whole-genome ANI `>=99%` 子集为 117 pairs、
+  6,132 fragments，pooled Spearman `0.7137`，75 个 pair correlations 中 89.3% 为正。Identical
+  sequences embedding distance 为数值零，variable 全部非零；99.94% homologous fragments 比同
+  donor genome 随机 fragment 更近。只能表述为 encoded fragment-level sub-species variation
+  preservation，不能升级为 complete-genome coverage 或 downstream MIC use。原 185-pair
+  strain-wise pilot 已归档到 `fragment_variation/strainwise_pilot/`，不再用于正式文稿。最终验证为
+  focused 10 passed、全仓 181 passed（14 条既有 warnings），24,605 raw/6,625 analysis rows 的
+  artifact contract、Black、JSON 与 `git diff --check` 均通过。
+- **Saved-window AMR/MGE fragment probes（2026-08-05，已完成）：** canonical 准备和运行
+  入口分别为 `PYTHONPATH=src python scripts/audit/prepare_historical_genome_annotation_probes.py`
+  与 `PYTHONPATH=src python scripts/audit/run_historical_genome_annotation_probes.py`；输出和完成条件见
+  `experiments/genome_condition_reviewer/historical_probe/task_manifest.json`。两个入口只使用本机
+  CPU，不重算 embedding。563 个 paper-dataset-matched embedding IDs 中，264 个 bacterial genomes、
+  96,716 fragments 通过 saved-window、FASTA/GenBank sequence/order 和 tensor shape
+  精确兼容；AMR/MGE positives 为
+  1,217/8,843。AMR/MGE OOF AUPRC 为 `0.2033/0.4456`，sampled prevalence 为
+  `0.1667/0.1977`；OOF AUROC 为 `0.5775/0.7415`。正式解释仍为 AMR 较弱、MGE 中等线性可解码
+  signal，不得升级为完整 catalogue、single-gene localization 或因果机制。最终 focused 11
+  passed、全仓 182 passed（14 条既有 warnings）；264 genome/96,716 fragment keys 与
+  7,302/44,730 OOF rows 的 artifact contract 通过，metrics 已从 predictions 独立重算一致。
+- **Genome representation 三面板图（2026-08-05）：** canonical 入口为
+  `MPLBACKEND=Agg PYTHONPATH=src python scripts/audit/plot_genome_representation_validation.py`；
+  只读消费正式 all-embedding fragment variation 与冻结 AMR/MGE probe 输出，不重训模型。输出
+  PDF/SVG/PNG、caption、exact plotted-data CSV 与 SHA-256 manifest 到
+  `experiments/genome_condition_reviewer/figures/`。Panel a 按作者要求排除 identical fragments，
+  只绘制 4,649 个连续 variable homologous fragment points，不使用 bins 或拟合趋势线，log y 轴
+  下限为 `1e-8`；ANI `>=99%` 的4,156个 fragments为蓝色圆点，其余493个为灰色叉号。Panel b/c
+  消费正式 264-genome saved-window probes，展示五个 held-out folds（同一 genome 不跨 train/test）、
+  fold mean±sample s.d.、OOF
+  AUPRC/AUROC 与 prevalence/0.5 baseline。图中不得加入已弃用的 genome-swap diagnostic。
+  canonical 图已目视 QA；focused 13 passed、全仓 184 passed（14 条既有 warnings），Black、JSON 与
+  `git diff --check` 通过。
+  作者比较后决定删除 linear-scale 对照及入口，只保留 canonical log-scale 产物。
+- **2026-08-06 genome-condition reviewer 正式落稿：** 三条新增软件论文已由 Google Scholar
+  检索结果和期刊原始页面双重核验：skani DOI `10.1038/s41592-023-02018-3`、minimap2 DOI
+  `10.1093/bioinformatics/bty191`、Edlib DOI `10.1093/bioinformatics/btw753`。已严格按
+  `experiments/genome_condition_reviewer/REVIEWER_RESPONSE_AND_MANUSCRIPT_DRAFT.md` 更新正式
+  `sn-article.tex`、`sn-bibliography.bib`、`Response to reviewers letter.docx`，并将 canonical 图
+  复制为 `Fig_SI_genome_representation_validation.pdf`，在论文中编号为 Supplementary Fig. C6。
+  修改前 TeX/Bib/DOCX 均保存 `before_genome_representation_revision_20260806` 备份。论文独立编译
+  为 34 页，无 undefined citation/reference，C6 位于第 26 页；回复 DOCX 独立渲染为 31 页，新增
+  回复位于第 7--9 页；两者均目视核验。正式 `sn-article.pdf` 未覆盖。完整 hash 和落稿记录见该
+  实验 README 的“正式文稿落稿记录（2026-08-06）”。
+- **2026-08-06 genome reviewer 发布维护边界：** 公共代码只发布 homologous-fragment、annotation
+  probe、figure、共享 `src/` contracts 与 tests。弃用的 genome/text swaps、旧 162-genome probe
+  和 strain-wise pilot 继续本地留存，但其 scripts、逐 member markers 与 superseded summaries 受
+  `.gitignore` 保护，不进入 GitHub。Annotation manifest 与 L2 probe 已从弃用 swap scripts 解耦到
+  `src/apexoracle/evaluation/genome_fragment_validation.py`；正式入口不再依赖本机绝对 producer
+  路径。发布前必须按显式路径暂存 canonical PDF/SVG/PNG 与 exact plotted data，禁止 `git add -A`。
 - **ReMDM remasking schedule reviewer 实验入口（2026-07-28）：**
   `scripts/reproduce/prepare_remasking_schedule_reviewer_tasks.py` 冻结 36-task manifest；
   `scripts/reproduce/run_remasking_schedule_reviewer.py` 执行单个 GPU 生成任务；

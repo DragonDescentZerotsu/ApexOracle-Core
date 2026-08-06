@@ -1,0 +1,59 @@
+{
+  "interpretation_boundary": "Tests linear decodability of conservative existing annotations; not a complete resistome or mobile-element catalogue.",
+  "linear_probes": [
+    {
+      "fold_auprc_mean": 0.2068356790836881,
+      "fold_auprc_sample_sd": 0.008047665462330355,
+      "fold_auroc_mean": 0.5789553981992983,
+      "fold_auroc_sample_sd": 0.01929527615488983,
+      "full_compatible_fragments": 96716,
+      "full_compatible_genomes": 264,
+      "full_positive_fragments": 1217,
+      "full_positive_genomes": 249,
+      "full_prevalence": 0.012583233384341785,
+      "label": "AMR",
+      "model": "L2 logistic regression; C=1; class_weight=balanced; liblinear",
+      "negative_sampling": "all positives plus at most 5 negatives per positive within each positive-bearing genome",
+      "oof_auprc": 0.20325402298606365,
+      "oof_auroc": 0.5775033100644188,
+      "probe_cohort_fragments": 7302,
+      "probe_cohort_genomes": 249,
+      "probe_cohort_positive_fragments": 1217,
+      "probe_cohort_positive_genomes": 249,
+      "probe_cohort_prevalence": 0.16666666666666666,
+      "split": "5-fold StratifiedGroupKFold grouped by genome ID"
+    },
+    {
+      "fold_auprc_mean": 0.45085025535869966,
+      "fold_auprc_sample_sd": 0.060529673219741544,
+      "fold_auroc_mean": 0.7445490361637471,
+      "fold_auroc_sample_sd": 0.037142084913679554,
+      "full_compatible_fragments": 96716,
+      "full_compatible_genomes": 264,
+      "full_positive_fragments": 8843,
+      "full_positive_genomes": 263,
+      "full_prevalence": 0.09143264816576369,
+      "label": "Mobile element",
+      "model": "L2 logistic regression; C=1; class_weight=balanced; liblinear",
+      "negative_sampling": "all positives plus at most 5 negatives per positive within each positive-bearing genome",
+      "oof_auprc": 0.4456268568314073,
+      "oof_auroc": 0.7414902805617244,
+      "probe_cohort_fragments": 44730,
+      "probe_cohort_genomes": 263,
+      "probe_cohort_positive_fragments": 8843,
+      "probe_cohort_positive_genomes": 263,
+      "probe_cohort_prevalence": 0.19769729488039348,
+      "split": "5-fold StratifiedGroupKFold grouped by genome ID"
+    }
+  ],
+  "schema_version": 1,
+  "scope": "saved bacterial fragment tensors with compatible annotations",
+  "source_sha256": {
+    "compatible_genomes": "575cf08f09b836fe3b3c7000953be2e415ad7d8eb740facbcb85fc1819938de6",
+    "entrypoint": "05741d0170d67fc271a48558398957454bebec419da4b0039270f6978da53627",
+    "fragment_labels": "4d2cb3bfa6e6015c34e6482acc99ec69be64cb75372013cbb585901d6806530b",
+    "fragment_validation_module": "9975c356c68ea7e5488cdc1d28f86a5b4cb434860c318f3c3890bacba246bec4",
+    "preparation_manifest": "625ffd1e01673ce153c87874a3f74e5e62c2d90a682e6b7b93a7d2988b8e8896"
+  },
+  "status": "completed"
+}

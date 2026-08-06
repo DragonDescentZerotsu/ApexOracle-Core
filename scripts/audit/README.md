@@ -31,6 +31,11 @@ in-house 脚本默认在同级外部 `mdlm` checkout 查找 guidance producer，
 | --- | --- | --- |
 | `audit_hierarchical_mic_molecule_overlap.py` | 在 strain/species/phylum pathogen holdout 中审计 train-seen 与 exact-molecule-disjoint test measurements | `experiments/hierarchical_mic/molecule_overlap/overlap_{by_group.csv,audit.json}` |
 | `plot_hierarchical_mic_test_distribution.py` | 绘制 fixed strain-wise 实际 held-out MIC 的 pooled histogram 与逐 fold ECDF，并审计 MIC<=16 micromolar 比例；最终样式无总标题、panel标题不加粗并带`a/b`标记 | `experiments/hierarchical_mic/mic_distribution/` |
+| `prepare_all_genome_fragment_variation_pairs.py` | 从全部 embedding/FASTA/species-compatible bacterial assets 中冻结同物种 ANI 最近邻与去重 pair manifest | `experiments/genome_condition_reviewer/fragment_variation/manifests/` |
+| `analyze_genome_fragment_variation.py` | 在 saved fragment condition 内，对全部合格 nearest same-species strains 的 mutual-best homologous fragments 比较 sequence divergence 与 embedding distance | `experiments/genome_condition_reviewer/fragment_variation/all_embeddings/` |
+| `prepare_historical_genome_annotation_probes.py` | 为全部 paper-matched、FASTA/GenBank/tensor-compatible bacterial fragments 构建 AMR/MGE annotation labels；文件名为冻结产物保留的 legacy 名称 | `experiments/genome_condition_reviewer/historical_probe/manifests/` |
+| `run_historical_genome_annotation_probes.py` | 在 saved-tensor-compatible cohort 上运行两个固定超参数的五折 L2 logistic probes；同一 genome 的 fragments 不跨 train/test | `experiments/genome_condition_reviewer/historical_probe/analysis/` |
+| `plot_genome_representation_validation.py` | 绘制正式三面板 genome representation figure：同源片段 divergence/embedding-distance relationship 与 AMR/MGE 五折 probe AUPRC/AUROC；panel a 使用 `1e-8` 下限的 log 轴并区分 ANI `>=99%` subset | `experiments/genome_condition_reviewer/figures/` |
 
 正式命令：
 
@@ -52,6 +57,11 @@ python scripts/audit/plot_hierarchical_mic_test_distribution.py
 
 默认直接消费 fixed strain-wise 七成员 replay 的逐测量 ensemble 表；不会重建 split、训练模型或
 修改论文图片。PNG/PDF 用于作者审阅，summary/bin CSV 与 manifest 记录精确输入血缘。
+
+Genome-condition 两个正式实验的命令、共享代码层、输出和解释边界见
+`experiments/genome_condition_reviewer/README.md`。已弃用的 genome/text condition controls 只保留
+本地取证资产，不属于公共入口。Probe 使用普通 L2 logistic regression，没有 MLP、降维或超参数
+搜索；标签来自现有 annotation 的保守词典，不等同于完整 ARG/MGE 数据库注释。
 
 ## ReMDM remasking schedule reviewer figure
 

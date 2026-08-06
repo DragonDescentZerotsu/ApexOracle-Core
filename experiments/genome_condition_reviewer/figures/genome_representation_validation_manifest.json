@@ -1,0 +1,38 @@
+{
+  "figure": "genome_representation_validation",
+  "output_sha256": {
+    "genome_representation_validation.pdf": "dcdd667253cd748a57a16cc1e6940ef5c910010d85b838344d4b13a651e699d5",
+    "genome_representation_validation.png": "6a1fab367a03b2f853782b89fad1c8ba685650eeba4faa3f076f45e9aadd8a0d",
+    "genome_representation_validation.svg": "57bf423ae335b9891bb32ade331e9cc823d2bfa69f62d626e9b0e07779cc81c5",
+    "genome_representation_validation_caption.md": "892adeaf7e822adaadd6ca4eeeee8c7818e86008c4eb08be728bb4918dcc79f4"
+  },
+  "panel_a_observed_cosine_distance_range": [
+    5.8568131344749474e-08,
+    0.0030485701591935
+  ],
+  "panel_a_y_limits": [
+    1e-08,
+    0.006
+  ],
+  "panel_a_y_scale": "log",
+  "panel_contract": {
+    "a": "4,649 variable homologous 11-kb fragment pairs; cosine distance shown on a log scale from 1e-8; ANI >=99% fragments are blue circles and the remaining fragments are grey crosses; no binned summaries or fitted trend lines",
+    "b": "five held-out folds per annotation, with every genome kept entirely within one fold; small points are fold AUPRC, diamonds/error bars are fold mean +/- sample SD, and short dashed lines are evaluation-set prevalence",
+    "c": "five held-out folds per annotation, with every genome kept entirely within one fold; small points are fold AUROC, diamonds/error bars are fold mean +/- sample SD, and the dashed line is random AUROC=0.5"
+  },
+  "plotted_data_sha256": {
+    "fragment_scatter_plotted_data.csv": "83ef14f01f3ad7cc02f3bafaad3f3cc55685768a6b5e089718c7584104b6eff7",
+    "probe_fold_plotted_data.csv": "6e60f1e937503d540798505d8ecf8c1ac64229e4944cddc77d2003cc1edb3e2a",
+    "probe_summary_plotted_data.csv": "660197cdeda6a686ca5353971c3fb0be4ba19800ad9ce222450298290d7e88db"
+  },
+  "schema_version": 1,
+  "source_sha256": {
+    "amr_fold_metrics": "a8eee82472ec682008d51c77aaf60b12199f8392579fed0e4fdbc94bd207773f",
+    "fragment_pairs": "29a92751847e3fb184e0390ff8849dca3f6bb94f73e714a973294667989c6124",
+    "fragment_summary": "10b028660dea283d30e094f5020c2c15486b2ea9618f210451c1bcf1ed6ca4fc",
+    "mge_fold_metrics": "a244a81b84b92472948d330a2f0ff5551330f8ebfc24e99ed8c19ab80a95661c",
+    "plot_script": "5a22700e0bad31f7c30e5328b9e40328989dba9a38869ce8649c66282aacdb13",
+    "probe_summary": "fa01f2d21e497a2575a861d0c49ceadfd5b7d532fa372788b482bce0f627634e"
+  },
+  "status": "completed"
+}

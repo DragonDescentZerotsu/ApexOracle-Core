@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-08-05",
+  "status": "completed",
+  "owner": "Codex root task",
+  "design": "saved-window-compatible bacterial AMR/MGE fragment linear probes",
+  "compute": "sn4622119311 CPU only; no GPU allocated",
+  "commands": [
+    "PYTHONPATH=src python scripts/audit/prepare_historical_genome_annotation_probes.py",
+    "PYTHONPATH=src python scripts/audit/run_historical_genome_annotation_probes.py"
+  ],
+  "output_dirs": [
+    "experiments/genome_condition_reviewer/historical_probe/manifests",
+    "experiments/genome_condition_reviewer/historical_probe/analysis"
+  ],
+  "completion_contract": {
+    "window_rule": "saved-tensor-compatible window reconstruction",
+    "split": "5-fold StratifiedGroupKFold grouped by genome ID",
+    "models": "two independent fixed-hyperparameter L2 logistic regressions",
+    "required_outputs": [
+      "manifests/manifest.json",
+      "analysis/summary.json",
+      "analysis/amr_associated_probe_fold_metrics.csv",
+      "analysis/mge_associated_probe_fold_metrics.csv"
+    ]
+  },
+  "completion": {
+    "paper_matched_embedding_ids": 563,
+    "compatible_bacterial_genomes": 264,
+    "compatible_fragments": 96716,
+    "amr_positive_fragments": 1217,
+    "mge_positive_fragments": 8843,
+    "amr_probe_cohort_fragments": 7302,
+    "mge_probe_cohort_fragments": 44730,
+    "amr_oof_auprc": 0.20325402298606365,
+    "amr_oof_auroc": 0.5775033100644188,
+    "mge_oof_auprc": 0.4456268568314073,
+    "mge_oof_auroc": 0.7414902805617244,
+    "window_count_mismatch_exclusions": 0,
+    "focused_tests": "13 passed",
+    "full_repository_tests": "184 passed, 14 existing dependency/runtime warnings",
+    "artifact_contract": "264 unique genomes; 96,716 unique fragment keys; 7,302/44,730 complete finite OOF rows; metrics independently recomputed"
+  }
+}

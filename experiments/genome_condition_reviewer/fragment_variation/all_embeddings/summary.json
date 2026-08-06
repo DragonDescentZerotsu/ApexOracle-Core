@@ -1,0 +1,108 @@
+{
+  "cohort": {
+    "analysis_homologous_fragment_pairs": 6625,
+    "included_pair_whole_genome_ani": {
+      "maximum": 100.0,
+      "median": 99.34,
+      "minimum": 95.51
+    },
+    "input_pair_whole_genome_ani": {
+      "maximum": 100.0,
+      "median": 99.36,
+      "minimum": 95.05
+    },
+    "input_unordered_strain_pairs": 255,
+    "pairs_with_homologous_fragments": 166,
+    "raw_mutual_fragment_pairs": 24605,
+    "species": 53
+  },
+  "saved_tensor_shape_audit": {
+    "exact_shape_matches": 567,
+    "fasta_tensor_pairs": 567,
+    "mismatches": [],
+    "multi_record_genomes": 370
+  },
+  "interpretation_boundary": "This tests whether sequence differences within actually encoded homologous fragments change frozen embeddings. It does not test unencoded contigs, complete-genome coverage, causal function, or MIC use.",
+  "protocol": {
+    "embedding_distance": "cosine distance after 1e14 scaling and float64 conversion",
+    "global_distance": "edlib Needleman-Wunsch edit distance / 11000",
+    "maximum_global_sequence_divergence": 0.05,
+    "minimum_bidirectional_alignment_coverage": 0.8,
+    "minimum_mapq": 20,
+    "mutual_best_same_orientation_only": true,
+    "random_control": "one deterministic non-homologous fragment from the same donor genome",
+    "representation_scope": "only genomic segments represented by the saved fragment tensors",
+    "scope": "all eligible bacterial nearest same-species strain pairs",
+    "window_length_nt": 11000,
+    "window_step_nt": 10000
+  },
+  "results": {
+    "all_pairs": {
+      "homologous_closer_than_random_donor_fraction": 0.9993962264150943,
+      "homologous_cosine_distance_median": 3.903527184156985e-06,
+      "homologous_fragment_pairs": 6625,
+      "identical_cosine_distance": {
+        "maximum": 2.3314683517128287e-15,
+        "median": 3.3306690738754696e-16
+      },
+      "identical_fragment_pairs": 1976,
+      "per_strain_pair_spearman": {
+        "eligible_pairs": 94,
+        "median": 0.3768153681266554,
+        "positive_fraction": 0.8936170212765957,
+        "q1": 0.21597455233865576,
+        "q3": 0.566201465216654
+      },
+      "pooled_spearman_sequence_divergence_vs_cosine_distance": 0.6953624693848706,
+      "random_donor_cosine_distance_median": 0.009948750023725306,
+      "species": 53,
+      "strain_pairs": 166,
+      "variable_cosine_distance": {
+        "median": 7.385245337276913e-06,
+        "nonzero_fraction": 1.0,
+        "q1": 3.5571050469584975e-06,
+        "q3": 2.1824486907462415e-05
+      },
+      "variable_fragment_pairs": 4649
+    },
+    "whole_genome_ani_ge_99": {
+      "homologous_closer_than_random_donor_fraction": 0.9993476842791911,
+      "homologous_cosine_distance_median": 3.439444570541017e-06,
+      "homologous_fragment_pairs": 6132,
+      "identical_cosine_distance": {
+        "maximum": 2.3314683517128287e-15,
+        "median": 3.3306690738754696e-16
+      },
+      "identical_fragment_pairs": 1976,
+      "per_strain_pair_spearman": {
+        "eligible_pairs": 75,
+        "median": 0.3695315627128046,
+        "positive_fraction": 0.8933333333333333,
+        "q1": 0.21672481586094605,
+        "q3": 0.5716056604346735
+      },
+      "pooled_spearman_sequence_divergence_vs_cosine_distance": 0.7136540506458453,
+      "random_donor_cosine_distance_median": 0.009674776156424036,
+      "species": 35,
+      "strain_pairs": 117,
+      "variable_cosine_distance": {
+        "median": 6.99259773229155e-06,
+        "nonzero_fraction": 1.0,
+        "q1": 3.2861381109583476e-06,
+        "q3": 2.0943139160289892e-05
+      },
+      "variable_fragment_pairs": 4156
+    }
+  },
+  "schema_version": 1,
+  "source_sha256": {
+    "entrypoint": "1a62bb09d5ea7474a9d9bc1fb56a95637e14436da25c56886cb309529448f2e9",
+    "window_reconstruction_module": "3338b1107ad6828ce9ecb626ba9d3e801dc5905ede6e1815c2e5cc9a5ed4ea9a",
+    "pair_manifest": "b7635793e05c86c38a3a7d2f36b674571d8b0fb1e34407f819710afdd29df30b"
+  },
+  "status": "completed",
+  "tools": {
+    "edlib": "1.3.9.post1",
+    "minimap2": "2.31-r1302"
+  }
+}

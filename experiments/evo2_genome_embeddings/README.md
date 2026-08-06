@@ -25,6 +25,11 @@
   CSV 和 PNG 与现有文件逐字节一致。PDF 仅因生成 metadata 不同而 SHA 不同。
 - 563 个 embedding 的 `mean(abs(E))` median 为 `2.2325736552308637e-15`；固定乘以 `1e14`
   后 median 为约 `0.223257`。
+- 2026-08-05 saved-tensor-compatible window reconstruction 与 567/567 tensor shapes 精确一致，其中
+  370 个为 multi-record FASTA。**已验证边界：** frozen tensors 只代表 saved fragment condition，
+  不外推到其余 sequence。Canonical 审计入口和 sub-species variation
+  结果见 `scripts/audit/analyze_genome_fragment_variation.py` 与
+  `experiments/genome_condition_reviewer/RESULTS.md`。
 
 ## 身份与发布
 
@@ -55,5 +60,7 @@ python scripts/plot_evo2_genome_embedding_abs_mean_distribution.py \
 
 - **已验证：** 当前 tensor 文件身份、消费集合、shape/dtype contract、scaling 数值和输出等价性。
 - **根据现有证据作出的推断：** embeddings 来自项目记录的 Evo-2-40B layer 46 流程。
-- **仍待确认：** 精确 producer commit、输入 genome FASTA 版本、windowing 参数和模型权重身份。
+- **仍待确认：** 精确 producer commit、模型权重身份，以及当前 FASTA 是否逐字节等于生产时输入。
+  Window size/step 和 saved-tensor indexing 已有代码与 567/567 tensor-shape 一致性支持，但这
+  不等同于恢复完整生产环境。
   在这些信息恢复前，未来 submodule commit 只能标为候选，不能冒充完整数据生产血缘。

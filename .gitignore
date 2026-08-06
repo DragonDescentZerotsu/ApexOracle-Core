@@ -137,6 +137,38 @@ experiments/remasking_schedule_reviewer/superseded_allocation_smoke_20260728/ear
 experiments/remasking_schedule_reviewer/superseded_allocation_smoke_20260728/queue_status_local_prebalance.json
 experiments/remasking_schedule_reviewer/analysis/evaluated_attempts.csv
 
+# Genome-condition reviewer raw replay tables, skani intermediates, plots, and
+# probe predictions follow the global data/media exclusions above. The
+# machine-specific skani input lists are deterministic and remain local; compact
+# JSON manifests/completion markers and Markdown results remain versionable.
+experiments/genome_condition_reviewer/manifests/fold_*_heldout_genomes.txt
+experiments/genome_condition_reviewer/fragment_variation/manifests/eligible_bacterial_fastas.txt
+
+# Publish the compact canonical genome-representation figure and its exact
+# plotted data; raw alignment/probe-prediction tables remain excluded.
+!experiments/genome_condition_reviewer/figures/genome_representation_validation.pdf
+!experiments/genome_condition_reviewer/figures/genome_representation_validation.png
+!experiments/genome_condition_reviewer/figures/genome_representation_validation.svg
+!experiments/genome_condition_reviewer/figures/fragment_scatter_plotted_data.csv
+!experiments/genome_condition_reviewer/figures/probe_fold_plotted_data.csv
+!experiments/genome_condition_reviewer/figures/probe_summary_plotted_data.csv
+
+# Superseded genome/text condition controls are retained locally for audit history
+# but are deliberately excluded from the public reviewer capsule. The formal
+# evidence uses only homologous-fragment variation and annotation probes.
+scripts/audit/prepare_genome_condition_reviewer.py
+scripts/audit/analyze_genome_condition_reviewer.py
+scripts/audit/analyze_genome_text_condition_swap.py
+scripts/reproduce/evaluate_heldout_genome_swap.py
+experiments/genome_condition_reviewer/analysis/
+experiments/genome_condition_reviewer/condition_analysis/
+experiments/genome_condition_reviewer/condition_replay/
+experiments/genome_condition_reviewer/replay/
+experiments/genome_condition_reviewer/manifests/
+experiments/genome_condition_reviewer/task_manifest.json
+experiments/genome_condition_reviewer/condition_task_manifest.json
+experiments/genome_condition_reviewer/fragment_variation/strainwise_pilot/
+
 # Historical exploratory PepLink outputs remain local to avoid confusing them
 # with the released v0.1.2 and source-aware reviewer scope.
 experiments/peplink_validation/peplink_0.1.2.dev0/
