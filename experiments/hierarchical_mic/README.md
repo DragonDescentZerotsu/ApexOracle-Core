@@ -272,3 +272,32 @@ PYTHONPATH=src pytest -q tests/test_hierarchical_mic_runner.py \
   tests/test_strainwise_legacy_equivalence.py \
   tests/test_hierarchical_mic_molecule_overlap.py
 ```
+
+## Reviewer MIC censor-multiplier sensitivity
+
+CPU/只读 canonical 入口：
+
+```bash
+PYTHONPATH=src python \
+  scripts/audit/analyze_hierarchical_mic_censor_sensitivity.py
+```
+
+该入口从 raw DBAASP concentration 重建 paper-era censor lineage，并用已有 fixed strain-wise 与
+canonical phylum-wise 七成员 ensemble predictions 重算 `>V` 的 `1×/2×/4×`、删除右删失和删除
+全部删失口径。输出位于 `censor_multiplier_sensitivity/analysis/`；42 MB 逐行表 local-only，
+compact counts/metrics/deltas/manifest 可发布。
+
+2026-08-09 维护后，canonical CLI 仅负责参数解析；冻结输入重建、prediction 对齐、closed output
+contract 与 manifest 由
+`src/apexoracle/evaluation/hierarchical_mic_censor_workflow.py` 统一实现，label/metric 计算保留在
+`hierarchical_mic_censor_sensitivity.py`。同输入完整重跑的全部七个输出 SHA-256 与重构前一致。
+
+已验证 raw DBAASP selected measurements 为105,547条，其中普通右删失22,158条；eligible
+strain/phylum measurement instances 的普通右删失比例分别为17.30%/17.79%。论文式
+mean-across-groups R² 在 strain `1×/2×/4×` 下为 `0.5785/0.5813/0.5634`，删除右删失为
+`0.5699`；phylum 对应为 `0.3804/0.3879/0.3748`，删除右删失为 `0.3491`。这支持
+held-out signal 不依赖唯一的 `2×` 选择，但 MAE 会随 point encoding 发生可见变化。
+
+完整协议、parser 的 ASCII `>`/Unicode `≥`/`>>` 历史差异、重复 stable-key 审计和英文落稿记录
+见 `censor_multiplier_sensitivity/README.md`。本实验不重训，必须表述为已报告指标的
+evaluation-label sensitivity；不能升级为 training robustness 或 censor-aware regression。

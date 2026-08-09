@@ -825,6 +825,42 @@ optimizer-step 已在宿主 H100 单独通过，两份 guidance checkpoint 的 i
 - [ ] 决定统一 public ApexOracle repo 使用 clean release history/branch 还是新仓库；不得继续把完整
   外部 checkout、数据和权重复制进约 235 MiB 的 legacy history。
 
+#### 2026-08-07 hierarchical MIC censor-multiplier sensitivity
+
+- [x] 新增共享 raw-censor lineage 与 frozen-prediction metric 重算逻辑
+  `src/apexoracle/evaluation/hierarchical_mic_censor_sensitivity.py`，不复制训练 runner 或模型实现。
+- [x] 新增单一 CPU/只读入口
+  `scripts/audit/analyze_hierarchical_mic_censor_sensitivity.py`；默认冻结普通右删失
+  `1×/2×/4×`、删除右删失、删除全部删失五种 sensitivity，并记录输入/输出 SHA-256。
+- [x] 使用现有 fixed strain-wise 和 canonical phylum-wise 七成员 ensemble predictions 完成
+  172,182条 held-out measurement instances 的分析。mean-across-groups R² 在 strain
+  `1×/2×/4×` 下为`0.5785/0.5813/0.5634`，phylum 为`0.3804/0.3879/0.3748`；删除右删失为
+  `0.5699/0.3491`。
+- [x] 从42 MB逐行 lineage/prediction 表独立复算60个 metric rows；R²/MAE/RMSE/Pearson 最大差
+  `<=2.2e-16`，Spearman 最大 CSV round-trip 差`5.03e-10`；focused tests 为28 passed，全仓为
+  196 passed（14条既有 warnings）。
+- [x] 将逐行表设为 local-only，只发布 compact counts/metrics/deltas/manifest；入口、参数、输出、
+  claim boundary 已同步到 experiment README、`scripts/audit/README.md`、根`AGENTS.md`和计算资产图。
+- [x] 完成R²机制诊断：量化17--18%局部log-label平移以及SSE/TSS同向变化的抵消；exact SQLite
+  decomposition 的精确数值与解释已保留在 experiment README。2026-08-09 维护审计确认原
+  466 KB portable HTML/JSON 没有 canonical 生成入口且未被正式文稿消费，已移出工作区至
+  `/data2/tianang/.codex-trash/20260809_synergy_mic_multiplier_diagnostics/` 可恢复归档，不再将其
+  列为正式产物。
+- [x] 作者已确认按英文 plan 草稿正式落稿：在 DBAASP MIC preprocessing table 前后紧凑加入
+  representative `>V` sensitivity 的方法、分母、`V/2V/4V`、exclusion 指标与 heuristic 结论，并将
+  reviewer DOCX 的 future-tense 占位回复替换为三段完成时结果。正式 TeX/DOCX 修改前均已创建
+  `before_mic_multiplier_sensitivity_20260808` 备份；TeX 独立编译为35页且无 undefined
+  citation/reference，Methods 位于第10--11页；DOCX独立渲染为32页，回复位于第24--25页并已目视
+  核验。正式 `sn-article.pdf` 未覆盖。对外表述仍限定为 evaluation-label sensitivity without
+  retraining，不声称 censor-aware training robustness。
+- [x] 2026-08-09 完成代码/文件系统维护审计：将623行 canonical audit script 收缩为118行 CLI，
+  新增 `src/apexoracle/evaluation/hierarchical_mic_censor_workflow.py` 统一重建、prediction 对齐、
+  output contract 与 manifest，保留纯 label/metric module；删除未使用的 `censor_counts`。补充
+  multiplier/output contract、in-memory MIC audit columns 和 auxiliary-column compatibility tests。
+  同一冻结输入 canonical `--overwrite` 重跑后六个CSV与manifest的SHA-256全部与重构前一致，31项
+  focused tests和全仓205 tests通过（14条既有warnings）；42 MB逐行表因承担独立复算与重复记录
+  审计而继续local-only保留。
+
 ## 5. 计划提交序列
 
 建议使用小而可审查的提交：

@@ -66,9 +66,13 @@ def prepare_hierarchical_mic_data(
     repo_root: Path,
     *,
     mic_data_path: Path | None = None,
+    mic_frame: pd.DataFrame | None = None,
     small_molecule_data_path: Path | None = None,
 ) -> PreparedHierarchicalMicData:
     """Reproduce common legacy filtering without choosing a holdout strategy."""
+
+    if mic_data_path is not None and mic_frame is not None:
+        raise ValueError("mic_data_path and mic_frame are mutually exclusive")
 
     data_root = repo_root / "DataPrepare" / "Data"
     genome_folder = data_root / "Genome_embs"
@@ -83,13 +87,17 @@ def prepare_hierarchical_mic_data(
         )
     )
 
-    mic_frame = pd.read_csv(
-        mic_data_path
-        if mic_data_path is not None
-        else data_root / "DBAASP_inhouse_AMP_SELFIES_token_MIC_Evo.csv"
+    loaded_mic_frame = (
+        mic_frame.copy()
+        if mic_frame is not None
+        else pd.read_csv(
+            mic_data_path
+            if mic_data_path is not None
+            else data_root / "DBAASP_inhouse_AMP_SELFIES_token_MIC_Evo.csv"
+        )
     )
-    columns = mic_frame.columns.tolist()
-    all_mic_records = mic_frame.values
+    columns = loaded_mic_frame.columns.tolist()
+    all_mic_records = loaded_mic_frame.values
     small_molecule_records = pd.read_csv(
         small_molecule_data_path
         if small_molecule_data_path is not None

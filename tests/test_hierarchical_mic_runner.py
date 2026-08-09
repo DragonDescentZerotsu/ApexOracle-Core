@@ -3,6 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 
 import numpy as np
+import pandas as pd
 import pytest
 import torch
 import yaml
@@ -11,6 +12,7 @@ from apexoracle.data.hierarchical_mic_preparation import (
     HoldoutSplit,
     PreparedHierarchicalMicData,
     load_fixed_strain_holdout_manifest,
+    prepare_hierarchical_mic_data,
 )
 from apexoracle.training.hierarchical_mic_runner import (
     DEFAULT_CONFIG,
@@ -179,6 +181,42 @@ def test_holdout_adapter_is_the_only_input_to_common_frame_builder():
     assert set(frames.small_molecule_text_only_train["strain_name"]) == {
         "Staphylococcus aureus RN4220"
     }
+
+
+def test_holdout_frames_preserve_appended_mic_audit_columns() -> None:
+    prepared = _prepared()
+    prepared.columns.append("censor_class")
+    prepared.genome_text_records = np.column_stack(
+        [prepared.genome_text_records, ["none"] * len(prepared.genome_text_records)]
+    )
+    prepared.genome_or_text_records = np.column_stack(
+        [
+            prepared.genome_or_text_records,
+            ["none"] * len(prepared.genome_or_text_records),
+        ]
+    )
+    prepared.genome_text_groups = _group(prepared.genome_text_records)
+    prepared.genome_or_text_groups = _group(prepared.genome_or_text_records)
+    split = HoldoutSplit(
+        protocol="strain",
+        group_names=("group",),
+        test_groups=(("g-held", "t-held", "#004"),),
+    )
+
+    frames = prepare_holdout_frames(prepared, split, 0)
+
+    assert "censor_class" in frames.genome_text_test.columns
+    assert list(frames.small_molecule_genome_text_train.columns) == prepared.columns[:4]
+    assert list(frames.small_molecule_text_only_train.columns) == prepared.columns[:4]
+
+
+def test_prepare_data_rejects_path_and_frame_inputs_together(tmp_path: Path) -> None:
+    with pytest.raises(ValueError, match="mutually exclusive"):
+        prepare_hierarchical_mic_data(
+            tmp_path,
+            mic_data_path=tmp_path / "mic.csv",
+            mic_frame=pd.DataFrame(),
+        )
 
 
 def test_shared_model_bundle_preserves_five_legacy_optimizer_groups():

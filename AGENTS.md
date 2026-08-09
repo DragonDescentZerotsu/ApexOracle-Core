@@ -423,6 +423,58 @@ median MIC 的 sample s.d.。panel c 是唯一保留 legend 的位置；legend �
   作者随后要求revision标记可见：新增Supplementary Fig. C3与Appendix Table D1的section标题和
   caption均以`\rev{}`显示红色，Table D1的表头、数值与规则线通过局部`\color{red}`显示红色；
   嵌入式figure内部坐标文字保持原图配色。重新临时编译仍为29页且引用解析完成。
+- **Hierarchical MIC censor-multiplier sensitivity（2026-08-07，已完成）：** canonical CPU/
+  只读入口为
+  `PYTHONPATH=src python scripts/audit/analyze_hierarchical_mic_censor_sensitivity.py`；默认比较
+  ordinary right-censored `>V` 的 `1×/2×/4×`、删除右删失和删除全部删失，消费 frozen fixed
+  strain-wise 与 canonical phylum-wise 七成员 ensemble predictions，不重训。共享逻辑为
+  `src/apexoracle/evaluation/hierarchical_mic_censor_sensitivity.py`，compact 输出与完成条件见
+  `experiments/hierarchical_mic/censor_multiplier_sensitivity/analysis/analysis_manifest.json`，42 MB
+  `row_censor_assignments.csv` 保持 local-only。**已由代码和独立复算验证的事实：** raw DBAASP
+  selected measurements 105,547条中 ordinary right-censored 22,158条；历史 parser 对22,138条
+  ASCII `>`/`>=` 使用`2×`，对20条 Unicode `≥` 实际使用`1×`，另有19条`>>`使用`3×`并从普通
+  multiplier grid 排除。CLI 只负责参数解析；冻结输入重建、prediction 对齐、closed output contract
+  和 manifest 写入统一由
+  `src/apexoracle/evaluation/hierarchical_mic_censor_workflow.py` 提供。eligible strain/phylum
+  measurement instances 中普通右删失为
+  14,939/15,264条（17.30%/17.79%）。论文式 mean-across-groups R² 在 strain `1×/2×/4×` 下为
+  `0.5785/0.5813/0.5634`，删除右删失为`0.5699`；phylum 对应为
+  `0.3804/0.3879/0.3748`，删除右删失为`0.3491`。172,182条逐行输出的60个 metric rows 已用
+  独立 NumPy/SciPy 公式复算；R²/MAE/RMSE/Pearson 最大差`<=2.2e-16`，Spearman 最大 CSV
+  round-trip 差`5.03e-10`。**根据现有证据作出的推断：** held-out signal 不依赖唯一的`2×`
+  取值，但 MAE 对 point encoding 有可见变化，回复必须承认`2×`只是对应 one twofold-dilution
+  step 的 operational heuristic。**2026-08-08 作者已确认并完成正式落稿：** sensitivity 的方法、
+  数值结果和结论紧凑加入 DBAASP MIC preprocessing table 前后，reviewer response 使用同一组冻结
+  数值；本实验仍只能称为 frozen-prediction evaluation-label sensitivity，不能写成 alternative
+  encoding 下重训稳健性或 censor-aware regression。最终 focused tests 为28 passed，
+  全仓为196 passed（14条既有 dependency/runtime warnings）。
+  **2026-08-08 R²机制诊断：** pooled分解验证 multiplier 每一步只在17.30%/17.79% rows上令
+  log-label平移`0.3010`。`2V→V`时strain/phylum SSE下降`7.68%/8.11%`而TSS同步下降
+  `8.28%/8.35%`；`2V→4V`时SSE上升`14.26%/14.42%`而TSS同步上升`11.20%/11.35%`，因此
+  `1-SSE/TSS`只小幅改变。不得把R²分母抵消写成MAE也不敏感。2026-08-09 维护审计确认一次性
+  portable HTML/JSON 没有 canonical 生成入口且未被正式文稿消费，已移出工作区至可恢复归档
+  `/data2/tianang/.codex-trash/20260809_synergy_mic_multiplier_diagnostics/`；exact 分解数值继续保留在
+  experiment README，不再登记该临时展示文件为正式产物。
+  **2026-08-08 正式文稿落稿记录：** 严格按
+  `experiments/hierarchical_mic/censor_multiplier_sensitivity/REVIEWER_RESPONSE_DRAFT.md` 更新正式
+  `sn-article.tex` 和 `Response to reviewers letter.docx`。TeX 在 Table `DBAASP_MIC` 前说明以
+  22,158 条 `>V` 作为 multiplier sensitivity 的代表，并在表后报告 strain/phylum 分母、
+  `V/2V/4V` 与 exclusion 的 R²、Spearman/MAE 范围和 heuristic 结论；DOCX 中原 future-tense
+  占位回复替换为三段完成时回复。修改前备份为
+  `sn-article_before_mic_multiplier_sensitivity_20260808.tex` 与
+  `Response to reviewers letter_before_mic_multiplier_sensitivity_20260808.docx`。正式 TeX/DOCX
+  SHA-256 分别为 `c8cc3b68...8f21` 和 `378e2a90...887d`；独立编译为35页且无 undefined
+  citation/reference，Methods 修改位于第10--11页；DOCX独立渲染为32页，回复位于第24--25页，
+  两者均目视核验。正式 `sn-article.pdf` 未覆盖，SHA-256 仍为 `761b1b6c...3c2`。
+  **2026-08-09 代码维护边界：** canonical CLI 保持
+  `scripts/audit/analyze_hierarchical_mic_censor_sensitivity.py`，已由623行收缩为118行参数层；纯
+  label/metric 逻辑仍在 `hierarchical_mic_censor_sensitivity.py`，新增共享工作流
+  `src/apexoracle/evaluation/hierarchical_mic_censor_workflow.py` 统一冻结输入重建、prediction 对齐、
+  closed output contract 和 manifest 写入。删除未使用的 `censor_counts`，并补充 multiplier/output
+  contract、in-memory MIC audit columns 与 auxiliary-column 兼容测试。canonical `--overwrite` 重跑
+  后六个 CSV 与 manifest 的 SHA-256 全部与重构前一致；31项 focused tests 和全仓205 tests通过
+  （14条既有 warnings）。42 MB逐行表继续保留 local-only，因其是独立复算和重复记录审计的唯一
+  逐行依据，不得复制或提交。
 
 ## 环境说明
 

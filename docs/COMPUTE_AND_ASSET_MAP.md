@@ -486,6 +486,53 @@ watch -n 30 python scripts/reproduce/monitor_fig1b_revision.py
   delta CI 为正。compact 结果位于
   `experiments/hierarchical_mic/molecule_disjoint/phylum_analysis/`。
 
+### 2026-08-07 hierarchical MIC censor-multiplier sensitivity
+
+- **计算与 owner：** 本机 CPU 单 owner 运行
+  `PYTHONPATH=src python scripts/audit/analyze_hierarchical_mic_censor_sensitivity.py`；没有申请或占用
+  GPU，没有在 node001/node002 启动 worker，也没有写 checkpoint。
+- **只读输入：** raw DBAASP JSON/SMILES/frozen MIC/token table、fixed strain manifest、hierarchical
+  config，以及本地既有
+  `fixed_strain_retrain/analysis/ensemble_predictions.csv`（86,358行）和
+  `molecule_disjoint/phylum_analysis/ensemble_predictions.csv`（85,824行）。全部输入的 absolute
+  path、size 和 SHA-256 已冻结在
+  `experiments/hierarchical_mic/censor_multiplier_sensitivity/analysis/analysis_manifest.json`。
+- **输出与写入边界：** 唯一输出根为
+  `experiments/hierarchical_mic/censor_multiplier_sensitivity/analysis/`。compact censor counts、
+  metrics、deltas、重复预测审计与 JSON manifest 可版本化；约42 MB的172,182行
+  `row_censor_assignments.csv` 可由入口确定性重建并受`.gitignore`保护，不复制到节点或正式文稿
+  目录。
+- **完成事实：** ordinary right-censored measurement 在 eligible strain/phylum 中为
+  14,939/15,264条（17.30%/17.79%）。mean-across-groups R² 在 `1×/2×/4×` 下分别为 strain
+  `0.5785/0.5813/0.5634`、phylum `0.3804/0.3879/0.3748`；删除右删失后为
+  `0.5699/0.3491`。60个 metric rows 已从逐行输出独立复算通过。
+- **科学边界：** 这是 frozen-prediction evaluation-label sensitivity，不是 alternative labels 下
+  retraining，也不是 censored-regression likelihood；不得据此声称训练完全不受 DBAASP censor
+  encoding 影响。
+- **2026-08-08 CPU诊断补充：** 本机只读消费42 MB逐行表和compact metrics，以SQLite精确分解
+  `R²=1-SSE/TSS`，不使用GPU、不写模型资产。`2V→V`时strain/phylum SSE与TSS分别变化
+  `-7.68%/-8.28%`和`-8.11%/-8.35%`；`2V→4V`时为`+14.26%/+11.20%`和
+  `+14.42%/+11.35%`。精确分解已写入 experiment README；原17 KB JSON与440 KB
+  self-contained HTML没有canonical生成入口且未被正式文稿消费，2026-08-09维护审计时已移出
+  工作区至 `/data2/tianang/.codex-trash/20260809_synergy_mic_multiplier_diagnostics/` 可恢复归档，
+  不再作为需迁移或发布的资产。
+- **2026-08-08 正式文稿资产：** 作者确认以
+  `experiments/hierarchical_mic/censor_multiplier_sensitivity/REVIEWER_RESPONSE_DRAFT.md` 为唯一
+  落稿基准。正式 TeX/DOCX 位于
+  `/data2/tianang/projects/ApexOracle_cleaned/docs/ApexOracle_Nat_Biotech/`，修改前备份分别为
+  `sn-article_before_mic_multiplier_sensitivity_20260808.tex` 和
+  `Response to reviewers letter_before_mic_multiplier_sensitivity_20260808.docx`。修改后
+  `sn-article.tex`/response DOCX SHA-256 为 `c8cc3b68...8f21`/`378e2a90...887d`；独立
+  `/tmp` 编译/渲染为35/32页，修改落在论文第10--11页和回复第24--25页，均已目视核验。
+  正式 `sn-article.pdf` 未覆盖，其 SHA-256 保持 `761b1b6c...3c2`。本次只消费既有 compact
+  sensitivity 结果，没有复制42 MB逐行表、启动GPU任务或生成新模型资产。
+- **2026-08-09 维护重构：** canonical CLI 路径和参数不变，但实现已收缩为118行参数层；共享
+  `src/apexoracle/evaluation/hierarchical_mic_censor_workflow.py` 负责本机CPU重建、frozen prediction
+  对齐、closed output contract与manifest，纯metric逻辑继续位于原sensitivity module。没有新增
+  node/GPU owner或输出根。重构后完整`--overwrite`运行的六个CSV与manifest SHA-256和重构前一致；
+  31项focused tests和全仓205 tests通过（14条既有warnings）。42 MB逐行表仍只保留在既有
+  local-only路径，没有创建副本。
+
 ### 2026-07-26 fixed strain-wise reviewer retraining
 
 - **实时资源核验：** 启动前本机4张 H100 PCIe、node001 8张 A100 80GB、node002 8张

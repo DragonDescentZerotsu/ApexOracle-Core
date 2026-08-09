@@ -522,18 +522,19 @@ def prepare_holdout_frames(
         for strain_name in text_auxiliary_train:
             text_auxiliary.extend(prepared.small_molecule_groups[strain_name])
 
+    auxiliary_columns = prepared.columns[: prepared.small_molecule_records.shape[1]]
     return HoldoutFrames(
         genome_text_train=genome_text_train,
         genome_text_test=genome_text_test,
         text_only_train=text_only_train,
         text_only_test=text_only_test,
         small_molecule_genome_text_train=(
-            pd.DataFrame(genome_auxiliary, columns=prepared.columns)
+            pd.DataFrame(genome_auxiliary, columns=auxiliary_columns)
             if genome_auxiliary
             else None
         ),
         small_molecule_text_only_train=(
-            pd.DataFrame(text_auxiliary, columns=prepared.columns)
+            pd.DataFrame(text_auxiliary, columns=auxiliary_columns)
             if text_auxiliary
             else None
         ),

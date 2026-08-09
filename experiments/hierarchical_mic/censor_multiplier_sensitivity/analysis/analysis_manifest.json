@@ -1,0 +1,125 @@
+{
+  "analysis_type": "evaluation_label_sensitivity_without_retraining",
+  "claim_boundary": "This analysis tests reported metrics against alternate evaluation-label encodings using frozen predictions. It does not test retraining under a censor-aware or alternatively imputed objective.",
+  "generated_on": "2026-08-07",
+  "inputs": {
+    "config": {
+      "path": "/data2/tianang/projects/Synergy/configs/hierarchical_mic/legacy_mdlm.yaml",
+      "sha256": "344419cf1d7fbadafbfcd662d8076719213cfd8273f6584a3ae38c8c4cfa02f0",
+      "size_bytes": 2852
+    },
+    "dbaasp_json": {
+      "path": "/data2/tianang/projects/Synergy/DataPrepare/Data/all_peptides_data.json",
+      "sha256": "927ea275f40cdc2f79acdae6a87b0efc13ae5b7acee3901a50d2005a8f187ce0",
+      "size_bytes": 325045129
+    },
+    "frozen_dbaasp_mic": {
+      "path": "/data2/tianang/projects/Synergy/DataPrepare/Data/DBAASP_id_bact_name_SMILES_MIC_Evo.csv",
+      "sha256": "ebbe1b32a45460a2f88f112192627f80f9f7391c1d17dfc2ebf007fe6f6ef2aa",
+      "size_bytes": 41381357
+    },
+    "mic_records": {
+      "path": "/data2/tianang/projects/Synergy/DataPrepare/Data/DBAASP_inhouse_AMP_SELFIES_token_MIC_Evo.csv",
+      "sha256": "ac1a1967d9e94e169ffc23621f7e78c644753659bd08f7a8e10bb63b574930b2",
+      "size_bytes": 146626408
+    },
+    "phylum_predictions": {
+      "path": "/data2/tianang/projects/Synergy/experiments/hierarchical_mic/molecule_disjoint/phylum_analysis/ensemble_predictions.csv",
+      "sha256": "2b3ca029bf0c966c30b7fcfd4dd536b3d206e162ac7c5f8c11b5d227de2358c8",
+      "size_bytes": 18820049
+    },
+    "small_molecule_records": {
+      "path": "/data2/tianang/projects/Synergy/DataPrepare/Data/small_molecule/processed/small_molecule_Evo_binary_data_SELFIES.csv",
+      "sha256": "d8e6391bfae3c35fe8d311461565df177fc75044cbc40204bf74f7ecf1fe7f27",
+      "size_bytes": 15433528
+    },
+    "smiles_csv": {
+      "path": "/data2/tianang/projects/Synergy/DataPrepare/Data/DBAASP_id_SMILES_merged.csv",
+      "sha256": "347b7d9b1175967e4e8199d627c4dd3df446d19f29156c97b360db9e8099a565",
+      "size_bytes": 7488172
+    },
+    "strain_manifest": {
+      "path": "/data2/tianang/projects/Synergy/experiments/hierarchical_mic/strain/legacy_protocol_manifest.json",
+      "sha256": "e0faa7a90eb531eccfcf8ee16b6f1c433b6f6a30772bfcbbf7acfea8f75a57ad",
+      "size_bytes": 173797
+    },
+    "strain_predictions": {
+      "path": "/data2/tianang/projects/Synergy/experiments/hierarchical_mic/fixed_strain_retrain/analysis/ensemble_predictions.csv",
+      "sha256": "80f368923d365fb379e049a1bf083773115a2b38cb0e0620a1c58b3e75a8752a",
+      "size_bytes": 18496228
+    }
+  },
+  "lineage_contract": {
+    "all_censored_excluded_policy": "all <, <=, >, >=, unicode censor, and >> rows excluded",
+    "dbaasp_selected_measurements": 105547,
+    "double_angle_policy": "excluded from ordinary multiplier grid",
+    "duplicate_key_prediction_policy": "Rows indistinguishable by protocol/group/route/model-input/normalized-strain/MIC use their within-key mean saved prediction so censor-lineage occurrence order cannot affect metrics.",
+    "duplicate_key_rows": 1822,
+    "maximum_absolute_metric_normalization_delta": 5.514493306435497e-09,
+    "maximum_absolute_prediction_normalization_delta": 1.3078928571400028e-05,
+    "metric_scale": "-log10(MIC_um / 10)",
+    "right_censored_definition": "ordinary >, >=, or unicode >=; range-like arrows excluded",
+    "tokenized_training_rows": 120955
+  },
+  "outputs": {
+    "duplicate_prediction_audit": {
+      "path": "/data2/tianang/projects/Synergy/experiments/hierarchical_mic/censor_multiplier_sensitivity/analysis/duplicate_prediction_normalization_audit.csv",
+      "sha256": "38799030ff3a1abcf012bd7cce0c4b98d533bb03b0b5e82ffdd75ecac5ba7886",
+      "size_bytes": 4836
+    },
+    "eligible_censor_counts": {
+      "path": "/data2/tianang/projects/Synergy/experiments/hierarchical_mic/censor_multiplier_sensitivity/analysis/eligible_censor_counts.csv",
+      "sha256": "49c36e8dfc9a933719b67a48ecb4e99a03501393451fe6a077d6ba73d698d2a8",
+      "size_bytes": 2539
+    },
+    "metric_deltas": {
+      "path": "/data2/tianang/projects/Synergy/experiments/hierarchical_mic/censor_multiplier_sensitivity/analysis/metric_deltas.csv",
+      "sha256": "ffdf9aa69a0662aa152159e5b728bd1b209414481b8b368705bcf307ee3e7a89",
+      "size_bytes": 35165
+    },
+    "metrics": {
+      "path": "/data2/tianang/projects/Synergy/experiments/hierarchical_mic/censor_multiplier_sensitivity/analysis/metrics.csv",
+      "sha256": "bdbf5e6e22d7efe7feaa7e9a5a3d298295b85d9478a99acb3bd6487452c3c6d0",
+      "size_bytes": 11918
+    },
+    "row_assignments": {
+      "path": "/data2/tianang/projects/Synergy/experiments/hierarchical_mic/censor_multiplier_sensitivity/analysis/row_censor_assignments.csv",
+      "sha256": "0f0d4330f55b84346bdd63f1f58376e806a1c51b00d579ef88f228f2acb7a5e0",
+      "size_bytes": 43795413
+    },
+    "source_censor_rules": {
+      "path": "/data2/tianang/projects/Synergy/experiments/hierarchical_mic/censor_multiplier_sensitivity/analysis/source_censor_rules.csv",
+      "sha256": "7cbb3feef9f8ec85372b479efa684c13ebfce0f5e5a977f1964bc810271af980",
+      "size_bytes": 285
+    }
+  },
+  "protocols": {
+    "phylum": {
+      "ensemble_members": 7,
+      "groups": 3,
+      "measurements": 85824,
+      "membership": "canonical_taxonomy_cluster_adapter"
+    },
+    "strain": {
+      "ensemble_members": 7,
+      "groups": 3,
+      "measurements": 86358,
+      "membership": "fixed_PYTHONHASHSEED_0_reconstruction"
+    }
+  },
+  "right_censor_multipliers": [
+    1.0,
+    2.0,
+    4.0
+  ],
+  "scenarios": [
+    "paper_legacy",
+    "right_censored_multiplier_1",
+    "right_censored_multiplier_2",
+    "right_censored_multiplier_4",
+    "right_censored_excluded",
+    "all_censored_excluded"
+  ],
+  "schema_version": 1,
+  "status": "completed"
+}

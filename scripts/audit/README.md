@@ -31,6 +31,7 @@ in-house 脚本默认在同级外部 `mdlm` checkout 查找 guidance producer，
 | --- | --- | --- |
 | `audit_hierarchical_mic_molecule_overlap.py` | 在 strain/species/phylum pathogen holdout 中审计 train-seen 与 exact-molecule-disjoint test measurements | `experiments/hierarchical_mic/molecule_overlap/overlap_{by_group.csv,audit.json}` |
 | `plot_hierarchical_mic_test_distribution.py` | 绘制 fixed strain-wise 实际 held-out MIC 的 pooled histogram 与逐 fold ECDF，并审计 MIC<=16 micromolar 比例；最终样式无总标题、panel标题不加粗并带`a/b`标记 | `experiments/hierarchical_mic/mic_distribution/` |
+| `analyze_hierarchical_mic_censor_sensitivity.py` | 从 raw DBAASP concentration 重建 censor lineage，并用 frozen strain/phylum 七成员 ensemble predictions 比较普通 `>V` 的 `1×/2×/4×`、删除右删失和删除全部删失口径；不重训 | `experiments/hierarchical_mic/censor_multiplier_sensitivity/analysis/` |
 | `prepare_all_genome_fragment_variation_pairs.py` | 从全部 embedding/FASTA/species-compatible bacterial assets 中冻结同物种 ANI 最近邻与去重 pair manifest | `experiments/genome_condition_reviewer/fragment_variation/manifests/` |
 | `analyze_genome_fragment_variation.py` | 在 saved fragment condition 内，对全部合格 nearest same-species strains 的 mutual-best homologous fragments 比较 sequence divergence 与 embedding distance | `experiments/genome_condition_reviewer/fragment_variation/all_embeddings/` |
 | `prepare_historical_genome_annotation_probes.py` | 为全部 paper-matched、FASTA/GenBank/tensor-compatible bacterial fragments 构建 AMR/MGE annotation labels；文件名为冻结产物保留的 legacy 名称 | `experiments/genome_condition_reviewer/historical_probe/manifests/` |
@@ -57,6 +58,23 @@ python scripts/audit/plot_hierarchical_mic_test_distribution.py
 
 默认直接消费 fixed strain-wise 七成员 replay 的逐测量 ensemble 表；不会重建 split、训练模型或
 修改论文图片。PNG/PDF 用于作者审阅，summary/bin CSV 与 manifest 记录精确输入血缘。
+
+MIC censor-multiplier sensitivity 的正式命令：
+
+```bash
+PYTHONPATH=src python \
+  scripts/audit/analyze_hierarchical_mic_censor_sensitivity.py
+```
+
+默认网格为 `1×/2×/4×`，可重复传 `--right-censor-multiplier` 修改，但必须包含 `2×`；已有输出时
+只有显式 `--overwrite` 才覆盖该入口登记的派生文件。42 MB 逐行 assignment 表保持 local-only，
+compact metrics/counts/manifest 可发布。由于该入口使用 frozen predictions，它只能说明已报告指标的
+evaluation-label sensitivity，不能写成 alternative encoding 下重训稳健性。完整数值、raw parser
+边界和英文落稿记录见 `experiments/hierarchical_mic/censor_multiplier_sensitivity/`。CLI 已保持为
+薄参数层；共享工作流位于
+`src/apexoracle/evaluation/hierarchical_mic_censor_workflow.py`，纯 label/metric 逻辑位于相邻
+`hierarchical_mic_censor_sensitivity.py`。2026-08-09 维护重构的完整 canonical 输出与重构前逐字节
+一致。
 
 Genome-condition 两个正式实验的命令、共享代码层、输出和解释边界见
 `experiments/genome_condition_reviewer/README.md`。已弃用的 genome/text condition controls 只保留

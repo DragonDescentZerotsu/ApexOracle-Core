@@ -92,6 +92,11 @@ slurm-*.out
 !experiments/hierarchical_mic/molecule_disjoint/phylum_analysis/cluster_bootstrap.csv
 !experiments/hierarchical_mic/fixed_strain_retrain/analysis/metrics.csv
 !experiments/hierarchical_mic/fixed_strain_retrain/analysis/cluster_bootstrap.csv
+!experiments/hierarchical_mic/censor_multiplier_sensitivity/analysis/source_censor_rules.csv
+!experiments/hierarchical_mic/censor_multiplier_sensitivity/analysis/eligible_censor_counts.csv
+!experiments/hierarchical_mic/censor_multiplier_sensitivity/analysis/metrics.csv
+!experiments/hierarchical_mic/censor_multiplier_sensitivity/analysis/metric_deltas.csv
+!experiments/hierarchical_mic/censor_multiplier_sensitivity/analysis/duplicate_prediction_normalization_audit.csv
 !experiments/generated_candidate_diversity/candidate_pairwise_tanimoto.csv
 !experiments/generated_candidate_diversity/generation_all_pairs_tanimoto_histogram.csv
 !experiments/generated_candidate_diversity/tanimoto_histogram_plotted_data.csv
@@ -119,6 +124,9 @@ experiments/hierarchical_mic/molecule_disjoint/phylum_analysis/ensemble_predicti
 experiments/hierarchical_mic/fixed_strain_retrain/checkpoints/
 experiments/hierarchical_mic/fixed_strain_retrain/predictions/
 experiments/hierarchical_mic/fixed_strain_retrain/analysis/ensemble_predictions.csv
+# Raw row-level censor lineage is reproducible and intentionally remains local;
+# only compact reviewer-facing aggregates and their manifest are versioned.
+experiments/hierarchical_mic/censor_multiplier_sensitivity/analysis/row_censor_assignments.csv
 
 # Reviewer peptide-classifier split memmaps are deterministic, locally
 # reproducible intermediates. Keep only their compact manifest and audit.
