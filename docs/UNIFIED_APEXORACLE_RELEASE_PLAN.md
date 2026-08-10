@@ -277,13 +277,16 @@ fresh-clone QA 已记录；未公开的完整训练数据、七成员 ensemble �
 ### R6：原地转换与正式发布
 
 状态：**完成。** 原仓转换、Core 原地重命名、`v0.1.0`/`v0.2.0`、GitHub Releases、HF revisions 与
-完整 source archive 均已发布；当前没有 Zenodo record，文档不得暗示已有 DOI。
+完整 source archive 均已发布。论文列出的 Zenodo dataset record `15612048`（DOI
+`10.5281/zenodo.15612048`）公开保存预计算 genome/text embeddings；它是数据 DOI，不是 super-repo
+软件快照 DOI。
 
 - 在现有 public `ApexOracle` 创建 legacy tag/branch 后，将其默认分支原地转换为 super-repo；canonical URL
   始终保持 `DragonDescentZerotsu/ApexOracle`。
 - 将 private `DragonDescentZerotsu/Synergy` 在完整 history audit 通过后重命名为
   `DragonDescentZerotsu/ApexOracle-Core`，再决定 public visibility；不创建复制仓库。
-- 发布 tag、GitHub Release、full-source archive，并同步 Hugging Face/Zenodo cards 与论文链接。
+- 发布 tag、GitHub Release、full-source archive，并同步 Hugging Face assets、论文链接和已有 Zenodo
+  embedding dataset record。
 - 只有两个端到端 quickstart、资产下载和 fresh-clone QA 完成后，才能把 reviewer response 的相关
   future tense 改为完成时。
 
@@ -347,6 +350,8 @@ fresh-clone QA 已记录；未公开的完整训练数据、七成员 ensemble �
 
 - 完整 paper condition bank 尚未重新分发；当前 compact BAA-3170 bundle 只用于可运行 smoke。
 - 完整七成员 MIC ensemble 不作为轻量 quickstart；论文评估继续使用冻结 ensemble 资产。
+- Zenodo `15612048` 已公开 genome/text precomputed embeddings；它不等于完整 paper condition bank 或
+  software source snapshot。
 - 新 target、更多数据资产和 CI/GPU automation 在有明确需求时另行版本化。
 
 ## 8. 从 2026-08-10 开始的下一阶段固定顺序
