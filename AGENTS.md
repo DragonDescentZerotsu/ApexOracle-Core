@@ -72,12 +72,14 @@
   launchers、debug 和 unused diffusion duplicate 已由 ledger gate 清理且可恢复；checkpoint/data/output 未入 Git。
   Upstream `kuleshov-group` remote 未接收任何 ApexOracle commit。下一关键路径为 Evo-2 clean fork。
 - **2026-08-10 Evo-2 clean fork 进行中：** `/data2/tianang/projects/evo2` 已在 upstream
-  `53f1959` 基线上建立 `refactor/apexoracle-evo2`，首个 clean candidate 为 `ccdbfbe`；本地
+  `53f1959` 基线上建立 `refactor/apexoracle-evo2`；public
+  `DragonDescentZerotsu/ApexOracle-Evo2` 默认 `main` 当前 candidate 为
+  `61a290f8026f70d9623b70f37f2abf3ce33cf2c5`。本地
   source-only recovery commit `ad00efc` 与 annotated tag `legacy-code-snapshot-2026-08-10` 尚未公开推送。
   新增 canonical `apexoracle-evo2-extract` CLI，固定 11,000-nt window、10,000-nt step、Evo-2-40B
   `blocks.46.mlp.l3` 与 valid-token mean pooling，并为每个 tensor 输出 record/window provenance manifest。
-  合成 multi-record contract 9 tests、567-FASTA CPU plan-only、clean sdist/wheel 与 wheel fresh CLI 已通过；
-  40B 小规模 runtime smoke、public remote、fresh-clone 和 super-repo gitlink 仍待完成。上游
+  合成 multi-record contract 9 tests、567-FASTA CPU plan-only、clean sdist/wheel、remote fresh clone
+  与 Python 3.11/3.12 GitHub CI 已通过；40B 小规模 runtime smoke 和 super-repo gitlink 仍待完成。上游
   `ArcInstitute/evo2` remote 不得接收 ApexOracle commit。
 - 机器职责、环境、共享文件系统、数据/权重/外部仓库位置和当前 reviewer 任务记录在
   `docs/COMPUTE_AND_ASSET_MAP.md`。任何机器或资产迁移都必须同步更新该文件；node001 与
