@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "date": "2026-08-10",
+  "scope": "ApexOracle-Core remasking evaluator: MDLM root compatibility bridge to canonical scoring API",
+  "canonical_mdlm_commit": "b9ac2915eb109f4a9c5f2faac570ef1796d3f7de",
+  "generation_input": {
+    "source_run": "ApexOracle-Generation canonical_no_copy full sampler parity",
+    "batch_sha256": "4ed023ff4786e778cf988f4081d1ae6c7a31a34a35357bcaa6e17f4b2e98d13a",
+    "selected_rows": 2,
+    "sequence_rule": "token_ids through first [SEP], inclusive"
+  },
+  "checkpoint": {
+    "role": "clean post-generation MIC reporter",
+    "sha256": "c0d7c2be49ef179a25a19dcd9c54c592c282b6961e51aff60e95fabc13786802"
+  },
+  "comparisons": [
+    {
+      "strain": "BAA-3170",
+      "legacy_logits": [-1.125, -1.1640625],
+      "canonical_logits": [-1.125, -1.1640625],
+      "torch_equal": true,
+      "max_abs_difference": 0.0
+    },
+    {
+      "strain": "BAA-3197",
+      "legacy_logits": [-1.1640625, -1.28125],
+      "canonical_logits": [-1.1640625, -1.28125],
+      "torch_equal": true,
+      "max_abs_difference": 0.0
+    }
+  ],
+  "verified": [
+    "The Core evaluator no longer dynamically imports judge_generated_mols_MIC.py.",
+    "The direct canonical scorer preserves the four tested formal-checkpoint predictions exactly.",
+    "The MDLM root bridge remains present temporarily, but no longer has this Core runtime consumer."
+  ],
+  "limitation": "This parity validates the remasking reviewer clean-MIC caller, not every historical external script that may import the bridge outside the audited repositories."
+}
