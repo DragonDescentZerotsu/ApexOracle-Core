@@ -5,7 +5,8 @@
 > legacy `DataPrepare/` 收尾仍待后续批次
 > 适用范围：当前 `Synergy` 仓库，以及后续需要整合的 Evo-2 genome embedding、DLM/MDLM 和 guided generation 代码。
 
-当前发布架构焦点（2026-08-10）：作者已冻结轻量 super-repo + 五个独立 submodule 的方案，其中
+当前发布架构焦点（2026-08-10）：作者已冻结“复用现有 ApexOracle 作为 super-repo + 五个独立
+submodule”的方案，其中
 合作者的 DLM+MTR 预训练与本地 downstream MDLM 分为两个模块。下一步
 按 `docs/UNIFIED_APEXORACLE_RELEASE_PLAN.md` 第 8 节执行：MDLM 与 Generation 已关闭，下一步处理
 Evo-2、DLM-pretraining 与 Core，最后创建 super-repo。MDLM/Generation clean modules 和 Hugging Face
@@ -188,8 +189,9 @@ Super-repo 只负责根 README、recursive-clone 指引、固定 module SHA、�
 bootstrap、MIC prediction quickstart、guided-generation quickstart 和展开 submodules 的完整 source
 release archive。数据、权重、embedding、raw outputs 和 cache 不进入 Git。
 
-当前 public `ApexOracle` legacy monorepo 在正式切换时改名归档为 `ApexOracle-Legacy`；新的
-clean-history super-repo 继续使用论文已公开的 `DragonDescentZerotsu/ApexOracle` URL。执行阶段、
+当前 public `ApexOracle` 不再改名或由新 repo 替代；先以 tag/branch 保存 legacy 状态，再在同一
+`DragonDescentZerotsu/ApexOracle` repository 原地转换默认分支。当前 `Synergy` 也不复制，发布前直接
+把同一个 GitHub repository 重命名为 `ApexOracle-Core`。执行阶段、
 模块边界和验收标准以 `docs/UNIFIED_APEXORACLE_RELEASE_PLAN.md` 为详细操作计划。本决策已经冻结；
 改变 module 数量、两个 MDLM 相关模块的职责边界、submodule 策略、目标 remote 或 canonical URL
 切换方式必须再次取得作者确认。详细 MDLM 源码审计见 `docs/MDLM_MODULE_SPLIT_AUDIT.md`。
@@ -895,11 +897,11 @@ optimizer-step 已在宿主 H100 单独通过，两份 guidance checkpoint 的 i
   不改模型结构、objective 或训练行为。
 - [ ] 从官方 Evo-2 基线准备 `DragonDescentZerotsu/ApexOracle-Evo2` clean fork commit，加入通用
   genome extraction CLI 和小规模 tensor-contract smoke；不得直接提交当前 dirty checkout。
-- [ ] 将当前 Synergy 整理为 `DragonDescentZerotsu/ApexOracle-Core` clean public module commit，
-  保留当前内部结构并完成公开边界审计。
-- [x] 作者已决定统一 public ApexOracle 采用新的 clean-history super-repo，并以五个固定 commit 的
-  Git submodule 组合 Core/DLM-Pretraining/MDLM/Evo2/Generation；旧 public monorepo 改名归档，canonical URL 由新
-  super-repo 接管。详细计划见 `docs/UNIFIED_APEXORACLE_RELEASE_PLAN.md`。
+- [ ] 将当前 Synergy 原 repository 整理并重命名为 `DragonDescentZerotsu/ApexOracle-Core`，
+  保留现有 history/内部结构并完成公开边界审计；不得复制第二个 Core repo。
+- [x] 作者已决定直接把现有 public `DragonDescentZerotsu/ApexOracle` 原地转换为 super-repo，以五个
+  固定 commit 的 Git submodule 组合 Core/DLM-Pretraining/MDLM/Evo2/Generation；不再新建 super-repo，
+  legacy 状态由同仓 tag/branch 恢复。详细计划见 `docs/UNIFIED_APEXORACLE_RELEASE_PLAN.md`。
 
 #### 2026-08-09 统一 ApexOracle super-repo 固定计划
 
@@ -909,11 +911,11 @@ optimizer-step 已在宿主 H100 单独通过，两份 guidance checkpoint 的 i
   科学角色和非破坏恢复点。Downstream MDLM 的 source-only 恢复点已完成，其余来源仍待执行。
 - [ ] R1：完成 Core/DLM-Pretraining/MDLM/Evo2/Generation 五个可独立安装和 smoke-tested 的
   clean commits。MDLM 与 Generation 两项已完成，Core/DLM-Pretraining/Evo2 待完成。
-- [ ] R2：创建轻量 super-repo、`.gitmodules`、`modules.lock.yaml`、环境 profiles 和 asset manifests。
+- [ ] R2：在现有 ApexOracle 原地建立 `.gitmodules`、`modules.lock.yaml`、环境 profiles 和 asset manifests。
 - [ ] R3：完成新 molecule × known strain 的 MIC prediction end-to-end quickstart。
 - [ ] R4：完成 target strain guided generation 的 smoke/paper-preset end-to-end quickstart。
 - [ ] R5：完成 model-ready data、strain texts、许可、完整 source archive 和 fresh-clone QA。
-- [ ] R6：归档 legacy public repo、切换 canonical URL、发布 tag/Release 并同步论文/HF/Zenodo 链接。
+- [ ] R6：在同仓保留 legacy tag/branch、原地转换默认分支、发布 tag/Release 并同步论文/HF/Zenodo 链接。
 
 阶段验收、禁止项和 reviewer-facing 命令固定记录于
 `docs/UNIFIED_APEXORACLE_RELEASE_PLAN.md`；执行时必须逐项更新这里的状态。

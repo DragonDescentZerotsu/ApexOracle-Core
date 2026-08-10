@@ -26,7 +26,7 @@ node001 与 node002 上 `Synergy_release` 的 inode/文件内容已经交叉核�
 
 ### 统一公开 super-repo 固定计划（2026-08-10；MDLM/Generation modules 已发布）
 
-**作者已确认的决定：** 最终公开入口为轻量 `DragonDescentZerotsu/ApexOracle` super-repo，使用
+**作者已确认的决定：** 直接把现有 public `DragonDescentZerotsu/ApexOracle` 原地转换为轻量 super-repo，使用
 固定 commit 的 Git submodule 组合 Core、DLM-Pretraining、downstream MDLM、Evo-2 和 Generation；
 不把五个模块重排为一个
 单体 Python package。PepLink 保持 `PepLink==0.1.2` 独立依赖。详细计划和阶段验收见
@@ -34,14 +34,14 @@ node001 与 node002 上 `Synergy_release` 的 inode/文件内容已经交叉核�
 
 | 模块 | 当前本机位置 / remote | 目标 remote 与角色 | 当前边界 |
 | --- | --- | --- | --- |
-| Core | `/data2/tianang/projects/Synergy`；private `DragonDescentZerotsu/Synergy` | `DragonDescentZerotsu/ApexOracle-Core`；`modules/core` | 先收口现有未提交 reviewer 工作并完成公开审计；当前未迁移 |
+| Core | `/data2/tianang/projects/Synergy`；private `DragonDescentZerotsu/Synergy` | 同一 repository 重命名为 `DragonDescentZerotsu/ApexOracle-Core`；`modules/core` | 不复制新 repo；先收口未提交 reviewer 工作并审计完整 history，再重命名和决定 public visibility |
 | DLM Pretraining | `/data2/tianang/projects/ApexOracle_github/DLM_pretrain`；当前位于 public legacy repo | `DragonDescentZerotsu/ApexOracle-DLM-Pretraining`；`modules/dlm_pretrain` | 合作者 joint DLM+MTR producer family；先参数化绝对路径、修复 model config contract 并做 synthetic smoke |
 | Downstream MDLM | `/data2/tianang/projects/mdlm`；上游 `origin` + public `custom/ApexOracle-MDLM` | `DragonDescentZerotsu/ApexOracle-MDLM`；`modules/mdlm` | public 默认 `master` 固定候选 `c9d17c7`；legacy tag 保留；118 tests、remote fresh-clone 与 HF revision `77694f08...2eda` 验收通过，禁止误推上游 |
 | Evo-2 | `/data2/tianang/projects/evo2`；官方上游 | `DragonDescentZerotsu/ApexOracle-Evo2`；`modules/evo2` | checkout dirty；先建 clean fork 和参数化 extraction 入口 |
 | Generation | `/data2/tianang/projects/discrete-diffusion-guidance`；上游 `origin` + public `custom/ApexOracle-Generation` | `DragonDescentZerotsu/ApexOracle-Generation`；`modules/generation` | public 默认 `main` 固定候选 `de6c1e5`；recovery tag、14 tests、paper GPU smoke 与 remote fresh-clone dry-run 通过；历史 outputs 保持 ignored |
-| Super-repo | 当前 public `DragonDescentZerotsu/ApexOracle` legacy checkout 位于 `/data2/tianang/projects/ApexOracle_github` | 新 clean-history `DragonDescentZerotsu/ApexOracle` | 旧 repo 先改名归档为 `ApexOracle-Legacy`；不得在其 history 上继续复制资产 |
+| Super-repo | 当前 public `DragonDescentZerotsu/ApexOracle` legacy checkout 位于 `/data2/tianang/projects/ApexOracle_github` | 同一个 `DragonDescentZerotsu/ApexOracle` 原地转换 | 转换前建立 legacy tag/branch；不新建 repo、不改 canonical URL、不再复制资产 |
 
-**已验证事实：** 上表来源当前仍位于原位置；尚未创建 super-repo、写入 `.gitmodules`、移动本机
+**已验证事实：** 上表来源当前仍位于原位置；现有 ApexOracle 尚未转换或写入 `.gitmodules`，也未移动本机
 data/weight 或改变 node001/node002 shared release checkout。Downstream MDLM 与 Generation 已有通过
 fresh-clone 验收的 public module commit。Hugging Face `Kiria-Nozan/ApexOracle` 正式 revision
 `77694f08c1d0664fdb24c5a7bab130c8a3bc2eda` 含 18 files、MIT metadata，权重 SHA-256 为

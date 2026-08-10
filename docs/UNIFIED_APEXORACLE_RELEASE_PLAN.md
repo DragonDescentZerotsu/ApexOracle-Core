@@ -1,12 +1,13 @@
 # ApexOracle 统一公开仓库发布计划
 
 > 决策日期：2026-08-09
-> 状态：架构已由作者确认并冻结；MDLM 与 Generation clean modules 已发布并验收，super-repo/submodule 尚未创建
+> 状态：架构已由作者确认并冻结；MDLM 与 Generation clean modules 已发布并验收，现有 ApexOracle 尚未转换为 super-repo
 > Canonical 上位计划：`REFACTOR_PLAN.md`
 
 ## 1. 目标与固定架构
 
-最终发布采用一个轻量公开 super-repo 加五个固定 commit 的 Git submodule。各模块保留当前内部
+最终发布直接把现有公开 `DragonDescentZerotsu/ApexOracle` 转换为轻量 super-repo，并加入五个固定
+commit 的 Git submodule。不会另建第二个 ApexOracle 仓库。各模块保留当前内部
 代码结构、依赖和运行环境，不把 MDLM、Evo-2 或 guided-generation 源码重排进
 `src/apexoracle/`。Reviewer-facing 的统一性由根 README、module lock、资产 manifest、bootstrap
 入口和两个端到端 quickstart 提供。
@@ -45,22 +46,25 @@ ApexOracle/
 
 | 角色 | 目标 remote | 来源与职责 |
 | --- | --- | --- |
-| 统一入口 | `DragonDescentZerotsu/ApexOracle` | 轻量 super-repo；README、quickstarts、环境和 manifests |
-| Core | `DragonDescentZerotsu/ApexOracle-Core` | 当前 `Synergy` 的 canonical data/fusion/heads/runners/audits |
+| 统一入口 | 现有 `DragonDescentZerotsu/ApexOracle` | 原地转换为轻量 super-repo；README、quickstarts、环境和 manifests |
+| Core | 当前 `DragonDescentZerotsu/Synergy` 原仓库重命名为 `DragonDescentZerotsu/ApexOracle-Core` | 同一 Git history/branches 的 canonical data/fusion/heads/runners/audits；不复制新仓库 |
 | DLM Pretraining | `DragonDescentZerotsu/ApexOracle-DLM-Pretraining` | 合作者的 DLM + 209-descriptor MTR 预训练 producer |
 | Downstream MDLM | `DragonDescentZerotsu/ApexOracle-MDLM` | checkpoint loading、molecule embedding、guidance heads 和 candidate scoring |
 | Evo-2 | `DragonDescentZerotsu/ApexOracle-Evo2` | 官方 Evo-2 clean fork 加 ApexOracle genome extraction 入口 |
 | Generation | `DragonDescentZerotsu/ApexOracle-Generation` | diffusion、MIC/peptide guidance、remasking 和输出 |
 | PepLink | `DragonDescentZerotsu/PepLink` / `PepLink==0.1.2` | 保持独立版本化依赖，不作为 submodule |
 
-当前公开 `DragonDescentZerotsu/ApexOracle` 的 legacy monorepo 不继续累加。发布切换时先将其改名为
-`ApexOracle-Legacy` 并归档，再让新 super-repo 使用论文已经公开的 canonical URL。不得通过把
-dirty checkout、数据或权重复制进旧 history 的方式实现统一发布。
+当前公开 `DragonDescentZerotsu/ApexOracle` 不改名、不另建替代仓库。转换前先为当前 legacy 状态建立
+annotated tag 和保留 branch，然后在同一 repository 的默认分支上迁移为 super-repo。现有 history 保留；
+除非历史审计发现必须移除的 credential/private asset，否则不做 force-push 或 history rewrite。不得继续把
+dirty checkout、数据或权重复制进该 history。
 
 ## 2. 模块边界
 
 ### 2.1 `modules/core`
 
+- 直接复用当前 `DragonDescentZerotsu/Synergy` repository，并在公开发布前重命名为
+  `DragonDescentZerotsu/ApexOracle-Core`；不得创建第二份 Core repository。
 - 保留当前 `Synergy` 的 `src/apexoracle/`、`scripts/`、`configs/`、`experiments/` 和 tests 布局。
 - 不为适配 super-repo 重写已验证的 fusion、head、runner 或 checkpoint schema。
 - 只新增公共 inference/quickstart 所需的稳定薄入口，并继续通过现有 tests 保护行为。
@@ -197,7 +201,8 @@ token-level complete 1 条但结构过滤后 0 row，只作为 runtime contract�
 
 状态：待执行。
 
-- 创建轻量 clean-history super-repo，加入五个 submodule 的固定 SHA。
+- 在现有 public `DragonDescentZerotsu/ApexOracle` 内先标记 legacy 恢复点，再原地建立 super-repo
+  默认分支并加入五个 submodule 的固定 SHA；不创建新 repository。
 - 新增 `modules.lock.yaml`、资产 manifests、环境 profiles、bootstrap 和统一 README。
 - CI 验证 recursive clone、module SHA、license/NOTICE、secret、大文件和 broken link。
 
@@ -237,21 +242,24 @@ token-level complete 1 条但结构过滤后 0 row，只作为 runtime contract�
 
 验收：代码、数据和权重三类入口互相引用一致，所有公开文件可由 manifest 验证。
 
-### R6：Canonical URL 切换与正式发布
+### R6：原地转换与正式发布
 
 状态：待执行。
 
-- 将旧 public `ApexOracle` 改名归档为 `ApexOracle-Legacy`；不复用其肥大 history。
-- 将新 super-repo 发布到 `DragonDescentZerotsu/ApexOracle`。
+- 在现有 public `ApexOracle` 创建 legacy tag/branch 后，将其默认分支原地转换为 super-repo；canonical URL
+  始终保持 `DragonDescentZerotsu/ApexOracle`。
+- 将 private `DragonDescentZerotsu/Synergy` 在完整 history audit 通过后重命名为
+  `DragonDescentZerotsu/ApexOracle-Core`，再决定 public visibility；不创建复制仓库。
 - 发布 tag、GitHub Release、full-source archive，并同步 Hugging Face/Zenodo cards 与论文链接。
 - 只有两个端到端 quickstart、资产下载和 fresh-clone QA 完成后，才能把 reviewer response 的相关
   future tense 改为完成时。
 
-验收：论文 canonical URL 指向新 super-repo；release tag 固定五个 module SHA 和全部资产版本。
+验收：论文 canonical URL 保持不变且内容成为 super-repo；release tag 固定五个 module SHA 和全部资产版本。
 
 ## 6. 禁止项与变更控制
 
 - 不把 dirty 本地目录或 legacy public repo 内的目录直接作为 submodule。
+- 不再创建第二个 ApexOracle super-repo 或第二个 Core repository；分别复用现有 ApexOracle 与 Synergy。
 - 不把 checkpoint、embedding、dataset、raw output、W&B、cache 或编译产物提交到 Git。
 - 不为统一目录而批量改写 module 内 import、Hydra config 或已验证 scientific protocol。
 - 不在未验证等价前删除历史 source；恢复点与 source manifest 必须先完成。
@@ -296,7 +304,7 @@ token-level complete 1 条但结构过滤后 0 row，只作为 runtime contract�
 
 ### 仍待执行而非待架构确认的事项
 
-- 创建剩余 Core、DLM-Pretraining、Evo-2 remotes，并决定具体 visibility 切换时间。
+- 将现有 Synergy 重命名为 Core；创建剩余 DLM-Pretraining、Evo-2 remotes，并决定 visibility 切换时间。
 - 完成剩余三个 clean module commits 及各自 smoke tests。
 - 完成数据/模型再分发许可审计和稳定下载 URI。
 - 完成两个端到端 quickstart、full-source archive 与 fresh-clone QA。
@@ -312,6 +320,7 @@ token-level complete 1 条但结构过滤后 0 row，只作为 runtime contract�
 4. **DLM-pretraining producer 与 Core 收口。** 合作者 pretraining 原则上原样归档并先做 synthetic
    train/save/load；只有 blocking portability failure 才做最小路径/文档/config 修补，不改变模型结构、
    objective 或训练行为。并行完成 Core 的 public-data/secret/license/fresh inference 审计。
-5. **最后创建 super-repo。** 只有五个 module candidate SHA 均冻结后才创建 `.gitmodules`、
+5. **最后原地转换现有 ApexOracle。** 只有五个 module candidate SHA 均冻结后，才在现有 public
+   `DragonDescentZerotsu/ApexOracle` 建立 legacy 恢复点并加入 `.gitmodules`、
    `modules.lock.yaml`、资产 manifests 和两个 quickstarts；随后做 full-source archive、fresh-clone QA 和 canonical
-   URL 切换。不得为了提前展示目录而先加入浮动 branch submodule。
+   release。不得新建第二个 super-repo，也不得为了提前展示目录而先加入浮动 branch submodule。

@@ -4,17 +4,18 @@
 - 代码文件名、路径、命令、模型名称、指标缩写以及没有自然中文译名的专有名词可以保留英文。
 - 新增审计结论时，应明确区分“已由代码和日志验证的事实”“根据现有证据作出的推断”和“仍待作者确认的事项”。
 - 当前发布重构的阶段、已确认决策和验收标准记录在 `REFACTOR_PLAN.md`；执行过程中应同步更新其中的状态，避免计划与代码迁移脱节。
-- **2026-08-09 作者确认的统一发布架构：** 最终公开发布固定采用轻量
-  `DragonDescentZerotsu/ApexOracle` super-repo，以 Git submodule 组合
+- **2026-08-09 作者确认、2026-08-10 修订的统一发布架构：** 最终公开发布直接把现有
+  `DragonDescentZerotsu/ApexOracle` 原地转换为轻量 super-repo，以 Git submodule 组合
   `ApexOracle-Core`（当前 Synergy）、`ApexOracle-DLM-Pretraining`、`ApexOracle-MDLM`、
   `ApexOracle-Evo2` 和 `ApexOracle-Generation` 五个独立模块。预训练模块只记录合作者的 DLM+MTR
   producer；MDLM 模块只记录 downstream embedding、guidance heads 与 candidate scoring。各模块
   保留现有内部结构、依赖和环境，不把 MDLM、Evo-2
   或 generation 大规模重排进 `src/apexoracle/`；PepLink 继续使用 `PepLink==0.1.2`，不作为
-  submodule。旧 public `ApexOracle` 改名归档为 `ApexOracle-Legacy` 后，由新 clean-history
-  super-repo 接管论文 canonical URL。详细阶段、module lock、quickstart、完整 source archive 和
+  submodule。不得另建第二个 ApexOracle repository；现有 legacy 状态以 tag/branch 保留后在同一 repo
+  转换默认分支。当前 `DragonDescentZerotsu/Synergy` 也不得复制，完整 history audit 通过后直接重命名为
+  `DragonDescentZerotsu/ApexOracle-Core`。详细阶段、module lock、quickstart、完整 source archive 和
   验收门槛见 `docs/UNIFIED_APEXORACLE_RELEASE_PLAN.md`。MDLM 与 Generation module remotes 已创建，
-  super-repo/submodule 尚未创建，也未移动资产；任何架构变更必须再次由作者确认并同步更新 canonical 计划与资产文档。
+  super-repo/submodule 尚未落地，也未移动资产；任何架构变更必须再次由作者确认并同步更新 canonical 计划与资产文档。
 - **2026-08-09 MDLM 双模块审计：** public legacy `ApexOracle/DLM_pretrain/` 已由源码确认包含
   DLM + 209-descriptor MTR 联合训练目标，是合作者预训练 producer family；本地
   `/data2/tianang/projects/mdlm` 则是 upstream runtime、embedding、MIC/classifier guidance、candidate
