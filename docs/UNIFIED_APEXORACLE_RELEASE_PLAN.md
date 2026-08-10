@@ -1,7 +1,7 @@
 # ApexOracle 统一公开仓库发布计划
 
 > 决策日期：2026-08-09
-> 状态：架构已由作者确认并冻结；MDLM 与 Generation clean modules 已发布并验收，现有 ApexOracle 尚未转换为 super-repo
+> 状态：现有 ApexOracle 已原地转换为 super-repo；MDLM 与 Generation gitlinks 已锁定，Core、DLM-Pretraining 与 Evo-2 待加入
 > Canonical 上位计划：`REFACTOR_PLAN.md`
 
 ## 1. 目标与固定架构
@@ -54,8 +54,10 @@ ApexOracle/
 | Generation | `DragonDescentZerotsu/ApexOracle-Generation` | diffusion、MIC/peptide guidance、remasking 和输出 |
 | PepLink | `DragonDescentZerotsu/PepLink` / `PepLink==0.1.2` | 保持独立版本化依赖，不作为 submodule |
 
-当前公开 `DragonDescentZerotsu/ApexOracle` 不改名、不另建替代仓库。转换前先为当前 legacy 状态建立
-annotated tag 和保留 branch，然后在同一 repository 的默认分支上迁移为 super-repo。现有 history 保留；
+当前公开 `DragonDescentZerotsu/ApexOracle` 不改名、不另建替代仓库。转换已于 2026-08-10 合入默认分支
+`main` `60ca1446b66f3562ce460395904d95293c4cee18`。转换前建立的 branch `legacy-monorepo` 与 annotated
+tag `legacy-monorepo-snapshot-2026-08-10` 均固定到原始 commit
+`2f29dee9cf6b7750425414f66c1a2d67998cb87f`。现有 history 保留；
 除非历史审计发现必须移除的 credential/private asset，否则不做 force-push 或 history rewrite。不得继续把
 dirty checkout、数据或权重复制进该 history。
 
@@ -199,12 +201,18 @@ token-level complete 1 条但结构过滤后 0 row，只作为 runtime contract�
 
 ### R2：建立 super-repo 骨架
 
-状态：待执行。
+状态：骨架与默认分支转换已完成；五模块中的两个已锁定，阶段尚未关闭。
 
-- 在现有 public `DragonDescentZerotsu/ApexOracle` 内先标记 legacy 恢复点，再原地建立 super-repo
-  默认分支并加入五个 submodule 的固定 SHA；不创建新 repository。
-- 新增 `modules.lock.yaml`、资产 manifests、环境 profiles、bootstrap 和统一 README。
-- CI 验证 recursive clone、module SHA、license/NOTICE、secret、大文件和 broken link。
+- [x] 在现有 public `DragonDescentZerotsu/ApexOracle` 内标记 legacy branch/tag，并原地转换默认分支；
+  未创建新 repository。
+- [x] 新增 `manifests/modules.lock.yaml`、资产 manifests、environment/quickstart 边界、bootstrap、统一
+  README 与根仓库 CI。
+- [x] 加入并锁定 MDLM `c9d17c7f6f091234aaaebf5f08dbe23542f980c1` 与 Generation
+  `de6c1e590c25b2ce36b4ce5c42c5a4fa0dcc7705`。
+- [ ] Core、DLM-Pretraining、Evo-2 只有在各自 clean candidate 验收后才加入真实 gitlink；当前 lock 中明确为
+  `pending`，不使用浮动 branch 或无效占位。
+- [x] GitHub CI 与远端默认分支 recursive fresh clone 已验证 active tree、module SHA、recovery refs、
+  大文件/legacy-root 边界和根测试。
 
 验收：全新 checkout 可完整初始化所有 submodule；普通 clone 的补救命令也通过。
 
@@ -320,7 +328,8 @@ token-level complete 1 条但结构过滤后 0 row，只作为 runtime contract�
 4. **DLM-pretraining producer 与 Core 收口。** 合作者 pretraining 原则上原样归档并先做 synthetic
    train/save/load；只有 blocking portability failure 才做最小路径/文档/config 修补，不改变模型结构、
    objective 或训练行为。并行完成 Core 的 public-data/secret/license/fresh inference 审计。
-5. **最后原地转换现有 ApexOracle。** 只有五个 module candidate SHA 均冻结后，才在现有 public
-   `DragonDescentZerotsu/ApexOracle` 建立 legacy 恢复点并加入 `.gitmodules`、
-   `modules.lock.yaml`、资产 manifests 和两个 quickstarts；随后做 full-source archive、fresh-clone QA 和 canonical
-   release。不得新建第二个 super-repo，也不得为了提前展示目录而先加入浮动 branch submodule。
+5. **Super-repo 骨架——已完成；完整 release 待五模块闭合。** 现有 public
+   `DragonDescentZerotsu/ApexOracle` 已建立 legacy 恢复点并原地转换，MDLM/Generation 使用固定 SHA；
+   Core/DLM-Pretraining/Evo-2 在各自验收后逐个加入。五模块齐全后再完成两个可执行 quickstarts、
+   full-source archive、fresh-clone QA、release tag 与 canonical release。不得新建第二个 super-repo，
+   也不得为 pending 模块加入浮动 branch submodule。

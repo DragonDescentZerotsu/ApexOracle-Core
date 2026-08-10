@@ -1,17 +1,17 @@
 # ApexOracle / Synergy 代码库重构计划
 
 > 建立日期：2026-07-17  
-> 状态：canonical 论文/审稿路径已完成；统一公开 super-repo 架构已冻结，MDLM 与 Generation modules 已发布；
+> 状态：canonical 论文/审稿路径已完成；现有 ApexOracle 已原地转换为 super-repo，MDLM 与 Generation modules 已锁定；
 > legacy `DataPrepare/` 收尾仍待后续批次
 > 适用范围：当前 `Synergy` 仓库，以及后续需要整合的 Evo-2 genome embedding、DLM/MDLM 和 guided generation 代码。
 
 当前发布架构焦点（2026-08-10）：作者已冻结“复用现有 ApexOracle 作为 super-repo + 五个独立
 submodule”的方案，其中
 合作者的 DLM+MTR 预训练与本地 downstream MDLM 分为两个模块。下一步
-按 `docs/UNIFIED_APEXORACLE_RELEASE_PLAN.md` 第 8 节执行：MDLM 与 Generation 已关闭，下一步处理
-Evo-2、DLM-pretraining 与 Core，最后创建 super-repo。MDLM/Generation clean modules 和 Hugging Face
-模型已发布并验收；其余 dirty checkout 与 public legacy `DLM_pretrain/` 尚未完成 source manifest/
-恢复点，因此仍不创建 submodule、不移动数据或权重。
+按 `docs/UNIFIED_APEXORACLE_RELEASE_PLAN.md` 第 8 节执行：MDLM 与 Generation 已关闭并作为固定 gitlink
+进入现有 ApexOracle；下一步处理 Evo-2、DLM-pretraining 与 Core，再补齐三个 pending gitlinks 和端到端
+quickstarts。MDLM/Generation clean modules 和 Hugging Face 模型已发布并验收；其余 dirty checkout 与
+legacy `DLM_pretrain/` 尚未完成 clean candidate，因此不创建对应浮动 submodule、不移动数据或权重。
 
 当前执行焦点（2026-07-28）：Fig. 1b 完整 10-member/fold fine-tune 与 baseline、最终统计、
 图文修订，以及 PepLink 0.1.2 round-trip/ChatGPT-o1/OPSIN 审计和 Supplementary Data 均已完成。
@@ -911,7 +911,8 @@ optimizer-step 已在宿主 H100 单独通过，两份 guidance checkpoint 的 i
   科学角色和非破坏恢复点。Downstream MDLM 的 source-only 恢复点已完成，其余来源仍待执行。
 - [ ] R1：完成 Core/DLM-Pretraining/MDLM/Evo2/Generation 五个可独立安装和 smoke-tested 的
   clean commits。MDLM 与 Generation 两项已完成，Core/DLM-Pretraining/Evo2 待完成。
-- [ ] R2：在现有 ApexOracle 原地建立 `.gitmodules`、`modules.lock.yaml`、环境 profiles 和 asset manifests。
+- [ ] R2：现有 ApexOracle 已原地转换，恢复 branch/tag、`.gitmodules`、module/asset manifests、bootstrap、
+  CI 与 MDLM/Generation 固定 gitlinks 已完成；Core/DLM-Pretraining/Evo2 三个 gitlinks 待各自 clean candidate。
 - [ ] R3：完成新 molecule × known strain 的 MIC prediction end-to-end quickstart。
 - [ ] R4：完成 target strain guided generation 的 smoke/paper-preset end-to-end quickstart。
 - [ ] R5：完成 model-ready data、strain texts、许可、完整 source archive 和 fresh-clone QA。

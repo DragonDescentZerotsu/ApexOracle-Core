@@ -14,8 +14,13 @@
   submodule。不得另建第二个 ApexOracle repository；现有 legacy 状态以 tag/branch 保留后在同一 repo
   转换默认分支。当前 `DragonDescentZerotsu/Synergy` 也不得复制，完整 history audit 通过后直接重命名为
   `DragonDescentZerotsu/ApexOracle-Core`。详细阶段、module lock、quickstart、完整 source archive 和
-  验收门槛见 `docs/UNIFIED_APEXORACLE_RELEASE_PLAN.md`。MDLM 与 Generation module remotes 已创建，
-  super-repo/submodule 尚未落地，也未移动资产；任何架构变更必须再次由作者确认并同步更新 canonical 计划与资产文档。
+  验收门槛见 `docs/UNIFIED_APEXORACLE_RELEASE_PLAN.md`。2026-08-10 现有 ApexOracle 已原地转换并合入
+  public `main` `60ca1446b66f3562ce460395904d95293c4cee18`；旧 active tree 由 branch `legacy-monorepo`
+  和 annotated tag `legacy-monorepo-snapshot-2026-08-10` 双重固定到 `2f29dee9cf6b7750425414f66c1a2d67998cb87f`。
+  当前只加入已验收的 MDLM `c9d17c7f6f091234aaaebf5f08dbe23542f980c1` 与 Generation
+  `de6c1e590c25b2ce36b4ce5c42c5a4fa0dcc7705` gitlinks；Core、DLM-Pretraining、Evo-2 保持
+  `pending`，不得加入浮动占位 submodule。未移动数据或权重；任何架构变更必须再次由作者确认并同步更新
+  canonical 计划与资产文档。
 - **2026-08-09 MDLM 双模块审计：** public legacy `ApexOracle/DLM_pretrain/` 已由源码确认包含
   DLM + 209-descriptor MTR 联合训练目标，是合作者预训练 producer family；本地
   `/data2/tianang/projects/mdlm` 则是 upstream runtime、embedding、MIC/classifier guidance、candidate

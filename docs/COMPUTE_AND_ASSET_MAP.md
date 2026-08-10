@@ -39,10 +39,11 @@ node001 与 node002 上 `Synergy_release` 的 inode/文件内容已经交叉核�
 | Downstream MDLM | `/data2/tianang/projects/mdlm`；上游 `origin` + public `custom/ApexOracle-MDLM` | `DragonDescentZerotsu/ApexOracle-MDLM`；`modules/mdlm` | public 默认 `master` 固定候选 `c9d17c7`；legacy tag 保留；118 tests、remote fresh-clone 与 HF revision `77694f08...2eda` 验收通过，禁止误推上游 |
 | Evo-2 | `/data2/tianang/projects/evo2`；官方上游 | `DragonDescentZerotsu/ApexOracle-Evo2`；`modules/evo2` | checkout dirty；先建 clean fork 和参数化 extraction 入口 |
 | Generation | `/data2/tianang/projects/discrete-diffusion-guidance`；上游 `origin` + public `custom/ApexOracle-Generation` | `DragonDescentZerotsu/ApexOracle-Generation`；`modules/generation` | public 默认 `main` 固定候选 `de6c1e5`；recovery tag、14 tests、paper GPU smoke 与 remote fresh-clone dry-run 通过；历史 outputs 保持 ignored |
-| Super-repo | 当前 public `DragonDescentZerotsu/ApexOracle` legacy checkout 位于 `/data2/tianang/projects/ApexOracle_github` | 同一个 `DragonDescentZerotsu/ApexOracle` 原地转换 | 转换前建立 legacy tag/branch；不新建 repo、不改 canonical URL、不再复制资产 |
+| Super-repo | `/data2/tianang/projects/ApexOracle_github`；public `DragonDescentZerotsu/ApexOracle` | 同一个 canonical super-repo | public `main` `60ca1446...cee18` 已原地转换；MDLM/Generation gitlinks 已固定，Core/DLM/Evo2 pending；legacy branch/tag 指向 `2f29dee...b87f` |
 
-**已验证事实：** 上表来源当前仍位于原位置；现有 ApexOracle 尚未转换或写入 `.gitmodules`，也未移动本机
-data/weight 或改变 node001/node002 shared release checkout。Downstream MDLM 与 Generation 已有通过
+**已验证事实：** 上表来源当前仍位于原位置；现有 ApexOracle 已转换并写入两个已验收 module 的
+`.gitmodules`，但没有移动本机 data/weight，也未改变 node001/node002 shared release checkout。默认分支
+recursive fresh clone、根 CI、module lock 和 recovery-ref 审计均通过。Downstream MDLM 与 Generation 已有通过
 fresh-clone 验收的 public module commit。Hugging Face `Kiria-Nozan/ApexOracle` 正式 revision
 `77694f08c1d0664fdb24c5a7bab130c8a3bc2eda` 含 18 files、MIT metadata，权重 SHA-256 为
 `b472f7508aaf0fdab4c935caf221415b48a5f8afd4d104a731c9d72d410c2c44`；第三方 runtime/tokenizer 仍保留
