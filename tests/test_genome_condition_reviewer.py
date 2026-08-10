@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import matplotlib.pyplot as plt
 import pandas as pd
+import pytest
 
 from apexoracle.evaluation.genome_condition_reviewer import (
     NON_BACTERIAL_SPECIES,
@@ -22,6 +23,7 @@ from scripts.audit.analyze_genome_fragment_variation import (
     normalize_pair_manifest,
     read_best_alignments,
 )
+from scripts.audit import analyze_genome_fragment_variation as fragment_analysis
 from scripts.audit.plot_genome_representation_validation import (
     build_caption,
     normalize_svg_whitespace,
@@ -89,6 +91,18 @@ def test_fragment_alignment_filter_and_mutual_best_contract(tmp_path):
 
     assert forward[["query_index", "target_index"]].values.tolist() == [[0, 2]]
     assert mutual[["query_index", "target_index"]].values.tolist() == [[0, 2]]
+
+
+def test_fragment_helpers_do_not_require_edlib_until_distance_runtime(
+    monkeypatch,
+):
+    def missing_dependency(name):
+        assert name == "edlib"
+        raise ImportError(name)
+
+    monkeypatch.setattr(fragment_analysis.importlib, "import_module", missing_dependency)
+    with pytest.raises(RuntimeError, match="requires edlib>=1.3.9"):
+        fragment_analysis.load_edlib()
 
 
 def test_pair_manifest_normalizes_canonical_and_legacy_inputs():

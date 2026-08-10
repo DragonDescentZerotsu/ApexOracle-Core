@@ -80,6 +80,8 @@ Genome-condition 两个正式实验的命令、共享代码层、输出和解释
 `experiments/genome_condition_reviewer/README.md`。已弃用的 genome/text condition controls 只保留
 本地取证资产，不属于公共入口。Probe 使用普通 L2 logistic regression，没有 MLP、降维或超参数
 搜索；标签来自现有 annotation 的保守词典，不等同于完整 ARG/MGE 数据库注释。
+`analyze_genome_fragment_variation.py` 只有在实际计算全局 edit distance 时才加载可选
+`edlib>=1.3.9`；仅 import PAF/manifest helpers 或收集公共测试不要求本机 ignored binary。
 
 ## ReMDM remasking schedule reviewer figure
 

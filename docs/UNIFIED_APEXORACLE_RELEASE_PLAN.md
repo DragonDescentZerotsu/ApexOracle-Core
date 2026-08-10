@@ -355,7 +355,8 @@ token-level complete 1 条但结构过滤后 0 row，只作为 runtime contract�
    合作者模型结构、objective、MTR loss 权重或 checkpoint schema。
 5. **Core 收口——下一关键路径。** public-data/secret/license/full-history audit 已建立；46-file
    `DataPrepare/` ledger、唯一 strain-text producer 迁移和 active-source 清理已完成，真实 ATCC/text-only
-   tensor parity 通过。继续完成 packaging/environment、DBAASP 再分发决策与 fresh inference，随后将
+   tensor parity 通过；标准 README、SPDX MIT metadata、NOTICE 和 asset-aware clean-clone tests 已关闭。
+   继续完成 environment、DBAASP 再分发决策与 fresh inference，随后将
    当前 Synergy 同一 repository 重命名为 `ApexOracle-Core` 并加入最后一个固定 gitlink。
 6. **Super-repo 骨架——已完成；完整 release 待 Core 闭合。** 现有 public
    `DragonDescentZerotsu/ApexOracle` 已建立 legacy 恢复点并原地转换，DLM-Pretraining/MDLM/Generation/Evo-2

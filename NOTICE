@@ -1,0 +1,14 @@
+ApexOracle Core
+Copyright (c) 2025 Tianang Leng
+
+This repository is distributed under the MIT License in LICENSE.
+
+The package vendors the minimal PeptideCLM tokenizer implementation and its
+vocabulary/merge assets from https://github.com/aaronfeller/PeptideCLM at
+revision a0847d8231d236645a2c4f629590118716c6fdda. Those files remain under
+their upstream MIT License, reproduced in
+src/apexoracle/vendor/peptideclm_tokenizer/LICENSE.
+
+External datasets, pretrained models, checkpoints, and optional software
+dependencies are not relicensed by the ApexOracle Core MIT License. Their
+licenses and redistribution terms must be reviewed at their respective source.

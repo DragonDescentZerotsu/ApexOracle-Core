@@ -1297,7 +1297,8 @@ Strain count mapping 的演化顺序如下：
 - `bash/PeptideCLM_benchmarking.sh` 是指向已迁移 root driver 的历史 CESGA launcher，已随 Fig. 2c
   comparator 迁移删除；由 legacy tag 恢复。
 - `environment.yml`：名为 `cold_base` 的完整 Anaconda 环境导出，规模过大，不是最小可复现环境。发布清理时应替换为经过筛选的 environment 或 lockfile。
-- `Readme.md`：只有几行的过期说明，仍指向旧 mean-MIC 文件和 `fine_tune_on_DBAASP_SMILES_5_fold_mean_MIC.py`；必须重写，不能作为当前文档使用。
+- 原 `Readme.md` 的过期说明已被标准 `README.md` 替换；public-facing 文档现在说明 Core 模块边界、
+  optional extras、canonical CLI、外部资产政策、测试和 recovery tags。
 
 ### 复制版本和第三方辅助文件的显式文件名索引
 
@@ -1378,4 +1379,5 @@ Strain count mapping 的演化顺序如下：
 5. species/phylum、synergy rank 和 k-mer 的残余差异已经机器可读归档；不要把高置信度候选写成精确历史复现。
 6. 清晰拆分外部项目：要么在许可证允许的前提下 vendoring 固定版本的 DLM/generation 代码，要么把它们声明为带版本的外部依赖。
 7. 把历史副本、W&B 日志、notebook、旁支项目、巨型 checkpoint 和 reviewer capsule 移出源代码包；不要盲目删除 provenance，而应保留机器可读的 archive manifest。
-8. 用最小且经过测试的安装说明、数据下载说明、实验配置、预期指标和容差、license/citation 以及清晰的支持矩阵，替换当前 `environment.yml` 和 `Readme.md`。
+8. `README.md`、SPDX MIT metadata 与 NOTICE 已完成；继续用最小且经过测试的环境 profiles、数据下载
+   说明、实验配置、预期指标/容差、citation 和支持矩阵替换完整机器导出的 `environment.yml`。

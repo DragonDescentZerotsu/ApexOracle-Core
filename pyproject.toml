@@ -1,14 +1,15 @@
 [build-system]
-requires = ["setuptools>=68", "wheel"]
+requires = ["setuptools>=77", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "apexoracle"
 version = "0.1.0"
 description = "Reusable code for the ApexOracle antibiotic prediction benchmarks"
-readme = "Readme.md"
+readme = "README.md"
 requires-python = ">=3.9"
-license = {file = "LICENSE"}
+license = "MIT"
+license-files = ["LICENSE", "NOTICE"]
 dependencies = [
   "numpy>=1.23",
   "pandas>=1.5",

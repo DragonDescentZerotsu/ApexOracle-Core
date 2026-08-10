@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 from concurrent.futures import ProcessPoolExecutor, as_completed
 import hashlib
+import importlib
 import json
 from pathlib import Path
 import subprocess
@@ -22,8 +23,6 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO_ROOT / "src"))
 EDLIB_PATH = REPO_ROOT / ".external/python/genome_condition_reviewer"
 sys.path.insert(0, str(EDLIB_PATH))
-
-import edlib  # noqa: E402
 
 from apexoracle.data.genome_embeddings import (  # noqa: E402
     genome_embedding_paths,
@@ -59,6 +58,18 @@ PAF_COLUMNS = [
     "alignment_block_length",
     "mapq",
 ]
+
+
+def load_edlib():
+    """Load the optional alignment dependency only for full fragment analysis."""
+
+    try:
+        return importlib.import_module("edlib")
+    except ImportError as error:
+        raise RuntimeError(
+            "Genome-fragment edit-distance analysis requires edlib>=1.3.9. "
+            "Install that optional dependency before running this audit."
+        ) from error
 
 
 def fasta_id(path: Path) -> str:
@@ -213,6 +224,7 @@ def analyze_pair(task: dict[str, object]) -> pd.DataFrame:
 
     a_indices = matches["query_index"].to_numpy(dtype=int)
     b_indices = matches["target_index"].to_numpy(dtype=int)
+    edlib = load_edlib()
     edit_distances = np.asarray(
         [
             edlib.align(

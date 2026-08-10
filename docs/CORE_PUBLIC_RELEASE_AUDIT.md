@@ -31,9 +31,9 @@ GitHub repository 和完整科学代码 history，不创建第二份 Core reposi
 - `src/apexoracle/` 中没有 `/data*`、`/home/*`、`/root/*` 或 `/mnt/*` 作者机器绝对路径。
 - `conda run --no-capture-output -n base python -m pytest -q`：`206 passed`，14 条 warning；warning
   均为现有 dependency/API deprecation 或合成常数测试的统计 warning。
-- `python -m build` 成功生成约 171 KiB wheel 和 188 KiB sdist。构建同时暴露两个 packaging
-  清理项：根文件名仍是 `Readme.md`，以及旧式 `project.license = {file = ...}` 将被 setuptools
-  后续版本弃用。
+- 基线 `python -m build` 成功生成约 171 KiB wheel 和 188 KiB sdist；后续 clean candidate 已将
+  `Readme.md` 标准化为 public-facing `README.md`，将 license metadata 改为 SPDX `MIT`，并新增根
+  `NOTICE`。当前 build 不再产生缺失标准 README 或旧 license-table warning。
 - 从 remote `main` 重新 shallow clone，在新 venv 中 `pip install --no-deps` 后：
   `import apexoracle`、`apexoracle-run-hierarchical-mic --help` 和
   `apexoracle-run-synergy-cv --help` 均通过。
@@ -84,8 +84,8 @@ history rewrite；不得泛化为删除全部实验 CSV。
   删除，只由 recovery tag 恢复；ignored 的 35 GB `DataPrepare/Data/` 资产原地保留。下一 gate 是重跑
   全仓 release checks。
 - 将 563 行机器环境导出替换为可维护的 Core package/test profiles。
-- 将 `Readme.md` 收口为标准 `README.md`，更新最终仓库名、安装边界和支持状态；修复 pyproject license
-  metadata，并增加根 `NOTICE` 汇总第三方组件。
+- `README.md`、SPDX `MIT` metadata 与根 `NOTICE` 已完成；最终 fresh-clone gate 继续验证 wheel/sdist
+  同时包含 license/notice，并保持 public-facing 安装、模块边界与 asset policy 一致。
 - 将 runtime asset lookup 全部改为 manifest + environment override；本机 path 只能保留在明确标注的
   provenance 文档，不能作为公共默认值。
 
