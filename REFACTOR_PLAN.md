@@ -34,7 +34,10 @@ clean-clone tests 和最小 `apexoracle-core` environment；原 `Readme.md`、li
 机器导出环境已由 recovery hash/tag 接管。公开 single-member inference asset、embedding example、thin
 CLI、immutable Hugging Face revision 和 empty-cache CPU inference 已闭合；GitHub rename/public、
 Core/super-repo release tag、第五个 gitlink 与 recursive fresh-clone 验收也已完成。后续发布工作转为
-compact guided-generation assets/quickstart 与完整 source archive，不再属于 Core 清理阻塞项。
+compact guided-generation assets/quickstart 与完整 source archive，不再属于 Core 清理阻塞项。上述两项已于
+super-repo `v0.2.0` 完成：Generation compact bundle 固定至 Hugging Face `2fb1aa0` 并通过 fresh-clone
+256-step H100 smoke；展开五模块的 source archive 为 36,553,607 bytes、SHA-256 `895c682b...fdd`，两次
+构建 byte-identical。统一发布主线至此关闭，后续只做维护和按需扩展。
 
 当前执行焦点（2026-07-28）：Fig. 1b 完整 10-member/fold fine-tune 与 baseline、最终统计、
 图文修订，以及 PepLink 0.1.2 round-trip/ChatGPT-o1/OPSIN 审计和 Supplementary Data 均已完成。

@@ -122,6 +122,13 @@
   `c2aecbb` 已加入第五个 Core gitlink，五个 module locks、完整 recursive fresh clone、root tests 与 fresh
   clone Core MIC inference 均通过；super-repo release `v0.1.0` 已公开。reviewer/Providencia 未完成改动仍只
   留在本地 dirty worktree，没有混入上述 commits。
+- **2026-08-10 下一发布阶段完成：** `ApexOracle-Generation` public `main`
+  `80d9a2cf9b0921f29e4a44edf5557ccac39f5af9` 支持 `--asset-root` compact BAA-3170 smoke；Hugging Face
+  `Kiria-Nozan/ApexOracle-Generation` revision `2fb1aa08187eaa359263be6c12c8a41868d8959c` 固定 4.06 GB
+  inference-only checkpoints/condition bundle。空 cache hashes、fresh recursive clone 与真实 H100 256-step
+  smoke 均通过。Super-repo `v0.2.0` 另发布展开五模块的 36,553,607-byte source archive，SHA-256
+  `895c682ba6ede090dd28e3b5d64f1995c014779c6447ae6abcf593bad78b4fdd`；两次构建 byte-identical，archive
+  checker 通过。
 - **2026-08-10 `DataPrepare/` complete ledger：** 当前 46 个 tracked legacy files 已逐文件登记到
   `docs/DATAPREPARE_LEGACY_LEDGER.md`，完整 source hashes 位于
   `reproducibility/dataprepare_legacy_source_2026-08-10.sha256` 并已 46/46 校验。已由 AST/import 和
