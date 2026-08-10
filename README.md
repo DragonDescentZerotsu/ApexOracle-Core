@@ -40,9 +40,16 @@ python -m pip install -e ".[benchmark,synergy]"
 # Sequence-similarity and figure workflows
 python -m pip install -e ".[similarity,figures]"
 
+# Homologous-fragment and genome-representation validation
+python -m pip install -e ".[genome-validation]"
+
 # Development tests
-python -m pip install -e ".[test,benchmark,synergy,data-preparation,similarity,figures]"
+python -m pip install -e ".[test,benchmark,synergy,data-preparation,similarity,figures,genome-validation]"
 ```
+
+Alternatively, `conda env create -f environment.yml` creates the same source-development profile without the
+machine-specific packages from the historical author environment. Install the PyTorch build recommended for your
+CUDA driver before GPU production runs if it differs from the default pip resolution.
 
 PepLink is a separate optional package. Peptide conversion workflows use the fixed public release
 `PepLink==0.1.2` rather than a copied source tree.

@@ -28,9 +28,10 @@ Med-LLaMA3 strain-text embedding producers——已合并为固定 revision、�
 H100 parity 分别为 tolerance-equivalent 与逐元素完全相等。现在 46 个旧文件均已达到 active-tree 删除
 条件并已删除；35 GB ignored data/assets 原地保留，原始 source 继续由 recovery tags 恢复。
 
-Core packaging 收口已完成标准 `README.md`、SPDX `MIT` metadata、根 `NOTICE` 和 asset-aware
-clean-clone tests；原 `Readme.md` 与 license-table build warnings 已消除。下一项固定工作是精简 563 行
-机器导出环境并关闭 public inference assets/CLI，随后处理 DBAASP 再分发 P0 决策。
+Core packaging 收口已完成标准 `README.md`、SPDX `MIT` metadata、根 `NOTICE`、asset-aware
+clean-clone tests 和最小 `apexoracle-core` environment；原 `Readme.md`、license-table warning 与 563 行
+机器导出环境已由 recovery hash/tag 接管。下一项固定工作是关闭 public inference assets/CLI，随后处理
+DBAASP 再分发 P0 决策。
 
 当前执行焦点（2026-07-28）：Fig. 1b 完整 10-member/fold fine-tune 与 baseline、最终统计、
 图文修订，以及 PepLink 0.1.2 round-trip/ChatGPT-o1/OPSIN 审计和 Supplementary Data 均已完成。

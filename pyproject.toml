@@ -53,6 +53,14 @@ figures = [
   "matplotlib>=3.7",
   "seaborn>=0.12",
 ]
+genome-validation = [
+  "biopython>=1.81",
+  "edlib>=1.3.9",
+  "matplotlib>=3.7",
+  "pyyaml>=6",
+  "scipy>=1.9",
+  "torch>=2.1",
+]
 
 [project.scripts]
 apexoracle-build-fig2b-data = "apexoracle.benchmarks.molecule_encoders.protocol:main"

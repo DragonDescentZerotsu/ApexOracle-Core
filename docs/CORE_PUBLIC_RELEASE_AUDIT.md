@@ -44,7 +44,8 @@ GitHub repository 和完整科学代码 history，不创建第二份 Core reposi
 
 - canonical Python package 为 0 个绝对路径文件；`scripts/` 有 6 个、legacy `DataPrepare/` 有 13 个
   tracked files 含作者机器绝对路径。
-- `environment.yml` 是 563 行的完整机器环境导出，不适合作为 Core 最小安装环境。
+- 原 563 行 `cold_base` 机器导出已由最小 `apexoracle-core` source-development environment 替换；旧文件
+  SHA-256 与 recovery tag 已登记到 `reproducibility/legacy_environment_2026-08-10.sha256`。
 - `configs/model_weights.yaml` 仍把多个本机 checkpoint path 作为历史来源记录；公开 quickstart 需要
   使用稳定 URI、revision、size、SHA-256 和 redistribution status，不能依赖这些本机路径。
 - Core 已有严格 hierarchical MIC checkpoint loader 和 inference-only checkpoint contract，但公开
@@ -83,7 +84,8 @@ history rewrite；不得泛化为删除全部实验 CSV。
   ATCC/text-only 两条真实 H100 parity 与逐输出 manifest 均通过。全部 46 个旧 source 已从 active tree
   删除，只由 recovery tag 恢复；ignored 的 35 GB `DataPrepare/Data/` 资产原地保留。下一 gate 是重跑
   全仓 release checks。
-- 将 563 行机器环境导出替换为可维护的 Core package/test profiles。
+- 最小 Core package/test environment 已完成；各独立 submodule 继续维护自己的重型环境，Core 不统一
+  锁定 CUDA driver/toolkit。
 - `README.md`、SPDX `MIT` metadata 与根 `NOTICE` 已完成；最终 fresh-clone gate 继续验证 wheel/sdist
   同时包含 license/notice，并保持 public-facing 安装、模块边界与 asset policy 一致。
 - 将 runtime asset lookup 全部改为 manifest + environment override；本机 path 只能保留在明确标注的
