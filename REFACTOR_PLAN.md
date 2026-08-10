@@ -1,8 +1,16 @@
 # ApexOracle / Synergy 代码库重构计划
 
 > 建立日期：2026-07-17  
-> 状态：canonical 论文/审稿路径已完成；legacy `DataPrepare/` 收尾仍待后续批次
+> 状态：canonical 论文/审稿路径已完成；统一公开 super-repo 架构已冻结，MDLM 与 Generation modules 已发布；
+> legacy `DataPrepare/` 收尾仍待后续批次
 > 适用范围：当前 `Synergy` 仓库，以及后续需要整合的 Evo-2 genome embedding、DLM/MDLM 和 guided generation 代码。
+
+当前发布架构焦点（2026-08-10）：作者已冻结轻量 super-repo + 五个独立 submodule 的方案，其中
+合作者的 DLM+MTR 预训练与本地 downstream MDLM 分为两个模块。下一步
+按 `docs/UNIFIED_APEXORACLE_RELEASE_PLAN.md` 第 8 节执行：MDLM 与 Generation 已关闭，下一步处理
+Evo-2、DLM-pretraining 与 Core，最后创建 super-repo。MDLM/Generation clean modules 和 Hugging Face
+模型已发布并验收；其余 dirty checkout 与 public legacy `DLM_pretrain/` 尚未完成 source manifest/
+恢复点，因此仍不创建 submodule、不移动数据或权重。
 
 当前执行焦点（2026-07-28）：Fig. 1b 完整 10-member/fold fine-tune 与 baseline、最终统计、
 图文修订，以及 PepLink 0.1.2 round-trip/ChatGPT-o1/OPSIN 审计和 Supplementary Data 均已完成。
@@ -162,7 +170,29 @@ probes、figure 和 tests。正式 manuscript、Supplementary Fig. C6、三条�
 - PeptideCLM；
 - APEX。
 
-ChemBERTa MLM mean-pooling 作为可选消融，不与论文主 comparator 混淆。DLM MLM-only 的代码和权重优先从 `/data2/tianang/projects/mdlm` 中定位和核验。
+ChemBERTa MLM mean-pooling 作为可选消融，不与论文主 comparator 混淆。DLM MLM-only 的代码和权重
+从 `/data2/tianang/projects/mdlm` 及保存的 checkpoint 血缘中定位和核验；合作者 joint DLM+MTR
+预训练 producer 则以 public legacy `ApexOracle/DLM_pretrain/` 为来源，二者不得再混写成同一个仓库职责。
+
+### 2.4 统一公开仓库架构（2026-08-09 作者确认）
+
+最终发布固定采用轻量 `DragonDescentZerotsu/ApexOracle` super-repo，通过 Git submodule 组合
+`ApexOracle-Core`、`ApexOracle-DLM-Pretraining`、`ApexOracle-MDLM`、`ApexOracle-Evo2` 和
+`ApexOracle-Generation` 五个独立模块。`ApexOracle-DLM-Pretraining` 只记录合作者的 DLM+MTR
+预训练 producer；`ApexOracle-MDLM` 只记录 downstream checkpoint loading、molecule embedding、
+guidance heads 和 candidate scoring。各模块保留自己的内部目录、依赖和环境；不再计划把 MDLM、
+Evo-2 或 generation 大规模重排进当前 `src/apexoracle/`。PepLink 继续以 `PepLink==0.1.2`
+版本化依赖接入，不作为 submodule。
+
+Super-repo 只负责根 README、recursive-clone 指引、固定 module SHA、资产 manifests、分离环境、
+bootstrap、MIC prediction quickstart、guided-generation quickstart 和展开 submodules 的完整 source
+release archive。数据、权重、embedding、raw outputs 和 cache 不进入 Git。
+
+当前 public `ApexOracle` legacy monorepo 在正式切换时改名归档为 `ApexOracle-Legacy`；新的
+clean-history super-repo 继续使用论文已公开的 `DragonDescentZerotsu/ApexOracle` URL。执行阶段、
+模块边界和验收标准以 `docs/UNIFIED_APEXORACLE_RELEASE_PLAN.md` 为详细操作计划。本决策已经冻结；
+改变 module 数量、两个 MDLM 相关模块的职责边界、submodule 策略、目标 remote 或 canonical URL
+切换方式必须再次取得作者确认。详细 MDLM 源码审计见 `docs/MDLM_MODULE_SPLIT_AUDIT.md`。
 
 ## 3. 目标目录结构
 
@@ -195,6 +225,30 @@ ChemBERTa MLM mean-pooling 作为可选消融，不与论文主 comparator 混�
 ```
 
 目录结构可以随迁移细化，但不得重新形成大量复制粘贴的单文件模型实现。
+
+上述结构是当前 `ApexOracle-Core`（即本仓库）的内部目标结构，不是最终 super-repo 将所有源码合并
+后的单体目录。最终公开入口的固定结构为：
+
+```text
+ApexOracle/
+├── modules/
+│   ├── core/          # ApexOracle-Core / 当前 Synergy
+│   ├── dlm_pretrain/  # ApexOracle-DLM-Pretraining / 合作者预训练 producer
+│   ├── mdlm/          # ApexOracle-MDLM / downstream embedding 与 guidance support
+│   ├── evo2/          # ApexOracle-Evo2
+│   └── generation/    # ApexOracle-Generation
+├── quickstarts/
+├── environments/
+├── manifests/
+├── scripts/
+├── .gitmodules
+├── README.md
+├── LICENSE
+└── CITATION.cff
+```
+
+五个 modules 均固定到 clean commit；super-repo 不复制其实现。完整目录、职责和 release contract
+见 `docs/UNIFIED_APEXORACLE_RELEASE_PLAN.md`。
 
 ## 4. 分阶段执行计划
 
@@ -818,12 +872,51 @@ optimizer-step 已在宿主 H100 单独通过，两份 guidance checkpoint 的 i
   日志、逐 attempt 表、权重和重复图稿不进入 Git。
 - [x] 按作者决定在当前 `Synergy/main` 上用显式路径分为四个主题提交并直接推送；没有使用
   `git add -A` 或创建 PR，推送前全仓库测试为 `164 passed`。
-- [ ] 为 ApexOracle-specific `discrete-diffusion-guidance` 建立 clean fork/独立 remote，参数化路径、
-  添加最小 smoke test 并固定 producer commit。
-- [ ] 从公开 `ApexOracle-MDLM` remote 准备 clean release commit；发布时显式使用 `custom` remote，
-  不误推上游。
-- [ ] 决定统一 public ApexOracle repo 使用 clean release history/branch 还是新仓库；不得继续把完整
-  外部 checkout、数据和权重复制进约 235 MiB 的 legacy history。
+- [x] ApexOracle-specific Generation clean fork 已发布到
+  `DragonDescentZerotsu/ApexOracle-Generation`；默认 `main` 固定候选 `de6c1e5`，source-only recovery tag、
+  paper GPU smoke、remote fresh-clone release audit、14 tests 和双 strain dry-run 通过，上游未被推送。
+- [x] 公开 `ApexOracle-MDLM` module-level clean release 已进入默认 `master`，固定候选 `c9d17c7`；发布只使用
+  `custom`，未误推上游。全仓 118 tests、14 项跨仓库 source contracts
+  passed；五个正式 MIC-guidance checkpoints 另已完成 schema/strict-head audit，Generation 正式
+  padding-preserved regression GPU/bfloat16 output exact；
+  checkpoint/embedding、heads、candidate scoring、interpretability、Fig. 3a、通用 screens/embedding producer
+  已迁移。Hugging Face 18-file clean release 已完成，固定 revision
+  `77694f08c1d0664fdb24c5a7bab130c8a3bc2eda` 已通过 fresh-cache strict-load/GPU smoke。旧 HF duplicates 与
+  peptide-classifier trainers 已完成 clean migration，source archive fresh install/import/CLI smoke 已通过；
+  六个 MIC guidance trainers 已归并为五 profiles 并删除 root copies；11 个 hierarchical drivers 已移交
+  Core 后删除；两个 chemistry utilities 已迁为通用 API 并通过 11,401-row byte parity 与 5,887,458-row
+  catalogue full-scan parity。三个 synergy-guidance root producers 已归并为两个 experimental profiles，
+  正式 encoder/candidate GPU parity 与 checkpoint schema 通过并删除旧 copies。远端 shallow clone、wheel/
+  install/import/CLI、118 tests、显式资产 20 checks 和 recovery tag fetch 已通过；MDLM module candidate 已
+  就绪；full Generation integration 与 Core compatibility bridge 删除均已完成。
+- [ ] 从 public legacy `ApexOracle/DLM_pretrain/` 准备
+  `DragonDescentZerotsu/ApexOracle-DLM-Pretraining` 独立历史；作者要求原则上不改代码。先原样归档并做
+  synthetic train/save/load smoke；只有 blocking portability failure 才允许最小化修补路径/文档/config，
+  不改模型结构、objective 或训练行为。
+- [ ] 从官方 Evo-2 基线准备 `DragonDescentZerotsu/ApexOracle-Evo2` clean fork commit，加入通用
+  genome extraction CLI 和小规模 tensor-contract smoke；不得直接提交当前 dirty checkout。
+- [ ] 将当前 Synergy 整理为 `DragonDescentZerotsu/ApexOracle-Core` clean public module commit，
+  保留当前内部结构并完成公开边界审计。
+- [x] 作者已决定统一 public ApexOracle 采用新的 clean-history super-repo，并以五个固定 commit 的
+  Git submodule 组合 Core/DLM-Pretraining/MDLM/Evo2/Generation；旧 public monorepo 改名归档，canonical URL 由新
+  super-repo 接管。详细计划见 `docs/UNIFIED_APEXORACLE_RELEASE_PLAN.md`。
+
+#### 2026-08-09 统一 ApexOracle super-repo 固定计划
+
+- [x] 固定目标 repository topology、module 职责、submodule 策略、canonical URL 切换方式和
+  PepLink 独立依赖边界。
+- [ ] R0：冻结四个来源 checkout 加 public legacy `DLM_pretrain/` 的 source inventory、SHA-256、
+  科学角色和非破坏恢复点。Downstream MDLM 的 source-only 恢复点已完成，其余来源仍待执行。
+- [ ] R1：完成 Core/DLM-Pretraining/MDLM/Evo2/Generation 五个可独立安装和 smoke-tested 的
+  clean commits。MDLM 与 Generation 两项已完成，Core/DLM-Pretraining/Evo2 待完成。
+- [ ] R2：创建轻量 super-repo、`.gitmodules`、`modules.lock.yaml`、环境 profiles 和 asset manifests。
+- [ ] R3：完成新 molecule × known strain 的 MIC prediction end-to-end quickstart。
+- [ ] R4：完成 target strain guided generation 的 smoke/paper-preset end-to-end quickstart。
+- [ ] R5：完成 model-ready data、strain texts、许可、完整 source archive 和 fresh-clone QA。
+- [ ] R6：归档 legacy public repo、切换 canonical URL、发布 tag/Release 并同步论文/HF/Zenodo 链接。
+
+阶段验收、禁止项和 reviewer-facing 命令固定记录于
+`docs/UNIFIED_APEXORACLE_RELEASE_PLAN.md`；执行时必须逐项更新这里的状态。
 
 #### 2026-08-07 hierarchical MIC censor-multiplier sensitivity
 

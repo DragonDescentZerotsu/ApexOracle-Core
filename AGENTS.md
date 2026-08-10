@@ -4,6 +4,67 @@
 - 代码文件名、路径、命令、模型名称、指标缩写以及没有自然中文译名的专有名词可以保留英文。
 - 新增审计结论时，应明确区分“已由代码和日志验证的事实”“根据现有证据作出的推断”和“仍待作者确认的事项”。
 - 当前发布重构的阶段、已确认决策和验收标准记录在 `REFACTOR_PLAN.md`；执行过程中应同步更新其中的状态，避免计划与代码迁移脱节。
+- **2026-08-09 作者确认的统一发布架构：** 最终公开发布固定采用轻量
+  `DragonDescentZerotsu/ApexOracle` super-repo，以 Git submodule 组合
+  `ApexOracle-Core`（当前 Synergy）、`ApexOracle-DLM-Pretraining`、`ApexOracle-MDLM`、
+  `ApexOracle-Evo2` 和 `ApexOracle-Generation` 五个独立模块。预训练模块只记录合作者的 DLM+MTR
+  producer；MDLM 模块只记录 downstream embedding、guidance heads 与 candidate scoring。各模块
+  保留现有内部结构、依赖和环境，不把 MDLM、Evo-2
+  或 generation 大规模重排进 `src/apexoracle/`；PepLink 继续使用 `PepLink==0.1.2`，不作为
+  submodule。旧 public `ApexOracle` 改名归档为 `ApexOracle-Legacy` 后，由新 clean-history
+  super-repo 接管论文 canonical URL。详细阶段、module lock、quickstart、完整 source archive 和
+  验收门槛见 `docs/UNIFIED_APEXORACLE_RELEASE_PLAN.md`。MDLM 与 Generation module remotes 已创建，
+  super-repo/submodule 尚未创建，也未移动资产；任何架构变更必须再次由作者确认并同步更新 canonical 计划与资产文档。
+- **2026-08-09 MDLM 双模块审计：** public legacy `ApexOracle/DLM_pretrain/` 已由源码确认包含
+  DLM + 209-descriptor MTR 联合训练目标，是合作者预训练 producer family；本地
+  `/data2/tianang/projects/mdlm` 则是 upstream runtime、embedding、MIC/classifier guidance、candidate
+  scoring、历史 MIC/synergy drivers 和 debug/case-study 混合工作区，不应再称为预训练 repo。
+  public 预训练源码仍含合作者绝对路径，且 README 的 `model=small` 与 hard-coded 1024-dimensional
+  regression head 不一致；因此必须先形成 portable clean commit 和 synthetic train/save/load smoke。
+  本地 `/mdlm` 约 321 GB，主要是数据、checkpoint、W&B/cache/output 和 wheels，全部不进 Git；其
+  source-only 发布白名单、功能分类和待确认血缘见 `docs/MDLM_MODULE_SPLIT_AUDIT.md`。
+- **2026-08-09 downstream MDLM 重构已启动：** `/data2/tianang/projects/mdlm` 已先将 tracked 修改和
+  两份未跟踪 Python source 冻结为 source-only commit `79eed10` 与 annotated tag
+  `legacy-code-snapshot-2026-08-09`，随后在 clean branch `refactor/apexoracle-mdlm` 增量重构；未
+  reset/clean、未删除 legacy、未移动 321 GB ignored assets，也未 push。`87fe50d` 建立 package、
+  checkpoint/embedding I/O contracts 与 11 tests；真实 567 genome、568 ATCC text、1,079 text-only
+  filenames 对 legacy mapping 均 0 mismatch/0 duplicate。`136905c` 统一重复 guidance heads 并保持
+  state-dict/forward parity；`4521c53` 冻结 Core/MDLM/Generation 的 checkpoint、embedding、动态 import
+  与 output filename contracts，并只迁移 `judge_generated_mols_MIC.py` 的 filename parser。累计 28 CPU
+  tests 与 7 项跨仓库 source/AST checks passed；四个正式 generation/scoring checkpoints 已通过 CPU
+  `mmap` schema validation，canonical guidance/classifier heads 已对真实 state dict 完成 `strict=True`
+  meta load。`e40c585` 进一步以正式 noisy guidance 权重和 generation 实际 bfloat16 autocast 完成
+  2-sample GPU head parity：genome/text/regression outputs 均 `torch.equal`，最大差异 `0.0`。DLM encoder/
+  full sampler 与 candidate scorer end-to-end parity、其余 legacy caller 切换和 clean release 仍未完成；
+  Generation checkout 在本批保持只读。
+  Canonical 记录位于该仓库的 `REFACTOR_PLAN.md`、`docs/CODE_AUDIT.md` 与
+  `docs/LEGACY_SNAPSHOT.md`、`docs/CROSS_REPO_CONTRACTS.md`。
+- **2026-08-10 downstream MDLM/Hugging Face 发布进展：** MDLM clean release 已进入 public 默认
+  `master`，固定候选 `c9d17c7`，全仓 118 tests 与 14 项跨仓库 source
+  contracts 通过。`Kiria-Nozan/ApexOracle` 已清为 18-file model allowlist；正式固定 revision
+  `77694f08c1d0664fdb24c5a7bab130c8a3bc2eda`、weight SHA-256
+  `b472f7508aaf0fdab4c935caf221415b48a5f8afd4d104a731c9d72d410c2c44`、model-card license MIT，
+  并从空 Hub cache 通过 symlink-aware strict load、manifest/hash 和 integer-mask padded GPU smoke。
+  第一次中间 revision `b16024b` 有 cache-symlink runtime-root bug，不得写入 super-repo lock。旧 tracked
+  HF duplicates 已清除；四个 v1/v2 peptide-classifier profiles、正式 v1 checkpoint strict load 和 noisy encoder
+  GPU parity 已完成，三个 root trainers 已由 snapshot 接管后删除。Source archive 的 fresh install/import/CLI
+  smoke 已通过。六个 MIC guidance trainers 已归并为五 profiles 并清理；五个正式 checkpoints 通过 schema/
+  inactive cls-head strict load，Generation 正式 padding-preserved regression GPU/bfloat16 output exact。MDLM
+  11 个 Core-owned hierarchical drivers 已完成 handoff 后删除；两个 root chemistry utilities 已迁为通用
+  table converter/catalogue matcher，正式 11,401-row conversion byte-exact，5,887,458-row full scan 恢复历史
+  276-row semantic set。三个 synergy-guidance root producers 也已归并为 first-clean/second-noisy 与
+  both-clean 两个 experimental profiles；两个正式 backbone encoder GPU outputs、Generation candidate
+  inference 和两个 4.11 GB checkpoint schema 均通过，旧 root copies 已由 snapshot 接管。远端 shallow-clone
+  wheel/install/import/CLI、118 tests、显式资产 20 checks 和 recovery-tag fetch 也已通过。Full Generation
+  integration 与 Core compatibility bridge 删除已经完成；下一阶段固定顺序见
+  `docs/UNIFIED_APEXORACLE_RELEASE_PLAN.md` 第 8 节。
+- **2026-08-10 Generation clean release：** public
+  `DragonDescentZerotsu/ApexOracle-Generation` 默认 `main` 固定候选为
+  `de6c1e590c25b2ce36b4ce5c42c5a4fa0dcc7705`；annotated recovery tag 指向 source-only `2368c25`。
+  Paper 256-step/15/15/remasking preset、1-sample GPU runtime smoke、通用 strain/length CSV grid、remote
+  fresh-clone release audit、全仓 14 tests 与 BAA-3170/3197 resolved-config dry-run 均通过。13 个硬编码
+  launchers、debug 和 unused diffusion duplicate 已由 ledger gate 清理且可恢复；checkpoint/data/output 未入 Git。
+  Upstream `kuleshov-group` remote 未接收任何 ApexOracle commit。下一关键路径为 Evo-2 clean fork。
 - 机器职责、环境、共享文件系统、数据/权重/外部仓库位置和当前 reviewer 任务记录在
   `docs/COMPUTE_AND_ASSET_MAP.md`。任何机器或资产迁移都必须同步更新该文件；node001 与
   node002 共享同一个 `/data1/tianang/Projects/Synergy_release`，不得把它们当作两个独立 checkout

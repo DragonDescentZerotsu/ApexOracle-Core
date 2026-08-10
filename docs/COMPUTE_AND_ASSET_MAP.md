@@ -1,6 +1,7 @@
 # 计算节点、代码版本与资源位置
 
-> 最后核验：2026-08-02。Fig. 1b 与 ReMDM remasking schedule reviewer 补实验均已完成；
+> 稳定计算状态最后核验：2026-08-02；统一发布架构于 2026-08-09 更新。Fig. 1b 与
+> ReMDM remasking schedule reviewer 补实验均已完成；
 > node002 原 GPU guard 已恢复。
 > `python scripts/reproduce/monitor_fig1b_revision.py` 仅用于只读核验历史产物与节点状态；
 > 本文记录稳定职责和路径，不把瞬时 GPU utilization 当作实验完成证据。
@@ -22,6 +23,35 @@ node001 与 node002 上 `Synergy_release` 的 inode/文件内容已经交叉核�
 /data1/tianang/Projects/Synergy_release/DataPrepare/Data
   -> /data1/tianang/Projects/Synergy/DataPrepare/Data
 ```
+
+### 统一公开 super-repo 固定计划（2026-08-10；MDLM/Generation modules 已发布）
+
+**作者已确认的决定：** 最终公开入口为轻量 `DragonDescentZerotsu/ApexOracle` super-repo，使用
+固定 commit 的 Git submodule 组合 Core、DLM-Pretraining、downstream MDLM、Evo-2 和 Generation；
+不把五个模块重排为一个
+单体 Python package。PepLink 保持 `PepLink==0.1.2` 独立依赖。详细计划和阶段验收见
+`docs/UNIFIED_APEXORACLE_RELEASE_PLAN.md`。
+
+| 模块 | 当前本机位置 / remote | 目标 remote 与角色 | 当前边界 |
+| --- | --- | --- | --- |
+| Core | `/data2/tianang/projects/Synergy`；private `DragonDescentZerotsu/Synergy` | `DragonDescentZerotsu/ApexOracle-Core`；`modules/core` | 先收口现有未提交 reviewer 工作并完成公开审计；当前未迁移 |
+| DLM Pretraining | `/data2/tianang/projects/ApexOracle_github/DLM_pretrain`；当前位于 public legacy repo | `DragonDescentZerotsu/ApexOracle-DLM-Pretraining`；`modules/dlm_pretrain` | 合作者 joint DLM+MTR producer family；先参数化绝对路径、修复 model config contract 并做 synthetic smoke |
+| Downstream MDLM | `/data2/tianang/projects/mdlm`；上游 `origin` + public `custom/ApexOracle-MDLM` | `DragonDescentZerotsu/ApexOracle-MDLM`；`modules/mdlm` | public 默认 `master` 固定候选 `c9d17c7`；legacy tag 保留；118 tests、remote fresh-clone 与 HF revision `77694f08...2eda` 验收通过，禁止误推上游 |
+| Evo-2 | `/data2/tianang/projects/evo2`；官方上游 | `DragonDescentZerotsu/ApexOracle-Evo2`；`modules/evo2` | checkout dirty；先建 clean fork 和参数化 extraction 入口 |
+| Generation | `/data2/tianang/projects/discrete-diffusion-guidance`；上游 `origin` + public `custom/ApexOracle-Generation` | `DragonDescentZerotsu/ApexOracle-Generation`；`modules/generation` | public 默认 `main` 固定候选 `de6c1e5`；recovery tag、14 tests、paper GPU smoke 与 remote fresh-clone dry-run 通过；历史 outputs 保持 ignored |
+| Super-repo | 当前 public `DragonDescentZerotsu/ApexOracle` legacy checkout 位于 `/data2/tianang/projects/ApexOracle_github` | 新 clean-history `DragonDescentZerotsu/ApexOracle` | 旧 repo 先改名归档为 `ApexOracle-Legacy`；不得在其 history 上继续复制资产 |
+
+**已验证事实：** 上表来源当前仍位于原位置；尚未创建 super-repo、写入 `.gitmodules`、移动本机
+data/weight 或改变 node001/node002 shared release checkout。Downstream MDLM 与 Generation 已有通过
+fresh-clone 验收的 public module commit。Hugging Face `Kiria-Nozan/ApexOracle` 正式 revision
+`77694f08c1d0664fdb24c5a7bab130c8a3bc2eda` 含 18 files、MIT metadata，权重 SHA-256 为
+`b472f7508aaf0fdab4c935caf221415b48a5f8afd4d104a731c9d72d410c2c44`；第三方 runtime/tokenizer 仍保留
+Apache-2.0 notice。
+未来任一实际迁移都必须更新本表的 commit、owner、目标路径和验证命令。
+
+Super-repo 发布时必须同时支持 `git clone --recurse-submodules` 和
+`git submodule update --init --recursive`，并在 GitHub Release 生成展开全部固定 submodules 的
+`ApexOracle-v<version>-source-full.tar.gz`；GitHub 自动 source ZIP 不得作为完整源码包宣称。
 
 版本核验命令：
 
@@ -223,10 +253,12 @@ RDKit 2025.03.5。
 - `Synergy` remote 为 private `DragonDescentZerotsu/Synergy`；发布时使用显式路径分组 stage，
   没有使用 `git add -A`。推送前全仓库测试为 `164 passed`，本地与远程 `main` 已对齐。
 - `mdlm` 同时有上游 `kuleshov-group/mdlm` 和公开自有 remote
-  `DragonDescentZerotsu/ApexOracle-MDLM`；本轮没有修改该 checkout。其当前 branch 跟踪上游，
-  未来发布必须显式推向自有 remote。
-- `discrete-diffusion-guidance` 目前只有上游 remote，不存在自有同名 GitHub fork；当前 dirty
-  producer 不得直接推送。应先建立 clean fork/独立 repo、参数化绝对路径并固定可复现 commit。
+  `DragonDescentZerotsu/ApexOracle-MDLM`。legacy tag 已推送，clean release 已进入默认 `master`，固定
+  候选 `c9d17c7`；118 tests、14 cross-repo contracts、formal GPU parity 与 remote fresh-clone passed。
+  发布仍必须显式推向自有 remote。
+- `discrete-diffusion-guidance` 的上游 `origin` 保持只读；public 自有 remote
+  `DragonDescentZerotsu/ApexOracle-Generation` 已建立，默认 `main` 为 `de6c1e5`，recovery tag 指向
+  `2368c25`。ApexOracle commits 未推送到 `kuleshov-group`。
 - public `DragonDescentZerotsu/ApexOracle` 的现有 legacy history 约 235 MiB，且已混入数据、模型和
   外部仓库副本，不适合作为继续复制本轮 raw 资产的目标。未来统一发布应采用清理后的 release
   history/layout，并以固定 commit/submodule 或版本化依赖连接 MDLM 与 guidance producer。
@@ -597,9 +629,10 @@ watch -n 30 python scripts/reproduce/monitor_fig1b_revision.py
 | 论文原始/冻结数据 | 本机 `DataPrepare/Data`；节点通过上述 symlink 读取历史目录 | 只读消费；重构输出写 `results/`，不得原地覆盖 |
 | Reviewer 4 私有 in-house AMP 表 | `DataPrepare/Data/private_inhouse_amp/Master_List_Peptides_Antimicrobial_Activity.xlsx` | Git ignored；SHA-256 `956ff3d60364a113c2149a63b74b65d4f81ec03741fefbac1841558ed54744a4`；不得上传 GitHub |
 | 本仓库权重登记 | `configs/model_weights.yaml`、`MODEL_WEIGHTS.md` | 二进制不进 Git；新路径使用 `${APEXORACLE_WEIGHTS_DIR:-weights}` |
-| DLM/MDLM producer | `/data2/tianang/projects/mdlm` | 必须用 `mdlm` conda env；当前 checkout 有本地修改，不能直接作为 clean submodule |
+| Joint DLM+MTR pretraining producer | `/data2/tianang/projects/ApexOracle_github/DLM_pretrain` | public legacy source family；仍含 `/data1/fangping*` 绝对路径和 small/medium config 不一致，不能原样作为 clean submodule |
+| Downstream MDLM producer/assets | `/data2/tianang/projects/mdlm` | 必须用 `mdlm` conda env；约 321 GB 数据/权重/cache 保持 ignored；public 默认 `master` 固定候选 `c9d17c7`；HF revision `77694f08...2eda` 与 remote fresh-clone 已通过 |
 | Evo-2 producer | `/data2/tianang/projects/evo2` | 当前仓库只消费 `DataPrepare/Data/Genome_embs`；不重跑 extraction |
-| guided generation | `/data2/tianang/projects/discrete-diffusion-guidance` | sampler、DLM pretraining 同属外部边界；当前只读审计，不并入 Synergy |
+| guided generation | `/data2/tianang/projects/discrete-diffusion-guidance` | sampler 属于独立 Generation 边界；public 默认 `main` 固定候选 `de6c1e5`，只消费 downstream MDLM/Core，不复制外部资产或预训练 producer |
 | Reviewer 2 peptide classifier | `experiments/peptide_classifier/README.md` | v1 数据血缘与论文 checkpoint 的 canonical 审计记录；node002 历史 producer 只读，v2 parser-label 数据不得反向解释 v1 checkpoint |
 | PepLink | `/data2/tianang/projects/PepLink` | clean 独立仓库；`PepLink==0.1.2` 已发布到 GitHub/PyPI，ApexOracle 新数据入口固定消费 0.1.2，论文复现仍读取 frozen CSV，不复制源码 |
 | AA/peptide reviewer 审计 | `experiments/peplink_validation/` | canonical 中文血缘为 `AA_AND_PEPTIDE_LINEAGE_ZH.md`；机器可读范围为 `reviewer_response_scope_summary.json`；56-peptide Supplementary Data 位于 `supplementary_data/`；不得用已退役的 forward-failure union 代替 source-aware scope |

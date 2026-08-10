@@ -1,7 +1,7 @@
 # ApexOracle 统一公开仓库发布计划
 
 > 决策日期：2026-08-09
-> 状态：架构已由作者确认并冻结；MDLM 的 Hugging Face clean release 已完成，super-repo/submodule 尚未创建
+> 状态：架构已由作者确认并冻结；MDLM 与 Generation clean modules 已发布并验收，super-repo/submodule 尚未创建
 > Canonical 上位计划：`REFACTOR_PLAN.md`
 
 ## 1. 目标与固定架构
@@ -106,6 +106,8 @@ dirty checkout、数据或权重复制进旧 history 的方式实现统一发布
   experimental，不进入默认 quickstart。
 - clean commit 必须参数化数据、权重和输出根目录，禁止覆盖历史 `outputs/`。
 - 当前上游 remote 不接收 ApexOracle patch；必须发布到自有 `ApexOracle-Generation` remote。
+- 已发布的默认 `main` 固定候选为 `de6c1e590c25b2ce36b4ce5c42c5a4fa0dcc7705`；annotated recovery tag
+  `legacy-code-snapshot-2026-08-10` 指向 source-only snapshot `2368c25ce831c187e5b2699b85a6ae1a4cdca31a`。
 
 ## 3. 环境与资产策略
 
@@ -175,14 +177,19 @@ release provenance；Core/Evo-2/Generation/DLM-pretraining 的统一 R0 manifest
 
 ### R1：准备五个 clean module commits
 
-状态：**进行中。** MDLM clean branch 已 push；其 Hugging Face embedding release 已验收，但 MDLM 剩余
-guidance caller/legacy HF duplicate 清理和 module-level fresh-clone release 仍未完成。其余四个模块待执行。
+状态：**进行中。** MDLM 与 Generation 两个 module candidates 已进入各自 public 默认分支并通过远端
+fresh-clone 验收；Core、DLM-Pretraining 与 Evo-2 三个模块待执行。
 
 - `ApexOracle-Core`：以当前 Synergy canonical 代码为基础完成公开边界审计。
 - `ApexOracle-DLM-Pretraining`：形成 portable pretraining source commit 和 synthetic train/save/load smoke。
 - `ApexOracle-MDLM`：形成 downstream source-only release commit、embedding 和 guidance-head smoke。
 - `ApexOracle-Evo2`：形成 clean fork commit、通用 extraction CLI 和小规模 tensor contract test。
 - `ApexOracle-Generation`：形成 paper-path clean commit、参数化配置和小 batch GPU smoke。
+
+Generation 已完成：paper preset 固定 256-step、15/15 guidance 与 remasking；1-sample GPU smoke
+token-level complete 1 条但结构过滤后 0 row，只作为 runtime contract；远端 fresh clone 的 source audit、
+14 tests 和 BAA-3170/3197 resolved-config dry-run 通过。13 个硬编码 launchers 已由通用 CSV grid 取代，
+删除项均可由 recovery tag 恢复。仓库保留上游 Apache-2.0 `LICENSE` 与 `NOTICE`，未把外部资产纳入 Git。
 
 验收：每个 module 独立 clone 后可按自身 README 安装，smoke test 通过且不需要作者机器绝对路径。
 
@@ -259,46 +266,52 @@ guidance caller/legacy HF duplicate 清理和 module-level fresh-clone release �
 
 - 当前 `Synergy` 为 private remote，已包含主要 Core 重构和 reviewer-facing code，但工作树仍有
   未提交 reviewer 工作。
-- `ApexOracle-MDLM` public remote 已存在；source-only tag `legacy-code-snapshot-2026-08-09` 和 clean
-  `refactor/apexoracle-mdlm` branch 均已 push，当前记录 HEAD 为 `fd30238`。Checkpoint/embedding I/O、shared
+- `ApexOracle-MDLM` public remote 已存在；source-only tag `legacy-code-snapshot-2026-08-09` 已 push，clean
+  release 已进入默认 `master`，当前固定候选为 `c9d17c7f6f091234aaaebf5f08dbe23542f980c1`。Checkpoint/embedding I/O、shared
   guidance heads、candidate MIC/synergy scoring、interpretability、paper Fig. 3a、通用 peptide/small-molecule
-  screens 和 molecule embedding producer 已迁移；全仓 93 tests 与 13 项跨仓库 source contracts 通过。
+  screens、molecule embedding producer、四个 peptide-classifier profiles 与五个 MIC-guidance profiles 已迁移；
+  全仓 118 tests 与 14 项跨仓库 source contracts 通过；五个正式 guidance checkpoints 通过 schema/inactive
+  cls-head strict load，Generation regression 正式 GPU parity exact。11 个 Core-owned hierarchical drivers 已
+  handoff 后删除；两个 chemistry root utilities 已迁为通用 converter/catalogue matcher，并通过 11,401-row
+  byte parity 与 5,887,458-row full-scan parity。
 - Hugging Face `Kiria-Nozan/ApexOracle` 已从 72-file legacy tree 清为 18-file allowlist；正式 revision
   `77694f08c1d0664fdb24c5a7bab130c8a3bc2eda` 已从空 cache 下载，通过 MIT metadata、manifest/hash、
-  `strict=True` load 和 integer-mask padded GPU inference。权重内容不变。MDLM module 本身仍需清理旧
-  tracked HF exporter/runtime duplicates、完成 remaining guidance callers/full Generation parity 和 fresh-clone
-  module smoke，才能宣告 R1 的 MDLM 子项完成。
+  `strict=True` load 和 integer-mask padded GPU inference。权重内容不变。旧 tracked HF duplicates 和三个
+  classifier root trainers、六个 MIC-guidance root trainers、11 个 hierarchical duplicates、两个 chemistry
+  utilities 与三个 synergy-guidance producers 已清除，source archive fresh install/import/CLI smoke 已通过；
+  两个 synergy producer profiles 的正式 encoder/candidate GPU parity 与 checkpoint schema 已通过。远端
+  shallow-clone wheel/install/import/CLI、118 tests、显式资产 20 checks 和 recovery-tag fetch 均通过。MDLM
+  module-level source candidate 已就绪；Generation sampler integration 已完成，Core compatibility bridge 已删除。
 - 合作者的 joint DLM+MTR 预训练源码已位于 public legacy `ApexOracle/DLM_pretrain/`，但仍含绝对
   路径和 small/medium config 不一致，尚不是 portable release。
 - 本地 Evo-2 checkout dirty，且当前 commit 不能证明是 567 个 frozen tensors 的精确 producer。
-- generation checkout 只有上游 remote，包含未提交 ApexOracle 修改和历史 outputs。
+- `ApexOracle-Generation` public remote 已创建，默认 `main` 为 `de6c1e5`；source-only recovery tag 已推送。
+  从 GitHub shallow clone 后 release audit、14 tests 和双 strain dry-run 通过；外部历史 outputs 原地 ignored。
 - 当前 public `ApexOracle` legacy history 已复制外部代码和大资产，不适合继续累加。
 
 ### 根据现有证据作出的判断
 
-- Generation 的历史 source/config 冻结和 clean commit 是整个发布计划的关键路径。
+- Generation 的历史 source/config 冻结和 clean commit 已关闭；下一关键路径转为 Evo-2 clean fork。
 - 采用 submodule 比重排模块内部代码更能降低科学行为变化和依赖冲突风险。
 
 ### 仍待执行而非待架构确认的事项
 
-- 创建或重命名目标 remotes，并决定具体 visibility 切换时间。
-- 完成五个 clean module commits 及各自 smoke tests。
+- 创建剩余 Core、DLM-Pretraining、Evo-2 remotes，并决定具体 visibility 切换时间。
+- 完成剩余三个 clean module commits 及各自 smoke tests。
 - 完成数据/模型再分发许可审计和稳定下载 URI。
 - 完成两个端到端 quickstart、full-source archive 与 fresh-clone QA。
 
 ## 8. 从 2026-08-10 开始的下一阶段固定顺序
 
-1. **关闭 MDLM source release。** 先将已经被 clean Hub capsule 替代的本地旧 HF exporter、重复 runtime、
-   image/debug 资产按 ledger gate 转为 snapshot-only 并从 active tree 清除；随后迁移剩余 v1/v2 peptide
-   classifier 与 clean/noisy MIC guidance callers，完成 Generation 调用链 parity。最后做独立 clone/install/
-   embedding/head/scoring smoke，再将 clean release commit 作为 MDLM submodule 候选。
-2. **Generation clean fork（下一关键路径）。** 冻结 resolved paper configs 与跨 MDLM imports，把权重/data/
-   output root 参数化；保留论文 MIC/peptide/remasking 默认路径，synergy guidance 只作 experimental。用刚固定的
-   MDLM/Hugging Face revision 做一个小 batch end-to-end GPU smoke。
-3. **Evo-2 clean fork。** 在官方许可兼容基线上迁移通用 genome extraction CLI，固定 window/layer/pooling
+1. **MDLM source release——完成。** 默认 `master` 固定候选为 `c9d17c7`；source/HF asset/fresh-clone、
+   guidance/scoring 与 Generation integration 已通过，legacy tag 保留。
+2. **Generation clean fork——完成。** 默认 `main` 固定候选为 `de6c1e5`；paper preset、通用 grid、GPU smoke、
+   remote fresh-clone 和 recovery tag 均通过，未推送上游 `kuleshov-group`。
+3. **Evo-2 clean fork（下一关键路径）。** 在官方许可兼容基线上迁移通用 genome extraction CLI，固定 window/layer/pooling
    contract；以已有 567 tensor lineage 和小规模 shape/value test验收，不声称无法证明的历史 byte-exact producer。
-4. **DLM-pretraining producer 与 Core 收口。** 清理合作者 pretraining 的绝对路径和 1024-dimensional head 配置，
-   做 synthetic train/save/load；并行完成 Core 的 public-data/secret/license/fresh inference 审计。
+4. **DLM-pretraining producer 与 Core 收口。** 合作者 pretraining 原则上原样归档并先做 synthetic
+   train/save/load；只有 blocking portability failure 才做最小路径/文档/config 修补，不改变模型结构、
+   objective 或训练行为。并行完成 Core 的 public-data/secret/license/fresh inference 审计。
 5. **最后创建 super-repo。** 只有五个 module candidate SHA 均冻结后才创建 `.gitmodules`、
    `modules.lock.yaml`、资产 manifests 和两个 quickstarts；随后做 full-source archive、fresh-clone QA 和 canonical
    URL 切换。不得为了提前展示目录而先加入浮动 branch submodule。
