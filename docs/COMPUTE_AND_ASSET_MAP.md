@@ -49,6 +49,13 @@ joint-objective smoke，Evo-2 已通过真实 40B GPU extraction smoke。Hugging
 `77694f08c1d0664fdb24c5a7bab130c8a3bc2eda` 含 18 files、MIT metadata，权重 SHA-256 为
 `b472f7508aaf0fdab4c935caf221415b48a5f8afd4d104a731c9d72d410c2c44`；第三方 runtime/tokenizer 仍保留
 Apache-2.0 notice。
+
+**Core pre-public audit（2026-08-10）：** 当前 `Synergy` 仍为 private；committed baseline `56c57e5`
+已通过 206 tests、wheel/sdist、remote fresh-clone install/import/CLI、current/history secret pattern 和
+binary/history-size checks。`src/apexoracle/` 为 0 个作者机器绝对路径文件。16,896-row DBAASP-derived
+round-trip table 的官方再分发文字存在冲突，因此仓库保持 private；取得许可或完成带离线 Git bundle 的
+单路径 history rewrite 前，不重命名、不切 public、不加入 Core gitlink。当前 reviewer/Providencia dirty
+worktree 明确排除于该 baseline。完整审计见 `docs/CORE_PUBLIC_RELEASE_AUDIT.md`。
 未来任一实际迁移都必须更新本表的 commit、owner、目标路径和验证命令。
 
 Super-repo 发布时必须同时支持 `git clone --recurse-submodules` 和

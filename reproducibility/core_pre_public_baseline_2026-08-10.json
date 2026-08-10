@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "created_on": "2026-08-10",
+  "role": "committed_core_baseline_before_public_release_cleanup",
+  "repository": "DragonDescentZerotsu/Synergy",
+  "visibility_at_audit": "private",
+  "default_branch": "main",
+  "commit": "56c57e51b0bc594e23609f7996de55b55946f716",
+  "tree": "2cd3bb67b04d68749863349d783a70c70190cbc1",
+  "annotated_tag": "core-pre-public-cleanup-2026-08-10",
+  "tree_inventory_sha256": "aeb810649e7618372a0f60b73cbc853bb19ed34f63140cd58397aad01f286934",
+  "git_archive_tar_sha256": "5b63c4adc410988c680ec9bf8e0031f6f6c3ba6cd218eab32500760d65db1e01",
+  "tracked_file_count": 448,
+  "tracked_bytes": 12752114,
+  "largest_reachable_blob": {
+    "path": "experiments/peplink_validation/peplink_0.1.2/roundtrip_records.csv",
+    "size_bytes": 4645044
+  },
+  "validation": {
+    "pytest": {
+      "command": "conda run --no-capture-output -n base python -m pytest -q",
+      "passed": 206,
+      "warnings": 14
+    },
+    "build": "wheel_and_sdist_passed",
+    "fresh_clone": "install_import_and_two_core_cli_help_commands_passed",
+    "current_and_history_secret_pattern_hits": 0,
+    "tracked_model_or_archive_binary_count": 0
+  },
+  "worktree_boundary": {
+    "included": "committed main only",
+    "excluded": "all contemporaneous tracked modifications and untracked reviewer/Providencia work"
+  },
+  "release_status": "private_audit_in_progress",
+  "blocking_document": "docs/CORE_PUBLIC_RELEASE_AUDIT.md"
+}

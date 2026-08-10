@@ -94,6 +94,18 @@
   contracts、remote main/tag CI、fresh virtualenv clone、Hydra compose 与真实 H100 joint-objective
   train/save/strict-load smoke 均通过。现有 ApexOracle super-repo public `main`
   `34cb2831964b21b0720247d90c2289782ed0aa42` 已锁定该 gitlink；当前仅 Core 保持 pending。
+- **2026-08-10 Core 公开发布审计启动：** 当前 private `DragonDescentZerotsu/Synergy` committed
+  baseline 为 `56c57e51b0bc594e23609f7996de55b55946f716`；tree/archive inventory、206 tests、wheel/sdist、
+  remote fresh-clone install/import/CLI 与 current/history credential pattern scan 已通过。已验证 canonical
+  `src/apexoracle/` 没有作者机器绝对路径，reachable history 没有 checkpoint、NumPy、FASTA 或 archive
+  binaries；根 MIT 与 vendored PeptideCLM MIT 边界存在。**根据现有证据作出的判断：** package 主体无需
+  再大规模重排，剩余关键路径是 `DataPrepare/` ledger/active-tree 清理、精简环境与 packaging、公开
+  inference 资产和 thin CLI。**仍待作者确认：** 16,896-row DBAASP-derived round-trip table 的官方条款
+  同时含 freely distributed 与 Non-Distribution 文字；在取得明确许可或完成带离线 bundle 的单路径
+  history rewrite 前，仓库不得切换 public、重命名或加入 super-repo。完整事实、阻塞项和固定顺序见
+  `docs/CORE_PUBLIC_RELEASE_AUDIT.md`；pre-public baseline manifest 位于
+  `reproducibility/core_pre_public_baseline_2026-08-10.json`。当前 reviewer/Providencia dirty worktree 不属于
+  该 baseline，禁止使用 `git add -A` 混入 Core release。
 - 机器职责、环境、共享文件系统、数据/权重/外部仓库位置和当前 reviewer 任务记录在
   `docs/COMPUTE_AND_ASSET_MAP.md`。任何机器或资产迁移都必须同步更新该文件；node001 与
   node002 共享同一个 `/data1/tianang/Projects/Synergy_release`，不得把它们当作两个独立 checkout

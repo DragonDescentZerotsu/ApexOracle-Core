@@ -72,6 +72,10 @@ dirty checkout、数据或权重复制进该 history。
 - 不为适配 super-repo 重写已验证的 fusion、head、runner 或 checkpoint schema。
 - 只新增公共 inference/quickstart 所需的稳定薄入口，并继续通过现有 tests 保护行为。
 - 在公开前完成 private data、绝对路径、ignored artifacts、许可和 staged-file 白名单审计。
+- 2026-08-10 已以 private `main` `56c57e5` 建立 pre-public baseline：206 tests、wheel/sdist、remote
+  fresh-clone install/import/CLI、current/history secret patterns 与 binary/history-size checks 通过。
+  公开转换仍被 DBAASP row-level derivative 的冲突再分发条款、legacy active-tree 收口和 public inference
+  assets 阻塞；详见 `docs/CORE_PUBLIC_RELEASE_AUDIT.md`。
 
 ### 2.2 `modules/dlm_pretrain`
 

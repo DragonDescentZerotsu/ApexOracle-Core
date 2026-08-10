@@ -1,7 +1,7 @@
 # ApexOracle / Synergy 代码库重构计划
 
 > 建立日期：2026-07-17  
-> 状态：canonical 论文/审稿路径已完成；现有 ApexOracle 已原地转换为 super-repo，DLM-Pretraining、MDLM、Generation 与 Evo-2 modules 已锁定；
+> 状态：canonical 论文/审稿路径已完成；现有 ApexOracle 已原地转换为 super-repo，DLM-Pretraining、MDLM、Generation 与 Evo-2 modules 已锁定；Core 公开发布审计进行中；
 > legacy `DataPrepare/` 收尾仍待后续批次
 > 适用范围：当前 `Synergy` 仓库，以及后续需要整合的 Evo-2 genome embedding、DLM/MDLM 和 guided generation 代码。
 
@@ -12,6 +12,13 @@ submodule”的方案，其中
 已关闭并作为固定 gitlink 进入现有 ApexOracle；下一步只收口 Core，再补齐最后一个 pending gitlink 和
 端到端 quickstarts。四个 clean modules 和 Hugging Face 模型已发布并验收；Core 尚未完成 clean candidate，
 因此不创建对应浮动 submodule、不移动数据或权重。
+
+Core public-release audit 已于 2026-08-10 以 committed `main` `56c57e5` 建立基线：206 tests、
+wheel/sdist、remote fresh-clone install/import/CLI、current/history secret pattern 与 binary/history size
+检查通过。当前 P0 hold 是 DBAASP 16,896-row round-trip audit table 的官方再分发条款存在冲突；在取得
+明确许可或完成带离线 bundle 的精确单路径 history rewrite 前，Synergy 保持 private。完整边界见
+`docs/CORE_PUBLIC_RELEASE_AUDIT.md`，机器可读基线见
+`reproducibility/core_pre_public_baseline_2026-08-10.json`。
 
 当前执行焦点（2026-07-28）：Fig. 1b 完整 10-member/fold fine-tune 与 baseline、最终统计、
 图文修订，以及 PepLink 0.1.2 round-trip/ChatGPT-o1/OPSIN 审计和 Supplementary Data 均已完成。
