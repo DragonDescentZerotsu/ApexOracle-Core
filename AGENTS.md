@@ -15,11 +15,12 @@
   转换默认分支。当前 `DragonDescentZerotsu/Synergy` 也不得复制，完整 history audit 通过后直接重命名为
   `DragonDescentZerotsu/ApexOracle-Core`。详细阶段、module lock、quickstart、完整 source archive 和
   验收门槛见 `docs/UNIFIED_APEXORACLE_RELEASE_PLAN.md`。2026-08-10 现有 ApexOracle 已原地转换并合入
-  public `main` `52da35d8c2464d03df4bb7874122cd2093c684f4`；旧 active tree 由 branch `legacy-monorepo`
+  public `main` `34cb2831964b21b0720247d90c2289782ed0aa42`；旧 active tree 由 branch `legacy-monorepo`
   和 annotated tag `legacy-monorepo-snapshot-2026-08-10` 双重固定到 `2f29dee9cf6b7750425414f66c1a2d67998cb87f`。
-  当前已加入已验收的 MDLM `c9d17c7f6f091234aaaebf5f08dbe23542f980c1`、Generation
+  当前已加入已验收的 DLM-Pretraining `362ffccac79bdd638a4e913c4f17df613da18f36`、MDLM
+  `c9d17c7f6f091234aaaebf5f08dbe23542f980c1`、Generation
   `de6c1e590c25b2ce36b4ce5c42c5a4fa0dcc7705` 与 Evo-2
-  `2184211acda07b0d5ca865067174ac42f530ad04` gitlinks；Core、DLM-Pretraining 保持
+  `2184211acda07b0d5ca865067174ac42f530ad04` gitlinks；Core 保持
   `pending`，不得加入浮动占位 submodule。未移动数据或权重；任何架构变更必须再次由作者确认并同步更新
   canonical 计划与资产文档。
 - **2026-08-09 MDLM 双模块审计：** public legacy `ApexOracle/DLM_pretrain/` 已由源码确认包含
@@ -83,6 +84,16 @@
   Python 3.11/3.12 GitHub CI 与真实 Evo-2-40B 小规模 GPU extraction smoke 已通过。现有 ApexOracle
   super-repo 已在 public `main` `52da35d8c2464d03df4bb7874122cd2093c684f4` 锁定该 gitlink，并通过
   recursive fresh-clone、module lock 与根测试。上游 `ArcInstitute/evo2` remote 未接收 ApexOracle commit。
+- **2026-08-10 DLM-pretraining clean release：** public
+  `DragonDescentZerotsu/ApexOracle-DLM-Pretraining` 默认 `main` 固定候选为
+  `362ffccac79bdd638a4e913c4f17df613da18f36`，release tag 为 `v0.1.0`；原始 56-file source tree 由
+  root commit `fda167cf5fb90ac57952482fb5c0e605b188c105`、annotated recovery tag
+  `legacy-code-snapshot-2026-08-10` 与完整 SHA-256 manifest 恢复。合作者模型结构、DLM objective、
+  `0.1 × MTR MSE` 权重和 checkpoint key schema 未改变；只移除缺失 import、参数化数据/cache/stats 路径、
+  固定 tokenizer revision，并将 README producer profile 对齐到 1024-hidden `model=medium`。5 source
+  contracts、remote main/tag CI、fresh virtualenv clone、Hydra compose 与真实 H100 joint-objective
+  train/save/strict-load smoke 均通过。现有 ApexOracle super-repo public `main`
+  `34cb2831964b21b0720247d90c2289782ed0aa42` 已锁定该 gitlink；当前仅 Core 保持 pending。
 - 机器职责、环境、共享文件系统、数据/权重/外部仓库位置和当前 reviewer 任务记录在
   `docs/COMPUTE_AND_ASSET_MAP.md`。任何机器或资产迁移都必须同步更新该文件；node001 与
   node002 共享同一个 `/data1/tianang/Projects/Synergy_release`，不得把它们当作两个独立 checkout
