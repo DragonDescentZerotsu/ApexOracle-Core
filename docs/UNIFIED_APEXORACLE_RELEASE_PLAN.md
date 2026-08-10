@@ -168,16 +168,17 @@ python quickstarts/guided_generation.py \
 根 quickstart 只负责参数和资产联结；核心计算继续由相应 submodule 执行。Generation 同时提供快速
 smoke preset 与完整 256-step paper preset，并明确 smoke 输出不是论文结果。
 
-GitHub 自动生成的 source ZIP 不含 submodule 内容，因此每个正式 release 必须额外由 CI 生成
-`ApexOracle-v<version>-source-full.tar.gz`：展开全部固定 submodule、附带
-`manifests/modules.lock.yaml`，并核验 archive 中的 module SHA 与 super-repo 完全一致。
+GitHub 自动生成的 source ZIP 不含 submodule 内容，因此完整源码必须使用 super-repo 的 deterministic
+archive builder。`v0.2.0` 已发布 `ApexOracle-source-v0.2.0.tar.gz`、JSON provenance 与 SHA-256 sidecar：
+展开全部固定 submodules、附带 `manifests/modules.lock.yaml`，并核验 archive 中的 module SHA 与
+super-repo 完全一致。
 
 ## 5. 分阶段执行计划
 
 ### R0：冻结来源与恢复点
 
-状态：**部分完成。** Downstream MDLM、Evo-2、Generation 与 DLM-pretraining 已完成 source-only recovery
-point 和 clean release provenance；Core 的统一 R0 manifest 仍待收口。
+状态：**完成。** 五个模块均有可验证的来源基线、公开 release commit 与非破坏恢复边界；Core、DLM、
+MDLM、Generation 的 annotated tags 和 Evo-2 upstream base/release tag 分别承担恢复职责。
 
 - 为 `Synergy`、public legacy `DLM_pretrain/`、本地 `mdlm`、`evo2`、
   `discrete-diffusion-guidance` 建立 tracked/modified/untracked
@@ -191,8 +192,7 @@ point 和 clean release provenance；Core 的统一 R0 manifest 仍待收口。
 
 ### R1：准备五个 clean module commits
 
-状态：**进行中。** DLM-Pretraining、MDLM、Generation 与 Evo-2 四个 module candidates 已进入各自
-public 默认分支并通过远端 fresh-clone 与 runtime 验收；Core 待执行。
+状态：**完成。** 五个 module candidates 均进入各自 public 默认分支并通过对应 source/runtime gates。
 
 - `ApexOracle-Core`：以当前 Synergy canonical 代码为基础完成公开边界审计。
 - `ApexOracle-DLM-Pretraining`：形成 portable pretraining source commit 和 synthetic train/save/load smoke。
@@ -220,17 +220,18 @@ token-level complete 1 条但结构过滤后 0 row，只作为 runtime contract�
 
 ### R2：建立 super-repo 骨架
 
-状态：骨架与默认分支转换已完成；五模块中的四个已锁定，阶段尚未关闭。
+状态：**完成。** 骨架、默认分支转换和五个固定 gitlinks 均已关闭。
 
 - [x] 在现有 public `DragonDescentZerotsu/ApexOracle` 内标记 legacy branch/tag，并原地转换默认分支；
   未创建新 repository。
 - [x] 新增 `manifests/modules.lock.yaml`、资产 manifests、environment/quickstart 边界、bootstrap、统一
   README 与根仓库 CI。
-- [x] 加入并锁定 DLM-Pretraining `362ffccac79bdd638a4e913c4f17df613da18f36`、MDLM
+- [x] `v0.2.0` 加入并锁定 Core `8c1def518ac148a878c14f4a39876db59649d43c`、DLM-Pretraining
+  `362ffccac79bdd638a4e913c4f17df613da18f36`、MDLM
   `c9d17c7f6f091234aaaebf5f08dbe23542f980c1`、Generation
-  `de6c1e590c25b2ce36b4ce5c42c5a4fa0dcc7705` 与 Evo-2 `2184211acda07b0d5ca865067174ac42f530ad04`。
-- [ ] Core 只有在 clean candidate 验收后才加入真实 gitlink；当前 lock 中明确为
-  `pending`，不使用浮动 branch 或无效占位。
+  `80d9a2cf9b0921f29e4a44edf5557ccac39f5af9` 与 Evo-2
+  `2184211acda07b0d5ca865067174ac42f530ad04`。
+- [x] 所有 module locks 都是完整 40-character commit；不存在 floating branch 或占位 gitlink。
 - [x] GitHub CI 与远端默认分支 recursive fresh clone 已验证 active tree、module SHA、recovery refs、
   大文件/legacy-root 边界和根测试。
 
@@ -238,7 +239,8 @@ token-level complete 1 条但结构过滤后 0 row，只作为 runtime contract�
 
 ### R3：MIC prediction quickstart
 
-状态：待执行。
+状态：**完成。** 公开单成员 MIC quickstart 固定 Hugging Face revision、checkpoint/input hashes 和 CPU
+reference output；它只验证 inference path，不替代论文七成员 ensemble。
 
 - 固定一个可公开的 example molecule、known strain、必要 embeddings 和正式 checkpoint manifest。
 - 建立 root wrapper，调用 Core 与 MDLM canonical inference，不复制实现。
@@ -249,7 +251,8 @@ token-level complete 1 条但结构过滤后 0 row，只作为 runtime contract�
 
 ### R4：Guided generation quickstart
 
-状态：待执行；为关键路径。
+状态：**完成。** compact BAA-3170 bundle 和 portable paper preset 已通过空 cache、fresh recursive clone 与
+真实 H100 256-step smoke；完整 paper condition bank 继续作为外部可选资产。
 
 - 固定论文 BAA-3170/BAA-3197 中至少一个公开 target 及其 genome/text assets。
 - root wrapper 调用 Generation、MDLM 与 Core 的固定 commits 和权重。
@@ -260,7 +263,8 @@ token-level complete 1 条但结构过滤后 0 row，只作为 runtime contract�
 
 ### R5：数据、许可和完整 source release
 
-状态：待执行。
+状态：**完成当前公开范围。** 公开 quickstart inputs、第三方边界、权重 revisions、完整 source archive 与
+fresh-clone QA 已记录；未公开的完整训练数据、七成员 ensemble 和 paper condition bank 明确列为外部范围。
 
 - 发布 reviewer 承诺的公开 model-ready tables、strain mappings、splits 和 strain-description texts，
   或对不可再分发/私有部分给出明确 manifest、获取方式与排除说明。
@@ -272,7 +276,8 @@ token-level complete 1 条但结构过滤后 0 row，只作为 runtime contract�
 
 ### R6：原地转换与正式发布
 
-状态：待执行。
+状态：**完成。** 原仓转换、Core 原地重命名、`v0.1.0`/`v0.2.0`、GitHub Releases、HF revisions 与
+完整 source archive 均已发布；当前没有 Zenodo record，文档不得暗示已有 DOI。
 
 - 在现有 public `ApexOracle` 创建 legacy tag/branch 后，将其默认分支原地转换为 super-repo；canonical URL
   始终保持 `DragonDescentZerotsu/ApexOracle`。
@@ -302,8 +307,8 @@ token-level complete 1 条但结构过滤后 0 row，只作为 runtime contract�
 
 - 原 `Synergy` remote 已原地重命名并公开为 `ApexOracle-Core`；`v0.1.0` 固定 clean release
   `8c1def518ac148a878c14f4a39876db59649d43c`。本地仍有的未提交 reviewer 工作没有进入 release。
-- 现有 `ApexOracle` super-repo 已在 public `main` `c2aecbb` 加入第五个 Core gitlink；五个 module locks、
-  完整 recursive fresh clone、root tests 与 Core MIC inference 均通过，super-repo `v0.1.0` 已公开。
+- 现有 `ApexOracle` super-repo 已加入第五个 Core gitlink；五个 module locks、完整 recursive fresh clone、
+  root tests 与 Core MIC inference 均通过，super-repo `v0.1.0` 和 `v0.2.0` 已公开。
 - `ApexOracle-MDLM` public remote 已存在；source-only tag `legacy-code-snapshot-2026-08-09` 已 push，clean
   release 已进入默认 `master`，当前固定候选为 `c9d17c7f6f091234aaaebf5f08dbe23542f980c1`。Checkpoint/embedding I/O、shared
   guidance heads、candidate MIC/synergy scoring、interpretability、paper Fig. 3a、通用 peptide/small-molecule
@@ -325,22 +330,24 @@ token-level complete 1 条但结构过滤后 0 row，只作为 runtime contract�
   均通过。公开 source 仍不含完整 curated dataset、正式训练日志或 checkpoint。
 - `ApexOracle-Evo2` public `main` 已固定为 `2184211`，tag、clean build、remote CI/fresh clone 与真实 40B
   GPU extraction smoke 均通过；上游 remote 未接收 ApexOracle commit。
-- `ApexOracle-Generation` public remote 已创建，默认 `main` 为 `de6c1e5`；source-only recovery tag 已推送。
-  从 GitHub shallow clone 后 release audit、14 tests 和双 strain dry-run 通过；外部历史 outputs 原地 ignored。
+- `ApexOracle-Generation` public remote 已创建；`v0.2.0` 固定 clean implementation `80d9a2c`，source-only
+  recovery tag 已推送。15 tests、空 cache compact asset hashes、fresh recursive clone 与真实 H100 256-step
+  smoke 通过；外部历史 outputs 原地 ignored。
 - 当前 public `ApexOracle` active tree 已转换为轻量 super-repo；legacy history 由固定 branch/tag 恢复，
-  active tree 不再复制数据、权重或四个已验收模块的源码。
+  active tree 不再复制数据、权重或五个已验收模块的源码。`v0.2.0` 展开五模块的 source archive 为
+  36,553,607 bytes、932 files、SHA-256
+  `895c682ba6ede090dd28e3b5d64f1995c014779c6447ae6abcf593bad78b4fdd`；两次构建 byte-identical。
 
 ### 根据现有证据作出的判断
 
-- DLM-Pretraining、MDLM、Generation 与 Evo-2 已关闭；下一关键路径为 Core public release audit 和原仓重命名。
+- 五模块拆分和当前 public release 已关闭；后续工作属于维护或新增实验，不再属于本轮重构 gate。
 - 采用 submodule 比重排模块内部代码更能降低科学行为变化和依赖冲突风险。
 
-### 仍待执行而非待架构确认的事项
+### 非阻塞的后续扩展
 
-- 将现有 Synergy 重命名为 Core，并决定 visibility 切换时间。
-- 完成最后一个 Core clean module commit 及 smoke tests。
-- 完成数据/模型再分发许可审计和稳定下载 URI。
-- 完成两个端到端 quickstart、full-source archive 与 fresh-clone QA。
+- 完整 paper condition bank 尚未重新分发；当前 compact BAA-3170 bundle 只用于可运行 smoke。
+- 完整七成员 MIC ensemble 不作为轻量 quickstart；论文评估继续使用冻结 ensemble 资产。
+- 新 target、更多数据资产和 CI/GPU automation 在有明确需求时另行版本化。
 
 ## 8. 从 2026-08-10 开始的下一阶段固定顺序
 
@@ -355,13 +362,12 @@ token-level complete 1 条但结构过滤后 0 row，只作为 runtime contract�
 4. **DLM-pretraining producer——完成。** public `main` 固定候选为 `362ffcc`，tag 为 `v0.1.0`；原始
    recovery tag、source manifest、remote CI/fresh clone 和 H100 joint-objective smoke 均通过。未改变
    合作者模型结构、objective、MTR loss 权重或 checkpoint schema。
-5. **Core 收口——下一关键路径。** public-data/secret/license/full-history audit 已建立；46-file
+5. **Core 收口——完成。** public-data/secret/license/full-history audit 已完成；46-file
    `DataPrepare/` ledger、唯一 strain-text producer 迁移和 active-source 清理已完成，真实 ATCC/text-only
    tensor parity 通过；标准 README、SPDX MIT metadata、NOTICE 和 asset-aware clean-clone tests 已关闭。
-   最小 Core environment 也已替换机器导出。继续完成 DBAASP 再分发决策与 fresh inference，随后将
-   当前 Synergy 同一 repository 重命名为 `ApexOracle-Core` 并加入最后一个固定 gitlink。
-6. **Super-repo 骨架——已完成；完整 release 待 Core 闭合。** 现有 public
+   最小 Core environment 已替换机器导出；DBAASP 再分发边界已记录，fresh inference 通过，原 Synergy
+   同一 repository 已重命名并公开为 `ApexOracle-Core`，`v0.1.0` 固定 `8c1def5`。
+6. **Super-repo 与完整 release——完成。** 现有 public
    `DragonDescentZerotsu/ApexOracle` 已建立 legacy 恢复点并原地转换，DLM-Pretraining/MDLM/Generation/Evo-2
-   使用固定 SHA；Core 验收后加入。五模块齐全后再完成两个可执行 quickstarts、
-   full-source archive、fresh-clone QA、release tag 与 canonical release。不得新建第二个 super-repo，
-   也不得为 pending 模块加入浮动 branch submodule。
+   与 Core 均使用固定 SHA。两个可执行 quickstarts、full-source archive、fresh-clone QA、release tag 与
+   canonical release 已完成。不得新建第二个 super-repo，也不得把任何 module 改成浮动 branch submodule。

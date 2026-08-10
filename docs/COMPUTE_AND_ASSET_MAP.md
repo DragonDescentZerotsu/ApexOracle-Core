@@ -1,6 +1,6 @@
 # 计算节点、代码版本与资源位置
 
-> 稳定计算状态最后核验：2026-08-02；统一发布架构于 2026-08-09 更新。Fig. 1b 与
+> 稳定发布状态最后核验：2026-08-10；统一发布架构于 2026-08-10 收口。Fig. 1b 与
 > ReMDM remasking schedule reviewer 补实验均已完成；
 > node002 原 GPU guard 已恢复。
 > `python scripts/reproduce/monitor_fig1b_revision.py` 仅用于只读核验历史产物与节点状态；
@@ -13,7 +13,7 @@
 | 本机 `sn4622119311` | `/data2/tianang/projects/Synergy` | canonical 开发、测试、文档和本机 H100 运行 | `.git` 是只读保护挂载，使用 `git --git-dir=.git-state --work-tree=.` |
 | node001 / node002 | `/data1/tianang/Projects/Synergy_release` | 共享 release runner 和 reviewer 补实验 | 两台机器看到同一个 `bright91:/data1` 工作树，只能在其中一台执行一次 Git 同步 |
 | node002 历史目录 | `/data1/tianang/Projects/Synergy` | 2025 代码、checkpoint、日志和数据来源 | 只读审计；不得为了同步 release 代码而修改或覆盖 |
-| GitHub | `DragonDescentZerotsu/Synergy` 的 `main` | canonical 远程版本 | 每个大阶段完成后 push；节点工作树只允许 fast-forward 到 `origin/main` |
+| GitHub | public `DragonDescentZerotsu/ApexOracle-Core` 的 `main` | canonical 远程版本；`v0.1.0` 固定 `8c1def5` | 每个大阶段完成后 push；节点工作树只允许 fast-forward 到 `origin/main` |
 
 node001 与 node002 上 `Synergy_release` 的 inode/文件内容已经交叉核验一致。因为它们共享 NFS，
 不要在两台机器上同时运行 `git pull`。节点 release 工作树中的 `DataPrepare/Data` 是有意保留的
@@ -24,7 +24,7 @@ node001 与 node002 上 `Synergy_release` 的 inode/文件内容已经交叉核�
   -> /data1/tianang/Projects/Synergy/DataPrepare/Data
 ```
 
-### 统一公开 super-repo 固定计划（2026-08-10；DLM-Pretraining/MDLM/Generation/Evo-2 modules 已发布）
+### 统一公开 super-repo 固定计划（2026-08-10；五个 modules 与 `v0.2.0` 均已发布）
 
 **作者已确认的决定：** 直接把现有 public `DragonDescentZerotsu/ApexOracle` 原地转换为轻量 super-repo，使用
 固定 commit 的 Git submodule 组合 Core、DLM-Pretraining、downstream MDLM、Evo-2 和 Generation；
@@ -34,14 +34,14 @@ node001 与 node002 上 `Synergy_release` 的 inode/文件内容已经交叉核�
 
 | 模块 | 当前本机位置 / remote | 目标 remote 与角色 | 当前边界 |
 | --- | --- | --- | --- |
-| Core | `/data2/tianang/projects/Synergy`；private `DragonDescentZerotsu/Synergy` | 同一 repository 重命名为 `DragonDescentZerotsu/ApexOracle-Core`；`modules/core` | 不复制新 repo；先收口未提交 reviewer 工作并审计完整 history，再重命名和决定 public visibility |
+| Core | `/data2/tianang/projects/Synergy`；public `DragonDescentZerotsu/ApexOracle-Core` | 同一 repository 已原地重命名；`modules/core` | release `v0.1.0` 固定 `8c1def5`；未完成 reviewer 工作未混入 release |
 | DLM Pretraining | `/data2/tianang/projects/ApexOracle-DLM-Pretraining`；source root `fda167c` + public `main` `362ffcc` | `DragonDescentZerotsu/ApexOracle-DLM-Pretraining`；`modules/dlm_pretrain` | tag `v0.1.0`；recovery tag、56-file manifest、5 source contracts、remote CI/fresh clone 与 H100 joint-objective smoke 已完成；只做 portability/config/docs 修补 |
 | Downstream MDLM | `/data2/tianang/projects/mdlm`；上游 `origin` + public `custom/ApexOracle-MDLM` | `DragonDescentZerotsu/ApexOracle-MDLM`；`modules/mdlm` | public 默认 `master` 固定候选 `c9d17c7`；legacy tag 保留；118 tests、remote fresh-clone 与 HF revision `77694f08...2eda` 验收通过，禁止误推上游 |
 | Evo-2 | `/data2/tianang/projects/evo2`；官方上游 `53f1959` + public candidate `2184211` | `DragonDescentZerotsu/ApexOracle-Evo2`；`modules/evo2` | tag `v0.6.0-apexoracle.1`；通用 extraction CLI、9 CPU tests、567-FASTA plan-only、clean build、remote fresh clone、Python 3.11/3.12 CI 与真实 40B GPU smoke 已完成；禁止推送上游 |
-| Generation | `/data2/tianang/projects/discrete-diffusion-guidance`；上游 `origin` + public `custom/ApexOracle-Generation` | `DragonDescentZerotsu/ApexOracle-Generation`；`modules/generation` | public 默认 `main` 固定候选 `de6c1e5`；recovery tag、14 tests、paper GPU smoke 与 remote fresh-clone dry-run 通过；历史 outputs 保持 ignored |
-| Super-repo | `/data2/tianang/projects/ApexOracle_github`；public `DragonDescentZerotsu/ApexOracle` | 同一个 canonical super-repo | public `main` `34cb2831...0aa42`；DLM-Pretraining/MDLM/Generation/Evo2 gitlinks 已固定，仅 Core pending；legacy branch/tag 指向 `2f29dee...b87f` |
+| Generation | `/data2/tianang/projects/discrete-diffusion-guidance`；上游 `origin` + public `custom/ApexOracle-Generation` | `DragonDescentZerotsu/ApexOracle-Generation`；`modules/generation` | `v0.2.0` 固定 implementation `80d9a2c`；recovery tag、15 tests、compact HF revision `2fb1aa0`、fresh clone 与 H100 smoke 通过；历史 outputs 保持 ignored |
+| Super-repo | `/data2/tianang/projects/ApexOracle_github`；public `DragonDescentZerotsu/ApexOracle` | 同一个 canonical super-repo | `v0.2.0` 固定五个 gitlinks并发布 36,553,607-byte完整 source archive；legacy branch/tag 指向 `2f29dee...b87f` |
 
-**已验证事实：** 上表来源当前仍位于原位置；现有 ApexOracle 已转换并写入四个已验收 module 的
+**已验证事实：** 上表来源当前仍位于原位置；现有 ApexOracle 已转换并写入五个已验收 module 的
 `.gitmodules`，但没有移动本机 data/weight，也未改变 node001/node002 shared release checkout。默认分支
 recursive fresh clone、根 CI、module lock 和 recovery-ref 审计均通过。DLM-Pretraining、Downstream MDLM、
 Generation 与 Evo-2 均有通过 fresh-clone 验收的 public module commit；DLM-Pretraining 已通过 H100
@@ -50,17 +50,18 @@ joint-objective smoke，Evo-2 已通过真实 40B GPU extraction smoke。Hugging
 `b472f7508aaf0fdab4c935caf221415b48a5f8afd4d104a731c9d72d410c2c44`；第三方 runtime/tokenizer 仍保留
 Apache-2.0 notice。
 
-**Core pre-public audit（2026-08-10）：** 当前 `Synergy` 仍为 private；committed baseline `56c57e5`
-已通过 206 tests、wheel/sdist、remote fresh-clone install/import/CLI、current/history secret pattern 和
-binary/history-size checks。`src/apexoracle/` 为 0 个作者机器绝对路径文件。16,896-row DBAASP-derived
-round-trip table 的官方再分发文字存在冲突，因此仓库保持 private；取得许可或完成带离线 Git bundle 的
-单路径 history rewrite 前，不重命名、不切 public、不加入 Core gitlink。当前 reviewer/Providencia dirty
-worktree 明确排除于该 baseline。完整审计见 `docs/CORE_PUBLIC_RELEASE_AUDIT.md`。
+**Core pre-public audit（2026-08-10；历史 gate 已关闭）：** committed baseline `56c57e5` 通过 206 tests、
+wheel/sdist、remote fresh-clone install/import/CLI、current/history secret pattern 和 binary/history-size
+checks；`src/apexoracle/` 为 0 个作者机器绝对路径文件。作者决定保留 16,896-row DBAASP-derived
+round-trip table 并以 `DATA_NOTICE.md` 明确第三方数据不被 MIT 重新授权；该决定不等同于取得 DBAASP
+明确再分发许可。随后同一 repository 已重命名并公开，Core `v0.1.0` 和第五个 gitlink 均已发布。
+当前 reviewer/Providencia dirty worktree 继续排除于该 release。完整审计见 `docs/CORE_PUBLIC_RELEASE_AUDIT.md`。
 未来任一实际迁移都必须更新本表的 commit、owner、目标路径和验证命令。
 
-Super-repo 发布时必须同时支持 `git clone --recurse-submodules` 和
-`git submodule update --init --recursive`，并在 GitHub Release 生成展开全部固定 submodules 的
-`ApexOracle-v<version>-source-full.tar.gz`；GitHub 自动 source ZIP 不得作为完整源码包宣称。
+Super-repo 必须继续支持 `git clone --recurse-submodules` 和
+`git submodule update --init --recursive`。`v0.2.0` 已在 GitHub Release 发布展开全部固定 submodules 的
+`ApexOracle-source-v0.2.0.tar.gz`、JSON provenance 和 SHA-256 sidecar；GitHub 自动 source ZIP 不得作为
+完整源码包宣称。
 
 版本核验命令：
 

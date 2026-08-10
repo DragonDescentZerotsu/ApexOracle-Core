@@ -926,7 +926,7 @@ optimizer-step 已在宿主 H100 单独通过，两份 guidance checkpoint 的 i
   `main` candidate `2184211` 与 tag `v0.6.0-apexoracle.1` 已加入通用 extraction CLI；9 CPU tests、
   567-FASTA plan-only、clean build、remote fresh clone、Python 3.11/3.12 CI 和真实 40B GPU smoke 通过，
   并已作为固定 gitlink 进入 super-repo。
-- [ ] 将当前 Synergy 原 repository 整理并重命名为 `DragonDescentZerotsu/ApexOracle-Core`，
+- [x] 将当前 Synergy 原 repository 整理并重命名为 `DragonDescentZerotsu/ApexOracle-Core`，
   保留现有 history/内部结构并完成公开边界审计；不得复制第二个 Core repo。
 - [x] 作者已决定直接把现有 public `DragonDescentZerotsu/ApexOracle` 原地转换为 super-repo，以五个
   固定 commit 的 Git submodule 组合 Core/DLM-Pretraining/MDLM/Evo2/Generation；不再新建 super-repo，
@@ -936,16 +936,16 @@ optimizer-step 已在宿主 H100 单独通过，两份 guidance checkpoint 的 i
 
 - [x] 固定目标 repository topology、module 职责、submodule 策略、canonical URL 切换方式和
   PepLink 独立依赖边界。
-- [ ] R0：冻结四个来源 checkout 加 public legacy `DLM_pretrain/` 的 source inventory、SHA-256、
-  科学角色和非破坏恢复点。Downstream MDLM、Evo-2、Generation 与 DLM-Pretraining 已完成，Core 待执行。
-- [ ] R1：完成 Core/DLM-Pretraining/MDLM/Evo2/Generation 五个可独立安装和 smoke-tested 的
-  clean commits。DLM-Pretraining、MDLM、Generation 与 Evo2 四项已完成；Core 待执行。
-- [ ] R2：现有 ApexOracle 已原地转换，恢复 branch/tag、`.gitmodules`、module/asset manifests、bootstrap、
-  CI 与 DLM-Pretraining/MDLM/Generation/Evo2 固定 gitlinks 已完成；Core gitlink 待 clean candidate。
-- [ ] R3：完成新 molecule × known strain 的 MIC prediction end-to-end quickstart。
-- [ ] R4：完成 target strain guided generation 的 smoke/paper-preset end-to-end quickstart。
-- [ ] R5：完成 model-ready data、strain texts、许可、完整 source archive 和 fresh-clone QA。
-- [ ] R6：在同仓保留 legacy tag/branch、原地转换默认分支、发布 tag/Release 并同步论文/HF/Zenodo 链接。
+- [x] R0：冻结五个来源模块的 source inventory、SHA-256、科学角色和非破坏恢复点。
+- [x] R1：完成 Core/DLM-Pretraining/MDLM/Evo2/Generation 五个可独立安装或按模块环境运行并通过
+  release smoke 的 clean commits。
+- [x] R2：现有 ApexOracle 原地转换完成；恢复 branch/tag、`.gitmodules`、module/asset manifests、bootstrap、
+  root checks 与五个固定 gitlinks 已建立。
+- [x] R3：完成新 molecule × known strain 的 MIC prediction end-to-end quickstart。
+- [x] R4：完成 target strain guided generation 的 compact BAA-3170 256-step smoke/paper-preset quickstart。
+- [x] R5：完成公开 quickstart data/strain conditions、许可边界、完整 source archive 和 fresh-clone QA；
+  完整 paper condition bank 仍是可选扩展，不是本轮发布 gate。
+- [x] R6：在同仓保留 legacy tag/branch、原地转换默认分支并发布 `v0.1.0`/`v0.2.0` 与固定 HF revisions。
 
 阶段验收、禁止项和 reviewer-facing 命令固定记录于
 `docs/UNIFIED_APEXORACLE_RELEASE_PLAN.md`；执行时必须逐项更新这里的状态。
