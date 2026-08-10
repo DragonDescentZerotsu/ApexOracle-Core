@@ -93,6 +93,11 @@ def test_real_paper_sources_reconstruct_frozen_tables() -> None:
             "nature_1_positive~Staphylococcus_aureus_RN4220.csv",
         ),
     )
+    raw_required = [raw / filename for _, filename in builders]
+    required = raw_required + [processed / path.name for path in raw_required]
+    required.append(processed / "small_molecule_Evo_binary_data.csv")
+    if not all(path.is_file() for path in required):
+        pytest.skip("ignored paper source tables are not installed")
     rebuilt = []
     for builder, filename in builders:
         actual = builder(pd.read_csv(raw / filename))

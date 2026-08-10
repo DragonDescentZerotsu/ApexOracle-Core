@@ -8,6 +8,8 @@ import statistics
 from collections import Counter
 from pathlib import Path
 
+import pytest
+
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = (
@@ -218,6 +220,8 @@ def test_narrow_structure_plot_element_policy_is_explicit() -> None:
 
 
 def test_mic_error_bar_uses_three_seed_pooled_median_sd() -> None:
+    if not EVALUATED_ATTEMPTS.is_file():
+        pytest.skip("ignored evaluated-attempt rows are not installed")
     module = load_structure_plot_module()
     rows = [
         {"condition": "current", "seed": str(seed)}
