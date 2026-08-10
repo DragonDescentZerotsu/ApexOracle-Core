@@ -93,7 +93,8 @@
   固定 tokenizer revision，并将 README producer profile 对齐到 1024-hidden `model=medium`。5 source
   contracts、remote main/tag CI、fresh virtualenv clone、Hydra compose 与真实 H100 joint-objective
   train/save/strict-load smoke 均通过。现有 ApexOracle super-repo public `main`
-  `34cb2831964b21b0720247d90c2289782ed0aa42` 已锁定该 gitlink；当前仅 Core 保持 pending。
+  `34cb2831964b21b0720247d90c2289782ed0aa42` 已锁定该 gitlink；该记录建立时仅 Core 尚 pending，现已由
+  后续 Core release 关闭。
 - **2026-08-10 Core 公开发布审计启动：** 当前 private `DragonDescentZerotsu/Synergy` committed
   baseline 为 `56c57e51b0bc594e23609f7996de55b55946f716`；tree/archive inventory、206 tests、wheel/sdist、
   remote fresh-clone install/import/CLI 与 current/history credential pattern scan 已通过。已验证 canonical
@@ -115,6 +116,12 @@
   `docs/MIC_QUICKSTART.md`；空 cache 下载、两个 SHA-256、strict CPU load 和真实 example 输出
   `11.79631996 µM` 均已通过。该 asset 是 strain group 0 / member 0 的 runnable example，不得表述为
   论文 7-member ensemble metric 或 prospective activity evidence。
+- **2026-08-10 Core 与 super-repo 正式发布：** 原 `DragonDescentZerotsu/Synergy` 已原地重命名并公开为
+  `DragonDescentZerotsu/ApexOracle-Core`，Core release `v0.1.0` 指向 `8c1def518ac148a878c14f4a39876db59649d43c`；
+  没有建立第二份 Core repository。现有 `DragonDescentZerotsu/ApexOracle` super-repo `main`
+  `c2aecbb` 已加入第五个 Core gitlink，五个 module locks、完整 recursive fresh clone、root tests 与 fresh
+  clone Core MIC inference 均通过；super-repo release `v0.1.0` 已公开。reviewer/Providencia 未完成改动仍只
+  留在本地 dirty worktree，没有混入上述 commits。
 - **2026-08-10 `DataPrepare/` complete ledger：** 当前 46 个 tracked legacy files 已逐文件登记到
   `docs/DATAPREPARE_LEGACY_LEDGER.md`，完整 source hashes 位于
   `reproducibility/dataprepare_legacy_source_2026-08-10.sha256` 并已 46/46 校验。已由 AST/import 和

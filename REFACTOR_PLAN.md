@@ -1,17 +1,17 @@
 # ApexOracle / Synergy 代码库重构计划
 
 > 建立日期：2026-07-17  
-> 状态：canonical 论文/审稿路径已完成；现有 ApexOracle 已原地转换为 super-repo，DLM-Pretraining、MDLM、Generation 与 Evo-2 modules 已锁定；Core 公开发布审计进行中；
-> legacy `DataPrepare/` 唯一功能迁移和 active source 删除已完成，release gates 进行中
+> 状态：canonical 论文/审稿路径已完成；现有 ApexOracle 已原地转换为 super-repo，五个 modules 均已锁定并发布；
+> Core legacy 清理、公开资产、release tag 与 recursive fresh-clone gates 已完成
 > 适用范围：当前 `Synergy` 仓库，以及后续需要整合的 Evo-2 genome embedding、DLM/MDLM 和 guided generation 代码。
 
 当前发布架构焦点（2026-08-10）：作者已冻结“复用现有 ApexOracle 作为 super-repo + 五个独立
 submodule”的方案，其中
 合作者的 DLM+MTR 预训练与本地 downstream MDLM 分为两个模块。下一步
-按 `docs/UNIFIED_APEXORACLE_RELEASE_PLAN.md` 第 8 节执行：DLM-Pretraining、MDLM、Generation 与 Evo-2
-已关闭并作为固定 gitlink 进入现有 ApexOracle；下一步只收口 Core，再补齐最后一个 pending gitlink 和
-端到端 quickstarts。四个 clean modules 和 Hugging Face 模型已发布并验收；Core 尚未完成 clean candidate，
-因此不创建对应浮动 submodule、不移动数据或权重。
+按 `docs/UNIFIED_APEXORACLE_RELEASE_PLAN.md` 第 8 节执行：DLM-Pretraining、MDLM、Generation、Evo-2 与
+Core 均已作为固定 gitlink 进入现有 ApexOracle。原 Synergy 已原地重命名为 public ApexOracle-Core，
+Core/super-repo `v0.1.0` 与单成员 MIC quickstart 已发布；没有创建浮动 submodule、第二个 Core repo，
+也没有移动本地数据或权重。
 
 Core public-release audit 已于 2026-08-10 以 committed `main` `56c57e5` 建立基线：206 tests、
 wheel/sdist、remote fresh-clone install/import/CLI、current/history secret pattern 与 binary/history size
@@ -32,8 +32,9 @@ H100 parity 分别为 tolerance-equivalent 与逐元素完全相等。现在 46 
 Core packaging 收口已完成标准 `README.md`、SPDX `MIT` metadata、根 `NOTICE`、asset-aware
 clean-clone tests 和最小 `apexoracle-core` environment；原 `Readme.md`、license-table warning 与 563 行
 机器导出环境已由 recovery hash/tag 接管。公开 single-member inference asset、embedding example、thin
-CLI、immutable Hugging Face revision 和 empty-cache CPU inference 已闭合；下一项是最终 GitHub
-rename/public、release tag 与 super-repo Core gitlink。
+CLI、immutable Hugging Face revision 和 empty-cache CPU inference 已闭合；GitHub rename/public、
+Core/super-repo release tag、第五个 gitlink 与 recursive fresh-clone 验收也已完成。后续发布工作转为
+compact guided-generation assets/quickstart 与完整 source archive，不再属于 Core 清理阻塞项。
 
 当前执行焦点（2026-07-28）：Fig. 1b 完整 10-member/fold fine-tune 与 baseline、最终统计、
 图文修订，以及 PepLink 0.1.2 round-trip/ChatGPT-o1/OPSIN 审计和 Supplementary Data 均已完成。

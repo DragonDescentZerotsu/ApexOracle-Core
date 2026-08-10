@@ -300,8 +300,10 @@ token-level complete 1 条但结构过滤后 0 row，只作为 runtime contract�
 
 ### 已由 Git/文件系统验证的事实
 
-- 当前 `Synergy` 为 private remote，已包含主要 Core 重构和 reviewer-facing code，但工作树仍有
-  未提交 reviewer 工作。
+- 原 `Synergy` remote 已原地重命名并公开为 `ApexOracle-Core`；`v0.1.0` 固定 clean release
+  `8c1def518ac148a878c14f4a39876db59649d43c`。本地仍有的未提交 reviewer 工作没有进入 release。
+- 现有 `ApexOracle` super-repo 已在 public `main` `c2aecbb` 加入第五个 Core gitlink；五个 module locks、
+  完整 recursive fresh clone、root tests 与 Core MIC inference 均通过，super-repo `v0.1.0` 已公开。
 - `ApexOracle-MDLM` public remote 已存在；source-only tag `legacy-code-snapshot-2026-08-09` 已 push，clean
   release 已进入默认 `master`，当前固定候选为 `c9d17c7f6f091234aaaebf5f08dbe23542f980c1`。Checkpoint/embedding I/O、shared
   guidance heads、candidate MIC/synergy scoring、interpretability、paper Fig. 3a、通用 peptide/small-molecule

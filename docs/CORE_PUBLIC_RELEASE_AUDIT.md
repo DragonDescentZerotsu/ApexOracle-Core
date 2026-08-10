@@ -2,7 +2,7 @@
 
 > 建立日期：2026-08-10
 > 审计基线：`Synergy/main` `56c57e51b0bc594e23609f7996de55b55946f716`
-> 当前结论：**代码基线可构建且测试通过；DBAASP 表由作者决定随仓库发布并已加 data notice，不再阻塞 public。**
+> 当前结论：**发布完成；原 Synergy 已原地成为 public ApexOracle-Core，`v0.1.0` 指向 `8c1def5`。**
 
 本文只记录当前 `Synergy` 原仓库转换为 `ApexOracle-Core` 的公开发布边界。最终仍复用同一个
 GitHub repository 和完整科学代码 history，不创建第二份 Core repository。任何删除都必须能从
@@ -12,8 +12,11 @@ GitHub repository 和完整科学代码 history，不创建第二份 Core reposi
 
 ### 1.1 Repository 与 history
 
-- GitHub repository `DragonDescentZerotsu/Synergy` 当前为 **private**，默认分支为 `main`，根许可为
-  MIT。
+- GitHub repository `DragonDescentZerotsu/Synergy` 已原地重命名为 public
+  `DragonDescentZerotsu/ApexOracle-Core`，默认分支为 `main`，根许可为 MIT；没有建立第二份 Core repo。
+- Annotated release tag 和 GitHub Release `v0.1.0` 均指向
+  `8c1def518ac148a878c14f4a39876db59649d43c`。现有 ApexOracle super-repo 已在 `c2aecbb` 加入固定 Core
+  gitlink，并通过五模块 recursive fresh-clone、module-lock/root tests 与 MIC inference。
 - 当前 reachable history 为 132 commits；远端有 6 个 branches 和 2 个 annotated tags。
 - 原始 source recovery point 已由 annotated tag `legacy-code-snapshot-2026-07-17` 和 remote branch
   `archive/legacy-code-snapshot-2026-07-17` 双重保存。
