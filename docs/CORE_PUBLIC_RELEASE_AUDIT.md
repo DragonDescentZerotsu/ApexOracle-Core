@@ -78,8 +78,9 @@ history rewrite；不得泛化为删除全部实验 CSV。
 
 ### P1：active tree 收口
 
-- 建立完整 `DataPrepare/` ledger；已迁入 `src/apexoracle/`/`scripts/prepare_data/` 的副本和无消费者
-  debug/notebook/机器 launcher 从 active tree 删除，只由 recovery tag 恢复。
+- 完整 `DataPrepare/` ledger 已建立于 `docs/DATAPREPARE_LEGACY_LEDGER.md`，46/46 source SHA-256
+  已验证。已迁入 `src/apexoracle/`/`scripts/prepare_data/` 的副本和无消费者 debug/notebook/机器 launcher
+  从 active tree 删除，只由 recovery tag 恢复。
 - 对仍有独立价值但尚未迁移的 producer，只迁为参数化、只读、可测试的通用入口；不得为某个历史
   case 保留硬编码机器路径。
 - 将 563 行机器环境导出替换为可维护的 Core package/test profiles。

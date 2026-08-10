@@ -20,6 +20,12 @@ wheel/sdist、remote fresh-clone install/import/CLI、current/history secret pat
 `docs/CORE_PUBLIC_RELEASE_AUDIT.md`，机器可读基线见
 `reproducibility/core_pre_public_baseline_2026-08-10.json`。
 
+`DataPrepare/` complete ledger 已关闭：46 个 tracked files 的 role、destination/disposition 与完整 SHA-256
+分别冻结到 `docs/DATAPREPARE_LEGACY_LEDGER.md` 和
+`reproducibility/dataprepare_legacy_source_2026-08-10.sha256`。唯一 `migrate-first` family 是两份
+Med-LLaMA3 strain-text embedding producers；其余 44 个文件可在 data-license 边界记录和同族依赖 gate
+满足后从 active tree 删除，原始内容由 recovery tags 恢复。
+
 当前执行焦点（2026-07-28）：Fig. 1b 完整 10-member/fold fine-tune 与 baseline、最终统计、
 图文修订，以及 PepLink 0.1.2 round-trip/ChatGPT-o1/OPSIN 审计和 Supplementary Data 均已完成。
 ReMDM remasking schedule 的 36-task reviewer 补实验和 3,600-attempt clean-model evaluation

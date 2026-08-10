@@ -106,6 +106,15 @@
   `docs/CORE_PUBLIC_RELEASE_AUDIT.md`；pre-public baseline manifest 位于
   `reproducibility/core_pre_public_baseline_2026-08-10.json`。当前 reviewer/Providencia dirty worktree 不属于
   该 baseline，禁止使用 `git add -A` 混入 Core release。
+- **2026-08-10 `DataPrepare/` complete ledger：** 当前 46 个 tracked legacy files 已逐文件登记到
+  `docs/DATAPREPARE_LEGACY_LEDGER.md`，完整 source hashes 位于
+  `reproducibility/dataprepare_legacy_source_2026-08-10.sha256` 并已 46/46 校验。已由 AST/import 和
+  repository reference scan 验证：唯一需先迁移的公共功能族是两份 Med-LLaMA3 strain-text embedding
+  producers；其余文件是已迁移副本、外模块 pretraining utilities、一次性探索/debug、受 data-license
+  边界约束的旧 fetch/producer 或空文件。text producer 迁移必须固定 model revision、参数化路径/device/
+  layer、保留 `This strain` replacement，并输出 source/model/output provenance manifest；完成 synthetic
+  contracts 与真实 historical text GPU parity 后，46/46 legacy files 可作为一批或按依赖族从 active tree
+  删除，原始内容继续由 recovery tags 恢复。
 - 机器职责、环境、共享文件系统、数据/权重/外部仓库位置和当前 reviewer 任务记录在
   `docs/COMPUTE_AND_ASSET_MAP.md`。任何机器或资产迁移都必须同步更新该文件；node001 与
   node002 共享同一个 `/data1/tianang/Projects/Synergy_release`，不得把它们当作两个独立 checkout
