@@ -474,6 +474,26 @@ proportion。
   smoke 输出位于被忽略的 `smoke/evaluator_local_validation/`。首次 smoke 暴露并修复了 checkpoint
   Hydra config 的 eager resolver 问题；该修正只影响后处理配置读取，不影响任何 generation task。
 
+### MDLM clean scoring integration（2026-08-10）
+
+`evaluate_remasking_schedule_reviewer.py` 的 clean MIC evaluation 已从动态导入 MDLM 根目录
+`judge_generated_mols_MIC.py` bridge，切换为直接调用 `apexoracle_mdlm.scoring` 的
+`load_condition_embedding_banks` 与 `load_candidate_mic_regressor`。CLI 仍显式接收 `--mdlm-root`；该路径只用于
+定位 sibling submodule 的 `src/`、upstream runtime/config 和本地 ignored assets，不再把 root legacy filename
+当作 API。
+
+正式 clean MIC checkpoint、最终 no-copy Generation sampler 的两个真实 token，以及 BAA-3170/BAA-3197 两个
+conditions 下，旧 bridge 与 direct API 共四个 logits 均 `torch.equal`，最大绝对差 `0.0`。精确输入/output、
+checkpoint hash 和解释边界记录在 `mdlm_scoring_bridge_parity.json`。Focused source contract：
+
+```bash
+PYTHONPATH=src python -m pytest -q \
+  tests/test_remasking_schedule_reviewer.py -k canonical_mdlm_scoring_api
+```
+
+完整 reviewer test 文件仍需要本地 ignored `analysis/evaluated_attempts.csv` 才能运行 seed-level MIC error-bar
+测试；fresh worktree 缺少该资产时的单个 `FileNotFoundError` 不属于本次 bridge 切换回归。
+
 Canonical 入口：
 
 ```bash

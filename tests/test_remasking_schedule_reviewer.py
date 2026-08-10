@@ -44,6 +44,9 @@ EVALUATED_ATTEMPTS = (
     / "analysis"
     / "evaluated_attempts.csv"
 )
+EVALUATOR_SCRIPT = (
+    ROOT / "scripts" / "reproduce" / "evaluate_remasking_schedule_reviewer.py"
+)
 
 
 def load_manifest() -> dict:
@@ -224,3 +227,12 @@ def test_mic_error_bar_uses_three_seed_pooled_median_sd() -> None:
     assert [row["valid_predicted_mic_n"] for row in rows] == [133, 131, 131]
     medians = [row["valid_predicted_mic_median_uM"] for row in rows]
     assert abs(statistics.stdev(medians) - 6.337521397261419) < 1e-12
+
+
+def test_mic_evaluator_uses_canonical_mdlm_scoring_api() -> None:
+    source = EVALUATOR_SCRIPT.read_text(encoding="utf-8")
+    assert 'import_module("judge_generated_mols_MIC")' not in source
+    assert "load_candidate_mic_regressor" in source
+    assert "load_condition_embedding_banks" in source
+    assert 'mdlm_source_root = mdlm_root / "src"' in source
+    assert "runtime_root=mdlm_root" in source

@@ -27,6 +27,7 @@ from pathlib import Path
 
 import numpy as np
 import torch
+from hydra import compose, initialize_config_dir
 from omegaconf import OmegaConf
 from torch import nn
 from torch.nn import functional as F
@@ -277,16 +278,52 @@ def load_clean_mic_model(
     checkpoint_path: Path,
     tokenizer,
 ):
-    if str(mdlm_root) not in sys.path:
-        sys.path.insert(0, str(mdlm_root))
-    module = importlib.import_module("judge_generated_mols_MIC")
-    module.current_directory = synergy_root
-    module.tokenizer = tokenizer
-    module.device = torch.device("cuda")
-    model = module.MIC_regressor(
-        module.config, str(checkpoint_path), module.device
+    mdlm_source_root = mdlm_root / "src"
+    if not mdlm_source_root.is_dir():
+        raise NotADirectoryError(
+            f"ApexOracle-MDLM package source is missing: {mdlm_source_root}"
+        )
+    if str(mdlm_source_root) not in sys.path:
+        sys.path.insert(0, str(mdlm_source_root))
+    from apexoracle_mdlm.scoring import (
+        load_candidate_mic_regressor,
+        load_condition_embedding_banks,
     )
-    return model.cuda().eval()
+
+    with initialize_config_dir(
+        config_dir=str(mdlm_root / "configs"), version_base=None
+    ):
+        mdlm_config = compose(config_name="config")
+    condition_banks = load_condition_embedding_banks(
+        genome_directory=(
+            synergy_root / "DataPrepare" / "Data" / "Genome_embs"
+        ),
+        atcc_text_directory=(
+            synergy_root
+            / "DataPrepare"
+            / "Data"
+            / "Text_Description"
+            / "ATCC"
+            / "embeddings"
+        ),
+        text_only_directory=(
+            synergy_root
+            / "DataPrepare"
+            / "Data"
+            / "Text_Description"
+            / "wo_ATCC"
+            / "embeddings"
+        ),
+    )
+    model = load_candidate_mic_regressor(
+        mdlm_config,
+        vocab_size=len(tokenizer.get_vocab()),
+        condition_embeddings=condition_banks,
+        checkpoint_path=checkpoint_path,
+        device=torch.device("cuda"),
+        runtime_root=mdlm_root,
+    )
+    return model.eval()
 
 
 @torch.inference_mode()
