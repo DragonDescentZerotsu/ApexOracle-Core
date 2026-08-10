@@ -31,8 +31,9 @@ H100 parity 分别为 tolerance-equivalent 与逐元素完全相等。现在 46 
 
 Core packaging 收口已完成标准 `README.md`、SPDX `MIT` metadata、根 `NOTICE`、asset-aware
 clean-clone tests 和最小 `apexoracle-core` environment；原 `Readme.md`、license-table warning 与 563 行
-机器导出环境已由 recovery hash/tag 接管。下一项固定工作是关闭 public inference assets/CLI，随后处理
-公开 inference asset/CLI 和最终发布 gate。
+机器导出环境已由 recovery hash/tag 接管。公开 single-member inference asset、embedding example、thin
+CLI、immutable Hugging Face revision 和 empty-cache CPU inference 已闭合；下一项是最终 GitHub
+rename/public、release tag 与 super-repo Core gitlink。
 
 当前执行焦点（2026-07-28）：Fig. 1b 完整 10-member/fold fine-tune 与 baseline、最终统计、
 图文修订，以及 PepLink 0.1.2 round-trip/ChatGPT-o1/OPSIN 审计和 Supplementary Data 均已完成。

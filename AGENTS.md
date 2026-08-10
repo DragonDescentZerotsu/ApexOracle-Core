@@ -107,6 +107,14 @@
   `docs/CORE_PUBLIC_RELEASE_AUDIT.md`；pre-public baseline manifest 位于
   `reproducibility/core_pre_public_baseline_2026-08-10.json`。当前 reviewer/Providencia dirty worktree 不属于
   该 baseline，禁止使用 `git add -A` 混入 Core release。
+- **2026-08-10 Core public MIC quickstart：** canonical CLI 为 `apexoracle-predict-mic`（实现于
+  `src/apexoracle/prediction/hierarchical_mic.py`）；主要参数为 `--checkpoint`、`--input`、`--device`、
+  `--verify-*-sha256` 和可选 `--output`。checkpoint 与 example 固定到 Hugging Face
+  `Kiria-Nozan/ApexOracle-Core` revision `459026cf4ae4e4e38ce5d2cae16ee3871d0a81df`，manifest 位于
+  `assets/manifests/core_mic_quickstart.json`，输出为 JSON prediction transform 与 µM。验证命令见
+  `docs/MIC_QUICKSTART.md`；空 cache 下载、两个 SHA-256、strict CPU load 和真实 example 输出
+  `11.79631996 µM` 均已通过。该 asset 是 strain group 0 / member 0 的 runnable example，不得表述为
+  论文 7-member ensemble metric 或 prospective activity evidence。
 - **2026-08-10 `DataPrepare/` complete ledger：** 当前 46 个 tracked legacy files 已逐文件登记到
   `docs/DATAPREPARE_LEGACY_LEDGER.md`，完整 source hashes 位于
   `reproducibility/dataprepare_legacy_source_2026-08-10.sha256` 并已 46/46 校验。已由 AST/import 和

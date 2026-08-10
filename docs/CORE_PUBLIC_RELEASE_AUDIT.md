@@ -49,8 +49,9 @@ GitHub repository 和完整科学代码 history，不创建第二份 Core reposi
 - `configs/model_weights.yaml` 仍把多个本机 checkpoint path 作为历史来源记录；公开 quickstart 需要
   使用稳定 URI、revision、size、SHA-256 和 redistribution status，不能依赖这些本机路径。
 - Core 已有严格 hierarchical MIC checkpoint loader 和 inference-only checkpoint contract，但公开
-  MIC inference checkpoint、molecule/strain example assets 与稳定下载 URI 尚未闭合，因此还不能声称
-  fresh end-to-end inference 已完成。
+  MIC inference checkpoint、molecule/strain example assets 与稳定下载 URI 已于 Hugging Face revision
+  `459026cf4ae4e4e38ce5d2cae16ee3871d0a81df` 闭合。2.875 GB checkpoint 与 1.76 MB example 已从空
+  cache 重新下载，SHA-256 一致，并在 CPU 得到冻结输出 `11.79631996 µM`。
 
 ## 2. 发布决定与剩余阻塞项
 
@@ -86,14 +87,14 @@ remote `main` 与 `refactor/mdlm-bridge` 的 history；2026-07-17 recovery tag/b
 - 将 runtime asset lookup 全部改为 manifest + environment override；本机 path 只能保留在明确标注的
   provenance 文档，不能作为公共默认值。
 
-### P1：公开 inference 资产与 quickstart
+### 已关闭：公开 inference 资产与 quickstart
 
-- 为至少一个正式 hierarchical MIC inference checkpoint 决定 redistribution status，生成 inference-only
-  copy，登记 stable URI/revision/size/SHA-256。
-- 为一个 known strain 和一个 example molecule 登记可公开的 molecule、genome/text embedding 输入；
-  如果某项不能再分发，只能提供下载/生成说明，不能把本机 asset 当作 public example。
-- 新增稳定 prediction CLI/API，并在空 cache/fresh clone 中运行一条真实 inference；synthetic tensor
-  smoke 只验证代码 contract，不能替代这一步。
+- 已发布 strain holdout group 0 / ensemble member 0 的 inference-only checkpoint；optimizer 和未使用的
+  classification payload 未上传。它只作为 runnable quickstart，不替代论文 7-member ensemble。
+- `apexoracle-predict-mic` 严格验证 input/checkpoint schema 和可选 SHA-256，同时返回 paper transform 与
+  inverse-transformed µM。known text-only example 为 DBAASP 2136 / *A. acidipropionici* ATCC 4965。
+- machine-readable manifest 位于 `assets/manifests/core_mic_quickstart.json`；公开运行说明位于
+  `docs/MIC_QUICKSTART.md`。empty-cache download、strict load 与 CPU real inference 均已完成。
 
 ## 3. 根据现有证据作出的判断
 
@@ -108,8 +109,6 @@ remote `main` 与 `refactor/mdlm-bridge` 的 history；2026-07-17 recovery tag/b
 
 ## 4. 仍待作者确认的事项
 
-- 哪一个正式 hierarchical MIC checkpoint family 作为首个 public prediction quickstart；这决定需要发布
-  的 checkpoint、strain embeddings 和 molecule embedding profile。
 - reviewer/Providencia 当前 worktree 是先独立提交到 `main`，还是在 Core release candidate 中明确排除。
 
 ## 5. 固定执行顺序与验收门槛

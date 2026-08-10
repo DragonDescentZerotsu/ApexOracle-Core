@@ -64,6 +64,16 @@ apexoracle-run-antibiotic-classification --help
 apexoracle-run-synergy-cv --help
 ```
 
+A public single-member MIC asset is available for a complete download-to-prediction smoke test:
+
+```bash
+python -m pip install -e ".[inference]"
+apexoracle-predict-mic --help
+```
+
+See [`docs/MIC_QUICKSTART.md`](docs/MIC_QUICKSTART.md) for pinned Hugging Face files, SHA-256 verification, and
+the important distinction between this runnable example and the paper's seven-member ensemble.
+
 Repository wrappers and frozen paper configs live under `scripts/reproduce/` and `configs/`. For example:
 
 ```bash

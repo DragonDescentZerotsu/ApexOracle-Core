@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "apexoracle"
 version = "0.1.0"
-description = "Reusable code for the ApexOracle antibiotic prediction benchmarks"
+description = "Core prediction, training, and evaluation code for ApexOracle"
 readme = "README.md"
 requires-python = ">=3.9"
 license = "MIT"
@@ -41,6 +41,7 @@ benchmark = [
   "scipy>=1.9",
   "tqdm>=4.64",
 ]
+inference = ["torch>=2.1"]
 synergy = [
   "torch>=2.1",
   "peft>=0.15",
@@ -75,6 +76,7 @@ apexoracle-run-synergy-cv = "apexoracle.training.synergy_runner:main"
 apexoracle-plot-modality-ablation = "apexoracle.evaluation.modality_ablation:main"
 apexoracle-build-kmer-embeddings = "apexoracle.features.kmer_cli:main"
 apexoracle-embed-strain-texts = "apexoracle.features.strain_text_cli:main"
+apexoracle-predict-mic = "apexoracle.prediction.hierarchical_mic:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
