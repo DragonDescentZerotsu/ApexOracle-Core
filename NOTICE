@@ -12,3 +12,5 @@ src/apexoracle/vendor/peptideclm_tokenizer/LICENSE.
 External datasets, pretrained models, checkpoints, and optional software
 dependencies are not relicensed by the ApexOracle Core MIT License. Their
 licenses and redistribution terms must be reviewed at their respective source.
+The DBAASP-derived peer-review validation table retained in this repository is
+described separately in DATA_NOTICE.md and is not represented as MIT-licensed.

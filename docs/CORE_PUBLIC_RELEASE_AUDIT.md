@@ -2,7 +2,7 @@
 
 > 建立日期：2026-08-10
 > 审计基线：`Synergy/main` `56c57e51b0bc594e23609f7996de55b55946f716`
-> 当前结论：**代码基线可构建且测试通过，但仓库尚不得改为 public。**
+> 当前结论：**代码基线可构建且测试通过；DBAASP 表由作者决定随仓库发布并已加 data notice，不再阻塞 public。**
 
 本文只记录当前 `Synergy` 原仓库转换为 `ApexOracle-Core` 的公开发布边界。最终仍复用同一个
 GitHub repository 和完整科学代码 history，不创建第二份 Core repository。任何删除都必须能从
@@ -52,24 +52,19 @@ GitHub repository 和完整科学代码 history，不创建第二份 Core reposi
   MIC inference checkpoint、molecule/strain example assets 与稳定下载 URI 尚未闭合，因此还不能声称
   fresh end-to-end inference 已完成。
 
-## 2. 发布阻塞项
+## 2. 发布决定与剩余阻塞项
 
-### P0：数据库派生 row-level 文件的再分发边界
+### 已由作者关闭：数据库派生 row-level 文件的再分发边界
 
 `experiments/peplink_validation/peplink_0.1.2/roundtrip_records.csv` 含 16,896 条 record-level
 结果和 DBAASP identifiers。它由 commit `76ab6a1d821715519ae8245f80d7265cde9379c9` 加入，当前只存在于
 remote `main` 与 `refactor/mdlm-bridge` 的 history；2026-07-17 recovery tag/branch 不含该文件。
 
 2026-08-10 核验的 DBAASP 官方条款同时出现“public domain / freely distributed”与 visitor
-“Non-Distribution of Data”要求，文字存在直接冲突。仓库公开前必须二选一：
-
-1. 获得 DBAASP 对该派生 row-level audit table 的明确再分发许可，并在 data notice 中引用；或
-2. 从 active tree 和所有将公开的 reachable refs/history 中移除该 16,896-row table，只保留 compact
-   aggregate、生成脚本、输入 manifest/hash 和 reviewer Supplementary Data 的必要最小表。
-
-在作者确认采用哪一种之前，repository 必须保持 private。仅在 current tree 删除文件不足以解决问题，
-因为 public Git history 仍可取得旧 blob。若采用方案 2，必须先建立离线 Git bundle，再做精确单路径
-history rewrite；不得泛化为删除全部实验 CSV。
+“Non-Distribution of Data”要求，文字存在直接冲突。**作者同日明确决定：** 为避免 reviewer 无法取得
+逐行复现证据，保留并公开现有 16,896-row derived audit table，不执行 history rewrite，也不等待额外
+书面许可。根 `DATA_NOTICE.md` 已记录来源、用途、官方条款入口、该作者决定及剩余风险，并明确 MIT
+不对底层 DBAASP records 重新授权。该决定关闭工程发布阻塞，但不应表述为已获得 DBAASP 明确许可。
 
 ### P0：未完成 reviewer 工作不得混入 Core baseline
 
@@ -113,7 +108,6 @@ history rewrite；不得泛化为删除全部实验 CSV。
 
 ## 4. 仍待作者确认的事项
 
-- DBAASP 16,896-row round-trip audit：取得明确许可，或执行带离线 bundle 的单路径 history rewrite。
 - 哪一个正式 hierarchical MIC checkpoint family 作为首个 public prediction quickstart；这决定需要发布
   的 checkpoint、strain embeddings 和 molecule embedding profile。
 - reviewer/Providencia 当前 worktree 是先独立提交到 `main`，还是在 Core release candidate 中明确排除。
@@ -123,9 +117,9 @@ history rewrite；不得泛化为删除全部实验 CSV。
 1. 冻结当前 committed Core baseline，建立 source manifest 和 annotated pre-public cleanup tag。
 2. `DataPrepare/` 逐文件 ledger、唯一功能迁移和 active-source 删除已完成；执行全仓回归。
 3. 完成 README/environment/pyproject/NOTICE、绝对路径和 asset-manifest 清理。
-4. 关闭 DBAASP 再分发决策；如需 rewrite，先生成并校验离线 Git bundle，再只改命中的路径和 refs。
+4. DBAASP 再分发决定已由作者关闭：保留表、发布 `DATA_NOTICE.md`，不 rewrite history。
 5. 完成 clean wheel/sdist、全仓 tests、fresh-clone install/import/CLI 和真实 inference smoke。
-6. 保持 repository private，直到以上门槛全部通过；随后才把同一 repository 重命名为
+6. 保持 repository private，直到 inference/clean-clone 门槛通过；随后把同一 repository 重命名为
    `DragonDescentZerotsu/ApexOracle-Core`、切换 public，并把固定 Core commit 加入现有 ApexOracle
    super-repo。
 

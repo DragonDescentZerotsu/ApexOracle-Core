@@ -15,8 +15,9 @@ submodule”的方案，其中
 
 Core public-release audit 已于 2026-08-10 以 committed `main` `56c57e5` 建立基线：206 tests、
 wheel/sdist、remote fresh-clone install/import/CLI、current/history secret pattern 与 binary/history size
-检查通过。当前 P0 hold 是 DBAASP 16,896-row round-trip audit table 的官方再分发条款存在冲突；在取得
-明确许可或完成带离线 bundle 的精确单路径 history rewrite 前，Synergy 保持 private。完整边界见
+检查通过。DBAASP 16,896-row round-trip audit table 的官方再分发条款存在冲突；作者于 2026-08-10
+决定为 reviewer 可复现性保留并公开该表，不等待额外书面许可且不改写 history。根 `DATA_NOTICE.md`
+明确来源、用途、MIT 不重新授权第三方数据及剩余风险，因此该项不再作为工程发布阻塞。完整边界见
 `docs/CORE_PUBLIC_RELEASE_AUDIT.md`，机器可读基线见
 `reproducibility/core_pre_public_baseline_2026-08-10.json`。
 
@@ -31,7 +32,7 @@ H100 parity 分别为 tolerance-equivalent 与逐元素完全相等。现在 46 
 Core packaging 收口已完成标准 `README.md`、SPDX `MIT` metadata、根 `NOTICE`、asset-aware
 clean-clone tests 和最小 `apexoracle-core` environment；原 `Readme.md`、license-table warning 与 563 行
 机器导出环境已由 recovery hash/tag 接管。下一项固定工作是关闭 public inference assets/CLI，随后处理
-DBAASP 再分发 P0 决策。
+公开 inference asset/CLI 和最终发布 gate。
 
 当前执行焦点（2026-07-28）：Fig. 1b 完整 10-member/fold fine-tune 与 baseline、最终统计、
 图文修订，以及 PepLink 0.1.2 round-trip/ChatGPT-o1/OPSIN 审计和 Supplementary Data 均已完成。

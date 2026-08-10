@@ -100,9 +100,10 @@
   `src/apexoracle/` 没有作者机器绝对路径，reachable history 没有 checkpoint、NumPy、FASTA 或 archive
   binaries；根 MIT 与 vendored PeptideCLM MIT 边界存在。**根据现有证据作出的判断：** package 主体无需
   再大规模重排，剩余关键路径是 `DataPrepare/` ledger/active-tree 清理、精简环境与 packaging、公开
-  inference 资产和 thin CLI。**仍待作者确认：** 16,896-row DBAASP-derived round-trip table 的官方条款
-  同时含 freely distributed 与 Non-Distribution 文字；在取得明确许可或完成带离线 bundle 的单路径
-  history rewrite 前，仓库不得切换 public、重命名或加入 super-repo。完整事实、阻塞项和固定顺序见
+  inference 资产和 thin CLI。**作者于 2026-08-10 确认的发布决定：** 16,896-row DBAASP-derived
+  round-trip table 虽然面对同时含 freely distributed 与 Non-Distribution 文字的官方条款，仍为 reviewer
+  可复现性保留并公开；不等待额外书面许可、不执行 history rewrite。根 `DATA_NOTICE.md` 必须随仓库发布，
+  并明确 MIT 不重新授权底层第三方 records；该决定关闭工程阻塞但不得写成已获得 DBAASP 明确许可。固定顺序见
   `docs/CORE_PUBLIC_RELEASE_AUDIT.md`；pre-public baseline manifest 位于
   `reproducibility/core_pre_public_baseline_2026-08-10.json`。当前 reviewer/Providencia dirty worktree 不属于
   该 baseline，禁止使用 `git add -A` 混入 Core release。

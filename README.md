@@ -94,6 +94,9 @@ evidence.
 Runtime assets are external to the source release. Do not infer redistribution permission from this repository's
 MIT license.
 
+The repository also retains one DBAASP-derived row-level validation table for peer-review reproducibility. Its
+provenance, license boundary, and the authors' publication decision are recorded in [`DATA_NOTICE.md`](DATA_NOTICE.md).
+
 - historical weight identities and local provenance: [`MODEL_WEIGHTS.md`](MODEL_WEIGHTS.md);
 - machine-readable weight registry: [`configs/model_weights.yaml`](configs/model_weights.yaml);
 - compute, environment, and private/public asset boundaries:
@@ -131,4 +134,5 @@ were not deleted as part of source cleanup.
 ## License
 
 Core source is released under the [MIT License](LICENSE). Vendored third-party notices are summarized in
-[`NOTICE`](NOTICE); external datasets, pretrained models, and optional dependencies retain their own terms.
+[`NOTICE`](NOTICE), and external-data boundaries are documented in [`DATA_NOTICE.md`](DATA_NOTICE.md); external
+datasets, pretrained models, and optional dependencies retain their own terms.
