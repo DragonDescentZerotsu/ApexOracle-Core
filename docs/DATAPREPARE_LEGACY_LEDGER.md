@@ -10,9 +10,13 @@
 Disposition 含义：
 
 - `remove`：功能已迁移、是一次性探索/debug、为空文件，或只保留历史价值；从 active tree 删除。
-- `migrate-first`：仍有公共发布需要的独立功能，先重构为参数化 canonical 入口并验证，再删除旧文件。
+- `migrated/remove`：独立功能已经迁为参数化 canonical 入口并验证；旧文件下一批删除。
 - `license-hold/remove`：脚本本身不作为公共 API；其数据库派生输入/输出受 Core data-license 决策约束，
   完成公开边界记录后删除，不能把旧脚本的可运行性当成数据再分发许可。
+
+执行状态（2026-08-10）：表中 46 个 disposition 已全部履行，tracked legacy source 已从 active tree
+移除；`DataPrepare/Data/` 下 ignored 数据、文本、embedding 和 reviewer assets 原地保留。下表继续记录
+删除前角色和处置理由，不表示这些路径仍存在于默认分支。
 
 ## 逐文件 ledger
 
@@ -27,8 +31,8 @@ Disposition 含义：
 | `DownloadAllPep.py` | 从 DBAASP API 拉取全量 peptide JSON 到作者机器路径 | 输入 hash/provenance 已冻结；官方条款存在冲突，不能以此脚本替代许可决定 | `license-hold/remove` |
 | `DownloadOnePep.py` | 按 peptide ID 下载单条 DBAASP JSON 到作者机器路径 | 必要 record links 保留在 reviewer Supplementary Data；非公共 API | `license-hold/remove` |
 | `ExtractSynData.py` | 从 DBAASP JSON 粗筛具有 synergy records 的 peptide IDs | 论文最终 synergy table、eligible counts 和 checkpoint family 已冻结 | `license-hold/remove` |
-| `Get_text_embedding.py` | Ben 测试目录的 Med-LLaMA3 倒数第二层 text embedding producer，含绝对路径 | 与下一文件合并为通用、固定 revision 的 strain-text embedding CLI | `migrate-first` |
-| `Get_text_embedding_wo_genome.py` | 对 text-only strain descriptions 替换精确 strain 名后提取 Med-LLaMA3 倒数第二层 token embeddings | 目标：`src/apexoracle/features/strain_text.py` + `scripts/prepare_data/embed_strain_texts.py` | `migrate-first` |
+| `Get_text_embedding.py` | Ben 测试目录的 Med-LLaMA3 倒数第二层 text embedding producer，含绝对路径 | `src/apexoracle/features/strain_text.py` + `scripts/prepare_data/embed_strain_texts.py`；ATCC real parity | `migrated/remove` |
+| `Get_text_embedding_wo_genome.py` | 对 text-only strain descriptions 替换精确 strain 名后提取 Med-LLaMA3 倒数第二层 token embeddings | 同一 canonical producer；text-only real parity exact | `migrated/remove` |
 | `MDLM/MDLM_data.ipynb` | PubChem/SmProt/UniProt/UniRef/CycloPS peptide 预训练语料探索与去重 | 合作者 producer 归 `ApexOracle-DLM-Pretraining`；不属于 Core | `remove` |
 | `MDLM/debug_notebook.py` | 6 行 tensor debug scratch | 无独立功能 | `remove` |
 | `MDLM/filter_non_209.py` | 把 descriptor dataset 投影到固定 209 维 | DLM-pretraining 的 209-descriptor contract 与统计文件已冻结 | `remove` |
@@ -71,16 +75,18 @@ Disposition 含义：
 `APEX_in_house_to_SMILES*.py`、`correct_SMILES_offered_by_DBAASP.py`、`try.py` 对
 `aa_seq_to_smiles.py` 的 legacy import。它们必须作为同一批删除，不能先删共享文件后留下坏 caller。
 
-唯一需要先迁移的公共功能族是两份 text embedding producer。新入口必须：
+唯一需要先迁移的公共功能族是两份 text embedding producer，现已关闭。新入口：
 
 1. 接受显式 input/output directory、device、model ID/revision、layer 和 overwrite policy；
 2. 默认固定 `YBXL/Med-LLaMA3-8B` revision
    `567e7e71d8b6b433d8bc494f8112176bec4afccf`；
 3. 保留历史精确 strain-name → `This strain` 两步 replacement；
 4. 保存每个 `.pt` 的 source text SHA-256、resolved model revision、shape 和 output SHA-256 manifest；
-5. 用 synthetic tokenizer/model stub 测试 selection、replacement、layer 和 filename contract，再对一条真实
-   historical text 做 GPU parity。
+5. 已用 7 项 synthetic tests 固定 selection、replacement、layer、filename 和 local-cache contract；
+   两条真实 historical text 完成 H100 parity，其中 text-only tensor 逐元素相等，ATCC tensor shape/dtype
+   一致并在 `rtol=1e-5, atol=1e-4` 下 allclose。机器可读证据见
+   `reproducibility/strain_text_embedding_parity_2026-08-10.json`。
 
-迁移通过后，46/46 个 legacy files 都可从 active tree 删除；raw data、embedding、checkpoint 和 ignored
-reviewer assets不随源码删除。删除提交必须显式列路径，不得使用 `git add -A`，并在删除后重新运行全仓
-tests、wheel/sdist、fresh-clone install/import/CLI 和 absolute-path scan。
+迁移通过后，46/46 个 legacy files 已从 active tree 删除；raw data、embedding、checkpoint 和 ignored
+reviewer assets 未随源码删除。删除按显式路径执行，没有使用 `git add -A`；全仓 tests、wheel/sdist、
+fresh-clone install/import/CLI 和 absolute-path scan 是本批提交前的剩余 release gates。

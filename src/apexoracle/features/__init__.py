@@ -1,1 +1,1 @@
-"""Feature loading interfaces for precomputed molecular and strain embeddings."""
+"""Feature producers and loaders for molecular and strain representations."""

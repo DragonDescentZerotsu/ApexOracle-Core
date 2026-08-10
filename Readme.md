@@ -33,9 +33,24 @@ PepLink 作为独立发布的 peptide↔SMILES 工具，不复制进本仓库。
 
 新运行和复现应优先使用 `src/apexoracle/`、`scripts/prepare_data/`、
 `scripts/reproduce/`、`configs/` 和 `experiments/` 中记录的 canonical 入口。
-`DataPrepare/` 仍包含论文时期和探索阶段的历史脚本，不是推荐 API；其中部分文件仍通过
-legacy import 相互依赖，因此本轮不删除。后续清理必须先迁移或归档剩余调用者，并用
-`legacy-code-snapshot-2026-07-17` 保留恢复路径。
+`DataPrepare/` 的 46-file ledger、源码 hashes 和恢复点已冻结。其唯一仍有独立公共价值的
+strain-text embedding producer 已迁入 `apexoracle.features.strain_text` 与
+`scripts/prepare_data/embed_strain_texts.py`；其余 paper-era、debug 和外模块副本不再作为 active API，
+原始版本由 recovery tags 恢复。
+
+## Strain-text embedding
+
+```bash
+python scripts/prepare_data/embed_strain_texts.py \
+  --input-dir /path/to/text \
+  --output-dir /path/to/embeddings \
+  --device cuda:0 \
+  --local-files-only
+```
+
+入口固定 Med-LLaMA3 model revision、历史 `This strain` replacement、倒数第二层和
+`[tokens, 4096]` float32 tensor contract，并输出逐文件 hash manifest。完整参数和真实历史 tensor
+parity 见 `scripts/prepare_data/README.md`。
 
 ## Lead peptide sequence similarity
 
@@ -118,5 +133,5 @@ guided generation sampler 的自包含复现，以及 corrected AA successor dat
 synergy、modality、k-mer 和 Fig. 1b 的发布代码及 reviewer 补实验已经完成，但不能因此把
 证据不足的历史 producer 或 checkpoint 血缘写成精确复现。
 
-`DataPrepare/` legacy 脚本去重和归档明确列为后续未完成事项；它不阻塞当前 reviewer
-Supplementary Data 或 canonical runner 的使用。
+旧 `DataPrepare/` active source 的最终删除仍需通过全仓测试、build 和 fresh-clone gate；它不阻塞当前
+reviewer Supplementary Data 或 canonical runner 的使用。

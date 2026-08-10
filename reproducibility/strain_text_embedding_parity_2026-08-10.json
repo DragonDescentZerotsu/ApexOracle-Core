@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "date": "2026-08-10",
+  "model": {
+    "id": "YBXL/Med-LLaMA3-8B",
+    "revision": "567e7e71d8b6b433d8bc494f8112176bec4afccf",
+    "hidden_state_index": -2
+  },
+  "hardware": "NVIDIA H100 PCIe",
+  "comparison": {
+    "rtol": 1e-05,
+    "atol": 0.0001
+  },
+  "cases": [
+    {
+      "filename_encoding": "atcc",
+      "stem": "Vibrio_sp_ATCC_19108",
+      "source_sha256": "d844b8b9579bf0c833b2e1c764a9fdf1fea84e33d2335dfa3fe592dc954cc776",
+      "historical_tensor_sha256": "17074d53eb0c5bb133b4c3d53b99e9352b4eeb0507702e475a09fdb6dfda50ed",
+      "regenerated_tensor_sha256": "b4e9a876265959d04762c884ed2043d3d1ac09d8053151c1b017afd04303d064",
+      "shape": [
+        73,
+        4096
+      ],
+      "dtype": "torch.float32",
+      "torch_equal": false,
+      "allclose": true,
+      "max_abs_diff": 0.000518798828125,
+      "mean_abs_diff": 1.1302607845209423e-06
+    },
+    {
+      "filename_encoding": "text-only",
+      "stem": "Proteus～hauseri～NBRC～3851",
+      "source_sha256": "46337de260e8840c3368ff8fd08ee51b11003ca3766a4b11c4e10d3713b30e3d",
+      "historical_tensor_sha256": "38dbe81097493c779bd863bddaa69dfe44ce08dec05ac2ffbfd8a8e9937fb0f5",
+      "regenerated_tensor_sha256": "38dbe81097493c779bd863bddaa69dfe44ce08dec05ac2ffbfd8a8e9937fb0f5",
+      "shape": [
+        78,
+        4096
+      ],
+      "dtype": "torch.float32",
+      "torch_equal": true,
+      "allclose": true,
+      "max_abs_diff": 0.0,
+      "mean_abs_diff": 0.0
+    }
+  ]
+}

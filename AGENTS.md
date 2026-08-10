@@ -115,6 +115,16 @@
   layer、保留 `This strain` replacement，并输出 source/model/output provenance manifest；完成 synthetic
   contracts 与真实 historical text GPU parity 后，46/46 legacy files 可作为一批或按依赖族从 active tree
   删除，原始内容继续由 recovery tags 恢复。
+- **2026-08-10 strain-text producer 迁移完成：** canonical library/CLI 为
+  `src/apexoracle/features/strain_text.py`、`apexoracle-embed-strain-texts` 与
+  `scripts/prepare_data/embed_strain_texts.py`。主要参数为显式 input/output directory、device、filename
+  encoding、hidden-state index 和 existing policy；默认固定 `YBXL/Med-LLaMA3-8B` revision
+  `567e7e71d8b6b433d8bc494f8112176bec4afccf`、倒数第二层、`This strain` replacement 与 float32
+  `[tokens, features]` 输出，manifest 默认写到 output directory。7 项 CPU contracts 通过；真实 ATCC/
+  text-only H100 parity 分别为 `rtol=1e-5, atol=1e-4` allclose 和 `torch.equal`。验证命令为
+  `PYTHONPATH=src python -m pytest -q tests/test_strain_text_embeddings.py`；入口与资产边界见
+  `scripts/prepare_data/README.md`，parity hashes 见
+  `reproducibility/strain_text_embedding_parity_2026-08-10.json`。
 - 机器职责、环境、共享文件系统、数据/权重/外部仓库位置和当前 reviewer 任务记录在
   `docs/COMPUTE_AND_ASSET_MAP.md`。任何机器或资产迁移都必须同步更新该文件；node001 与
   node002 共享同一个 `/data1/tianang/Projects/Synergy_release`，不得把它们当作两个独立 checkout

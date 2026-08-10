@@ -2,7 +2,7 @@
 
 > 建立日期：2026-07-17  
 > 状态：canonical 论文/审稿路径已完成；现有 ApexOracle 已原地转换为 super-repo，DLM-Pretraining、MDLM、Generation 与 Evo-2 modules 已锁定；Core 公开发布审计进行中；
-> legacy `DataPrepare/` 收尾仍待后续批次
+> legacy `DataPrepare/` 唯一功能迁移和 active source 删除已完成，release gates 进行中
 > 适用范围：当前 `Synergy` 仓库，以及后续需要整合的 Evo-2 genome embedding、DLM/MDLM 和 guided generation 代码。
 
 当前发布架构焦点（2026-08-10）：作者已冻结“复用现有 ApexOracle 作为 super-repo + 五个独立
@@ -22,9 +22,11 @@ wheel/sdist、remote fresh-clone install/import/CLI、current/history secret pat
 
 `DataPrepare/` complete ledger 已关闭：46 个 tracked files 的 role、destination/disposition 与完整 SHA-256
 分别冻结到 `docs/DATAPREPARE_LEGACY_LEDGER.md` 和
-`reproducibility/dataprepare_legacy_source_2026-08-10.sha256`。唯一 `migrate-first` family 是两份
-Med-LLaMA3 strain-text embedding producers；其余 44 个文件可在 data-license 边界记录和同族依赖 gate
-满足后从 active tree 删除，原始内容由 recovery tags 恢复。
+`reproducibility/dataprepare_legacy_source_2026-08-10.sha256`。唯一 `migrate-first` family——两份
+Med-LLaMA3 strain-text embedding producers——已合并为固定 revision、显式路径/device/layer/existing-policy
+和逐 tensor manifest 的 canonical library/CLI。7 项 synthetic contracts 通过；ATCC/text-only 两条真实
+H100 parity 分别为 tolerance-equivalent 与逐元素完全相等。现在 46 个旧文件均已达到 active-tree 删除
+条件并已删除；35 GB ignored data/assets 原地保留，原始 source 继续由 recovery tags 恢复。
 
 当前执行焦点（2026-07-28）：Fig. 1b 完整 10-member/fold fine-tune 与 baseline、最终统计、
 图文修订，以及 PepLink 0.1.2 round-trip/ChatGPT-o1/OPSIN 审计和 Supplementary Data 均已完成。

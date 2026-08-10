@@ -65,6 +65,7 @@ apexoracle-run-sequence-similarity = "apexoracle.evaluation.sequence_similarity.
 apexoracle-run-synergy-cv = "apexoracle.training.synergy_runner:main"
 apexoracle-plot-modality-ablation = "apexoracle.evaluation.modality_ablation:main"
 apexoracle-build-kmer-embeddings = "apexoracle.features.kmer_cli:main"
+apexoracle-embed-strain-texts = "apexoracle.features.strain_text_cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

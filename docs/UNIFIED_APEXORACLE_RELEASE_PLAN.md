@@ -353,8 +353,10 @@ token-level complete 1 条但结构过滤后 0 row，只作为 runtime contract�
 4. **DLM-pretraining producer——完成。** public `main` 固定候选为 `362ffcc`，tag 为 `v0.1.0`；原始
    recovery tag、source manifest、remote CI/fresh clone 和 H100 joint-objective smoke 均通过。未改变
    合作者模型结构、objective、MTR loss 权重或 checkpoint schema。
-5. **Core 收口——下一关键路径。** 完成 public-data/secret/license/full-history/fresh inference 审计，
-   然后将当前 Synergy 同一 repository 重命名为 `ApexOracle-Core` 并加入最后一个固定 gitlink。
+5. **Core 收口——下一关键路径。** public-data/secret/license/full-history audit 已建立；46-file
+   `DataPrepare/` ledger、唯一 strain-text producer 迁移和 active-source 清理已完成，真实 ATCC/text-only
+   tensor parity 通过。继续完成 packaging/environment、DBAASP 再分发决策与 fresh inference，随后将
+   当前 Synergy 同一 repository 重命名为 `ApexOracle-Core` 并加入最后一个固定 gitlink。
 6. **Super-repo 骨架——已完成；完整 release 待 Core 闭合。** 现有 public
    `DragonDescentZerotsu/ApexOracle` 已建立 legacy 恢复点并原地转换，DLM-Pretraining/MDLM/Generation/Evo-2
    使用固定 SHA；Core 验收后加入。五模块齐全后再完成两个可执行 quickstarts、

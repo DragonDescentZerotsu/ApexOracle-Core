@@ -79,10 +79,10 @@ history rewrite；不得泛化为删除全部实验 CSV。
 ### P1：active tree 收口
 
 - 完整 `DataPrepare/` ledger 已建立于 `docs/DATAPREPARE_LEGACY_LEDGER.md`，46/46 source SHA-256
-  已验证。已迁入 `src/apexoracle/`/`scripts/prepare_data/` 的副本和无消费者 debug/notebook/机器 launcher
-  从 active tree 删除，只由 recovery tag 恢复。
-- 对仍有独立价值但尚未迁移的 producer，只迁为参数化、只读、可测试的通用入口；不得为某个历史
-  case 保留硬编码机器路径。
+  已验证。唯一独立 producer 已迁为参数化 strain-text embedding library/CLI：7 项 synthetic tests、
+  ATCC/text-only 两条真实 H100 parity 与逐输出 manifest 均通过。全部 46 个旧 source 已从 active tree
+  删除，只由 recovery tag 恢复；ignored 的 35 GB `DataPrepare/Data/` 资产原地保留。下一 gate 是重跑
+  全仓 release checks。
 - 将 563 行机器环境导出替换为可维护的 Core package/test profiles。
 - 将 `Readme.md` 收口为标准 `README.md`，更新最终仓库名、安装边界和支持状态；修复 pyproject license
   metadata，并增加根 `NOTICE` 汇总第三方组件。
@@ -119,7 +119,7 @@ history rewrite；不得泛化为删除全部实验 CSV。
 ## 5. 固定执行顺序与验收门槛
 
 1. 冻结当前 committed Core baseline，建立 source manifest 和 annotated pre-public cleanup tag。
-2. 完成 `DataPrepare/` 逐文件 ledger；先迁移唯一功能，再删除已替代/无关副本。
+2. `DataPrepare/` 逐文件 ledger、唯一功能迁移和 active-source 删除已完成；执行全仓回归。
 3. 完成 README/environment/pyproject/NOTICE、绝对路径和 asset-manifest 清理。
 4. 关闭 DBAASP 再分发决策；如需 rewrite，先生成并校验离线 Git bundle，再只改命中的路径和 refs。
 5. 完成 clean wheel/sdist、全仓 tests、fresh-clone install/import/CLI 和真实 inference smoke。
