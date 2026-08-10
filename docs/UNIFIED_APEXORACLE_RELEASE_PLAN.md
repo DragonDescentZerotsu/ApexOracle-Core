@@ -184,13 +184,18 @@ release provenance；Core/Evo-2/Generation/DLM-pretraining 的统一 R0 manifest
 ### R1：准备五个 clean module commits
 
 状态：**进行中。** MDLM 与 Generation 两个 module candidates 已进入各自 public 默认分支并通过远端
-fresh-clone 验收；Core、DLM-Pretraining 与 Evo-2 三个模块待执行。
+fresh-clone 验收；Evo-2 已形成 CPU-validated local candidate，40B runtime 与远端验收待完成；Core 和
+DLM-Pretraining 待执行。
 
 - `ApexOracle-Core`：以当前 Synergy canonical 代码为基础完成公开边界审计。
 - `ApexOracle-DLM-Pretraining`：形成 portable pretraining source commit 和 synthetic train/save/load smoke。
 - `ApexOracle-MDLM`：形成 downstream source-only release commit、embedding 和 guidance-head smoke。
 - `ApexOracle-Evo2`：形成 clean fork commit、通用 extraction CLI 和小规模 tensor contract test。
 - `ApexOracle-Generation`：形成 paper-path clean commit、参数化配置和小 batch GPU smoke。
+
+Evo-2 当前 candidate `ccdbfbe` 基于 upstream `53f1959`，提供 `apexoracle-evo2-extract`、record/window
+provenance manifest、567-FASTA plan-only contract、9 CPU tests 和 clean sdist/wheel；正式 module SHA
+必须等待 40B 小规模 runtime smoke、public remote 与 fresh-clone 验收后冻结。
 
 Generation 已完成：paper preset 固定 256-step、15/15 guidance 与 remasking；1-sample GPU smoke
 token-level complete 1 条但结构过滤后 0 row，只作为 runtime contract；远端 fresh clone 的 source audit、
@@ -323,8 +328,10 @@ token-level complete 1 条但结构过滤后 0 row，只作为 runtime contract�
    guidance/scoring 与 Generation integration 已通过，legacy tag 保留。
 2. **Generation clean fork——完成。** 默认 `main` 固定候选为 `de6c1e5`；paper preset、通用 grid、GPU smoke、
    remote fresh-clone 和 recovery tag 均通过，未推送上游 `kuleshov-group`。
-3. **Evo-2 clean fork（下一关键路径）。** 在官方许可兼容基线上迁移通用 genome extraction CLI，固定 window/layer/pooling
-   contract；以已有 567 tensor lineage 和小规模 shape/value test验收，不声称无法证明的历史 byte-exact producer。
+3. **Evo-2 clean fork（进行中）。** 已在官方许可兼容基线上迁移通用 genome extraction CLI，并固定
+   window/layer/pooling 与 provenance contract；CPU tests、567-FASTA plan 和 clean build 已完成。下一 gate
+   为 40B 小规模 runtime、public remote/fresh clone，再以固定 module SHA 收口；不声称无法证明的历史
+   byte-exact producer。
 4. **DLM-pretraining producer 与 Core 收口。** 合作者 pretraining 原则上原样归档并先做 synthetic
    train/save/load；只有 blocking portability failure 才做最小路径/文档/config 修补，不改变模型结构、
    objective 或训练行为。并行完成 Core 的 public-data/secret/license/fresh inference 审计。

@@ -9,9 +9,10 @@
 submodule”的方案，其中
 合作者的 DLM+MTR 预训练与本地 downstream MDLM 分为两个模块。下一步
 按 `docs/UNIFIED_APEXORACLE_RELEASE_PLAN.md` 第 8 节执行：MDLM 与 Generation 已关闭并作为固定 gitlink
-进入现有 ApexOracle；下一步处理 Evo-2、DLM-pretraining 与 Core，再补齐三个 pending gitlinks 和端到端
-quickstarts。MDLM/Generation clean modules 和 Hugging Face 模型已发布并验收；其余 dirty checkout 与
-legacy `DLM_pretrain/` 尚未完成 clean candidate，因此不创建对应浮动 submodule、不移动数据或权重。
+进入现有 ApexOracle；Evo-2 已形成首个本地 clean candidate，下一步完成其 40B runtime/remote 验收，
+随后处理 DLM-pretraining 与 Core，再补齐三个 pending gitlinks 和端到端 quickstarts。MDLM/Generation
+clean modules 和 Hugging Face 模型已发布并验收；legacy `DLM_pretrain/` 与 Core 尚未完成 clean candidate，
+因此不创建对应浮动 submodule、不移动数据或权重。
 
 当前执行焦点（2026-07-28）：Fig. 1b 完整 10-member/fold fine-tune 与 baseline、最终统计、
 图文修订，以及 PepLink 0.1.2 round-trip/ChatGPT-o1/OPSIN 审计和 Supplementary Data 均已完成。
@@ -895,8 +896,9 @@ optimizer-step 已在宿主 H100 单独通过，两份 guidance checkpoint 的 i
   `DragonDescentZerotsu/ApexOracle-DLM-Pretraining` 独立历史；作者要求原则上不改代码。先原样归档并做
   synthetic train/save/load smoke；只有 blocking portability failure 才允许最小化修补路径/文档/config，
   不改模型结构、objective 或训练行为。
-- [ ] 从官方 Evo-2 基线准备 `DragonDescentZerotsu/ApexOracle-Evo2` clean fork commit，加入通用
-  genome extraction CLI 和小规模 tensor-contract smoke；不得直接提交当前 dirty checkout。
+- [ ] 从官方 Evo-2 基线准备 `DragonDescentZerotsu/ApexOracle-Evo2` clean fork commit：upstream
+  `53f1959` 上的本地 candidate `ccdbfbe` 已加入通用 extraction CLI，9 CPU tests、567-FASTA plan-only、
+  clean build 与 wheel fresh CLI 通过；40B runtime、public remote/fresh clone 尚待完成。
 - [ ] 将当前 Synergy 原 repository 整理并重命名为 `DragonDescentZerotsu/ApexOracle-Core`，
   保留现有 history/内部结构并完成公开边界审计；不得复制第二个 Core repo。
 - [x] 作者已决定直接把现有 public `DragonDescentZerotsu/ApexOracle` 原地转换为 super-repo，以五个
@@ -908,9 +910,10 @@ optimizer-step 已在宿主 H100 单独通过，两份 guidance checkpoint 的 i
 - [x] 固定目标 repository topology、module 职责、submodule 策略、canonical URL 切换方式和
   PepLink 独立依赖边界。
 - [ ] R0：冻结四个来源 checkout 加 public legacy `DLM_pretrain/` 的 source inventory、SHA-256、
-  科学角色和非破坏恢复点。Downstream MDLM 的 source-only 恢复点已完成，其余来源仍待执行。
+  科学角色和非破坏恢复点。Downstream MDLM 与 Evo-2 的 source-only 恢复点已完成，其余来源仍待执行。
 - [ ] R1：完成 Core/DLM-Pretraining/MDLM/Evo2/Generation 五个可独立安装和 smoke-tested 的
-  clean commits。MDLM 与 Generation 两项已完成，Core/DLM-Pretraining/Evo2 待完成。
+  clean commits。MDLM 与 Generation 两项已完成；Evo2 已有 CPU-validated local candidate，
+  Core/DLM-Pretraining 待执行。
 - [ ] R2：现有 ApexOracle 已原地转换，恢复 branch/tag、`.gitmodules`、module/asset manifests、bootstrap、
   CI 与 MDLM/Generation 固定 gitlinks 已完成；Core/DLM-Pretraining/Evo2 三个 gitlinks 待各自 clean candidate。
 - [ ] R3：完成新 molecule × known strain 的 MIC prediction end-to-end quickstart。

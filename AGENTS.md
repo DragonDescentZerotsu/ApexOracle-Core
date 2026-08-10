@@ -71,6 +71,14 @@
   fresh-clone release audit、全仓 14 tests 与 BAA-3170/3197 resolved-config dry-run 均通过。13 个硬编码
   launchers、debug 和 unused diffusion duplicate 已由 ledger gate 清理且可恢复；checkpoint/data/output 未入 Git。
   Upstream `kuleshov-group` remote 未接收任何 ApexOracle commit。下一关键路径为 Evo-2 clean fork。
+- **2026-08-10 Evo-2 clean fork 进行中：** `/data2/tianang/projects/evo2` 已在 upstream
+  `53f1959` 基线上建立 `refactor/apexoracle-evo2`，首个 clean candidate 为 `ccdbfbe`；本地
+  source-only recovery commit `ad00efc` 与 annotated tag `legacy-code-snapshot-2026-08-10` 尚未公开推送。
+  新增 canonical `apexoracle-evo2-extract` CLI，固定 11,000-nt window、10,000-nt step、Evo-2-40B
+  `blocks.46.mlp.l3` 与 valid-token mean pooling，并为每个 tensor 输出 record/window provenance manifest。
+  合成 multi-record contract 9 tests、567-FASTA CPU plan-only、clean sdist/wheel 与 wheel fresh CLI 已通过；
+  40B 小规模 runtime smoke、public remote、fresh-clone 和 super-repo gitlink 仍待完成。上游
+  `ArcInstitute/evo2` remote 不得接收 ApexOracle commit。
 - 机器职责、环境、共享文件系统、数据/权重/外部仓库位置和当前 reviewer 任务记录在
   `docs/COMPUTE_AND_ASSET_MAP.md`。任何机器或资产迁移都必须同步更新该文件；node001 与
   node002 共享同一个 `/data1/tianang/Projects/Synergy_release`，不得把它们当作两个独立 checkout
