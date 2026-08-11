@@ -129,7 +129,9 @@ class SynergyConfig:
             text_dim=int(model["text_dim"]),
             attention_heads=int(model["attention_heads"]),
             lora_rank=int(model["active_fusion_lora"]["rank"]),
-            head_dimensions=tuple(int(value) for value in model["synergy_head"]["dimensions"]),
+            head_dimensions=tuple(
+                int(value) for value in model["synergy_head"]["dimensions"]
+            ),
             folds=int(training["folds"]),
             ensemble_members=int(
                 training["ensemble_members"]
@@ -204,10 +206,13 @@ class EvaluationOutput:
     labels: dict[str, list[float]]
     probabilities: dict[str, list[float]]
     pair_keys: list[tuple]
+    routes: list[str]
 
     def metrics(self, route: str = "all") -> dict[str, float]:
         return {
-            "auroc": float(roc_auc_score(self.labels[route], self.probabilities[route])),
+            "auroc": float(
+                roc_auc_score(self.labels[route], self.probabilities[route])
+            ),
             "auprc": float(
                 average_precision_score(self.labels[route], self.probabilities[route])
             ),
@@ -279,7 +284,9 @@ def prepare_filtered_folds(
     return filtered_folds
 
 
-def load_runtime_features(config: SynergyConfig, device: torch.device) -> RuntimeFeatures:
+def load_runtime_features(
+    config: SynergyConfig, device: torch.device
+) -> RuntimeFeatures:
     return RuntimeFeatures(
         genomes=load_all_embeddings(
             config.paths.genome_embeddings, config.genome_scale, device, "genome"
@@ -358,6 +365,7 @@ def _empty_evaluation() -> EvaluationOutput:
         labels={route: [] for route in routes},
         probabilities={route: [] for route in routes},
         pair_keys=[],
+        routes=[],
     )
 
 
@@ -409,6 +417,7 @@ def evaluate(
                     output.labels[target].extend(labels)
                     output.probabilities[target].extend(probabilities)
                 output.pair_keys.extend(result.pair_keys)
+                output.routes.extend([route] * len(labels))
     return output
 
 
@@ -475,7 +484,11 @@ def run_member(
         lora_rank=config.lora_rank,
     )
     optimizer = optim.Adam(
-        [parameter for parameter in components.genome_attention.parameters() if parameter.requires_grad],
+        [
+            parameter
+            for parameter in components.genome_attention.parameters()
+            if parameter.requires_grad
+        ],
         lr=config.learning_rate,
         weight_decay=config.weight_decay,
     )
@@ -593,8 +606,12 @@ def run_fold(
             device=device,
             output_dir=output_dir,
         )
-        if labels is not None and (current_labels != labels or current_keys != pair_keys):
-            raise ValueError("Held-out prediction order changed across ensemble members")
+        if labels is not None and (
+            current_labels != labels or current_keys != pair_keys
+        ):
+            raise ValueError(
+                "Held-out prediction order changed across ensemble members"
+            )
         labels, pair_keys = current_labels, current_keys
         members.append(predictions)
         member_aurocs.append(auroc)
@@ -647,7 +664,9 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main(argv: list[str] | None = None) -> None:
     args = build_parser().parse_args(argv)
-    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+    logging.basicConfig(
+        level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s"
+    )
     repo_root = args.repo_root.resolve()
     config_path = args.config if args.config.is_absolute() else repo_root / args.config
     config = SynergyConfig.load(
@@ -691,7 +710,9 @@ def main(argv: list[str] | None = None) -> None:
     if device.type == "cuda" and not torch.cuda.is_available():
         raise RuntimeError("CUDA device requested but unavailable")
     features = load_runtime_features(config, device)
-    results = [run_fold(config, fold, features=features, device=device) for fold in selected]
+    results = [
+        run_fold(config, fold, features=features, device=device) for fold in selected
+    ]
     summary["results"] = results
     config.paths.output_dir.mkdir(parents=True, exist_ok=True)
     (config.paths.output_dir / "summary.json").write_text(

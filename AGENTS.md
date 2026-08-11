@@ -1133,6 +1133,8 @@ median MIC 的 sample s.d.。panel c 是唯一保留 legend 的位置；legend �
   `strain_wise_synergy` 目录或 `MDLM_3_fold_ensembles_1_base_model_cls` checkpoint family。
 - **仍须披露但不阻塞的限制：** Methods 写 fusion LoRA rank 64 和 base training 13 epochs，并把融合维度写为 `12,294→3,073`；候选 checkpoint 分别证明 rank 1024、实际加载 100-epoch base 和真实维度 `12,288→3,072`。旧日志也未记录独立进程的 `PYTHONHASHSEED`，因此不能声称逐 bit 或精确原始 run 复现。
 - **已完成的重构验收：** 1 个 base 与 21 个 member 的逐文件 SHA-256 已登记；`fold_0/ensemble_0` 在 H100 上严格加载后，genome+text 和 text-only 两路均与 inline legacy 公式逐值一致。统一 runner 的 fold 2、1 member、1 epoch 真实数据 smoke 成功写出 checkpoint、175 条预测、metrics 和 summary；临时 2.24 GB 输出已删除。该 smoke 指标不作为论文结果。
+- **2026-08-11 synergy checkpoint replay 入口：** Canonical 只读入口为
+  `PYTHONHASHSEED=0 PYTHONPATH=src python scripts/reproduce/replay_synergy_checkpoints.py --asset-root PATH --output-dir OUTSIDE_GIT --device cuda:0 --local-files-only`。默认重算 1 base + 21 member hashes，加载固定 checkpoint 而不训练，输出每折/合并 prediction CSV 与 `summary.json`；公开表只含 SHA-256 pair identity、同-key measurement index、fold、route、strain ID、binary label、7 member probabilities 和 ensemble probability。重复测量不得合并，因为至少 fold 0 存在同 pair/strain key 但不同 binary label 的历史测量；表中不含 exact FICI、raw molecule ID/structure、embedding、checkpoint、optimizer state 或绝对路径。当前仍在真实 21-member replay 验收；未完成前不得把 seed-0 candidate 写成 exact 2025 membership。
 - **已由范围审计验证的事实：** 论文正文和 Methods 不包含 few-shot synergy 结果；paper-only
   清理后，共享 synergy 模块仅保留 CV 路径的消费者。全仓库为 111 passed / 4 skipped；
   post-paper 源码可从已登记 tag/commit 恢复。

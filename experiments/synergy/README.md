@@ -81,6 +81,26 @@ binary（1 个 base + 21 个 member）的 SHA-256 位于 `checkpoint_file_manife
 driver 已在作者接受该候选后从发布工作树删除，可由 `legacy-code-snapshot-2026-07-17` 恢复；
 发布入口只保留 canonical runner。
 
+### 现存 checkpoint 只读 replay
+
+不重新训练、只加载完整 21-member family 并导出逐样本预测的入口为：
+
+```bash
+PYTHONHASHSEED=0 PYTHONPATH=src python \
+  scripts/reproduce/replay_synergy_checkpoints.py \
+  --asset-root /path/to/preserved/core-workspace \
+  --output-dir /path/outside/git/synergy_checkpoint_replay \
+  --device cuda:0 --local-files-only
+```
+
+该入口默认逐文件重算 1 个 base 和 21 个 member checkpoint 的 SHA-256，随后对固定 seed-0
+候选划分执行三折推理。输出为每折与合并后的紧凑 CSV、`summary.json`、每个 member 的概率、
+ensemble 概率、AUROC/AUPRC 及与旧日志的差值。CSV 保留二分类 label、route 和 strain ID，使用
+SHA-256 pair identity 与稳定的同-key measurement index；重复测量不合并，因而保持旧日志的样本数
+和指标定义。不写 exact FICI、原始 molecule ID/structure、embedding、checkpoint、
+optimizer state 或本机绝对路径。该 replay 正在进行结果验收；通过前不得把 seed-0 候选写成
+2025 年精确 membership。
+
 ## Paper-only 范围
 
 作者于 2026-07-19 确认只保留复现论文已汇报结果所需的代码。因此，本目录不再维护
