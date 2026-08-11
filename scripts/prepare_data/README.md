@@ -3,6 +3,21 @@
 本目录只保留可参数化、对输入只读且具有测试或 manifest contract 的公共数据准备入口。论文时期的
 硬编码 producer 不属于公共 API；它们的源码由 Core recovery tags 恢复。
 
+## Paper strain mapping
+
+Canonical CLI：
+
+```bash
+python scripts/prepare_data/export_paper_strain_mapping.py \
+  --data-root /path/to/DataPrepare/Data \
+  --output assets/manifests/paper_strain_mapping.json
+```
+
+该入口只导出 source strain label 到 runtime condition key、species、condition route 和 embedding filename
+的紧凑映射，不复制 MIC label、molecule、embedding tensor 或 private assay row。当前冻结产物包含
+1,766 个 source labels、1,769 条 condition routes 和 92,322 个 routed MIC records；详细 schema、历史
+substring filter 边界与验证命令见 `docs/PAPER_STRAIN_MAPPING.md`。
+
 ## Strain-text embeddings
 
 Canonical CLI：

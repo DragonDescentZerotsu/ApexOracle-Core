@@ -109,6 +109,9 @@ provenance, license boundary, and the authors' publication decision are recorded
 
 - historical weight identities and local provenance: [`MODEL_WEIGHTS.md`](MODEL_WEIGHTS.md);
 - machine-readable weight registry: [`configs/model_weights.yaml`](configs/model_weights.yaml);
+- compact paper strain-label to runtime-condition mapping:
+  [`assets/manifests/paper_strain_mapping.json`](assets/manifests/paper_strain_mapping.json), with schema and rebuild
+  instructions in [`docs/PAPER_STRAIN_MAPPING.md`](docs/PAPER_STRAIN_MAPPING.md);
 - compute, environment, and private/public asset boundaries:
   [`docs/COMPUTE_AND_ASSET_MAP.md`](docs/COMPUTE_AND_ASSET_MAP.md);
 - unified five-module release architecture:

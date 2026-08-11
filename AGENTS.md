@@ -1392,6 +1392,16 @@ Strain count mapping 的演化顺序如下：
 
 ### 公开发布前的安全阻塞项
 
+- **Paper strain mapping 公共入口（2026-08-10）：** canonical producer 为
+  `python scripts/prepare_data/export_paper_strain_mapping.py --data-root /path/to/DataPrepare/Data`，输出
+  `assets/manifests/paper_strain_mapping.json`。产物只记录 source label、canonical condition key、species、
+  genome/text route、embedding filename 和 route record count，不含 MIC label、molecule、tensor 或 private assay
+  row。当前冻结为 1,766 个 unique source labels、1,769 routes、92,322 routed MIC rows，与
+  `prepare_hierarchical_mic_data` 的 79,904 genome+text + 12,418 text-only pre-length-filter records 精确一致。
+  三个 source labels 历史上同时走两条 route，因此允许重复 source name；legacy `"del"` substring filter 必须
+  原样保留并在文档说明，不能静默修正。验证命令为
+  `PYTHONPATH=src python -m pytest -q tests/test_strain_mapping_release.py`。
+
 - legacy snapshot 审计曾在下列文件发现明文 API 或服务凭据：
   `DataPrepare/discription_generation.py`、`discription_generation_w_ATCC.py`、
   `discription_generation_wo_ATCC.py`、`get_synergy_Evo.py`、`resistant_gene_check.py` 和已删除的
