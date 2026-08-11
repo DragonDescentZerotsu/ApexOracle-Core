@@ -36,7 +36,7 @@ in-house 脚本默认在同级外部 `mdlm` checkout 查找 guidance producer，
 | `prepare_all_genome_fragment_variation_pairs.py` | 从全部 embedding/FASTA/species-compatible bacterial assets 中冻结同物种 ANI 最近邻与去重 pair manifest | `experiments/genome_condition_reviewer/fragment_variation/manifests/` |
 | `analyze_genome_fragment_variation.py` | 在 saved fragment condition 内，对全部合格 nearest same-species strains 的 mutual-best homologous fragments 比较 sequence divergence 与 embedding distance | `experiments/genome_condition_reviewer/fragment_variation/all_embeddings/` |
 | `prepare_historical_genome_annotation_probes.py` | 为全部 paper-matched、FASTA/GenBank/tensor-compatible bacterial fragments 构建 AMR/MGE annotation labels；文件名为冻结产物保留的 legacy 名称 | `experiments/genome_condition_reviewer/historical_probe/manifests/` |
-| `run_historical_genome_annotation_probes.py` | 在 saved-tensor-compatible cohort 上运行两个固定超参数的五折 L2 logistic probes；同一 genome 的 fragments 不跨 train/test | `experiments/genome_condition_reviewer/historical_probe/analysis/` |
+| `run_historical_genome_annotation_probes.py` | 在 saved-tensor-compatible genome set 上运行两个固定超参数的五折 L2 logistic probes；同一 genome 的 fragments 不跨 train/test | `experiments/genome_condition_reviewer/historical_probe/analysis/` |
 | `plot_genome_representation_validation.py` | 绘制正式三面板 genome representation figure：同源片段 divergence/embedding-distance relationship 与 AMR/MGE 五折 probe AUPRC/AUROC；panel a 使用 `1e-8` 下限的 log 轴并区分 ANI `>=99%` subset | `experiments/genome_condition_reviewer/figures/` |
 
 正式命令：

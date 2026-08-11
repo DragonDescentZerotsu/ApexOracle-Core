@@ -647,7 +647,7 @@ median MIC 的 sample s.d.。panel c 是唯一保留 legend 的位置；legend �
   CSV/PNG 后逐字节一致。公开 Evo-2 模块已通过通用 extraction smoke，但没有原始 extraction log 证明
   当前 module commit 是这 567 个历史 tensor 的精确 producer。
 - **2026-08-11 论文 Evo-2 基因组清单：** reviewer-facing 名称统一为“paper genome list / 论文基因组
-  清单”，不使用容易产生临床含义的 `cohort`。Canonical builder 为
+  清单”，不使用容易产生临床含义的旧术语。Canonical builder 为
   `PYTHONPATH=src python scripts/audit/build_paper_genome_list.py --data-dir PATH --overwrite`；公开输出为
   `experiments/evo2_genome_embeddings/paper_genome_list.csv` 和相邻 JSON manifest。清单精确包含被论文
   MIC/classification/synergy 数据使用的 563 个 genome，相应任务计数为 563/2/100，CSV SHA-256 为
