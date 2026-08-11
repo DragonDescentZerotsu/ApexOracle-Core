@@ -5,6 +5,10 @@
 > Core legacy 清理、公开资产、release tag 与 recursive fresh-clone gates 已完成
 > 适用范围：当前 `Synergy` 仓库，以及后续需要整合的 Evo-2 genome embedding、DLM/MDLM 和 guided generation 代码。
 
+2026-08-11 文件系统复核没有发现仓库内 >=1 KiB 精确重复或散落的 nonignored untracked file；16 个 tracked
+`experiments/<topic>/` 目录均有 README。Core 当前 431/500 files，已进入 super-repo anti-bloat 软警戒；后续
+同一科学问题必须复用现有 experiment 目录，大型逐行表继续外置，不因外观拆动 parity-frozen runners。
+
 当前发布架构焦点（2026-08-10）：作者已冻结“复用现有 ApexOracle 作为 super-repo + 五个独立
 submodule”的方案，其中
 合作者的 DLM+MTR 预训练与本地 downstream MDLM 分为两个模块。下一步

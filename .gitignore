@@ -8,12 +8,15 @@ __pycache__/
 .vscode/
 .idea/
 .codex
-.codex
-.codex/
 .agents/
 .DS_Store
 .git-state/
 .external/
+
+# Local Python build products
+/build/
+/dist/
+*.egg-info/
 
 # 本地环境与凭据
 .env
