@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "date": "2026-08-11",
+  "code_revision": "23e560e11a2ce06c19cc6eb6fe1dd0c0ee9b21f5",
+  "device": "NVIDIA H100 PCIe",
+  "protocol": {
+    "membership": "PYTHONHASHSEED=0 legacy-codepath candidate",
+    "historical_boundary": "strongly supported by replay but not proven exact 2025 membership",
+    "folds": 3,
+    "members_per_fold": 7,
+    "evaluation_rows_after_token_filter": 2371
+  },
+  "source_provenance": {
+    "source_sha256": "ff57e2152159be950a9823f5d94f24c0771b18465bd17cfd11d9d0318db393be",
+    "split_manifest_sha256": "d65ff3fc7d66be82988992064d51d909064836500cbc59138e2183cfc73254f2",
+    "checkpoint_manifest_sha256": "86bf6b4224981978aba511f2f6353aa81960a53650f72f96c4ecf7733bd7e733",
+    "checkpoint_hash_verification": "computed for one base and all 21 members"
+  },
+  "folds": [
+    {
+      "fold": 0,
+      "rows": 1944,
+      "unique_pair_keys": 1908,
+      "repeated_measurement_rows": 36,
+      "positive_rows": 835,
+      "route_rows": {"genome_text": 1917, "text_only": 27},
+      "auroc": 0.668989163242496,
+      "auprc": 0.6158603165536012,
+      "archived_log_auroc": 0.6690,
+      "archived_log_auprc": 0.6159,
+      "prediction_sha256": "1efd2133f7a75e521f5305dc2b61f8bd36f1bd2a3612e4e52672ceb33af9aedd"
+    },
+    {
+      "fold": 1,
+      "rows": 252,
+      "unique_pair_keys": 249,
+      "repeated_measurement_rows": 3,
+      "positive_rows": 94,
+      "route_rows": {"genome_text": 65, "text_only": 187},
+      "auroc": 0.7614126043630488,
+      "auprc": 0.6852778827926547,
+      "archived_log_auroc": 0.7614,
+      "archived_log_auprc": 0.6853,
+      "prediction_sha256": "558d766c814e67468fbee5609364fb24f19eaf40a360d9172ae579ba8863d955"
+    },
+    {
+      "fold": 2,
+      "rows": 175,
+      "unique_pair_keys": 174,
+      "repeated_measurement_rows": 1,
+      "positive_rows": 123,
+      "route_rows": {"genome_text": 13, "text_only": 162},
+      "auroc": 0.8488899312070043,
+      "auprc": 0.9307117946544439,
+      "archived_log_auroc": 0.8489,
+      "archived_log_auprc": 0.9307,
+      "prediction_sha256": "cb9f0799463286e36880dba71a3ba2173f5f33e38a0e570f270684395584e262"
+    }
+  ],
+  "unweighted_fold_mean": {
+    "auroc": 0.759763899604183,
+    "auprc": 0.7439499980002333
+  },
+  "archived_log_unweighted_fold_mean": {
+    "auroc": 0.7597666667,
+    "auprc": 0.7439666667
+  },
+  "paper_reported_mean": {"auroc": 0.7539, "auprc": 0.7454},
+  "combined_predictions": {
+    "rows": 2371,
+    "size_bytes": 497149,
+    "sha256": "4c0abac1351b7e6c106768c78cd57a9e3691ac8c82c78708ab7730e366a212da"
+  },
+  "repeatability": {
+    "second_replay_completed": true,
+    "all_four_prediction_csv_files_byte_identical": true
+  },
+  "repeated_measurement_audit": {
+    "fold_0_duplicate_pair_keys": 35,
+    "fold_0_pair_keys_with_conflicting_binary_labels": 14,
+    "handling": "retain every measurement and add a stable within-key measurement index"
+  },
+  "privacy_boundary": [
+    "no exact FICI values",
+    "no raw molecule identifiers or structures",
+    "no embeddings, checkpoints, optimizer state, or absolute author paths"
+  ]
+}

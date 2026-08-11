@@ -1,4 +1,5 @@
 import importlib.util
+import json
 from pathlib import Path
 
 import pytest
@@ -17,6 +18,21 @@ def load_replay_script():
 
 
 REPLAY = load_replay_script()
+
+
+def test_frozen_replay_audit_matches_archived_log_precision() -> None:
+    audit = json.loads(
+        (ROOT / "experiments/synergy/checkpoint_replay_audit.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert audit["status"] == "passed"
+    assert audit["protocol"]["evaluation_rows_after_token_filter"] == 2371
+    assert len(audit["folds"]) == 3
+    for fold in audit["folds"]:
+        assert round(fold["auroc"], 4) == fold["archived_log_auroc"]
+        assert round(fold["auprc"], 4) == fold["archived_log_auprc"]
+    assert audit["repeatability"]["all_four_prediction_csv_files_byte_identical"]
 
 
 def test_pair_identity_is_stable_and_order_sensitive() -> None:

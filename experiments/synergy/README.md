@@ -98,8 +98,15 @@ PYTHONHASHSEED=0 PYTHONPATH=src python \
 ensemble 概率、AUROC/AUPRC 及与旧日志的差值。CSV 保留二分类 label、route 和 strain ID，使用
 SHA-256 pair identity 与稳定的同-key measurement index；重复测量不合并，因而保持旧日志的样本数
 和指标定义。不写 exact FICI、原始 molecule ID/structure、embedding、checkpoint、
-optimizer state 或本机绝对路径。该 replay 正在进行结果验收；通过前不得把 seed-0 候选写成
-2025 年精确 membership。
+optimizer state 或本机绝对路径。
+
+2026-08-11 完整 replay 已通过：1 base + 21 member hashes 全部从 bytes 重算一致，2,371 条
+token-filtered evaluation rows 的三折 AUROC/AUPRC 为 `0.668989/0.615860`、
+`0.761413/0.685278`、`0.848890/0.930712`，四舍五入到旧日志的四位小数后逐项一致；未加权均值
+为 `0.759764/0.743950`。第二次只读 replay 的四个 prediction CSV 与第一次 byte-identical。
+紧凑审计见 `checkpoint_replay_audit.json`；约 0.5 MB 的逐样本表继续留在 Git 外，等待由统一
+Zenodo paper-data version series 发布。该一致性强力支持 seed-0 候选，但旧日志没有逐样本预测，
+所以仍不称为已证明的 2025 exact membership。
 
 ## Paper-only 范围
 
