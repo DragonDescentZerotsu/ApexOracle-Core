@@ -457,12 +457,42 @@ CSV/JSON 均留在 `DataPrepare/Data/private_inhouse_amp/`，不得上传 GitHub
 guidance regressor 实际训练 exposure 为 1,599 个标准化 strain ID / 389 个 producer-era species；
 表格 35 个 normalized species 中有 11 个未进入实际训练，10 个具有 MIC 测量。
 
-本项当前状态是 `target discovery complete / generation assets blocked`。已验证 11 个候选均缺少
+本项原状态为 `target discovery complete / generation assets blocked`。2026-08-07 作者已选择并购买
+*Providencia stuartii* ATCC 29914；2026-08-11 的执行状态已更新为
+`target selected / exact assets verified / genome+text embedded / inventory screen complete / generation pending`。
+已验证 11 个候选原先均缺少
 完整 exact-target genome+text embedding；9 个有 exact accession 但现存资产无匹配，另 2 个未给
 exact strain ID。现有表格每个 unseen species 最多只有一个有数据的 strain，因此只能支持
 species-level zero-shot target discovery，不能支持 reviewer 要求的 broad species/genus efficacy。
-下一步必须先由作者和 microbiology 团队选择临床 target 与多-isolate panel，再由外部 Evo-2/text
-producer 生成并登记输入资产；在此之前不启动 guided sampler，也不修改 reviewer response 的结果段。
+ATCC 29914 历史格式 text、实际 Med-LLaMA3 input、完成的 `[174,4096]` text tensor 和 41-length
+raw-attempt generation/filter contract 已冻结到
+`experiments/reviewer4_unseen_targets/providencia_stuartii_atcc_29914/`。exact ATCC Portal FASTA/GenBank 已
+从作者 Mac 复制到 ignored canonical paths，二者 single-record 4,438,675-bp sequence 精确相等；专属
+Evo-2 runtime 已生成 `[444,8192]` bfloat16 tensor。私有 4,842-row lab inventory 也已完成 canonical
+MDLM screen：4,817 rows scored，全部在 resolved DLM `model.length=1024` 范围（observed max 789）；
+2,164 rows predicted MIC `<=15 µM`，其中 1,772 rows/1,681 unique sequences 同时为 exact unmodified
+sequence 且 positive remaining stock。早期误把 tokenizer metadata 512 当模型上限而排除 188 rows 的
+汇总错误已修复，raw predictions 未改变。该结果是 model prioritization，不是 wet-lab activity evidence；
+735 个声明 chemistry 但 sequence-only scorer 未编码的 rows 已显式隔离。下一步按作者优先级先从
+1,772-row shortlist 冻结
+wet-lab selection，再启动 generation；单个 strain 仍不能单独支持 broad species/genus efficacy。
+
+本轮同时完成 downstream MDLM maintenance：embedding loader 只消费 `.pt`、空 CSV peptide 不再被 coercion
+为 `NAN` 假序列，table scorer 固定 tokenizer revision并记录 resolved config/token lengths/实际 condition
+tensor hashes。正式 genome embedding 只保留 ApexOracle-Evo2 canonical CLI；未使用且会输出 float32 的
+Providencia-specific genome/text duplicate wrappers 已从 active tree 删除。Core focused 6 tests、全仓
+221 passed / 4 skipped（14 条既有 warnings）、MDLM focused 19 tests、MDLM 全仓 127 tests 与
+code-ledger stale check 均通过。
+
+随后按作者要求收敛 future strain/molecule workflow：inventory prepare/reporting 已由两个
+Providencia-specific scripts 迁入 MDLM 通用 `peptide_inventory_screen.py {prepare,summarize}` 和 package API；
+prepared inventory 与 strain 解耦并唯一保存于 ignored
+`DataPrepare/Data/private_inhouse_amp/prepared_sequence_screen/`。正式 4,842-row prepare outputs 与旧 adapter
+byte-identical，Providencia 四层 shortlist 的 source-row/prediction/count parity 通过。旧 target-local prepared
+CSV、568-symlink condition bank、两个 screening scripts 与三份相关 pycache 已删除；以后换 strain 只新增
+FASTA/text/embedding 和 CLI 参数，换 inventory 只声明列 schema，不复制 Reviewer-specific code。
+通用 scorer 另新增显式 `--genome-scale`（默认 `1e14`）并写入 manifest，避免未来 strain run 只能依赖源码
+默认值推断 scale；磁盘 Evo-2 tensor 仍保持未缩放原值。
 
 PepLink 外部依赖边界始建于 2026-07-19，并于 2026-07-21 升级到当前版本。作者维护的独立仓库
 `DragonDescentZerotsu/PepLink` 已发布 PyPI `PepLink==0.1.2`、tag `v0.1.2` 和 commit

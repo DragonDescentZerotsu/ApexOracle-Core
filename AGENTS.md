@@ -876,6 +876,66 @@ median MIC 的 sample s.d.。panel c 是唯一保留 legend 的位置；legend �
 - 本初筛只证明「买得到且有基因组」。模型在这些靶点上的预测性能尚未评估，也没有任何湿实验数据；
   不得在回复信中把候选清单表述为已完成的 broad-efficacy 结果。
 
+## 2026-08-11 Reviewer 4 *Providencia stuartii* ATCC 29914 screening/generation
+
+- **已由公开主数据源和本地代码验证的事实：** 作者已购买未进入 guidance training exposure 的
+  *P. stuartii* ATCC 29914。ATCC Genome Portal primary assembly 为 single contig、4,438,675 bp；
+  NCBI Datasets v2 当前把 `GCF_029075745.1` 标为 strain `1194-23`、79 contigs、4,405,218 bp，
+  因此不得把该 GCF 当作 exact ATCC 29914。`GCA_900455155.1` 对应等价 deposit NCTC 11800，
+  只能作为 assembly-source sensitivity。
+- canonical asset 入口为 `scripts/reproduce/prepare_reviewer4_providencia_assets.py`；主要参数为
+  `--atcc-fasta`、`--atcc-genbank` 和 `--install`，会验证 single-record length 及 FASTA/GenBank
+  sequence equality。正式 genome embedding 使用 `ApexOracle-Evo2` 的
+  `python -m apexoracle_evo2.cli`，而不是 base 环境；本次专属 runtime 为
+  `/home/tianang/anaconda3/envs/evo2`、`evo2 0.6.0+apexoracle.1`、`vtx 1.1.0`。
+  text embedding 复用通用 `apexoracle-embed-strain-texts`，使用固定 revision 的
+  `YBXL/Med-LLaMA3-8B` 倒数第二层；不得为新 strain 新增 wrapper。
+- inventory 准备与汇总已迁为 downstream MDLM 通用入口
+  `/data2/tianang/projects/mdlm/scripts/reproduce/peptide_inventory_screen.py {prepare,summarize}`；主要参数为
+  显式 input/sheet/sequence/identifier/chemistry columns，以及 inventory/predictions/model-manifest/strain/
+  stock-column/MIC cutoff/model length。准备产物与 strain 无关，canonical ignored 位置为
+  `DataPrepare/Data/private_inhouse_amp/prepared_sequence_screen/`，同一 inventory 只准备一次。Legacy model
+  manifest 未记录 resolved length 时必须显式给 `--max-token-length 1024`，不得再采用 tokenizer metadata
+  512。模型推断继续复用 MDLM canonical `score_peptide_table_mic.py`，strain `29914`、batch size 32。
+  Genome tensor 从磁盘 raw Evo-2 值加载后在内存显式乘 `--genome-scale 1e14`，新 manifest 必须记录该值；
+  不得与 MIC cutoff 15 或 generation gamma 15 混淆。
+  Target prediction/summary 输出位于 ignored
+  `experiments/reviewer4_unseen_targets/providencia_stuartii_atcc_29914/analysis/inventory_screen/`；验证命令为
+  MDLM `PYTHONPATH=src python -m unittest tests.test_peptide_inventory tests.test_peptide_table -v` 与 Core
+  `PYTHONPATH=src python -m pytest -q tests/test_reviewer4_providencia_generation.py`。
+- generation manifest 入口为
+  `scripts/reproduce/prepare_reviewer4_providencia_generation_tasks.py`：length 256--416、步长 4、
+  默认 seed 1、每长度 1,000 raw attempts，复用论文 `15/15` guidance 和现有 raw-attempt runner。
+  所有 token attempts 必须先于 validity/MIC/peptide filter 保存；不得只保存最终候选。
+- filter 入口为 `scripts/reproduce/filter_reviewer4_providencia_candidates.py`。正式 strict candidate
+  是 clean predicted MIC `<=15 µM`（inclusive）且 PepLink 0.1.2 reliable reverse parser 接受的
+  standard linear/head-to-tail cyclic peptide；同时保留 attempted、complete、RDKit-valid、legacy
+  amide、finite MIC、MIC<=15 和 PepLink-standard 的逐层 flags。完整协议与输出位于
+  `experiments/reviewer4_unseen_targets/providencia_stuartii_atcc_29914/`。
+- **已由代码和产物验证的当前状态：** exact FASTA/GenBank 均为 single record、4,438,675 bp 且
+  sequence 相等；Evo-2 40B tensor 已在本机 GPU0--1 完成，shape `[444,8192]`、bfloat16、444/444
+  rows finite/nonzero、SHA-256 `56ee84b1...35cde`。私有 workbook 4,842 rows 已在 GPU3 完成筛选；
+  4,817 rows 获得 raw score，全部处于 resolved DLM `model.length=1024`（observed max 789）；inclusive
+  predicted MIC `<=15 µM` 为 2,164 rows；其中 exact-unmodified 且剩余库存 `>0` 为 1,772 rows/
+  1,681 unique sequences。25 个无法转换的 rows 保留审计。早期误用 tokenizer metadata 512 排除 188 rows
+  的汇总已纠正；raw predictions 未改变。
+  结果只是 model prioritization，不能表述为湿实验 activity；generation 尚未启动，单菌株也不能支持
+  broad species/genus efficacy。
+- **已验证维护结论：** downstream MDLM 已修复空 CSV peptide 被 pandas 转成 `NAN` 假肽、embedding loader
+  误读 JSON sidecar、tokenizer revision/config/condition provenance 缺失三项通用问题。当前 workbook 的四个
+  blank rows 原运行已由 `X` sentinel 正确拒绝，因此不污染 raw predictions。正式 Evo-2 只保留
+  `python -m apexoracle_evo2.cli`；重复 target-specific genome embedding wrapper 已删除。Core focused
+  6 tests、Core 全仓 221 passed / 4 skipped（14 条既有 warnings）、MDLM focused 19 tests、MDLM 全仓
+  127 tests 与
+  code-ledger stale check 均通过。
+- **2026-08-11 通用新 strain/molecule contract：** 新 strain 不新增 Python；将同 stem 的 FASTA/text 放入
+  canonical input directories，分别运行 ApexOracle-Evo2 与 `apexoracle-embed-strain-texts`，确保 filename
+  parser 产生同一 strain key，再把该 key 传给 MDLM scorer/reporting。新 molecule inventory 只需用通用
+  `prepare` 声明列名；同一 prepared inventory 可跨 strain 复用。Providencia-specific prepare/summarize
+  scripts、target-local prepared CSV、副本 symlink bank 及其 pycache 已在 formal byte/row/hash parity 后删除；
+  Reviewer-specific code 只保留 exact assembly/text identity audit 与 generation protocol，不作为新 strain
+  模板复制。
+
 ## 审稿回复辅助脚本
 
 ### `scripts/plot_evo2_genome_embedding_abs_mean_distribution.py`

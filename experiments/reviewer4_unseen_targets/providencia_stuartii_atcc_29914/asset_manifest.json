@@ -1,0 +1,47 @@
+{
+  "annotation_sequence_matches_fasta": true,
+  "block_reason": null,
+  "blocked": false,
+  "fasta": {
+    "lengths_bp": [
+      4438675
+    ],
+    "path": "DataPrepare/Data/Genome/ATCC/Providencia_stuartii_ATCC_29914.fasta",
+    "record_ids": [
+      "ATCC_29914_contig_1"
+    ],
+    "records": 1,
+    "sha256": "bb7755507a901e43af89972d28b8b0719ca452a023ad660e41082dc1e32cc654",
+    "total_length_bp": 4438675
+  },
+  "genbank": {
+    "feature_count": 8268,
+    "lengths_bp": [
+      4438675
+    ],
+    "path": "DataPrepare/Data/Genome_annotation/ATCC/Providencia_stuartii_ATCC_29914.gbk",
+    "record_ids": [
+      "assembly_8831b4b5b5364192_1"
+    ],
+    "records": 1,
+    "sha256": "184c08de14e6c683a7b6dd751cd82fa9ff98a8ec78511956199e2246adfd836e",
+    "total_length_bp": 4438675
+  },
+  "installed": {
+    "fasta": "DataPrepare/Data/Genome/ATCC/Providencia_stuartii_ATCC_29914.fasta",
+    "genbank": "DataPrepare/Data/Genome_annotation/ATCC/Providencia_stuartii_ATCC_29914.gbk",
+    "text": "DataPrepare/Data/Text_Description/ATCC/Text/Providencia_stuartii_ATCC_29914.txt"
+  },
+  "med_llama3_input": {
+    "hidden_state": -2,
+    "model": "YBXL/Med-LLaMA3-8B",
+    "normalization": "historical full strain-name replacement with 'This strain'",
+    "path": "experiments/reviewer4_unseen_targets/providencia_stuartii_atcc_29914/med_llama3_input.txt",
+    "sha256": "a52071eb411d80654d777f26bb41317d2c1512769b0068f1cd1b00271b01feba"
+  },
+  "schema_version": 1,
+  "source_text": {
+    "path": "experiments/reviewer4_unseen_targets/providencia_stuartii_atcc_29914/strain_description.txt",
+    "sha256": "0799047648291564bd1c02910a20d9c0f29748ba070941ac026123c4aa9d80d9"
+  }
+}

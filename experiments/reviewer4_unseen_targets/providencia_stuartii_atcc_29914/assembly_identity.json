@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "target": {
+    "catalogue": "ATCC 29914",
+    "species": "Providencia stuartii",
+    "strain_designation": "CDC 2896-68",
+    "equivalent_deposits": [
+      "NCTC 11800",
+      "DSM 4539",
+      "LMG 3260"
+    ],
+    "sampler_key": "29914"
+  },
+  "accepted_primary_assembly": {
+    "source": "ATCC Genome Portal",
+    "portal_genome_id": "bac4c442bbed4a2f",
+    "filename": "Providencia_stuartii_ATCC_29914.fasta.gz",
+    "expected_contigs": 1,
+    "expected_length_bp": 4438675,
+    "download_status": "requires ATCC entitlement/API key; not present locally"
+  },
+  "rejected_exact_target_claim": {
+    "accession": "GCF_029075745.1",
+    "ncbi_strain": "1194-23",
+    "assembly_level": "Contig",
+    "contigs": 79,
+    "length_bp": 4405218,
+    "reason": "Current NCBI assembly metadata do not identify this accession as ATCC 29914, and its assembly dimensions conflict with the ATCC portal assembly."
+  },
+  "possible_type_strain_sensitivity_only": {
+    "accession": "GCA_900455155.1",
+    "ncbi_strain": "NCTC 11800",
+    "assembly_level": "Contig",
+    "contigs": 4,
+    "length_bp": 4463872,
+    "use_boundary": "Equivalent-deposit sensitivity only; not the default exact purchased-culture condition."
+  }
+}

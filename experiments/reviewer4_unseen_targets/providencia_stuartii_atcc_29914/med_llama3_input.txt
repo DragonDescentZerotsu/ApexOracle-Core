@@ -1,0 +1,7 @@
+Species Information: This strain is the type strain of Providencia stuartii and is also catalogued as CDC 2896-68, NCTC 11800, and DSM 4539. It is a Gram-negative, motile, facultatively anaerobic rod in the family Morganellaceae. Providencia stuartii is an opportunistic pathogen associated especially with catheter-associated urinary tract infections and other healthcare-associated infections.
+
+Unique Mutations: None
+
+Antibiotics and antimicrobial peptides Resistance: Providencia stuartii has intrinsic resistance to colistin and related polymyxins associated with constitutive modification of lipid A with 4-amino-4-deoxy-L-arabinose. No ATCC 29914-specific resistance mutation or MIC value was identified for this description.
+
+Antibiotics and antimicrobial peptides Sensitivity: None

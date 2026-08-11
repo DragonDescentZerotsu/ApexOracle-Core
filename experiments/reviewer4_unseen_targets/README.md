@@ -80,6 +80,10 @@ genus 展示 broad efficacy」作为有意义的 benchmark。本目录记录为�
   *Treponema*）的 MIC 方案与常规 CLSI 肉汤稀释不同，需要先确认可行性。
 - 靶点确定后，Evo-2 genome embedding 与 strain-text embedding 仍由外部 producer 生成，并登记
   exact genome assembly、text source、SHA-256 和 producer commit；在这些资产就绪前不启动 sampler。
+- 作者于 2026-08-07 确认已购买 *P. stuartii* ATCC 29914。该菌株的 exact-target asset、历史格式
+  text、Evo-2/text embedding、41-length generation 和非破坏性 filter contract 记录在
+  `providencia_stuartii_atcc_29914/`；其当前 NCBI/ATCC assembly identity 冲突与执行 blocker 不由
+  本候选表的旧状态覆盖。
 - 本初筛只证明「买得到且有基因组」。模型在这些靶点上的实际预测性能尚未评估，也没有任何湿实验
   数据；不得在回复信中把候选清单表述为已完成的 broad-efficacy 结果。
 

@@ -1,0 +1,22 @@
+{
+  "device": "cpu",
+  "input": {
+    "path": "experiments/reviewer4_unseen_targets/providencia_stuartii_atcc_29914/med_llama3_input.txt",
+    "sha256": "a52071eb411d80654d777f26bb41317d2c1512769b0068f1cd1b00271b01feba"
+  },
+  "model": {
+    "id": "YBXL/Med-LLaMA3-8B",
+    "revision": "567e7e71d8b6b433d8bc494f8112176bec4afccf"
+  },
+  "output": {
+    "dtype_saved": "torch.float32",
+    "hidden_state": -2,
+    "path": "DataPrepare/Data/Text_Description/ATCC/embeddings/Providencia_stuartii_ATCC_29914.pt",
+    "sha256": "4e33a0869f66ca568d7edf791ccc11df4471903a42591fe55aa3eabc80795825",
+    "shape": [
+      174,
+      4096
+    ]
+  },
+  "schema_version": 1
+}

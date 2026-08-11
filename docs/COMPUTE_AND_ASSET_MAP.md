@@ -733,8 +733,55 @@ GitHub Release 与 PyPI 均已发布）。这些 SHA 只记录当前
   `Staphylococcus capitis` 没有 exact strain ID，后者还没有任何 MIC 测量。
 - **根据现有证据作出的推断：** 当前 in-house 表可用于选 target 和已有 peptide counter-screen，
   但每个 unseen species 只有一个有数据的 strain，尚不能构成 broad species/genus efficacy panel。
-- **仍待作者确认：** 选择临床 target 和多-isolate panel；随后才由外部 Evo-2/text producer 创建
-  exact-target embeddings，并在外部 guidance repo 重构完成后启动 generation。
+- **作者已于 2026-08-07选择：** 首个 target 为已购买的 *Providencia stuartii* ATCC 29914；单菌株
+  不改变后续仍需 multi-isolate panel 才能支持 broad species/genus efficacy 的边界。
+- **资产位置：** 历史格式 text 与 manifest 位于
+  `experiments/reviewer4_unseen_targets/providencia_stuartii_atcc_29914/`；安装后的 text 位于 ignored
+  `DataPrepare/Data/Text_Description/ATCC/Text/Providencia_stuartii_ATCC_29914.txt`。计划中的 tensors 为
+  `DataPrepare/Data/Text_Description/ATCC/embeddings/Providencia_stuartii_ATCC_29914.pt`（已在 CPU
+  完成；shape `[174,4096]`；SHA-256 `4e33a0869f66ca568d7edf791ccc11df4471903a42591fe55aa3eabc80795825`）
+  与 `DataPrepare/Data/Genome_embs/Providencia_stuartii_ATCC_29914.pt`（已完成；shape `[444,8192]`；
+  bfloat16；SHA-256 `56ee84b1565ca690b45609a5b607a2fe8267c9d1cf39ce6db638ec9976d35cde`）。exact FASTA 位于
+  `DataPrepare/Data/Genome/ATCC/Providencia_stuartii_ATCC_29914.fasta`（SHA-256 `bb775550...c654`），
+  GenBank 位于 `DataPrepare/Data/Genome_annotation/ATCC/Providencia_stuartii_ATCC_29914.gbk`
+  （SHA-256 `184c08de...36e`）；二者均为 4,438,675 bp 且 sequence 精确相等，GenBank 有 8,268 features。
+- **2026-08-11 Evo-2 GPU 记录：** Codex 在本机 GPU0--1 使用专属
+  `/home/tianang/anaconda3/envs/evo2/bin/python` 顺序加载 `evo2_40b` 并运行 canonical
+  `python -m apexoracle_evo2.cli`；runtime 为 Python 3.11.11、`evo2 0.6.0+apexoracle.1`、
+  `vtx 1.1.0` 和匹配的 cp311 FlashAttention。输出 444 个 11-kb/10-kb-step windows，443 个 full 加
+  1 个 partial；444/444 tensor rows finite/nonzero。完整命令、source/output hashes 和 window contract
+  位于该实验的 `genome_embedding_manifest.json`。早期 base/isolated runtime 仅做 preflight，未产生或
+  混入正式资产。
+- **2026-08-11 inventory screening GPU 记录：** Codex 在 Evo-2 释放后使用本机 GPU3 运行 downstream
+  MDLM canonical `score_peptide_table_mic.py`，GPU2 已被另一任务占用且未触碰。输入为 ignored
+  `DataPrepare/Data/private_inhouse_amp/de_la_Fuente_Lab_Peptides_Inventory_outsourced.xlsx`（SHA-256
+  `21b37ac...0f24`），checkpoint SHA-256 `c0d7c2be...802`，strain `29914`，batch size 32。4,842 rows
+  中 4,817 scored；全部处于 resolved DLM `model.length=1024`（observed max 789），predicted MIC
+  `<=15 µM` 为 2,164 rows，exact-unmodified + positive stock 为 1,772 rows/1,681 unique sequences。
+  早期 512 汇总错误已纠正且未重跑 raw predictions。输出和 hash manifest 位于 ignored
+  `experiments/reviewer4_unseen_targets/providencia_stuartii_atcc_29914/analysis/inventory_screen/`。首次 raw run
+  使用的 `.pt`-only symlink bank 已在 loader 修复和 hash/key parity 后删除；后续直接读取 canonical
+  `DataPrepare/Data/Genome_embs`，不再建立条件资产副本或 symlink bank。与 strain 无关的 prepared inventory
+  唯一位于 ignored `DataPrepare/Data/private_inhouse_amp/prepared_sequence_screen/`，`screen_input.csv` 与
+  `inventory_rows.csv` SHA-256 分别为 `c2775b59...777d`、`5f97c871...262ba`；target-local copies 已删除。
+  本次 raw run 由代码调用链确认在内存使用 genome scale `1e14`；磁盘 tensor 未缩放。维护后的通用 scorer
+  已新增显式 `--genome-scale 1e14` 并写入未来 manifests，消除这一旧 manifest provenance 缺口。
+- **未来 generation owner/输出 contract：** scheduling 前重新登记具体 host/GPU/owner。每个
+  `length × seed` task 独占
+  `experiments/reviewer4_unseen_targets/providencia_stuartii_atcc_29914/runs/<task_id>/`，以逐 batch
+  JSONL 和原子 `completed.json` 为完成标记；任何两个 worker 不得写同一 task 目录。
+
+### 2026-08-10 Core strain-text producer parity
+
+- **GPU owner：** Codex 在本机 GPU0（NVIDIA H100 PCIe）顺序执行两条只读复算；启动前 4 张本机
+  H100 均为 0 MiB used/0% utilization，没有占用其他任务输出目录。
+- **输入与输出边界：** 只读消费一条 ATCC 和一条 text-only 历史描述及其已有 tensor；重算结果写入
+  `/tmp/apex-strain-parity-*` 唯一临时目录，不覆盖 `DataPrepare/Data/`。提交范围只包含 compact parity
+  manifest，不包含文本、tensor 或模型权重。
+- **已验证事实：** fixed revision `567e7e71...f811` 的倒数第二层输出保持 `[tokens,4096]` float32
+  contract；text-only 样本与历史 tensor `torch.equal`，ATCC 样本在 `rtol=1e-5, atol=1e-4` 下 allclose，
+  最大/平均绝对差为 `5.18798828125e-4 / 1.1302607845209423e-6`。完整 hashes 位于
+  `reproducibility/strain_text_embedding_parity_2026-08-10.json`。
 
 ## 5. 发生变化时必须同步更新
 

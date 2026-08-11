@@ -149,6 +149,11 @@ experiments/remasking_schedule_reviewer/superseded_allocation_smoke_20260728/ear
 experiments/remasking_schedule_reviewer/superseded_allocation_smoke_20260728/queue_status_local_prebalance.json
 experiments/remasking_schedule_reviewer/analysis/evaluated_attempts.csv
 
+# Reviewer 4 ATCC 29914 raw token attempts and row-level filter tables remain
+# local; compact task/asset manifests and protocol documentation are versioned.
+experiments/reviewer4_unseen_targets/providencia_stuartii_atcc_29914/runs/
+experiments/reviewer4_unseen_targets/providencia_stuartii_atcc_29914/analysis/
+
 # Genome-condition reviewer raw replay tables, skani intermediates, plots, and
 # probe predictions follow the global data/media exclusions above. The
 # machine-specific skani input lists are deterministic and remain local; compact

@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "target": "Providencia stuartii ATCC 29914",
+  "source": {
+    "fasta": "DataPrepare/Data/Genome/ATCC/Providencia_stuartii_ATCC_29914.fasta",
+    "fasta_sha256": "bb7755507a901e43af89972d28b8b0719ca452a023ad660e41082dc1e32cc654",
+    "genbank": "DataPrepare/Data/Genome_annotation/ATCC/Providencia_stuartii_ATCC_29914.gbk",
+    "genbank_sha256": "184c08de14e6c683a7b6dd751cd82fa9ff98a8ec78511956199e2246adfd836e",
+    "records": 1,
+    "length_bp": 4438675,
+    "annotation_sequence_matches_fasta": true
+  },
+  "protocol": {
+    "model": "evo2_40b",
+    "layer": "blocks.46.mlp.l3",
+    "window_bp": 11000,
+    "step_bp": 10000,
+    "include_partial": true,
+    "pooling": "valid_token_mean"
+  },
+  "runtime": {
+    "environment": "evo2",
+    "evo2": "0.6.0+apexoracle.1",
+    "vtx": "1.1.0",
+    "gpus": [0, 1]
+  },
+  "output": {
+    "tensor": "DataPrepare/Data/Genome_embs/Providencia_stuartii_ATCC_29914.pt",
+    "tensor_sha256": "56ee84b1565ca690b45609a5b607a2fe8267c9d1cf39ce6db638ec9976d35cde",
+    "tensor_bytes": 7275989,
+    "shape": [444, 8192],
+    "dtype": "torch.bfloat16",
+    "windows": 444,
+    "all_finite": true,
+    "nonzero_rows": 444,
+    "full_window_count": 443,
+    "partial_window_count": 1,
+    "first_window": [0, 11000],
+    "last_window": [4430000, 4438675],
+    "full_window_manifest": "DataPrepare/Data/Genome_embs/Providencia_stuartii_ATCC_29914.manifest.json"
+  }
+}
