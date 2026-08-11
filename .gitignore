@@ -85,6 +85,7 @@ slurm-*.out
 !experiments/peplink_validation/supplementary_data/*.csv
 !experiments/peplink_validation/supplementary_data/*.xlsx
 !experiments/reviewer4_unseen_targets/*.csv
+!experiments/evo2_genome_embeddings/paper_genome_list.csv
 !experiments/hierarchical_mic/molecule_overlap/*.csv
 !experiments/hierarchical_mic/molecule_disjoint/analysis/metrics.csv
 !experiments/hierarchical_mic/molecule_disjoint/analysis/cluster_bootstrap.csv

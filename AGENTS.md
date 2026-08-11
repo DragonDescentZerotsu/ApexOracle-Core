@@ -638,8 +638,23 @@ median MIC 的 sample s.d.。panel c 是唯一保留 legend 的位置；legend �
   `/data2/tianang/projects/discrete-diffusion-guidance`，与 DLM pretraining 和 Evo-2 producer 一样
   不复制进当前 Synergy 源码；未来 ApexOracle 总仓库只在外部仓库拥有 clean、固定 commit 后将其
   作为 submodule 或版本化链接。
-- **作者于 2026-07-19 确认的边界：** 当前仓库不重构或重跑 Evo-2 genome embedding extraction，直接消费 `DataPrepare/Data/Genome_embs` 中的预计算 tensor。未来整合后的 ApexOracle 主仓库可以在 `external/evo2` 使用固定 clean commit 的 Git submodule；权重和 embedding 数据不进入 submodule。
-- **已验证事实：** 当前 567 个 embedding 共 3,437,540,485 bytes，逐文件 SHA-256 manifest 位于 `experiments/evo2_genome_embeddings/file_manifest.csv`，其中三份论文数据匹配 563 个。全部已匹配 tensor 为 `torch.bfloat16`、hidden dimension 8192。重构后的只读 safe loader 完整重算 reviewer scaling CSV/PNG 后逐字节一致。当前外部 Evo-2 HEAD `afd0dae0a4bb25f3ca55f171fbdac4907b937afd` 的 commit object 存在，但 checkout dirty，且没有原始 extraction log 证明该 commit 是精确 producer，因此仅作为未来 submodule candidate。
+- **作者于 2026-07-19 确认、2026-08-11 更新的边界：** 当前仓库不重构或重跑 Evo-2 genome
+  embedding extraction，直接消费 `DataPrepare/Data/Genome_embs` 中的预计算 tensor。ApexOracle
+  super-repo 已固定独立 `ApexOracle-Evo2` submodule；权重和 embedding 数据不进入 submodule。
+- **已验证事实：** 当前 567 个 embedding 共 3,437,540,485 bytes，逐文件 SHA-256 manifest 位于
+  `experiments/evo2_genome_embeddings/file_manifest.csv`，其中三份论文数据匹配 563 个。全部已匹配 tensor
+  为 `torch.bfloat16`、hidden dimension 8192。重构后的只读 safe loader 完整重算 reviewer scaling
+  CSV/PNG 后逐字节一致。公开 Evo-2 模块已通过通用 extraction smoke，但没有原始 extraction log 证明
+  当前 module commit 是这 567 个历史 tensor 的精确 producer。
+- **2026-08-11 论文 Evo-2 基因组清单：** reviewer-facing 名称统一为“paper genome list / 论文基因组
+  清单”，不使用容易产生临床含义的 `cohort`。Canonical builder 为
+  `PYTHONPATH=src python scripts/audit/build_paper_genome_list.py --data-dir PATH --overwrite`；公开输出为
+  `experiments/evo2_genome_embeddings/paper_genome_list.csv` 和相邻 JSON manifest。清单精确包含被论文
+  MIC/classification/synergy 数据使用的 563 个 genome，相应任务计数为 563/2/100，CSV SHA-256 为
+  `64323cab44a4a287b0b63e6e60bd7b0270557d5f0ce5715acb651aeb98b1f860`。`current_fasta_*` 仅固定发布
+  审计时 filename-matched FASTA，不得声称是未恢复的原始 producer input；无法核验 accession 的 custom
+  FASTA 必须保留 `not_recovered`。验证命令为
+  `python -m pytest -q tests/test_genome_embeddings.py`。
 - 论文最终绘图在 SSH host alias `Mac` 上维护；主 notebook 为 `/Users/kirianozan/Documents/Study/Penn/projects/local_figs/figs.ipynb`。
 - Mac 的 conda 位于 `/Users/kirianozan/Documents/anaconda/anaconda3/bin/conda`。后续论文绘图统一使用其 `base` 环境；已验证包含 Matplotlib 3.7.1、Seaborn 0.12.2、NumPy 1.24.3 和 nbformat 5.7.0。
 - 通过非交互 SSH 生成图片时可使用 `MPLBACKEND=Agg .../conda run --no-capture-output -n base python ...`；在 notebook 中交互运行时继续使用 base kernel 即可。

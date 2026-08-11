@@ -30,6 +30,7 @@ in-house 脚本默认在同级外部 `mdlm` checkout 查找 guidance producer，
 | 脚本 | 作用 | 主要输出 |
 | --- | --- | --- |
 | `audit_hierarchical_mic_molecule_overlap.py` | 在 strain/species/phylum pathogen holdout 中审计 train-seen 与 exact-molecule-disjoint test measurements | `experiments/hierarchical_mic/molecule_overlap/overlap_{by_group.csv,audit.json}` |
+| `build_paper_genome_list.py` | 整理论文实际使用的 genome、当前 filename-matched FASTA、embedding SHA-256 与 MIC/classification/synergy 使用标记；不重跑 Evo-2 | `experiments/evo2_genome_embeddings/paper_genome_list*` |
 | `plot_hierarchical_mic_test_distribution.py` | 绘制 fixed strain-wise 实际 held-out MIC 的 pooled histogram 与逐 fold ECDF，并审计 MIC<=16 micromolar 比例；最终样式无总标题、panel标题不加粗并带`a/b`标记 | `experiments/hierarchical_mic/mic_distribution/` |
 | `analyze_hierarchical_mic_censor_sensitivity.py` | 从 raw DBAASP concentration 重建 censor lineage，并用 frozen strain/phylum 七成员 ensemble predictions 比较普通 `>V` 的 `1×/2×/4×`、删除右删失和删除全部删失口径；不重训 | `experiments/hierarchical_mic/censor_multiplier_sensitivity/analysis/` |
 | `prepare_all_genome_fragment_variation_pairs.py` | 从全部 embedding/FASTA/species-compatible bacterial assets 中冻结同物种 ANI 最近邻与去重 pair manifest | `experiments/genome_condition_reviewer/fragment_variation/manifests/` |

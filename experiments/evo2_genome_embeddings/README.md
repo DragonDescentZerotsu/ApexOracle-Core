@@ -5,13 +5,12 @@
 
 ## 已确认的架构决定
 
-- 未来整合后的 ApexOracle 主仓库计划在 `external/evo2` 放置 Evo-2 Git submodule。
-- submodule 只固定生产代码，不包含模型权重、genome 输入或预计算 embedding。
-- 当前 `/data2/tianang/projects/evo2` HEAD 为
-  `afd0dae0a4bb25f3ca55f171fbdac4907b937afd`，commit object 已验证存在，但工作树有本地修改。
-  因此不能直接把当前 checkout 当成 clean submodule，也不能声称该 commit 已由原始日志证明是
-  567 个 tensor 的精确生产版本。
-- 当前 Synergy 仓库不新增 submodule、不迁移 extraction 代码、不重新运行 Evo-2。
+- ApexOracle super-repo 已将 clean `ApexOracle-Evo2` 固定为独立 submodule；该模块只提供通用
+  extraction code，不包含模型权重、genome 输入或预计算 embedding。
+- Core 只消费版本化 embedding，不复制 Evo-2 extraction 实现，也不因整理清单而重新运行 40B 模型。
+- 当前公开 Evo-2 模块已经通过通用 40B runtime smoke，但原始 567 个 tensor 的 extraction log、精确
+  producer commit 和模型权重身份没有完整恢复；不得把当前 module commit 写成这些历史 tensor 的精确
+  producer。
 
 ## 已由代码和真实文件验证的事实
 
@@ -40,6 +39,28 @@
 0420058138fd0473f9c3c6d92a0dae0ebe4ffedc1924a14ab6038259f0aa7496
 ```
 
+`paper_genome_list.csv` 是 reviewer-facing 的论文基因组清单，只保留上述 563 个实际被至少一项论文
+MIC、classification 或 synergy 数据使用的 genome。每行记录 paper-era species label、保守来源类型、
+可核验来源标识、当前 filename-matched FASTA 的文件身份、embedding 文件身份，以及三项任务的独立使用
+标记。清单为 171,749 bytes，SHA-256 为：
+
+```text
+64323cab44a4a287b0b63e6e60bd7b0270557d5f0ce5715acb651aeb98b1f860
+```
+
+其中 MIC/classification/synergy 分别使用 563/2/100 个 genome。`paper_genome_list_manifest.json` 固定
+这些计数、输入清单 hash 与解释边界。`current_fasta_*` 只表示发布审计时 filename-matched 的现存 FASTA，
+不声称它与未恢复的原始 producer 输入逐字节相同；无法核验精确外部 accession 时保留
+`not_recovered`，不作猜测。
+
+确定性重建命令为：
+
+```bash
+PYTHONPATH=src python scripts/audit/build_paper_genome_list.py \
+  --data-dir /path/to/DataPrepare/Data \
+  --overwrite
+```
+
 重新审计时必须写入数据目录之外的新路径：
 
 ```bash
@@ -59,6 +80,8 @@ python scripts/plot_evo2_genome_embedding_abs_mean_distribution.py \
 ## 证据边界
 
 - **已验证：** 当前 tensor 文件身份、消费集合、shape/dtype contract、scaling 数值和输出等价性。
+- **已验证：** 563 行论文基因组清单与三份 paper dataset 的匹配集合、当前 FASTA/embedding 文件身份和
+  任务计数。
 - **根据现有证据作出的推断：** embeddings 来自项目记录的 Evo-2-40B layer 46 流程。
 - **仍待确认：** 精确 producer commit、模型权重身份，以及当前 FASTA 是否逐字节等于生产时输入。
   Window size/step 和 saved-tensor indexing 已有代码与 567/567 tensor-shape 一致性支持，但这

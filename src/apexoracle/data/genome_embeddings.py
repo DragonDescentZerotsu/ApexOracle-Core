@@ -20,6 +20,20 @@ DEFAULT_DATASETS = (
     "synergy_DBAASP_inhouse_Evo.csv",
 )
 
+PAPER_DATASET_COLUMNS = {
+    DEFAULT_DATASETS[0]: "used_by_mic",
+    DEFAULT_DATASETS[1]: "used_by_classification",
+    DEFAULT_DATASETS[2]: "used_by_synergy",
+}
+
+CUSTOM_FASTA_SOURCES = {
+    "#001": ("NCBI RefSeq assembly", "GCF_000212715.2"),
+    "#002": ("NCBI RefSeq assembly", "GCF_045689255.1"),
+    "#003": ("project custom FASTA", "not_recovered"),
+    "#004": ("project custom FASTA", "not_recovered"),
+    "#005": ("project custom FASTA", "not_recovered"),
+}
+
 
 def parse_embedding_id(file_name: str) -> str:
     stem = file_name.split(".")[0]
@@ -29,6 +43,22 @@ def parse_embedding_id(file_name: str) -> str:
     if len(components) == 2:
         return "-".join(components)
     return components[0]
+
+
+def parse_species_label(file_name: str) -> str:
+    """Recover the paper-era species label encoded in an embedding filename."""
+
+    stem = Path(file_name).stem
+    prefix = stem.split("_ATCC_", 1)[0]
+    return prefix.replace("_", " ")
+
+
+def fasta_source(genome_id: str) -> tuple[str, str]:
+    """Return a conservative source label without inventing missing accessions."""
+
+    if genome_id in CUSTOM_FASTA_SOURCES:
+        return CUSTOM_FASTA_SOURCES[genome_id]
+    return "ATCC FASTA archive", f"ATCC {genome_id.replace('-', ' ')}"
 
 
 def genome_embedding_paths(embeddings_dir: Path) -> dict[str, Path]:
@@ -193,3 +223,71 @@ def manifest_identity(table: pd.DataFrame) -> str:
         raise ValueError(f"Unexpected manifest columns: {list(table.columns)}")
     payload = table.to_csv(index=False, lineterminator="\n").encode("utf-8")
     return hashlib.sha256(payload).hexdigest()
+
+
+def build_paper_genome_list(
+    embedding_manifest: pd.DataFrame,
+    fasta_dir: Path,
+    dataset_genome_ids: dict[str, set[str]],
+) -> pd.DataFrame:
+    """Build the compact list of genomes used by at least one paper task.
+
+    The FASTA columns identify the current filename-matched archive. They do
+    not assert that these files are byte-identical to the unrecovered original
+    Evo-2 producer inputs.
+    """
+
+    expected_datasets = set(PAPER_DATASET_COLUMNS.values())
+    if set(dataset_genome_ids) != expected_datasets:
+        raise ValueError(
+            "Expected paper dataset keys "
+            f"{sorted(expected_datasets)}, got {sorted(dataset_genome_ids)}"
+        )
+
+    required = {"genome_id", "file", "bytes", "sha256", "used_by_paper_datasets"}
+    missing = required.difference(embedding_manifest.columns)
+    if missing:
+        raise ValueError(f"Embedding manifest is missing columns: {sorted(missing)}")
+
+    union_ids = set().union(*dataset_genome_ids.values())
+    manifest_ids = set(embedding_manifest["genome_id"].astype(str))
+    unknown = union_ids.difference(manifest_ids)
+    if unknown:
+        raise ValueError(
+            f"Paper genome IDs are absent from manifest: {sorted(unknown)}"
+        )
+
+    rows = []
+    for record in embedding_manifest.to_dict(orient="records"):
+        genome_id = str(record["genome_id"])
+        if genome_id not in union_ids:
+            continue
+        embedding_file = str(record["file"])
+        fasta_path = fasta_dir / f"{Path(embedding_file).stem}.fasta"
+        if not fasta_path.is_file():
+            raise FileNotFoundError(f"Missing filename-matched FASTA: {fasta_path}")
+        source_type, source_identifier = fasta_source(genome_id)
+        rows.append(
+            {
+                "genome_id": genome_id,
+                "species_label": parse_species_label(embedding_file),
+                "source_type": source_type,
+                "source_identifier": source_identifier,
+                "current_fasta_file": fasta_path.name,
+                "current_fasta_bytes": fasta_path.stat().st_size,
+                "current_fasta_sha256": sha256_file(fasta_path),
+                "embedding_file": embedding_file,
+                "embedding_bytes": int(record["bytes"]),
+                "embedding_sha256": str(record["sha256"]),
+                **{
+                    key: genome_id in ids
+                    for key, ids in sorted(dataset_genome_ids.items())
+                },
+            }
+        )
+    table = pd.DataFrame(rows).sort_values("genome_id", kind="stable")
+    if len(table) != len(union_ids):
+        raise ValueError(
+            f"Expected {len(union_ids)} paper genomes, built {len(table)} rows"
+        )
+    return table.reset_index(drop=True)
