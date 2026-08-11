@@ -34,7 +34,7 @@
     "peptide": "v1 peptide classifier clean-input probability >= 0.5",
     "valid_peptide_yield_denominator": "all raw attempted generations",
     "composition_denominator": "RDKit-valid generated candidates",
-    "predicted_mic": "clean MIC reporting model; micromolar; not wet-lab MIC",
+    "predicted_mic": "fixed-t=1e-3 MIC reporting model; micromolar; not wet-lab MIC",
     "panel_a_error_bars": "sample standard deviation across 3 seed-level rates, each pooling 2 strains and 200 attempts",
     "panel_c_tests": "two-sided exact paired sign-flip tests across 6 matched strain-by-seed tasks; no multiple-testing correction"
   },
@@ -51,5 +51,10 @@
       "rdkit_valid": 0.1875,
       "valid_peptide_yield": 0.59375
     }
+  },
+  "metadata_maintenance": {
+    "date": "2026-08-10",
+    "change": "Renamed the reporting model to fixed-t=1e-3; numeric plotted data and figure binaries were unchanged.",
+    "current_script_sha256": "c6a7626bc7f3b83828a5c17f2302351b3f2d4f2c5f72c5c66b9fea746f99c235"
   }
 }

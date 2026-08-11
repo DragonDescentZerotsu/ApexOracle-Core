@@ -2,7 +2,7 @@
 **a,** Peptide yield across five remasking windows. Bars are pooled rates from
 600 attempts per window; vertical error bars are the sample s.d. across three
 seed-level pooled rates (200 attempts per seed). **b,** Pooled median predicted
-MIC among all RDKit-valid outputs from the clean MIC model; vertical error
+MIC among all RDKit-valid outputs from the fixed-`t=1e-3` MIC model; vertical error
 bars are the sample s.d. across the three seed-level pooled median MIC values.
 Lower values indicate stronger predicted activity. **c,** Current peptide
 guidance (blue circles; gamma_peptide=15) versus no peptide guidance (open

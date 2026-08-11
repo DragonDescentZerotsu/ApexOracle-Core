@@ -2,7 +2,7 @@
   "arguments": {
     "allow_incomplete": false,
     "classifier_batch_size": 16,
-    "clean_mic_checkpoint": "/data2/tianang/projects/Synergy/Checkpoints/genome_text_learnable_emb/guidance_regressor_non_pad_clean/noise_guidance_best_R2_all_peptide_epoch_13.pth",
+    "historical_clean_mic_checkpoint": "/data2/tianang/projects/Synergy/Checkpoints/genome_text_learnable_emb/guidance_regressor_non_pad_clean/noise_guidance_best_R2_all_peptide_epoch_13.pth",
     "mdlm_root": "/data2/tianang/projects/mdlm",
     "mic_batch_size": 8,
     "output_dir": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/analysis",
@@ -11,8 +11,9 @@
     "synergy_root": "/data2/tianang/projects/Synergy",
     "task_manifest": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/task_manifest.json"
   },
-  "clean_mic_checkpoint": {
-    "path": "/data2/tianang/projects/Synergy/Checkpoints/genome_text_learnable_emb/guidance_regressor_non_pad_clean/noise_guidance_best_R2_all_peptide_epoch_13.pth",
+  "fixed_epsilon_mic_checkpoint": {
+    "path": "/data2/tianang/projects/Synergy/Checkpoints/genome_text_learnable_emb/guidance_regressor_non_pad_t1e-3/mic_candidate_scorer_all_peptide_non_pad_t1e-3_epoch13.pth",
+    "historical_path": "/data2/tianang/projects/Synergy/Checkpoints/genome_text_learnable_emb/guidance_regressor_non_pad_clean/noise_guidance_best_R2_all_peptide_epoch_13.pth",
     "sha256": "c0d7c2be49ef179a25a19dcd9c54c592c282b6961e51aff60e95fabc13786802",
     "size": 9168011488
   },

@@ -46,7 +46,7 @@
 - generation level：两个目标菌株、全部生成长度的 84,226 条 guided generation outputs，精确去重并
   穷举全部 3,546,967,425 个无序 non-self pairs。
 
-73 条 candidate pool 的筛选流程为：clean MIC regressor 对相应 target strain 评分，保留
+73 条 candidate pool 的筛选流程为：fixed-`t=1e-3` MIC regressor 对相应 target strain 评分，保留
 predicted MIC <=15 µM 且能够解析为不含 unresolved `X` residue 的 peptide structures；
 再从中按 structural/sequence diversity 与 synthesis feasibility 选择 24 条进入合成，并降低
 过度疏水或有 aggregation-prone motifs 的候选优先级。predicted MIC 只用于 computational

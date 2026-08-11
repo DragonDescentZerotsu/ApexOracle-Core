@@ -15,7 +15,7 @@
 | --- | --- | --- |
 | `/data2/tianang/projects/Synergy` | reviewer 实验编排、评估、结构审计、绘图、测试和内部文档 | 本轮代码主仓库；已按主题提交并直接推送 `main`，本地与远程已对齐 |
 | `/data2/tianang/projects/discrete-diffusion-guidance` | 实际 MDLM/ReMDM guided-generation producer | 本轮只读消费；checkout 历史上已有大量本地修改，本轮没有在该仓库写代码 |
-| `/data2/tianang/projects/mdlm` | pretrained MDLM、clean MIC 和 peptide classifier 资产/实现来源 | 本轮只读消费；checkout 预先 dirty，本轮没有在该仓库写代码 |
+| `/data2/tianang/projects/mdlm` | pretrained MDLM、fixed-`t=1e-3` MIC 和 peptide classifier 资产/实现来源 | 本轮只读消费；checkout 预先 dirty，本轮没有在该仓库写代码 |
 | `/data2/tianang/projects/ApexOracle_cleaned/docs/ApexOracle_Nat_Biotech` | 正式 TeX、response DOCX 和 Supplementary Fig. C4 | 非 Git 目录；正式文稿已修改并独立渲染核验，不能从当前位置直接 push |
 
 正式文稿资产为：

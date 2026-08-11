@@ -484,7 +484,7 @@ def main() -> None:
         axis_b.set_ylabel("Median predicted MIC (µM)")
         panel_b_title = "Median predicted MIC among RDKit-valid molecules"
         panel_b_subtitle = (
-            "Pooled median from the clean MIC model; lower values indicate stronger activity"
+            "Pooled median from the fixed-t=1e-3 MIC model; lower values indicate stronger activity"
         )
     else:
         mic_by_condition = [
@@ -848,7 +848,7 @@ def main() -> None:
             "peptide": "v1 peptide classifier clean-input probability >= 0.5",
             "valid_peptide_yield_denominator": "all raw attempted generations",
             "composition_denominator": "RDKit-valid generated candidates",
-            "predicted_mic": "clean MIC reporting model; micromolar; not wet-lab MIC",
+            "predicted_mic": "fixed-t=1e-3 MIC reporting model; micromolar; not wet-lab MIC",
             "panel_a_error_bars": (
                 "sample standard deviation across 3 seed-level rates, each pooling "
                 "2 strains and 200 attempts"

@@ -116,6 +116,12 @@
   `docs/MIC_QUICKSTART.md`；空 cache 下载、两个 SHA-256、strict CPU load 和真实 example 输出
   `11.79631996 µM` 均已通过。该 asset 是 strain group 0 / member 0 的 runnable example，不得表述为
   论文 7-member ensemble metric 或 prospective activity evidence。
+- **2026-08-10 downstream MIC scorer 命名修正：** 原资产名中的 `clean` 与 `noise` 均不能准确表达
+  producer；源码验证该模型固定 `t=1e-3`，并非精确 `t=0`。本地 9.17 GB reporting/candidate-scoring
+  checkpoint 的 canonical 路径现为
+  `Checkpoints/genome_text_learnable_emb/guidance_regressor_non_pad_t1e-3/mic_candidate_scorer_all_peptide_non_pad_t1e-3_epoch13.pth`，
+  SHA-256 保持 `c0d7c2be...013686802`。Core 的 active evaluator、文档和 provenance 使用新名；旧名只作为
+  `historical_path` 保留。Generation sampler 继续使用独立的 `noisy_padding_preserved` 权重，未被替换。
 - **2026-08-10 Core 与 super-repo 正式发布：** 原 `DragonDescentZerotsu/Synergy` 已原地重命名并公开为
   `DragonDescentZerotsu/ApexOracle-Core`，Core release `v0.1.0` 指向 `8c1def518ac148a878c14f4a39876db59649d43c`；
   没有建立第二份 Core repository。现有 `DragonDescentZerotsu/ApexOracle` super-repo `main`
@@ -263,7 +269,7 @@
   `scripts/reproduce/run_remasking_schedule_reviewer.py` 执行单个 GPU 生成任务；
   `scripts/reproduce/orchestrate_remasking_schedule_reviewer.py` 按 host 为每张 GPU 建立一条顺序队列；
   `scripts/reproduce/evaluate_remasking_schedule_reviewer.py` 使用同一 v1 peptide classifier 的
-  clean-input probability 和 clean MIC checkpoint 评估全部 raw attempts。正式协议为
+  clean-input probability 和 fixed-`t=1e-3` MIC checkpoint 评估全部 raw attempts。正式协议为
   5 个 window（含作者指定的 wider `0.55--0.25`）加 current-window
   `gamma_peptide=0` effectiveness control，2 strains × 3 seeds × 100 attempts；
   输出统一写入 `experiments/remasking_schedule_reviewer/`，完整参数、资产边界、任务分配和

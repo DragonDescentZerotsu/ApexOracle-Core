@@ -377,7 +377,7 @@ predicted MIC 更低。
 每个 window 只比较：
 
 1. peptide proportion；
-2. clean MIC reporting model 的 predicted MIC；
+2. fixed-`t=1e-3` MIC reporting model 的 predicted MIC；
 3. 作为分母说明所必需的 attempted、completed/valid molecule counts。
 
 不为本 reviewer 问题额外加入 $r_t$、$\alpha_{\rm loop}$、guidance strength、confidence
@@ -476,13 +476,13 @@ proportion。
 
 ### MDLM clean scoring integration（2026-08-10）
 
-`evaluate_remasking_schedule_reviewer.py` 的 clean MIC evaluation 已从动态导入 MDLM 根目录
+`evaluate_remasking_schedule_reviewer.py` 的 fixed-`t=1e-3` MIC evaluation 已从动态导入 MDLM 根目录
 `judge_generated_mols_MIC.py` bridge，切换为直接调用 `apexoracle_mdlm.scoring` 的
 `load_condition_embedding_banks` 与 `load_candidate_mic_regressor`。CLI 仍显式接收 `--mdlm-root`；该路径只用于
 定位 sibling submodule 的 `src/`、upstream runtime/config 和本地 ignored assets，不再把 root legacy filename
 当作 API。
 
-正式 clean MIC checkpoint、最终 no-copy Generation sampler 的两个真实 token，以及 BAA-3170/BAA-3197 两个
+正式 fixed-`t=1e-3` MIC checkpoint、最终 no-copy Generation sampler 的两个真实 token，以及 BAA-3170/BAA-3197 两个
 conditions 下，旧 bridge 与 direct API 共四个 logits 均 `torch.equal`，最大绝对差 `0.0`。精确输入/output、
 checkpoint hash 和解释边界记录在 `mdlm_scoring_bridge_parity.json`。Focused source contract：
 
@@ -509,7 +509,7 @@ CUDA_VISIBLE_DEVICES=0 /home/tianang/anaconda3/envs/mdlm/bin/python \
 /home/tianang/anaconda3/envs/mdlm/bin/python \
   scripts/reproduce/orchestrate_remasking_schedule_reviewer.py --help
 
-# 全部任务完成后，用同一 v1 classifier 和 clean MIC checkpoint 评估
+# 全部任务完成后，用同一 v1 classifier 和 fixed-t=1e-3 MIC checkpoint 评估
 CUDA_VISIBLE_DEVICES=0 /home/tianang/anaconda3/envs/mdlm/bin/python \
   scripts/reproduce/evaluate_remasking_schedule_reviewer.py --help
 
@@ -542,7 +542,7 @@ MPLBACKEND=Agg \
 RDKit validity 与结构代理，并保存 resolved config、启动日志和 batch SHA-256。原评估的
 classifier-positive proportion 使用生成时同一个 v1 peptide classifier 在 clean input 的
 `p(peptide)>=0.5`；后续已确认该值不是 structure peptide truth。predicted MIC 使用
-`guidance_regressor_non_pad_clean/noise_guidance_best_R2_all_peptide_epoch_13.pth`，只对
+`guidance_regressor_non_pad_t1e-3/mic_candidate_scorer_all_peptide_non_pad_t1e-3_epoch13.pth`，只对
 RDKit-valid 分子计算，且不用于改变 raw-attempt 分母。
 
 ### 7.1 2026-07-29 完成状态
@@ -598,7 +598,7 @@ truth。canonical/legacy 索引及避免二进制重复的存储规则见 `figur
 
 - [ ] 恢复/界定 DLM 过滤后逐来源计数；
 - [X] 核对 BAA-3197 historical generation config、两个 strain input embeddings 和 checkpoint；
-- [X] 核对 clean MIC reporting checkpoint 与 noisy guidance checkpoint；
+- [X] 核对 fixed-`t=1e-3` MIC reporting checkpoint 与 noisy guidance checkpoint；
 - [X] 记录本机和 node002 GPU 可用性并冻结 task ownership；
 - [X] 验证 wrapper 可保存 raw attempts；没有修改外部 sampler 或其历史 output；
   如果未来必须改外部 sampler，仍需先获得作者对最小
@@ -987,7 +987,7 @@ $$
 > $t_{\rm on}=0.55$, $t_{\rm off}=0.45$, $\alpha(t_{\rm on})=0.5$, and a base loop-remasking
 > probability of $r_t=0.02$. MIC guidance used $\gamma_1=15$ in stages 1 and 3, whereas peptide
 > guidance used $\gamma_2=15$ in stage 2. Both predictors used for guidance were trained on
-> noised molecular sequences. The clean MIC model was used only for post-generation property
+> noised molecular sequences. The fixed-$t=10^{-3}$ MIC model was used only for post-generation property
 > reporting and did not alter the generated samples.
 
 这里不再重复“middle of the generation process”或“correct mistakes”等直觉性表述；机制已由
@@ -1009,7 +1009,7 @@ Sampling Strategy 精确定义。
 > sequence lengths were 368 and 232 tokens, respectively.
 
 > Peptide yield and RDKit-valid yield used all raw attempts as the denominator. Predicted MIC was
-> evaluated only for RDKit-valid outputs using the clean MIC reporting model and was not treated
+> evaluated only for RDKit-valid outputs using the fixed-$t=10^{-3}$ MIC reporting model and was not treated
 > as a wet-lab measurement. Window-wise bars report pooled values across both strains and all
 > three seeds. Error bars for yields are the sample standard deviation across three seed-level
 > pooled rates; error bars for predicted MIC are the sample standard deviation across the three
@@ -1064,7 +1064,7 @@ molecules。
 > **a,** Peptide yield across five remasking windows. Bars are pooled rates from 600 attempts per
 > window; vertical error bars are
 > the sample s.d. across three seed-level pooled rates (200 attempts per seed).
-> **b,** Pooled median predicted MIC among all RDKit-valid outputs from the clean MIC reporting
+> **b,** Pooled median predicted MIC among all RDKit-valid outputs from the fixed-$t=10^{-3}$ MIC reporting
 > model; vertical error bars are the sample s.d. across the three seed-level pooled median MIC
 > values. Lower values indicate stronger predicted activity.
 > **c,** Current peptide guidance (blue circles; $\gamma_{\rm peptide}=15$) versus no peptide

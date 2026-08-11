@@ -71,8 +71,8 @@
     },
     "remasking_structure_qualified_peptides_with_mic_control_caption.md": {
       "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/figures/remasking_structure_qualified_peptides_with_mic_control_caption.md",
-      "sha256": "701656295f267de8994108be8b9063e80921ac2eada46ea29edfed24469aa357",
-      "size": 1173
+      "sha256": "288a61b29b9377eaa4731a4df459c5620a0de8ccb87fc709e75836264482bc92",
+      "size": 1182
     },
     "remasking_structure_qualified_peptides_with_mic_control_plotted_data.csv": {
       "path": "/data2/tianang/projects/Synergy/experiments/remasking_schedule_reviewer/figures/remasking_structure_qualified_peptides_with_mic_control_plotted_data.csv",
@@ -85,5 +85,10 @@
   "script": {
     "path": "/data2/tianang/projects/Synergy/scripts/audit/plot_remasking_structure_qualified_peptides.py",
     "sha256": "60458fdf53c6ec74d8d5961ac107bf110364c28c3934ff8423cb9318e1fd872a"
+  },
+  "metadata_maintenance": {
+    "date": "2026-08-10",
+    "change": "Updated only the reporting-model terminology in the caption; numeric plotted data and figure binaries were unchanged.",
+    "current_script_sha256": "ae7b0f9cb42f948e92e876be0960cce69ddecf135e1d816cade1eb0e5ff41cee"
   }
 }

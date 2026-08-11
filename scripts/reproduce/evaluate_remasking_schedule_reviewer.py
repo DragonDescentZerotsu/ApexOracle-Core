@@ -45,7 +45,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--mdlm-root", type=Path, required=True)
     parser.add_argument("--synergy-root", type=Path, required=True)
     parser.add_argument("--peptide-classifier-checkpoint", type=Path, required=True)
-    parser.add_argument("--clean-mic-checkpoint", type=Path, required=True)
+    parser.add_argument("--fixed-epsilon-mic-checkpoint", type=Path, required=True)
     parser.add_argument("--classifier-batch-size", type=int, default=32)
     parser.add_argument("--mic-batch-size", type=int, default=16)
     parser.add_argument(
@@ -479,7 +479,7 @@ def main() -> None:
         "mdlm_root",
         "synergy_root",
         "peptide_classifier_checkpoint",
-        "clean_mic_checkpoint",
+        "fixed_epsilon_mic_checkpoint",
     ):
         setattr(args, name, getattr(args, name).resolve())
     if args.classifier_batch_size < 1 or args.mic_batch_size < 1:
@@ -500,7 +500,7 @@ def main() -> None:
         rows,
         mdlm_root=args.mdlm_root,
         synergy_root=args.synergy_root,
-        checkpoint_path=args.clean_mic_checkpoint,
+        checkpoint_path=args.fixed_epsilon_mic_checkpoint,
         tokenizer=tokenizer,
         batch_size=args.mic_batch_size,
     )
@@ -541,10 +541,10 @@ def main() -> None:
             "size": args.peptide_classifier_checkpoint.stat().st_size,
             "sha256": sha256_file(args.peptide_classifier_checkpoint),
         },
-        "clean_mic_checkpoint": {
-            "path": str(args.clean_mic_checkpoint),
-            "size": args.clean_mic_checkpoint.stat().st_size,
-            "sha256": sha256_file(args.clean_mic_checkpoint),
+        "fixed_epsilon_mic_checkpoint": {
+            "path": str(args.fixed_epsilon_mic_checkpoint),
+            "size": args.fixed_epsilon_mic_checkpoint.stat().st_size,
+            "sha256": sha256_file(args.fixed_epsilon_mic_checkpoint),
         },
         "input_files": input_files,
         "row_count": len(rows),

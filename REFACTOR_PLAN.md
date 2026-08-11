@@ -986,6 +986,14 @@ optimizer-step 已在宿主 H100 单独通过，两份 guidance checkpoint 的 i
   focused tests和全仓205 tests通过（14条既有warnings）；42 MB逐行表因承担独立复算与重复记录
   审计而继续local-only保留。
 
+### 4.14 fixed-epsilon MIC scorer 命名收口（2026-08-10）
+
+- [x] 从 legacy producer 源码确认 reporting/candidate scorer 固定 `t=1e-3`，不是精确 clean `t=0`。
+- [x] 将 active evaluator 参数、文档和 provenance 从 `clean` 术语迁为 `fixed_epsilon`；旧路径只保留为
+  `historical_path`。
+- [x] 固定 canonical 本地路径和不变 SHA-256；确认 Generation sampler 使用另一份
+  `noisy_padding_preserved` checkpoint，本次未替换其权重。
+
 ## 5. 计划提交序列
 
 建议使用小而可审查的提交：
