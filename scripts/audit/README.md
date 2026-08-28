@@ -22,8 +22,8 @@
 | `audit_reviewer4_inhouse_species_coverage.py` | 将私有 in-house assay headers 与实际 guidance training exposure 比较 | 私有 workbook 和逐 assay 输出不提交 |
 | `audit_reviewer4_unseen_atcc_pathogens.py` | 用 NCBI current taxonomy 与公开 ATCC catalogue 筛选 unseen species/genus | 公开候选表发布于 `experiments/reviewer4_unseen_targets/` |
 
-in-house 脚本默认在同级外部 `mdlm` checkout 查找 guidance producer，也可设置
-`MDLM_GUIDANCE_PRODUCER=/path/to/guaidance_regressor_all_data_pad_no_mask.py`。
+in-house 脚本默认读取同级外部 `mdlm/reproducibility/mic_guidance_migration.json` 中冻结的 snapshot producer
+SHA-256；也可用 `MDLM_GUIDANCE_PRODUCER=/path/to/source.py` 复核一份显式恢复的 legacy source。
 
 ## Hierarchical MIC split 与 molecule overlap
 

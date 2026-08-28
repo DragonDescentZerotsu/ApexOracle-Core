@@ -812,7 +812,10 @@ median MIC 的 sample s.d.。panel c 是唯一保留 legend 的位置；legend �
 - `guaidance_regressor_all_data_pad_no_mask.py` 实际消费的不是源 CSV 中全部 5,614 个 strain 名，
   而是经过 genome/text embedding 过滤后的 1,599 个标准化 strain ID；它们全部可回映到 389 个
   producer-era species 名。审计入口为
-  `scripts/audit/audit_reviewer4_inhouse_species_coverage.py`。
+  `scripts/audit/audit_reviewer4_inhouse_species_coverage.py`；默认 producer provenance 来自
+  `/data2/tianang/projects/mdlm/reproducibility/mic_guidance_migration.json`，也可用
+  `--guidance-producer` 指向恢复出的 legacy source。验证命令为
+  `PYTHONPATH=src python scripts/audit/audit_reviewer4_inhouse_species_coverage.py --output-dir /tmp/reviewer4-species-audit`。
 - Excel 两个 sheet 共 76 个 assay 表头，归一化为 35 个 species。结合项目 frozen taxonomy alias
   与 2026-07-20 NCBI Datasets v2 名称核对后，11 个 species 没有进入 guidance regressor 的实际
   训练 exposure，其中 10 个已有 MIC 数值：`[Clostridium] scindens` 468、
@@ -1037,7 +1040,7 @@ median MIC 的 sample s.d.。panel c 是唯一保留 legend 的位置；legend �
 | Fig. 1a / Fig. 2d、g species-wise 11-cluster holdout | `scripts/reproduce/run_hierarchical_mic.py --protocol species`；checkpoint 位于 `.../11_species_w_SM/MDLM_MTR_fix_cls_wo_pad_7_fold_ensembles` | **代码路径已统一并验证；历史结果仍为中等置信度。** 合并 node002 group 0–5 和本机 group 6–10 后已覆盖全部 11 组；10 个非异常值重算均值 `0.43366`，与论文 `0.4337` 一致。唯一差异是现存异常组 `-0.3467`，而 Mac 绘图为 `-0.1467`。作者决定暂不继续追查。 |
 | Fig. 2c strain-wise molecular encoder 比较 | `scripts/reproduce/run_hierarchical_mic.py --protocol strain --molecule-encoder {chemberta_mtr,chemberta_mlm,molformer,peptideclm}`；配置 `configs/hierarchical_mic/legacy_fig2c_comparators.yaml` | **代码路径已统一并通过真实模型 H100 smoke。** profiles 保留各 encoder 的 online tokenization、first-token pooling、mode、freeze epoch、ensemble 数和 optimizer 差异。MTR/MolFormer/PeptideCLM 现存 checkpoint 已严格匹配固定 revision；node002 MLM checkpoint 的 state schema 精确匹配。PeptideCLM fixed 与 node002 早期 7-member 变体不同，论文精确 ensemble 血缘仍未完全恢复。 |
 | Fig. 2c Evo-2 与 k-mer 消融 | canonical producer 为 `scripts/reproduce/build_kmer_embeddings.py`；consumer 使用共享 hierarchical runner 和 `configs/hierarchical_mic/legacy_kmer_reconstruction.yaml`；血缘见 `experiments/kmer_ablation/` | **代码迁移完成；论文精确训练血缘仍缺失。** Mac 最终图的单模型 k-mer 为 R²/Spearman/Pearson `0.4507/0.6688/0.6793`。`/data/fangping/kmer_baseline` 是 2026 年 post-paper reconstruction：完整 global/25-epoch/7-member 三组均值 R² `0.5276`，协议与论文不同。567 个 global 和 567 个 windowed tensor 已建立逐文件 manifest；两种 canonical producer 在真实 E. coli ATCC 25922 上均与现存 tensor 逐值相同。 |
-| Fig. 2b 不使用 strain knowledge 的五折 molecular representation benchmark | canonical 模块为 `src/apexoracle/benchmarks/molecule_encoders/`，正式结果见 `experiments/fig2b_molecule_encoders/results_shared_5fold.md`；DLM 预训练代码仍位于外部 `/data2/tianang/projects/mdlm` | **正式修订版 / 高置信度。** 7-model × 5-fold 已在 10,886 个共享 molecule 上完成；旧 root/capsule source 副本由 legacy tag 和 migration audit 追溯。 |
+| Fig. 2b 不使用 strain knowledge 的五折 molecular representation benchmark | canonical 模块为 `src/apexoracle/benchmarks/molecule_encoders/`，正式结果见 `experiments/fig2b_molecule_encoders/results_shared_5fold.md`；joint DLM+MTR 预训练 producer 已发布到 `ApexOracle-DLM-Pretraining`，downstream loader/benchmark family 已发布到 `ApexOracle-MDLM` | **正式修订版 / 高置信度。** 7-model × 5-fold 已在 10,886 个共享 molecule 上完成；旧 root/capsule source 副本由 legacy tag 和 migration audit 追溯。 |
 | Fig. 1b 严格 target-strain zero-shot 小分子分类 | canonical 入口 `scripts/reproduce/run_antibiotic_classification.py --mode strict-zero-shot`；checkpoint：`.../antibiotic_3_strain_compare/MDLM_fix_cls_sm_all_test_10_fold_ensembles` | **最终版 / 高置信度，已完成行为保持迁移。** 完整 held-out target-strain 数据不进入训练，但仍逐 epoch 用于 best-AUROC checkpoint selection。完整 ensemble 指标：E. coli `#004` 为 0.9360 AUROC / 0.5890 AUPRC；A. baumannii 17978 为 0.7262 / 0.3243；S. aureus RN4220 为 0.7679 / 0.1655。30 个 checkpoint 和 3 个完成日志网格完整；group 0 / ensemble 0 已在 H100 上与 capsule 做到 2,335 条 logit 逐值一致。 |
 | Fig. 1b fine-tuned ApexOracle | 同一入口的 `--mode fine-tune --fold N`；checkpoint：`MDLM_fix_cls_10_fold_ensembles` | **完整 10-member ensemble / 最终补实验完成。** fine-tune 网格为 `3 strains × 5 outer folds × 10 members = 150 checkpoints`；strict zero-shot 是无 KFold 的 `3 × 10 = 30`。15 个 fold 已逐项验证恰好 10 members。fold-mean AUPRC/AUROC 为 E. coli `0.71205/0.95884`、A. baumannii `0.43436/0.82200`、RN4220 `0.40127/0.95309`；与三个最终 10-member baseline 的 6/6 paired comparisons 均为 Holm-adjusted `p < 0.05`。单成员 pooled OOF 只保留为 sensitivity。`--mode molecule-only` 对应旧 `wo_SAND`。 |
 | Synergy 二分类结果 | canonical 入口 `scripts/reproduce/run_synergy_cv.py`；配置 `configs/synergy/legacy_cv.yaml`；checkpoint：`.../strain_wise_synergy/MDLM_3_fold_ensembles_1_base_model_cls` | **论文高置信度复现候选 / 重构完成。** 使用 `synergistic_pairs_Evo.csv`、strain-wise 三折、单个完整 MIC base 和 7-member ensemble。现存 mean AUROC/AUPRC `0.7598/0.7440` 与论文 `0.7539/0.7454` 的绝对差为 `0.0059/0.0014`；作者确认接受为论文实现的高置信度复现候选。它不是精确原始 checkpoint 声明；rank 1024/100-epoch base 与 Methods rank 64/13 epochs 的差异继续披露。root driver 已归档删除。 |
@@ -1228,7 +1231,7 @@ median MIC 的 sample s.d.。panel c 是唯一保留 legend 的位置；legend �
 | Genome | 除 MG1665、UMNK88、PA14、USA300 来自 NCBI 外，其余来自 ATCC | FASTA 位于 `DataPrepare/Data/Genome`；最终 tensor 位于 `Genome_embs`；最终名称映射为 `Evo_edition_4_MIC_data_handcrafted_no_ATCC_to_custom_ATCC_and_inhouse.json` | 当前训练和评估实际匹配到 563 个 embedding。仓库缺少 Evo-2 提取代码。论文方法为：11,000 nt window、10,000 nt step、Evo-2-40B 第 46 层、每个 window 按长度求均值、window 之间不 pooling，并使用固定 `1e14` 缩放。 |
 | Strain text | Qwen2.5-Max，版本 `qwen-max-0125`，基于文献检索生成描述 | 文本和 tensor 位于 `Text_Description/ATCC` 与 `Text_Description/wo_ATCC` | 最终模型使用 Me-LLaMA3-8B 倒数第二层的 token embedding，不做 mean pooling；精确 strain 名会替换为 “this strain”。`Get_text_embedding_wo_genome.py` 是本地 canonical embedding 脚本。 |
 | Synergy | 论文为 2,732 个通过筛选的 unique molecule-synergy-strain pair，其中 88% 为 AMP-small molecule、12% 为 AMP-AMP；FICI < 0.5 标为 1 | 原始扩充表 `synergistic_pairs_Evo.csv` 有 4,285 行；后续组合表 `synergy_DBAASP_inhouse_Evo.csv` 有 4,342 行 | 论文中的 2,732 是 molecule、strain 和 embedding 过滤后的 eligible/curated 子集，不是当前原始表行数。最终 CV 脚本动态过滤 `synergistic_pairs_Evo.csv`；当前没有保存不可变的 2,732 行快照，这是一个复现缺口。 |
-| DLM 预训练 | PubChem、SmProt、UniRef 中长度不超过 50 aa 的序列、UniProt 中长度不超过 50 aa 的序列和 CycloPS；论文报告 121.6M 条有效去重序列及 209 个 RDKit descriptor | 主要位于外部 `/data2/tianang/projects/mdlm`；`DataPrepare/MDLM` 中只保留部分预处理 | 训练实现和 checkpoint 在外部项目中。不能声称仅使用 `Synergy` 仓库即可端到端训练 DLM。 |
+| DLM 预训练 | PubChem、SmProt、UniRef 中长度不超过 50 aa 的序列、UniProt 中长度不超过 50 aa 的序列和 CycloPS；论文报告 121.6M 条有效去重序列及 209 个 RDKit descriptor | joint DLM+MTR 训练源码位于 `ApexOracle-DLM-Pretraining`；checkpoint 与 downstream loader 位于 `ApexOracle-MDLM`；`DataPrepare/MDLM` 中只保留部分预处理 | 两个 portable 模块和独立 smoke 已完成；历史 checkpoint 的精确 commit-to-checkpoint 血缘仍需按各自 manifest 限定，不能声称仅使用 Core 即可端到端重训 DLM。 |
 
 Strain count mapping 的演化顺序如下：
 
@@ -1455,7 +1458,8 @@ Strain count mapping 的演化顺序如下：
 ### 已知复现缺口与不一致
 
 1. 当前没有 Git 历史，因此不能确定论文最终版本对应的精确 commit。
-2. DLM 训练代码、checkpoint 和 Fig. 2b DLM 源代码依赖外部 `/data2/tianang/projects/mdlm`。
+2. joint DLM+MTR 与 downstream loader 已分别发布为 `ApexOracle-DLM-Pretraining` 和
+   `ApexOracle-MDLM`；历史 checkpoint 的精确 commit-to-checkpoint lineage 仍未完全闭合。
 3. Evo-2 genome window feature extraction 按作者决定保留为外部 producer；当前仓库只消费预计算 tensor。
 4. k-mer producer/consumer 已迁入并验证，但产生论文 `0.4507` 的精确单模型训练日志、projection 状态和 checkpoint 仍未恢复；现存完整 `0.5276` 是协议不同的 post-paper 7-member reconstruction。
 5. 实际 discrete guided-generation/remasking sampler 按作者决定继续位于外部仓库。
