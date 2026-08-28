@@ -41,7 +41,7 @@ DEFAULT_OUTPUT_DIR = DEFAULT_WORKBOOK.parent
 DEFAULT_GUIDANCE_PRODUCER = Path(
     os.environ.get(
         "MDLM_GUIDANCE_PRODUCER",
-        REPO_ROOT.parent / "mdlm" / "guaidance_regressor_all_data_pad_no_mask.py",
+        REPO_ROOT.parent / "mdlm" / "reproducibility" / "mic_guidance_migration.json",
     )
 )
 
@@ -145,7 +145,9 @@ def normalize_text(value: object) -> str:
 
 def map_header_species(header: object) -> str:
     normalized = normalize_text(header)
-    matches = [species for token, species in HEADER_SPECIES_RULES if token in normalized]
+    matches = [
+        species for token, species in HEADER_SPECIES_RULES if token in normalized
+    ]
     if len(matches) != 1:
         raise ValueError(f"Expected one species mapping for {header!r}, got {matches}")
     return matches[0]
@@ -154,9 +156,7 @@ def map_header_species(header: object) -> str:
 def parse_mic(value: object) -> float | None:
     if isinstance(value, (int, float)) and not isinstance(value, bool):
         return float(value)
-    if isinstance(value, str) and re.fullmatch(
-        r"[<>]?\s*\d+(?:\.\d+)?", value.strip()
-    ):
+    if isinstance(value, str) and re.fullmatch(r"[<>]?\s*\d+(?:\.\d+)?", value.strip()):
         return float(re.sub(r"[^0-9.]", "", value))
     return None
 
@@ -252,12 +252,12 @@ def training_exposure(repo_root: Path):
             strain_id
         ) or prepared.original_strain_to_species.get(strain_id)
         if species is None:
-            raise AssertionError(f"No species mapping for training strain {strain_id!r}")
+            raise AssertionError(
+                f"No species mapping for training strain {strain_id!r}"
+            )
         species_by_id[strain_id] = species
     counts = Counter(species_by_id.values())
-    canonical_species = canonicalize_training_species(
-        counts, prepared.taxonomy_aliases
-    )
+    canonical_species = canonicalize_training_species(counts, prepared.taxonomy_aliases)
     return prepared, species_by_id, counts, canonical_species
 
 
@@ -277,7 +277,9 @@ def exact_target_assets(repo_root: Path, species: str, accession: str | None) ->
             "asset_note": "workbook does not specify an exact strain",
         }
     aliases = ASSET_SPECIES_ALIASES.get(species, (species,))
-    alias_tokens = [normalize_text(alias).replace("[", "").replace("]", "") for alias in aliases]
+    alias_tokens = [
+        normalize_text(alias).replace("[", "").replace("]", "") for alias in aliases
+    ]
     accession_token = normalize_text(accession).replace("-", " ")
 
     def matching_files(folder: Path) -> list[Path]:
@@ -288,7 +290,9 @@ def exact_target_assets(repo_root: Path, species: str, accession: str | None) ->
             name = normalized_asset_name(path).replace("-", " ")
             if accession_token not in name:
                 continue
-            if any(all(word in name for word in alias.split()) for alias in alias_tokens):
+            if any(
+                all(word in name for word in alias.split()) for alias in alias_tokens
+            ):
                 matches.append(path)
         return matches
 
@@ -308,7 +312,11 @@ def exact_target_assets(repo_root: Path, species: str, accession: str | None) ->
         "genome_embedding_matches": len(genome_matches),
         "text_embedding_matches": len(text_matches),
         "generation_assets_ready": bool(genome_matches and text_matches),
-        "asset_note": "" if genome_matches and text_matches else "missing exact target embedding asset(s)",
+        "asset_note": (
+            ""
+            if genome_matches and text_matches
+            else "missing exact target embedding asset(s)"
+        ),
     }
 
 
@@ -333,11 +341,14 @@ def build_candidate_table(
         rows.append(
             {
                 "species": species,
-                "ncbi_tax_id": frame["ncbi_tax_id"].dropna().iloc[0]
-                if frame["ncbi_tax_id"].notna().any()
-                else None,
+                "ncbi_tax_id": (
+                    frame["ncbi_tax_id"].dropna().iloc[0]
+                    if frame["ncbi_tax_id"].notna().any()
+                    else None
+                ),
                 "species_absent_from_actual_training": True,
-                "current_genus_absent_from_actual_training": genus not in training_genera,
+                "current_genus_absent_from_actual_training": genus
+                not in training_genera,
                 "assay_columns": len(frame),
                 "measured_cells": int(frame["measured_cells"].sum()),
                 "assay_headers": " | ".join(frame["assay_header"].astype(str)),
@@ -348,7 +359,9 @@ def build_candidate_table(
         ["measured_cells", "species"], ascending=[False, True]
     )
     if len(result) != 11:
-        raise AssertionError(f"Expected 11 unseen workbook species, found {len(result)}")
+        raise AssertionError(
+            f"Expected 11 unseen workbook species, found {len(result)}"
+        )
     if int((result["measured_cells"] > 0).sum()) != 10:
         raise AssertionError("Expected 10 unseen species with measured MIC values")
     return result
@@ -389,6 +402,23 @@ def main() -> None:
         / "DBAASP_inhouse_AMP_SELFIES_token_MIC_Evo.csv"
     )
     producer = args.guidance_producer.expanduser().resolve()
+    producer_manifest_path = None
+    producer_manifest_sha256 = None
+    if producer.suffix.lower() == ".json":
+        producer_manifest = json.loads(producer.read_text(encoding="utf-8"))
+        producer_source = producer_manifest["sources"][
+            "guaidance_regressor_all_data_pad_no_mask.py"
+        ]
+        producer_path = (
+            f"git:{producer_manifest['snapshot_ref']}:"
+            "guaidance_regressor_all_data_pad_no_mask.py"
+        )
+        producer_sha256 = producer_source["sha256"]
+        producer_manifest_path = str(producer)
+        producer_manifest_sha256 = sha256_file(producer)
+    else:
+        producer_path = str(producer)
+        producer_sha256 = sha256_file(producer)
     checkpoint = (
         REPO_ROOT
         / "Checkpoints"
@@ -404,11 +434,15 @@ def main() -> None:
             "sha256": sha256_file(workbook_path),
             "sheets": assay_headers["sheet"].drop_duplicates().tolist(),
             "assay_headers": len(assay_headers),
-            "unique_species_after_normalization": int(assay_headers["species"].nunique()),
+            "unique_species_after_normalization": int(
+                assay_headers["species"].nunique()
+            ),
         },
         "guidance_training": {
-            "producer_path": str(producer),
-            "producer_sha256": sha256_file(producer),
+            "producer_path": producer_path,
+            "producer_sha256": producer_sha256,
+            "producer_manifest_path": producer_manifest_path,
+            "producer_manifest_sha256": producer_manifest_sha256,
             "training_source_path": str(training_source),
             "training_source_sha256": sha256_file(training_source),
             "actual_genome_text_rows": len(prepared.genome_text_records),
@@ -418,11 +452,15 @@ def main() -> None:
             "canonical_species_names_with_relevant_aliases": len(training_species),
             "unmapped_actual_strain_ids": 0,
             "checkpoint_path": str(checkpoint),
-            "checkpoint_sha256": sha256_file(checkpoint) if checkpoint.exists() else None,
+            "checkpoint_sha256": (
+                sha256_file(checkpoint) if checkpoint.exists() else None
+            ),
         },
         "comparison": {
             "unseen_species_in_workbook": len(candidates),
-            "unseen_species_with_measured_mic": int((candidates["measured_cells"] > 0).sum()),
+            "unseen_species_with_measured_mic": int(
+                (candidates["measured_cells"] > 0).sum()
+            ),
             "unseen_current_genera_in_workbook": int(
                 candidates["current_genus_absent_from_actual_training"].sum()
             ),

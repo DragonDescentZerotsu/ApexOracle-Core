@@ -21,8 +21,10 @@
    一致。这 44,608 entries 进一步对应 39,995 个 RDKit-valid canonical isomeric structures，且该
    canonical set 与 `small_molecule_Evo_binary_data.csv` 完全一致。
 4. 历史 MolPort snapshot 的 12 个 catalogue files 共含 5,887,458 rows / 唯一 MolPort IDs。
-   `/data2/tianang/projects/mdlm/match_molecules.py` 对上述低预测 MIC 结构与该 MolPort catalogue
-   做 RDKit canonical-isomeric-SMILES exact match。输出为 276 个 `target × query × MolPort ID`
+   历史 producer `legacy-code-snapshot-2026-08-09:match_molecules.py` 对上述低预测 MIC 结构与该 MolPort
+   catalogue 做 RDKit canonical-isomeric-SMILES exact match；当前 canonical entry 为 ApexOracle-MDLM 的
+   `scripts/reproduce/match_screen_to_catalogue.py`。5,887,458-row full rescan 已恢复相同的 276 个
+   `target × query × MolPort ID`
    rows，对应 179 个唯一 MolPort ID / canonical structures；其中 `BAA-3170` 和 `BAA-3197`
    分别覆盖 177 和 90 个结构。
 5. `/data2/tianang/projects/mdlm/temp_data/small_molecules/cluster_filter.py` 使用 radius-2、

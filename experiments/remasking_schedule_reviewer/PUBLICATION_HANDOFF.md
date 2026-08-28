@@ -3,6 +3,14 @@
 > 状态：2026-08-02 暂时收束。本轮补实验、结构审计、正式 reviewer 图、论文 Methods/
 > Supplementary Fig. C4 和三处 reviewer response 已完成。用户决定按主题拆分提交并直接更新
 > `Synergy/main`；代码、紧凑证据和发布文档已经推送，未创建 PR。
+>
+> 2026-08-09 架构更新：作者已确认最终采用轻量 `ApexOracle` super-repo，以 Git submodule
+> 组合独立的 Core/DLM-Pretraining/downstream-MDLM/Evo2/Generation clean repos。该决定取代本文早期仍待确认的单体目录或
+> 独立 producer 链接方案；详细 canonical 计划见
+> `docs/UNIFIED_APEXORACLE_RELEASE_PLAN.md`。
+>
+> 2026-08-10 完成更新：五个模块、super-repo `v0.2.0`、完整 source archive 与 quickstart gates
+> 均已发布；下文阶段 B/C 保留为执行前的历史计划，不代表当前仍待完成。
 
 本文档只记录发布边界和跨仓库血缘。科学协议、精确数值及判定边界分别见
 `README.md`、`RESULTS.md` 和 `STRUCTURE_AUDIT.md`。
@@ -54,7 +62,7 @@
 | Checkout | Remote / visibility | 已验证状态 | 本轮发布判断 |
 | --- | --- | --- | --- |
 | `Synergy` | `DragonDescentZerotsu/Synergy`，private | reviewer 内容已按主题直接推送 `main`；发布前 full test 为 `164 passed` | 当前 reviewer capsule 已有远程 Git 血缘；后续统一 public repo 仍需做公开边界筛选 |
-| `mdlm` | 上游 `kuleshov-group/mdlm`；自有 `DragonDescentZerotsu/ApexOracle-MDLM`，public | local HEAD 与自有 remote 的 `master` 均为 `7a6a7d1`；当前 branch 跟踪上游 `origin`，checkout dirty | 本轮没有需要推送的改动；未来清理后应显式 push 到 `custom`，不能误推上游 |
+| `mdlm` | 上游 `kuleshov-group/mdlm`；自有 `DragonDescentZerotsu/ApexOracle-MDLM`，public | historical baseline `7a6a7d1`；local recovery tag `legacy-code-snapshot-2026-08-09`；public clean release 已完成 | 发布过程中的 CPU/source-contract、strict-load、GPU parity、fresh-clone 和 release gates 均已通过；未向上游 `origin` 推送 ApexOracle commits |
 | `discrete-diffusion-guidance` | 只有上游 `kuleshov-group/discrete-diffusion-guidance` | local HEAD/upstream main 为 `edb0f8c`；checkout 含 ApexOracle 历史修改且 dirty；不存在自有同名 GitHub fork | 当前不能推送；须先建立 clean fork/独立仓库并参数化机器路径，再固定 commit |
 | `ApexOracle_github` | `DragonDescentZerotsu/ApexOracle`，public | clean，但 packed history 约 235 MiB，已包含大数据、模型和外部仓库副本 | 不应把本轮工作直接复制进该 legacy monorepo，否则会继续膨胀并混淆 producer 血缘 |
 | `ApexOracle_cleaned` | 无 Git metadata | 正式论文修改只存在本地文件系统 | 后续若公开文稿，只迁移精简的 TeX/bib/必要 figure，不迁移编译缓存和 DOCX 备份 |
@@ -104,45 +112,64 @@ peptide classifier、remasking schedule 和共享文档四组；提交前检查�
 疑似凭据和 whitespace，并在推送前运行全仓库测试。没有使用 `git add -A`，raw outputs、权重、
 逐 attempt 大表和约 911 MB 的 peptide-classifier split memmap 均未进入 Git history。
 
-### 阶段 B：清理两个外部 producer
+### 阶段 B：清理三个外部 producer
 
-- **MDLM：** 以公开的 `ApexOracle-MDLM` 为目标，创建独立 release branch；只收录公共运行真正
-  需要的修改，删除临时脚本、缓存和硬编码路径。由于本地 `master` 跟踪上游 `origin`，发布时须
-  显式指定 `custom` remote。
+- **DLM Pretraining：** 从 public legacy `ApexOracle/DLM_pretrain/` 提取合作者的 joint DLM+MTR
+  producer，目标为 `ApexOracle-DLM-Pretraining`；先参数化数据/cache/statistics 路径，修复 README
+  `small` config 与 1024-dimensional regression head 的不一致并做 synthetic train/save/load smoke。
+- **Downstream MDLM：** 以公开的 `ApexOracle-MDLM` 为目标，创建独立 release branch；只收录
+  checkpoint loading、molecule embedding、经血缘确认的 guidance heads 和 candidate scoring，
+  排除已迁入 Core 的复制训练 driver、临时脚本、缓存和硬编码路径。由于本地 `master` 跟踪上游
+  `origin`，发布时须显式指定 `custom` remote。
 - **Discrete guidance：** 先创建自有 fork 或新的 clean repository；从已核验 producer 文件
   提取最小 patch，参数化数据/权重/output roots，加入环境与 smoke test，再产生一个可固定的 clean
   commit。不要把当前 dirty checkout 直接推向上游。
 
 ### 阶段 C：统一公共 ApexOracle repo
 
-未来统一仓库建议保留：
+作者已确认未来统一入口采用以下 super-repo：
 
 ```text
-src/apexoracle/                    # 共享模型和数据接口
-scripts/reproduce/                 # 可复现实验入口
-scripts/audit/                     # reviewer/结果审计
-experiments/.../                   # 紧凑 manifest、summary 和说明
-external/mdlm                     # 固定 clean commit/submodule 或版本化依赖
-external/discrete-diffusion-guidance
-configs/model_weights.yaml         # 权重身份与外部下载位置
-paper/                             # 如需公开，仅精简 TeX/bib/正式 figure
+ApexOracle/
+├── modules/
+│   ├── core/                       # ApexOracle-Core / 当前 Synergy
+│   ├── dlm_pretrain/               # ApexOracle-DLM-Pretraining
+│   ├── mdlm/                       # ApexOracle-MDLM / downstream
+│   ├── evo2/                       # ApexOracle-Evo2
+│   └── generation/                 # ApexOracle-Generation
+├── quickstarts/
+├── environments/
+├── manifests/
+├── scripts/
+└── .gitmodules
 ```
 
 不建议在已有约 235 MiB packed history 的 `ApexOracle_github` 上继续复制完整外部仓库和二进制。
-正式统一发布应选择经过清理的新 release history/branch 或新的仓库布局，并以 submodule、固定 commit
-或版本化依赖连接 producer；权重和数据继续由 manifest 指向 Zenodo/Hugging Face 等外部资产。
+旧 public repo 将改名归档为 `ApexOracle-Legacy`；新的 clean-history super-repo 接管
+`DragonDescentZerotsu/ApexOracle` canonical URL，并固定五个 submodule commit。权重和数据继续由
+manifest 指向 Zenodo/Hugging Face 等外部资产。每次 release 还必须生成展开 submodules 的完整
+source archive，不能把 GitHub 自动 ZIP 当作完整源码包。
 
-## 4. 仍待作者确认的事项
+## 4. 已解决决策与仍待确认事项
 
-1. 统一公共 repo 最终沿用 `DragonDescentZerotsu/ApexOracle`，还是建立新的 clean-history repo；
-2. `discrete-diffusion-guidance` 采用 GitHub fork 还是独立的 ApexOracle-specific producer repo；
-3. 正式论文 TeX 是否随代码公开，response DOCX 是否只作为投稿资产保留；
-4. 外部代码、模型权重和数据的 license/再分发条件；
-5. 是否需要把 canonical Supplementary Fig. C4 PDF 纳入公共 repo，或仅保留可重建脚本、caption
+已由作者在 2026-08-09 解决：
+
+1. 统一入口使用新的 clean-history `DragonDescentZerotsu/ApexOracle` super-repo；旧 public repo
+   改名为 `ApexOracle-Legacy`。
+2. Core/DLM-Pretraining/downstream-MDLM/Evo2/Generation 分别使用独立 clean remote，并由
+   super-repo submodule 固定 commit；两个 MDLM 相关模块的职责边界见
+   `docs/MDLM_MODULE_SPLIT_AUDIT.md`；
+   generation 目标 remote 为 `DragonDescentZerotsu/ApexOracle-Generation`。
+
+仍待确认或执行：
+
+1. 正式论文 TeX 是否随代码公开，response DOCX 是否只作为投稿资产保留；
+2. 外部代码、模型权重和数据的 license/再分发条件；
+3. 是否需要把 canonical Supplementary Fig. C4 PDF 纳入公共 repo，或仅保留可重建脚本、caption
    和 source hashes。
 
-阶段 A 已完成。这些待确认决定只影响后续统一公共 repo 和两个外部 producer 的发布；在确认前仍
-不应把 dirty 外部 checkout 或 legacy 大仓库做整体合并。
+阶段 A 在本文形成时已完成；阶段 B/C 随后也已完成。最终锁定版本与验收结果以
+`docs/UNIFIED_APEXORACLE_RELEASE_PLAN.md` 和根 `AGENTS.md` 为准。
 
 ## 5. 发布前验证命令
 
