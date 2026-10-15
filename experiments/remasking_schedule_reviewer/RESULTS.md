@@ -1,8 +1,7 @@
 # ReMDM remasking schedule reviewer 补实验结果
 
 > 完成日期：2026-07-29
-> 状态：36/36 generation tasks 和正式 clean-model evaluation 均已完成；尚未修改论文或
-> reviewer response。
+> 状态：36/36 generation tasks 和正式 clean-model evaluation 均已完成。
 > **2026-07-29 structure-audit warning：** 本报告下列 “peptide” 数值是历史 v1
 > classifier-positive operational label，不是可靠的 structure-based peptide identity。current
 > window 的 213 个 full-token positives 中有 125 个没有 RDKit general amide；修正 first
@@ -31,8 +30,8 @@
    （`33.0% -> 35.5%`），validity 从 `59.2% -> 65.8%`，valid-molecule median predicted
    MIC 从 `56.2 -> 37.9 micromolar`。
 5. 作者确认原始 interval 本来就是通过相近的 empirical window comparison 选择，只是当时没有
-   完整记录过程和结果。因此，正式回复应使用本次可复核的五窗口结果展示选择过程及 trade-off
-   逻辑；不声称理论唯一最优，也不把本次冻结协议逐项冒充为当年已完整归档的同一实验。
+   完整记录过程和结果。本次五窗口结果提供可复核的 trade-off
+   比较，但不能证明理论唯一最优，也不等同于当年已完整归档的同一实验。
 
 ## 2. 冻结协议与完整性
 
@@ -140,10 +139,10 @@ guidance 一致的模型判定，不是独立的结构真值或 biological pepti
 | no peptide correction | BAA-3170 | 63.0% | 67.7% | 46.3% | 73.5% | 38.2 |
 | no peptide correction | BAA-3197 | 55.3% | 27.3% | 19.7% | 35.5% | 65.5 |
 
-两种 strain 的 absolute peptide proportion 差异很大，因此正式回复应同时给 pooled composition
+两种 strain 的 absolute peptide proportion 差异很大，因此需同时考察 pooled composition
 和 strain-specific composition，不应只报告一个总体百分比。
 
-## 5. 对 reviewer 回复和论文修改的含义
+## 5. 解释边界
 
 ### 已由代码和实验验证的事实
 
@@ -161,14 +160,14 @@ guidance 一致的模型判定，不是独立的结构真值或 biological pepti
 
 ### 根据现有证据作出的解释
 
-- Reviewer 所说的 hardcoded/static schedule 在“global window”层面是事实，但由此进一步推出
+- hardcoded/static schedule 在“global window”层面是事实，但由此进一步推出
   所有 molecule 被强制在同一阶段、以相同方式 correction，并不符合实际逐 token stochastic
   transition。
-- Reviewer 2 关于 correction 完全未评估的批评对原稿成立；本次实验补上了 raw generation 与
+- 本次实验提供 raw generation 与
   direct control，但 classifier/structure audit 表明真实 composition 仍未回答。当前只支持
   RDKit parseability 和 operational classifier score 的描述，不能声称 usable-peptide 或
   activity benefit。
-- 原拟回复中的 `r_t=0.02 for t_off<t<t_on` 基本正确，但必须写成
+- `r_t=0.02 for t_off<t<t_on` 表示
   **unguided/base remask proposal probability**，不能写成 guidance 后每个 token 的固定最终
   remask probability。
 
@@ -205,7 +204,7 @@ provenance、manifest、README 和本报告可进入 reviewer-facing 版本控�
 
 ## 7. Canonical final reviewer figure（2026-07-29）
 
-作者确认最终三面板图 stem 为：
+三面板图 stem 为：
 
 `figures/remasking_structure_qualified_peptides_with_mic_control`
 
@@ -252,10 +251,9 @@ p-values：
 classifier-positive `p=1.000`、RDKit-valid `p=0.1875`、valid peptide yield `p=0.59375`，
 但 reviewer-facing figure 不显示 p-value 或 significance stars。没有为五个 window
 comparisons 添加 significance stars；只有三个 seeds 时做多重 pairwise significance testing
-不足以支持可靠强结论。作者决定后续 reply 和正文只报告样本量及 descriptive effect，不加入
-“difference did not reach statistical significance”句子，同时也不作 significance claim。
+不足以支持可靠强结论。该图只报告样本量及 descriptive effect，不作 significance claim。
 
-建议英文 caption：
+历史图注（classifier label 不代表结构真值）：
 
 > **Sensitivity of generated candidates to the remasking window and peptide correction.**
 > (a) Yield of RDKit-valid, peptide-classifier-positive candidates among all raw generation

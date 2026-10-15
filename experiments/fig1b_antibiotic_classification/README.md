@@ -89,7 +89,7 @@ Reviewer 要求 Fig. 1b 对三个菌株一致报告 AUPRC，并为“优于 base
   不能继续标成主 baseline。
 - E. coli 有 1 个 MDLM 可处理、但 RDKit 因异常铝配位价态拒绝的 SMILES。固定 KFold
   membership 不重排；该样本只在配对统计时从双方同时排除，并写入 exclusions。
-- node002 的隔离环境固定为 Chemprop 1.5.2、RDKit 2025.03.5；PyTorch 2.7 加载受信任的
+- 运行环境固定为 Chemprop 1.5.2、RDKit 2025.03.5；PyTorch 2.7 加载受信任的
   Chemprop 1.x checkpoint 时显式设置 `TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD=1`，不改权重内容。
 
 2026-07-20 运行状态：三个 baseline 的 15 个 fold 已全部完成。pooled OOF 的
@@ -116,29 +116,18 @@ fine-tune pooled OOF 的 AUROC/AUPRC 分别为 E. coli `0.95529/0.66655`、A. ba
 `p=0.00180`）显著高于 baseline；A. baumannii 与 RN4220 的四项差异均不显著。完整结果见
 `results_reviewer_revision.md`；该表明确属于单模型/折 sensitivity，不是旧完整 ensemble 结果。
 
-Mac notebook、最终 panel、论文和回复信已同步并通过完整编译。修改前快照、运行产物及
-最终文件的 SHA-256 见 `reproducibility/fig1b_reviewer_revision_2026-07-20.json`。
-
-node002 运行环境是
-`/path/to/fig1b-chemprop-v1`：Python 3.12.7、Chemprop 1.5.2、
-RDKit 2025.03.5、PyTorch 2.7.1+cu126、Pandas 2.2.2、scikit-learn 1.8.0。
-该 venv 使用 `--system-site-packages` 继承 node002 的 CUDA PyTorch；Chemprop 与新版 Pandas
-不兼容的旧 RDKit 2023 已在 venv 内由 RDKit 2025.03.5 覆盖，未修改 conda base。
-
 ## 完整 ensemble 最终补跑（已完成）
 
-上文已经完成的 baseline 与单成员 fine-tune 只作为 reviewer sensitivity 保留。作者随后确认
-最终结果中 ApexOracle 每个 outer fold 使用 10 members。作者于 2026-07-21 决定三个 baseline
-也统一使用固定编号 0--9 的 10-member ensemble，而不是照搬发布资产不同的 `20/10/20` 大小。
+上文的 baseline 与单成员 fine-tune 作为 sensitivity 保留。最终结果中 ApexOracle 和三个
+baseline 每个 outer fold 均使用固定编号 0--9 的 10-member ensemble；baseline 原发布资产大小为 `20/10/20`。
 由于 ApexOracle 自身没有 RDKit feature augmentation，Liu 使用论文报告的 no-RDKit ablation，
 不采用其 RDKit 增强主模型。新运行写入
 `results/fig1b_revision/full_ensemble_reconstruction/` 和
 `results/fig1b_revision/baselines_full_ensemble_no_rdkit/`，不覆盖历史 checkpoint 或原始数据。
 
 这里的完整 fine-tune 网格是 `3 strains × 5 outer folds × 10 members = 150 checkpoints`，
-不是 strict zero-shot 的 `3 × 10 = 30`。两台机器共恢复 104 个历史 checkpoint，另补完
-RN4220 fold 4 member 0 后已有 105 个，因此本轮当时只训练剩余 45 个 member。监控中的待补完成数
-只计算这 45 个新任务；例如 `0/45` 不表示已有 105 个资产不存在。该队列现已全部完成。
+不是 strict zero-shot 的 `3 × 10 = 30`。150 个 checkpoint 均已完成；其中包含恢复的历史
+checkpoint 与补训 checkpoint，不能将全部结果称为精确的原始训练重放。
 
 ApexOracle 完整 ensemble 已于 2026-07-21 完成。每个成功 member 固定完整训练 25 epochs，
 没有 early stopping。

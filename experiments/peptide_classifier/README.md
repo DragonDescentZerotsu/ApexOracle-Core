@@ -136,13 +136,9 @@ non-peptide。除非重新构建标签并重训 checkpoint，Methods 和 reviewe
   3,954,076 条真实 peptide 形成 2,804,874 个 sequence clusters；最终有 458 条 raw records
   不能被当前 RDKit 解析，其中进入最终 Arrow 的 fallback 为 252 rows。仅 1 个 canonical
   molecule 存在来源标签冲突，涉及 491 rows，按协议从 primary molecule metrics 排除。
-- **2026-07-26 22:32 EDT 正式启动：** seed 0 使用本机 GPU0--3，seed 1/2 分别使用 node001
-  GPU0--3/GPU4--7。三个 `run_manifest.json` 的 dataset rows、global batch、checkpoint SHA、
-  split SHA 和 `time_conditioning=True` 均一致。首 1,000 steps 分别耗时
-  368.2/444.4/445.1 秒，mean loss 为 0.15453/0.16219/0.16105。
-- **2026-07-27 已验证的失败与作者决定：** seed 1 完成 epoch 0 的 90,152 train steps 后，在
+- **2026-07-27 排除失败运行的依据：** seed 1 完成 epoch 0 的 90,152 train steps 后，在
   epoch-end clean validation 的 metric broadcast 前触发 600 秒 NCCL watchdog timeout；日志无
-  loss/NaN/OOM 证据。作者决定不重跑，正式结果只使用完整完成的 seed 0 和 seed 2。seed 1 的
+  loss/NaN/OOM 证据。正式结果只使用完整完成的 seed 0 和 seed 2。seed 1 的
   排除由基础设施失败触发，不基于其 clean validation AUPRC（45,000-step 时为
   `0.9999999951`），失败产物保留作审计但不进入 ensemble。
 

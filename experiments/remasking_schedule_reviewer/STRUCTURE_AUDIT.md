@@ -153,16 +153,10 @@ structure identity。
 - 用全部 RDKit-valid outputs 的 predicted MIC trade-off 直接为 peptide-generation window
   背书；该结论需在 structure-qualified subset 上复核。
 
-现有 figure 和 `RESULTS.md` 中相关数字保留作审计血缘，不应在修订信中引用为 structural peptide
+现有 figure 和 `RESULTS.md` 中相关数字保留作审计血缘，不代表 structural peptide
 proportion。
 
-## 5. 最小下一步
-
-无需重新生成 3,600 个 attempts。最小修复是对现有 2,355 个 valid structures 做一次独立、
-canonical-structure-based peptide classification，并据此重算各 window 与
-current-vs-control 的 peptide yield/composition。
-
-候选规则需在正式使用前固定并验证：
+## 5. 结构分类方法的限制
 
 1. general amide count 只能作为必要性 QC，不能单独作为 peptide 定义，因为许多 small-molecule
    drugs 也含 amide；
@@ -170,9 +164,6 @@ current-vs-control 的 peptide yield/composition。
    peptides，但 coverage 较窄，不能把 unsupported 自动等同于 non-peptide；
 3. 更稳妥的最终口径应组合 peptide-backbone topology、至少两个 residue-like units、元素/价态
    合理性，并用已知 peptide/small-molecule controls 验证 precision 与 coverage。
-
-在该定义冻结前，建议不修改正式论文或 reviewer response，也不继续润色当前
-peptide-composition figure。
 
 ## 6. 可复核入口
 

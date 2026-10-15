@@ -1,7 +1,6 @@
 # Hierarchical MIC exact-molecule-disjoint sensitivity
 
-Status: completed post hoc sensitivity analysis for reviewer discussion. This
-file does not by itself modify the manuscript or response-letter DOCX.
+Status: completed post hoc sensitivity analysis.
 
 ## Question answered
 
@@ -71,21 +70,20 @@ measurements (8,259 exact molecules), of which 53.12% had MIC <= 16
 micromolar. Its pooled 7-member R2/Spearman/Pearson were
 0.088/0.403/0.409, with an R2 cluster-bootstrap interval of 0.062--0.112.
 
-This is useful internal robustness evidence, but it must not be presented as
+This is secondary robustness evidence, but it must not be presented as
 the formal primary sensitivity: the exact 2025 strain membership was not
 recorded because the historical processes did not log `PYTHONHASHSEED`.
 Consequently the candidate-defined training exposure cannot be guaranteed to
 equal the archived checkpoint's exact training exposure.
 
-## Interpretation and manuscript consequence
+## Interpretation and limitations
 
-1. The reviewer is correct that the hierarchical split unit was pathogen, not
-   peptide. The response should state this directly.
+1. The hierarchical split unit was pathogen, not peptide.
 2. The main benchmark remains a valid test of held-out pathogen-context
    transfer for a peptide library that includes many previously assayed
    peptides. It is not a joint unseen-pathogen/unseen-peptide benchmark.
-3. Exact-peptide reuse contributes materially to the headline R2. We should not
-   claim that removing overlap leaves performance unchanged.
+3. Exact-peptide reuse contributes materially to the headline R2. Removing
+   overlap does not leave performance unchanged.
 4. The phylum sensitivity should be reported as post hoc supplementary
    evidence, including all three group R2 values rather than only the pooled
    value.
