@@ -7,13 +7,13 @@
 
 | 资产 | 位置 | 状态 |
 | --- | --- | --- |
-| 论文实际 classifier checkpoint | `/data2/tianang/projects/mdlm/cls-guide-pad-no-mask-checkpoints/epoch-epoch=1-step-step=134000-train_loss-train_loss=0.008.ckpt` | v1，epoch 1 / step 134000 |
+| 论文实际 classifier checkpoint | `/path/to/ApexOracle-MDLM/cls-guide-pad-no-mask-checkpoints/epoch-epoch=1-step-step=134000-train_loss-train_loss=0.008.ckpt` | v1，epoch 1 / step 134000 |
 | v1 最终训练数据 | `DataPrepare/MDLM/Data/hf_pep_SM_cls_1024` | 82,795,051 rows |
 | v1 tokenization 前 Hugging Face 数据 | `DataPrepare/MDLM/Data/hf_pep_SM_cls` | 保存了 `mol_ids`、token IDs 与标签，可逐来源审计 |
-| 精确历史 trainer | `node002:/data1/tianang/Projects/mdlm/guaidance_classifier_all_data_pad_no_mask.py` | 2025-05-14；node002 历史目录只读 |
-| 当前本机同名 trainer | `/data2/tianang/projects/mdlm/guaidance_classifier_all_data_pad_no_mask.py` | 已改为 v2 数据，不是上述 checkpoint 的精确 producer |
+| 精确历史 trainer | `/path/to/historical-mdlm/guaidance_classifier_all_data_pad_no_mask.py` | 2025-05-14；node002 历史目录只读 |
+| 当前本机同名 trainer | `/path/to/ApexOracle-MDLM/guaidance_classifier_all_data_pad_no_mask.py` | 已改为 v2 数据，不是上述 checkpoint 的精确 producer |
 
-外部 `/data2/tianang/projects/mdlm` 中的代码必须在 `mdlm` conda 环境运行。当前审计只读消费
+外部 `/path/to/ApexOracle-MDLM` 中的代码必须在 `mdlm` conda 环境运行。当前审计只读消费
 node002 历史目录和外部 guidance 仓库，没有改写原始数据或 checkpoint。
 
 ## 已由最终 CSV、Arrow shards 和 producer 路径验证的 v1 血缘
@@ -58,7 +58,7 @@ node002 历史目录和外部 guidance 仓库，没有改写原始数据或 chec
 
 ## v2 不能反向解释 v1 checkpoint
 
-2025 年 6 月的 v2 使用 `/data2/tianang/projects/mdlm/smiles_to_peptide.py` 将结构解析为 peptide
+2025 年 6 月的 v2 使用 `/path/to/ApexOracle-MDLM/smiles_to_peptide.py` 将结构解析为 peptide
 sequence；解析失败或包含 `X` 时标为 0。该 parser 明确只覆盖线性、无环、无复杂修饰的标准
 氨基酸肽。v2 原始 125,300,511 个结构中的来源级标签为：
 
@@ -152,7 +152,7 @@ PYTHONPATH=src python scripts/reproduce/prepare_peptide_classifier_split.py \
   extract-sequences \
   --output-dir experiments/peptide_classifier/reviewer_retrain \
   --uniprot-sequences DataPrepare/MDLM/Data/unique_peptide_sequences.txt \
-  --smprot-csv /data1/tianang/SMILES_data/SmProt2_All.csv
+  --smprot-csv /path/to/source-data/SmProt2_All.csv
 
 PYTHONPATH=src python scripts/reproduce/prepare_peptide_classifier_split.py \
   cluster-sequences \
@@ -178,8 +178,8 @@ PYTHONPATH=src torchrun --standalone --nproc-per-node=4 \
   scripts/reproduce/run_peptide_classifier_reviewer.py \
   --dataset-dir DataPrepare/MDLM/Data/hf_pep_SM_cls_1024 \
   --split-dir experiments/peptide_classifier/reviewer_retrain \
-  --producer-root /data2/tianang/projects/mdlm \
-  --v1-checkpoint /data2/tianang/projects/mdlm/cls-guide-pad-no-mask-checkpoints/epoch-epoch=1-step-step=134000-train_loss-train_loss=0.008.ckpt \
+  --producer-root /path/to/ApexOracle-MDLM \
+  --v1-checkpoint /path/to/ApexOracle-MDLM/cls-guide-pad-no-mask-checkpoints/epoch-epoch=1-step-step=134000-train_loss-train_loss=0.008.ckpt \
   --output-dir experiments/peptide_classifier/reviewer_retrain/runs/seed_0 \
   --seed 0 --batch-size 225 --epochs 2 --validation-interval-steps 45000
 

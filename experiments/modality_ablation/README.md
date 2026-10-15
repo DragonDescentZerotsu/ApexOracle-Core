@@ -7,7 +7,7 @@
 ## 已由最终绘图资源验证的事实
 
 - Mac 上最终绘图 notebook 是
-  `/Users/kirianozan/Documents/Study/Penn/projects/local_figs/figs.ipynb`，cell ID
+  `historical-notebooks/local_figs/figs.ipynb`，cell ID
   `8d84054140b51b7d`，execution count 18，执行时间为 2025-05-22。
 - 该 cell 直接定义了四条曲线、三个 holdout 粒度和全部 12 个 R²；这些值已逐项冻结在
   `paper_values.csv`。

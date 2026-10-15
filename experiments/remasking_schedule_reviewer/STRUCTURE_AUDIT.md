@@ -29,7 +29,7 @@ reviewer。在建立独立的 structure-based peptide criterion 并重算之前�
 ### 2.1 权重身份
 
 - 本次 generation 和 clean-input post-hoc evaluation 使用的历史 v1 checkpoint 均为：
-  `/data2/tianang/projects/mdlm/cls-guide-pad-no-mask-checkpoints/epoch-epoch=1-step-step=134000-train_loss-train_loss=0.008.ckpt`
+  `/path/to/ApexOracle-MDLM/cls-guide-pad-no-mask-checkpoints/epoch-epoch=1-step-step=134000-train_loss-train_loss=0.008.ckpt`
 - 文件大小为 `393,226,092` bytes，SHA-256 为
   `40f638ca5668f20a641a538035015b1741ab69cded300cba27f7148cc291945b`。
 - 正式 reviewer classifier retrain 确实从同一个 checkpoint 提取 backbone；但是该实验冻结
@@ -178,7 +178,7 @@ peptide-composition figure。
 
 ```bash
 CUDA_VISIBLE_DEVICES=0 \
-  /home/tianang/anaconda3/bin/conda run --no-capture-output -n mdlm \
+  conda run --no-capture-output -n mdlm \
   python scripts/audit/audit_remasking_peptide_classifier_structure.py
 
 python -m pytest -q tests/test_remasking_schedule_reviewer.py

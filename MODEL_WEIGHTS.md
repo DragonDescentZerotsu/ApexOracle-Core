@@ -11,16 +11,15 @@
 - 每个本地 checkpoint 在发布前必须具备 SHA-256、文件大小、稳定下载 URI、许可或再分发结论和至少一个加载 smoke test。
 - 第三方 Hugging Face 权重不应默认复制再分发。优先固定 revision 并从上游下载；只有许可允许且确有离线发布需要时才镜像到统一存储。
 - Fig. 1b 当前加载的 `Pep_emb_dict_cls_wo_pad_eval.pt` 和 `SM_emb_dict_cls_wo_pad_eval.pt` 是
-  预计算 molecule feature cache，不是可训练模型权重，因此不登记为 checkpoint manifest ID；
-  它们的条目数、SHA-256、消费代码和机器位置记录在 `docs/COMPUTE_AND_ASSET_MAP.md`。
+  预计算 molecule feature cache，不是可训练模型权重，因此不登记为 checkpoint manifest ID。
 
 ## Fig. 2b 当前登记
 
 | Manifest ID | 当前来源 | 已固定身份 | 未来相对路径 | 状态 |
 | --- | --- | --- | --- | --- |
-| `fig2b_dlm_only` | `/data2/tianang/projects/mdlm/Checkpoints_fangping/best_2.ckpt` | SHA-256 `fbbcc65…75e59` | `molecule_encoders/dlm_only/best_2.ckpt` | 作者已确认用于修订 benchmark；原论文精确身份仍是高置信度推断 |
-| `fig2b_dlm_mtr_dlm` | `/data2/tianang/projects/mdlm/Checkpoints_fangping/best.ckpt` | SHA-256 `f8df1fb5…d8ca` | `molecule_encoders/dlm_mtr_dlm/best.ckpt` | 已验证用于修订 benchmark |
-| `fig2b_dlm_mtr_dlm_small_candidate` | `node002:/data1/fangping/mdlm/outputs/openwebtext-train/2025.04.29/165523/checkpoints/best.ckpt` | SHA-256 `3c612c9c…6c9d6` | `molecule_encoders/dlm_mtr_dlm_small/best.ckpt` | 12-layer 容量匹配候选；尚未运行共同数据 benchmark |
+| `fig2b_dlm_only` | `/path/to/ApexOracle-MDLM/Checkpoints_fangping/best_2.ckpt` | SHA-256 `fbbcc65…75e59` | `molecule_encoders/dlm_only/best_2.ckpt` | 作者已确认用于修订 benchmark；原论文精确身份仍是高置信度推断 |
+| `fig2b_dlm_mtr_dlm` | `/path/to/ApexOracle-MDLM/Checkpoints_fangping/best.ckpt` | SHA-256 `f8df1fb5…d8ca` | `molecule_encoders/dlm_mtr_dlm/best.ckpt` | 已验证用于修订 benchmark |
+| `fig2b_dlm_mtr_dlm_small_candidate` | `/path/to/historical-pretraining/outputs/openwebtext-train/2025.04.29/165523/checkpoints/best.ckpt` | SHA-256 `3c612c9c…6c9d6` | `molecule_encoders/dlm_mtr_dlm_small/best.ckpt` | 12-layer 容量匹配候选；尚未运行共同数据 benchmark |
 | `fig2b_apex_encoder` | `weights/molecule_encoders/apex/APEX_pretrained_encoder_state_dict_best.ckpt` | SHA-256 `a4b37338…b2b9` | `molecule_encoders/apex/APEX_pretrained_encoder_state_dict_best.ckpt` | 已迁移；通过 manifest ID 加载并严格验证 |
 | `fig2b_chemberta_mtr` | `DeepChem/ChemBERTa-77M-MTR` | revision `66b895ca…04ca` | `molecule_encoders/chemberta_mtr` | 已用于 Fig. 2b/2c 重构；旧 run 未记录 revision |
 | `fig2b_chemberta_mlm` | `DeepChem/ChemBERTa-77M-MLM` | revision `ed8a5374…15ff` | `molecule_encoders/chemberta_mlm` | 已用于 Fig. 2b/2c 重构；旧 run 未记录 revision |
@@ -62,7 +61,7 @@ provenance 限制，但 synergy 重构阶段已关闭。
 
 已核验联合模型的原始 checkpoint 目录：
 
-`node002:/data1/fangping/mdlm/outputs/openwebtext-train/2025.05.06/112126/checkpoints`
+`/path/to/historical-pretraining/outputs/openwebtext-train/2025.05.06/112126/checkpoints`
 
 该目录现存 `best.ckpt`、`last.ckpt` 以及 step 960000、970000、980000、990000、1000000 的 checkpoint；每个文件均为 5,268,558,165 bytes。原始训练源码 `/data1/fangping/mdlm/diffusion.py` 使用 `loss + 0.1*reg_mse`，`/data1/fangping/mdlm/models/dit.py` 为该模型构建 209-descriptor regression head。因此这些文件都是从训练开始就采用联合 DLM+MTR objective 的 24-layer、hidden size 1024 checkpoint。
 
@@ -70,7 +69,7 @@ provenance 限制，但 synergy 重构阶段已关闭。
 
 不过，node002 上存在一个可与 `best_2.ckpt` 做容量匹配比较的 small joint checkpoint：
 
-`node002:/data1/fangping/mdlm/outputs/openwebtext-train/2025.04.29/165523/checkpoints/best.ckpt`
+`/path/to/historical-pretraining/outputs/openwebtext-train/2025.04.29/165523/checkpoints/best.ckpt`
 
 该文件为 12-layer、hidden size 768，global step 650032，SHA-256 `3c612c9c68b9ee72c077dc1492153fa30d5c9fa4cb1753355bf146cff616c9d6`，大小 1,568,403,312 bytes，并包含 `768→768→209` regression head。它和纯 DLM `best_2.ckpt` 的 architecture、数据配置与 sequence length 相同，可以作为新的容量匹配 DLM+MTR 候选。
 

@@ -63,39 +63,6 @@ pathogens, not as generalization to novel peptide molecules. This sensitivity
 analysis should be reported separately and should not replace the pathogen-holdout
 benchmark.
 
-## Concise reviewer-response draft
-
-We thank the reviewer for highlighting this distinction. We agree that the same
-peptide can occur in training measurements for other strains; accordingly, the
-main split evaluates generalization to held-out pathogens rather than to entirely
-novel peptide molecules. We have now quantified this effect using a fixed,
-deterministic reconstruction of the original threefold strain-wise protocol,
-retaining the same model, training procedure and seven-member ensembles. Among
-86,358 eligible test measurements, 60,086 (69.58%) involved an exact peptide
-observed in that fold's training data, whereas 26,272 (30.42%; 8,259 distinct exact
-peptides) were train-unseen. The unseen cohort remained well represented at the
-active end of the regression range: 53.12% of its measurements had MIC <=16 µM.
-
-The mean-across-folds \(R^2\) values on the full, train-seen and train-unseen
-cohorts were 0.5814, 0.6283 and 0.1089, respectively. Within the train-unseen
-cohort, the mean-across-folds Spearman and Pearson correlations were 0.4481 and
-0.4452, respectively. Together, the positive \(R^2\) and correlation values
-indicate that the model retained measurable regression predictive ability as well
-as meaningful ranking ability under the more stringent joint condition of unseen
-peptides and held-out strains. Thus, exact-peptide reuse materially contributes to
-calibrated performance, but the model retains a weaker, measurable signal on
-peptides absent from training. This computational result is further supported by
-our prospective experimental validation: ApexOracle generated three representative
-peptides active against the training-unseen strains *P. aeruginosa* PA5257
-or *E. coli* AR-0349, with MIC values of 32, 64 and 8 \(\mu\)M,
-respectively. Their maximum sequence identities to any training peptide were only
-36.7%, 35.7% and 36.8%, respectively. These results provide complementary
-experimental evidence that ApexOracle can generate active, structurally novel
-peptides in the challenging setting where both the peptide and target strain are
-unseen. We have revised the manuscript to define the split unit and scope
-explicitly and report this stricter molecule-disjoint test-subset analysis as a
-sensitivity analysis.
-
 ## Reproduction and artifacts
 
 - Task and machine ownership:

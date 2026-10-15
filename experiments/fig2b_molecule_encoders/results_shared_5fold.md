@@ -50,7 +50,7 @@ R² 的标准差是五个 fold 最佳 mean R² 的 sample SD。
 - `common_molecule_ids.csv` SHA-256：`6563ec0f19aea03c13fe9fd70c4847608adca78b669866d4d1542708c6e6578b`。
 - `folds.csv` SHA-256：`500bcc58f0d28976394fa7e7000dfb8c70caa1a38f675745fdc2a6dd9cf299c4`。
 - DLM-only 使用 12-layer `best_2.ckpt`；DLM MTR+DLM 使用 24-layer `best.ckpt`。
-- 24-layer checkpoint 的原始训练文件位于 `node002:/data1/fangping/mdlm/outputs/openwebtext-train/2025.05.06/112126/checkpoints/`；搜索范围与解释边界详见 `MODEL_WEIGHTS.md`。
-- 12-layer joint 候选位于 `node002:/data1/fangping/mdlm/outputs/openwebtext-train/2025.04.29/165523/checkpoints/best.ckpt`，step 650032，SHA-256 `3c612c9c…616c9d6`；它尚未运行本协议，当前结果表不包含该 checkpoint。
+- 24-layer checkpoint 的原始训练文件位于 `/path/to/historical-pretraining/outputs/openwebtext-train/2025.05.06/112126/checkpoints/`；搜索范围与解释边界详见 `MODEL_WEIGHTS.md`。
+- 12-layer joint 候选位于 `/path/to/historical-pretraining/outputs/openwebtext-train/2025.04.29/165523/checkpoints/best.ckpt`，step 650032，SHA-256 `3c612c9c…616c9d6`；它尚未运行本协议，当前结果表不包含该 checkpoint。
 - MolFormer 使用 `ibm/MoLFormer-XL-both-10pct` revision `7b12d946c181a37f6012b9dc3b002275de070314`。这是本地已有权重对应、且与当前环境兼容的历史 revision；没有改变模型结构、权重或训练超参数。
 - 完整 checkpoint、prediction 和逐任务指标位于被 Git 忽略的 `results/fig2b_shared_original_protocol/`；其中 `REPORT.md`、`comparison_summary.json`、`comparison_summary.csv` 和 `fold_metrics.csv` 可用于后续更新图表。

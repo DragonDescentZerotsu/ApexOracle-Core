@@ -112,8 +112,7 @@ PYTHONPATH=src python -m pytest -q tests/test_genome_condition_reviewer.py
   AMR-associated signal 和更明显的 mobile-element-associated signal。不得升级为 complete-genome
   coverage、完整 resistome/MGE catalogue、single-gene attribution、功能因果或 MIC-head use。
 
-完整数字和弃用内部 controls 的解释边界见 `RESULTS.md`。正式 reviewer 文稿实施记录见
-`REVIEWER_RESPONSE_AND_MANUSCRIPT_DRAFT.md`。
+完整数值与解释边界见 `RESULTS.md`。
 
 ## 输出与发布边界
 
@@ -130,11 +129,3 @@ PYTHONPATH=src python -m pytest -q tests/test_genome_condition_reviewer.py
 本地 raw/replay/probe-prediction tables 约 249 MB，均可由上述入口或冻结 assets 重建，不进入 Git。
 本轮公共 capsule 在提交前必须通过 100 MB 单文件检查、凭据扫描、focused/full tests、Black、Ruff、
 JSON parse 和 `git diff --check`。
-
-## 正式文稿落稿（2026-08-06）
-
-Supplementary Fig. C6 已写入正式 manuscript；Methods、Results、figure caption、三条软件引用和
-reviewer response 已同步。三条引用 DOI 为 `10.1038/s41592-023-02018-3`、
-`10.1093/bioinformatics/bty191` 和 `10.1093/bioinformatics/btw753`。论文独立编译为 34 页，C6
-位于第 26 页且无 undefined citation/reference；response DOCX 独立渲染为 31 页，目标回复位于
-第 7--9 页。正式 `sn-article.pdf` 未覆盖，修改前文件均已备份。

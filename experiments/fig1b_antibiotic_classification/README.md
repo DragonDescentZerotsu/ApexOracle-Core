@@ -120,7 +120,7 @@ Mac notebook、最终 panel、论文和回复信已同步并通过完整编译�
 最终文件的 SHA-256 见 `reproducibility/fig1b_reviewer_revision_2026-07-20.json`。
 
 node002 运行环境是
-`/data1/tianang/Projects/.venvs/fig1b-chemprop-v1`：Python 3.12.7、Chemprop 1.5.2、
+`/path/to/fig1b-chemprop-v1`：Python 3.12.7、Chemprop 1.5.2、
 RDKit 2025.03.5、PyTorch 2.7.1+cu126、Pandas 2.2.2、scikit-learn 1.8.0。
 该 venv 使用 `--system-site-packages` 继承 node002 的 CUDA PyTorch；Chemprop 与新版 Pandas
 不兼容的旧 RDKit 2023 已在 venv 内由 RDKit 2025.03.5 覆盖，未修改 conda base。
@@ -173,59 +173,4 @@ error bar 为五折 sample s.d.；显著性 bracket 显示同一 held-fold 样�
 Holm-adjusted `p`。左 panel 为 AUPRC，右 panel 为 AUROC，三种方法依次为 Chemprop baseline、
 ApexOracle zero-shot 和 ApexOracle fine-tuned（每折均为固定 10-member ensemble）。
 
-Mac canonical notebook
-`/Users/kirianozan/Documents/Study/Penn/projects/local_figs/figs.ipynb` 中新增且只执行了 cell
-`fig1b-final-10member-dual-metric-20260722`；说明 cell 为
-`fig1b-final-10member-dual-metric-notes-20260722`。新 cell 沿用原论文 panel 的 pastel 配色、
-白色柱边、虚线水平网格、italic species labels 和 despine 风格，独立输出：
-
-- `/Users/kirianozan/Documents/Study/Penn/Synergy/paper_figs/3-strain-antibiotics-final-10member-dual-metric.pdf`
-- `/Users/kirianozan/Documents/Study/Penn/Synergy/paper_figs/3-strain-antibiotics-final-10member-dual-metric.png`
-
-原始 cell `220739609a526f79` 的 source SHA-256 仍为
-`56d9eb55eb1d23ee7f30d9ad504cc49bb6f05f862517d34bc60ca9c480cc24a4`，已有 output 的语义
-SHA-256 仍为 `86b36871d2ce1810dfa44e7f41c7fad475cc66923790e8f7d97006cd81fb52f2`。
-本次没有执行或重写原始 cell，也没有覆盖旧 panel PDF、reviewer sensitivity panel 或论文总图。
-完整 notebook、输入和输出 hash 见
-`reproducibility/fig1b_reviewer_revision_2026-07-20.json`。
-
-作者随后在原始 cell 后新增 `### Final 10-member Fig. 1b: AUPRC only version` 区域。
-该区域的 placeholder 已填写为独立 cell `fig1b-final-10member-auprc-only-20260722`，只读取同一
-冻结 CSV 的 AUPRC 行，沿用相同三色 palette、五折 sample s.d. 和 Holm-adjusted paired
-prediction-swap `p`。它独立输出：
-
-- `/Users/kirianozan/Documents/Study/Penn/Synergy/paper_figs/3-strain-antibiotics-final-10member-auprc-only.pdf`
-- `/Users/kirianozan/Documents/Study/Penn/Synergy/paper_figs/3-strain-antibiotics-final-10member-auprc-only.png`
-
-该图已按最终 PNG/PDF 检查，title、legend、数值标签、error bar 和六个 bracket 均无裁切或重叠。
-原始 cell 和双指标 cell 均未执行或修改。给 reviewer 的最终英文回复、建议图注、Results
-替换段落及相对当前论文草稿的修改清单位于 `reviewer_response_auprc_final.md`。
-
-作者反馈初版 legend 与坐标区之间留白过大后，仅修改上述 AUPRC-only cell 的 layout：画布使用
-旧论文 panel 的实际页面尺寸 `741.12 × 380.724 pt`（约 `10.293 × 5.288 in`），取消
-`bbox_inches="tight"` 并显式设置 margins，同时把 y-axis 上限从 `1.12` 收紧至 `1.03`。最终
-PDF 与旧 `3-strain-antibiotics.pdf` 页面尺寸逐点一致；原始和双指标 cell 仍未变化。
-
-作者最终决定不在 Methods 中加入 Fig. 1b 的细碎实验流程。`Data / Small Molecule Antibiotics`
-仅保留数据来源、样本量和标签说明，先前迁入 `Implementation Details` 的详细 protocol 已由作者
-删除。论文只在 Fig. 1b 图注、Results 和结果概览中作简洁更新：说明三个 baseline 均按原论文的
-model configuration 和 training procedure 复现并使用共同五折，随后报告最终 AUPRC 和显著性。
-实际 response-letter docx 已同步最终 10-member 数值，并保留作者指定的 Stokes/Liu/Wong
-common-fold 说明；修改前 Word 备份位于论文目录的 `.revision_backups/`。TeX 已在临时目录完整
-编译为 28 页，Word 已转换为 25 页 PDF 检查；没有覆盖论文 PDF、任何 figure 或论文总图。
-
-一次性查看本机、node001 和 node002 的合并状态：
-
-```bash
-python scripts/reproduce/monitor_fig1b_revision.py
-```
-
-每 30 秒连续刷新：
-
-```bash
-watch -n 30 python scripts/reproduce/monitor_fig1b_revision.py
-```
-
-监控同时显示 45 个待补 member 的唯一完成数与 epoch、15 个 baseline fold、动态 Apex ETA、
-GPU 温度/热降频、磁盘余量和新 checkpoint 占用。总 ETA 必须等首个完整 baseline fold 完成后
-再外推；Apex ETA 不应被误写成整个 reviewer 实验的完成时间。
+The frozen input and statistical protocol also support an AUPRC-only panel.

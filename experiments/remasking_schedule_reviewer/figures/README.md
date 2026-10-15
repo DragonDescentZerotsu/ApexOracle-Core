@@ -10,7 +10,7 @@
 
 ```bash
 MPLCONFIGDIR=/tmp/mplconfig XDG_CACHE_HOME=/tmp MPLBACKEND=Agg \
-  /home/tianang/anaconda3/bin/conda run --no-capture-output -n mdlm \
+  conda run --no-capture-output -n mdlm \
   python scripts/audit/plot_remasking_structure_qualified_peptides.py
 ```
 

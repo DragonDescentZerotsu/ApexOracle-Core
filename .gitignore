@@ -196,3 +196,20 @@ experiments/peplink_validation/roundtrip_summary.json
 *.temp
 *.swp
 *~
+
+# Local agent instructions, internal plans, and manuscript working records.
+AGENTS.md
+CLAUDE.md
+REFACTOR_PLAN.md
+PUBLICATION_HANDOFF.md
+*[Rr][Ee][Vv][Ii][Ee][Ww][Ee][Rr]*[Rr][Ee][Ss][Pp][Oo][Nn][Ss][Ee]*.md
+*[Dd][Rr][Aa][Ff][Tt]*.md
+*MANUSCRIPT*PLAN*.md
+.local/
+/docs/COMPUTE_AND_ASSET_MAP.md
+/docs/CORE_PUBLIC_RELEASE_AUDIT.md
+/docs/DATAPREPARE_LEGACY_LEDGER.md
+/docs/MDLM_MODULE_SPLIT_AUDIT.md
+/docs/UNIFIED_APEXORACLE_RELEASE_PLAN.md
+/experiments/generated_candidate_diversity/molport_selection_audit.md
+/experiments/remasking_schedule_reviewer/superseded_allocation_smoke_20260728/README.md

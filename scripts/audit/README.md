@@ -71,7 +71,7 @@ PYTHONPATH=src python \
 只有显式 `--overwrite` 才覆盖该入口登记的派生文件。42 MB 逐行 assignment 表保持 local-only，
 compact metrics/counts/manifest 可发布。由于该入口使用 frozen predictions，它只能说明已报告指标的
 evaluation-label sensitivity，不能写成 alternative encoding 下重训稳健性。完整数值、raw parser
-边界和英文落稿记录见 `experiments/hierarchical_mic/censor_multiplier_sensitivity/`。CLI 已保持为
+边界见 `experiments/hierarchical_mic/censor_multiplier_sensitivity/`。CLI 已保持为
 薄参数层；共享工作流位于
 `src/apexoracle/evaluation/hierarchical_mic_censor_workflow.py`，纯 label/metric 逻辑位于相邻
 `hierarchical_mic_censor_sensitivity.py`。2026-08-09 维护重构的完整 canonical 输出与重构前逐字节
@@ -90,7 +90,7 @@ Genome-condition 两个正式实验的命令、共享代码层、输出和解释
 
 ```bash
 CUDA_VISIBLE_DEVICES=0 \
-  /home/tianang/anaconda3/bin/conda run --no-capture-output -n mdlm \
+  conda run --no-capture-output -n mdlm \
   python scripts/audit/audit_remasking_peptide_classifier_structure.py
 ```
 
@@ -112,7 +112,7 @@ classifier-positive 不能充当独立 structure identity。该 legacy 图及 vi
 
 ```bash
 MPLBACKEND=Agg \
-  /home/tianang/anaconda3/bin/conda run --no-capture-output -n mdlm \
+  conda run --no-capture-output -n mdlm \
   python scripts/audit/plot_remasking_structure_qualified_peptides.py
 ```
 
@@ -187,7 +187,7 @@ PYTHONPATH=src python scripts/audit/audit_peptide_classifier_split.py \
 
 ```bash
 MPLBACKEND=Agg PYTHONPATH=src \
-  /home/tianang/anaconda3/bin/python \
+  python \
   scripts/audit/analyze_generated_candidate_diversity.py
 ```
 
@@ -203,7 +203,7 @@ reviewer-facing distribution 使用下一入口的 exact all-pairs counts。输�
 24 条最终实验 peptides 的 pairwise diversity 使用：
 
 ```bash
-PYTHONPATH=src /home/tianang/anaconda3/bin/python \
+PYTHONPATH=src python \
   scripts/audit/analyze_selected_peptide_diversity.py
 ```
 
@@ -217,14 +217,14 @@ topology 的 87-pair stratified summary 与双 panel 图；四个组分别含 66
 验证命令为：
 
 ```bash
-PYTHONPATH=src /home/tianang/anaconda3/bin/python -m pytest -q \
+PYTHONPATH=src python -m pytest -q \
   tests/test_generated_candidate_diversity.py tests/test_sequence_similarity.py
 ```
 
 正式 Supplementary Fig. C5 三 panel 图使用：
 
 ```bash
-MPLBACKEND=Agg /home/tianang/anaconda3/bin/python \
+MPLBACKEND=Agg python \
   scripts/audit/plot_generated_candidate_diversity_figure.py
 ```
 

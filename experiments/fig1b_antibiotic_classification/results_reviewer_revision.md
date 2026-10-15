@@ -171,8 +171,8 @@ RN4220 fold 4 还是后补训候选。canonical runner 的 legacy 行为等价�
 - canonical 绘图实现是 `src/apexoracle/evaluation/fig1b_plot.py`，入口是
   `scripts/reproduce/plot_fig1b_revision.py`；Matplotlib 生成冻结 CSV、PDF 和 PNG。
 - Mac canonical notebook 是
-  `/Users/kirianozan/Documents/Study/Penn/projects/local_figs/figs.ipynb`，cell ID
-  `220739609a526f79`。`/Users/kirianozan/Documents/Study/Penn/Synergy/paper_figs/figs.ipynb`
+  `historical-notebooks/local_figs/figs.ipynb`，cell ID
+  `220739609a526f79`。`historical-notebooks/paper_figs/figs.ipynb`
   是只有三个旧 cell 的另一份 notebook，从未包含该 Fig. 1b cell。
 - Holm 校正后的 `p < 0.05` 才标为显著。完整 ensemble 完成后，新增 notebook cell 使用
   Fig. 3a bracket 样式显示 paired prediction-swap test 的 Holm-adjusted p；原始论文 cell
