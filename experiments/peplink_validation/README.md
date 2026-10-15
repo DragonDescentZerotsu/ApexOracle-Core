@@ -75,8 +75,7 @@ evaluation-only sensitivity 原意是不重训，只从 ID-aligned held-out pred
 - strain-wise 2025 精确 split membership 未恢复；
 - 即使只删测试行，也无法消除 training exposure，不能等同于 corrected-data retraining。
 
-因此 reviewer 回复只报告 0.30% 的实测 prevalence 和 limitation，不写 `unchanged`、`robust` 或
-`no effect`。
+0.30% 是实测 prevalence；该比例本身不能证明性能 unchanged、robust 或 no effect。
 
 ## 已退役但保留用于审计追溯的产物
 
@@ -105,8 +104,3 @@ PYTHONPATH=src python scripts/audit/build_peplink_supplementary_data.py
 第二个入口仍复现 169-row 化学审计；reviewer-facing 的 source-aware 训练影响口径以
 `reviewer_response_scope_summary.json`、`recalculated_local_error_scope.json` 和
 `recalculated_local_error_peptides.csv` 为准。
-
-2026-07-23 已将审计结果正式写入作者 manuscript checkout 中 `sn-article.tex` 的
-ChatGPT-o1/OPSIN Methods 段落，并将精简英文回复写入同目录的 reviewer-response DOCX。两份投稿
-文档不进入本源码仓库；TeX 临时编译为 28 页，DOCX 经 LibreOffice 临时渲染为 25 页，PepLink
-回复文本完整且未改变页数。正式论文 PDF 未自动覆盖。

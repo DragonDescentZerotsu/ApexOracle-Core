@@ -137,7 +137,7 @@ SHA-256 为 `912de74c72960b99495e4a441e1dcb75b338dd7390625ac47b3468025c676e83`�
 
 ## 旧论文 fine-tuned 柱子与当前 sensitivity 的口径诊断
 
-旧 Mac notebook 在修改前的 cell `220739609a526f79` 中直接硬编码了混合指标：RN4220
+旧图使用的硬编码数值混合了不同指标：RN4220
 AUPRC `0.408`、E. coli AUROC `0.962`、A. baumannii AUPRC/AUROC
 `0.4344/0.8262`。这些值不是当前 pooled OOF 单模型分析的输出。
 
@@ -170,21 +170,4 @@ RN4220 fold 4 还是后补训候选。canonical runner 的 legacy 行为等价�
 
 - canonical 绘图实现是 `src/apexoracle/evaluation/fig1b_plot.py`，入口是
   `scripts/reproduce/plot_fig1b_revision.py`；Matplotlib 生成冻结 CSV、PDF 和 PNG。
-- Mac canonical notebook 是
-  `historical-notebooks/local_figs/figs.ipynb`，cell ID
-  `220739609a526f79`。`historical-notebooks/paper_figs/figs.ipynb`
-  是只有三个旧 cell 的另一份 notebook，从未包含该 Fig. 1b cell。
-- Holm 校正后的 `p < 0.05` 才标为显著。完整 ensemble 完成后，新增 notebook cell 使用
-  Fig. 3a bracket 样式显示 paired prediction-swap test 的 Holm-adjusted p；原始论文 cell
-  不允许覆盖或改写。
-
-## 发布同步
-
-- 原始 Mac cell `220739609a526f79` 已从修改前备份逐字节恢复；原始硬编码论文数值和 output
-  保持不变。reviewer sensitivity 已迁入新 cell `fig1b-reviewer-sensitivity-20260720`，独立输出
-  `3-strain-antibiotics-reviewer-sensitivity.pdf`。两个 cell 均通过 notebook schema 与语法校验，
-  恢复过程中没有执行原始 cell。
-- 禁止脚本自动合并或覆盖论文 `Fig1.pdf`。总图已经从更新前备份恢复，临时 bracket 图注也已
-  撤回；后续只生成独立 panel，论文图片编辑由作者完成。
-- 修改前快照、最终文件和运行产物 SHA-256 见
-  `reproducibility/fig1b_reviewer_revision_2026-07-20.json`。
+- Holm 校正后的 `p < 0.05` 才标为显著。完整 ensemble panel 显示 paired prediction-swap test 的 Holm-adjusted p。

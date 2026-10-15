@@ -75,12 +75,11 @@ raw DBAASP selected measurements 共 105,547 条，其中普通右删失 22,158 
 而 `4×` 的误差更高。
 
 **根据现有证据作出的推断：** held-out signal 不依赖唯一的 `2×` 取值，但绝对误差会随点值编码
-发生可见变化。因此回复应承认该倍数是基于 twofold-dilution spacing 的 operational heuristic，
+发生可见变化。该倍数是基于 twofold-dilution spacing 的 operational heuristic，
 而不是已知的真实 MIC 或理论唯一值。
 
-**正式采用边界（2026-08-08 作者确认）：** 本结果已加入正式 reviewer response，并以紧凑方法与
-结果段落加入 DBAASP MIC preprocessing table 前后；没有新增 Supplementary table。本实验没有在每个
-alternative label encoding 下重训，因此正式文稿只将其表述为 frozen-prediction label sensitivity，
+**解释边界：** 本实验没有在每个 alternative label encoding 下重训，因此属于
+frozen-prediction label sensitivity，
 不能写成训练过程对 censoring 完全稳健，也不能替代 censored-regression/interval-likelihood 模型。
 
 ## 为什么 R² 变化有限（2026-08-08 诊断）

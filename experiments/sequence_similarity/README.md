@@ -58,7 +58,7 @@ training ID：9800、9801、9802 和 15510。当前稳定规则选择先出现�
 （序列 `FWFTLIKTQAKQPARYRRFC`）。二者的 matches、alignment length、PID 和
 `max_len_identity` 完全相同，因此论文的 35.7% 数值不受影响，但代表序列不是唯一解。
 
-## 仍待作者确认的事项
+## 证据限制
 
 - 没有找到 ApexOracle-12 当时单独运行生成的历史 full CSV，因此对它的结论是算法与 paper
   cache 的确定性重算，不是旧文件逐字节恢复。

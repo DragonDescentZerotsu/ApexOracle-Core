@@ -1,7 +1,7 @@
 # Synergy 三折 CV（论文高置信度复现候选）
 
-本目录迁移论文时期的 strain-wise synergy 二分类实现。作者于 2026-07-19 接受现存完整运行为
-论文实现的高置信度复现候选，synergy 重构阶段至此完成。这里的“高置信度”不表示找回了论文
+本目录提供论文时期 strain-wise synergy 二分类的高置信度复现候选。
+这里的“高置信度”不表示找回了论文
 原始 checkpoint：任务协议、数据规模和性能水平已复现，但精确 checkpoint 身份仍未知。
 
 安装本模块依赖：`pip install -e '.[synergy]'`。验收环境使用 PyTorch 2.6.0、PEFT 0.15.1、
@@ -37,13 +37,12 @@ Transformers 4.49.0 和 SELFIES 2.1.1。
 - 三个现存日志的 ensemble AUROC/AUPRC 为 `0.6690/0.6159`、`0.7614/0.6853`、
   `0.8489/0.9307`，未加权均值约为 `0.7598/0.7440`。
 
-## 结论与作者确认
+## 复现结果
 
 该 driver 和 checkpoint family 是当前最接近论文 synergy 结果的完整实现，因为任务定义、
 2,732 行 eligible 数据、三折 strain-wise 协议、7-member ensemble 和 base checkpoint 血缘均
 吻合。现存 mean `0.7598/0.7440` 与论文 `0.7539/0.7454` 的绝对差分别为 `0.0059/0.0014`。
-作者确认将其作为论文实现的高置信度复现候选，不再以寻找逐文件相同的原始 checkpoint 作为
-synergy 重构阻塞项。
+该结果属于高置信度复现候选，精确原始 checkpoint 身份仍未确认。
 
 ## 保留的证据边界
 
@@ -110,7 +109,7 @@ Zenodo paper-data version series 发布。该一致性强力支持 seed-0 候选
 
 ## Paper-only 范围
 
-作者于 2026-07-19 确认只保留复现论文已汇报结果所需的代码。因此，本目录不再维护
+本目录只保留复现论文已汇报结果所需的代码，不包含
 few-shot、all-data guidance、prospective regression 或 BAA-3170 screening；这些论文后实验的
 源码已从当前工作树删除，但原始数据、checkpoint 和结果文件未被修改。删除清单、SHA-256 与
 Git 恢复位置见 `reproducibility/synergy_paper_only_cleanup_2026-07-19.json`。

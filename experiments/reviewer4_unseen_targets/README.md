@@ -70,22 +70,13 @@ genus 展示 broad efficacy」作为有意义的 benchmark。本目录记录为�
 - 本次未把「临床合理性」量化。syndrome 标注是策展性的，用于让作者和 microbiology 团队排序，
   不能作为选靶依据本身。
 
-## 仍待作者或 microbiology 团队确认的事项
+## 验证限制
 
-- 从 genus-level unseen 且 panel-ready 的候选中选定靶点，并决定是走 genus-level 主张
-  （*Providencia*，3 species / 21 isolate）还是 family 也完全未见的单 species 主张
-  （如 *Pantoea agglomerans* 或 *Erysipelothrix rhusiopathiae*）。
-- 逐条核对实时产品页的 BSL、运输限制与机构生物安全审批；索引中的 BSL 字段不能替代该步骤。
-  厌氧菌（*Finegoldia*）、fastidious 菌（*Kingella*、*Eikenella*）和螺旋体（*Leptospira*、
-  *Treponema*）的 MIC 方案与常规 CLSI 肉汤稀释不同，需要先确认可行性。
-- 靶点确定后，Evo-2 genome embedding 与 strain-text embedding 仍由外部 producer 生成，并登记
-  exact genome assembly、text source、SHA-256 和 producer commit；在这些资产就绪前不启动 sampler。
-- 作者于 2026-08-07 确认已购买 *P. stuartii* ATCC 29914。该菌株的 exact-target asset、历史格式
-  text、Evo-2/text embedding、41-length generation 和非破坏性 filter contract 记录在
-  `providencia_stuartii_atcc_29914/`；其当前 NCBI/ATCC assembly identity 冲突与执行 blocker 不由
-  本候选表的旧状态覆盖。
-- 本初筛只证明「买得到且有基因组」。模型在这些靶点上的实际预测性能尚未评估，也没有任何湿实验
-  数据；不得在回复信中把候选清单表述为已完成的 broad-efficacy 结果。
+- genus-level unseen 与 family-level unseen 是不同的泛化主张；候选表只记录训练暴露范围。
+- BSL 与可订购状态是数据源快照；候选的实验适用性仍需独立确认。
+- 生成流程需要 exact genome assembly、text source、embedding SHA-256 和 producer commit。
+- 本初筛只证明目录可获得性与基因组可用性，未评估模型预测性能，也不提供湿实验
+  broad-efficacy 证据。
 
 ## 输出
 

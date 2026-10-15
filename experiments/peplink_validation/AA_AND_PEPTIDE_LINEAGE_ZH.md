@@ -101,27 +101,6 @@ stereocenter 不作猜测。`Cl-Th2CA` 的正确身份是 N-terminal acyl cap，
 `supplementary_data/pubchem_corrected_definitions_20260723.json`；生成脚本将其作为输入，逐项
 断言分子式与结构。
 
-### 3.2 内部记录：排除的 DBAASP source-data inconsistency
-
-DBAASP sequence 用 `X` 表示 unusual residue，并在 `unusualAminoAcids` 中另给每个 unusual residue
-的名称和位置；两部分原则上应一一对应。旧 builder 在 `DataPrepare/aa_seq_to_smiles.py` 中先按声明
-位置排序 annotation，再从左到右扫描 `X`，但遇到不一致时不会停止：
-
-- **数量不一致 9 peptide / 36 model row（上游 completeness mismatch）：**`X` 多于 annotation 时，
-  `IndexError` 分支直接把多出的 `X` 建成 Leucine；annotation 多于 `X` 时，多余 annotation 从未被
-  消费。例如 DBAASP 10433 有 3 个 `X` 但只有 2 条 annotation，第三个 `X` 被当作 Leucine；6672
-  有 10 个 `X` 但有 12 条 annotation，最后两条修饰被忽略；14902 有 4 个 `X`、0 条 annotation，
-  四处都被当作 Leucine。
-- **位置不一致 9 peptide / 45 model row（位置待确认）：**`X` 数量与 annotation 数量相同，但
-  声明位置不同。旧 builder 只打印 warning，仍把“下一条 annotation”放到当前扫描到的 `X`。
-  例如 DBAASP 4284 的 `X` 在 position 19，而 `MET-OXD` annotation 声明 position 1；旧 builder
-  把 `MET-OXD` 放到 position 19。仅凭冲突字段无法判断 position 1 还是 position 19 才是文献中的
-  真实修饰位置；这属于 DBAASP 源字段需要后续清理的事项。
-
-这 18 peptide/81 model row 记录的是 DBAASP 上游字段不一致和历史 producer 的容错行为。作者于
-2026-07-22 确认：它们不属于 ChatGPT-o1/OPSIN 或 PepLink 转换错误，不计入 56/219，不写入 reviewer
-response 或论文修改。该内部记录仅用于解释旧 producer 如何处理源数据。
-
 ### 4. Round-trip 已验证范围
 
 - 16,075/16,075 个可 forward construct 的 peptide 通过 SMILES → SELFIES → SMILES molecular-graph
@@ -140,7 +119,7 @@ response 或论文修改。该内部记录仅用于解释旧 producer 如何处�
 - PepLink forward failure 不是 chemical error 的同义词；尤其 whole-peptide PubChem source 即使无法由
   当前 PepLink annotation API 重建，模型仍消费按 DBAASP-linked CID 获得的 frozen structure。
 
-## 仍待作者或 chemistry coauthor 确认的事项
+## 尚未解决的来源与验证限制
 
 - 20 个主支路 source-ambiguous definition（85 个 model-eligible peptide、366 行）需要回查 synthesis
   paper/supplier record，当前既不算 confirmed error，也不算 confirmed correct。

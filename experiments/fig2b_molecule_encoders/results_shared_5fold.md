@@ -38,7 +38,7 @@ R² 的标准差是五个 fold 最佳 mean R² 的 sample SD。
 
 - DLM MTR+DLM 在共同数据上比原 retained-set rerun 高 0.0179，仍是性能最高的模型。
 - DLM-only 降低 0.0318，是唯一出现较大变化的模型；这说明旧实验中各模型样本和 fold 不一致对该 bar 的影响不可忽略。新论文图和 reviewer response 应使用 0.3765，而不是沿用约 0.408 的旧值。
-- 正式表中的两个 DLM checkpoint 容量不同：DLM-only 是 12-layer/768，MTR+DLM 是 24-layer/1024。因此当前二者是模型版本比较，不是容量受控的 MTR objective ablation，正文和 reviewer response 不应把 0.1621 的差异完全归因于 MTR。node002 后续定位到一份尚未纳入本表的 12-layer/768 joint checkpoint；它可用于新增容量匹配比较，但预训练 learning rate、global batch size 和最佳 step 仍与 DLM-only 不完全相同。
+- 正式表中的两个 DLM checkpoint 容量不同：DLM-only 是 12-layer/768，MTR+DLM 是 24-layer/1024。因此当前二者是模型版本比较，不是容量受控的 MTR objective ablation，正文和 reviewer response 不应把 0.1621 的差异完全归因于 MTR。另有一份尚未纳入本表的 12-layer/768 joint checkpoint；它可用于新增容量匹配比较，但预训练 learning rate、global batch size 和最佳 step 仍与 DLM-only 不完全相同。
 - ChemBERTa-MTR、ChemBERTa-MLM、MolFormer 和 APEX 相对原 rerun 的绝对变化都小于 0.006；PeptideCLM 上升 0.0069。
 - APEX 没有被重构或改变：仍使用原 23-token vocabulary、AAindex embedding、encoder、checkpoint 和 `512→256` regression head；noncanonical residue 的 `X` 按原 `onehot_encoding` 行为留在 index 0。
 - 原代码没有显式固定 PyTorch 训练 seed。本次保留了这一原始行为，并在每个 fold 的 `metrics.json` 中记录 `initial_torch_seed`；因此这里是一次忠实的 stochastic rerun，而不是跨硬件逐 bit 确定的结果。
