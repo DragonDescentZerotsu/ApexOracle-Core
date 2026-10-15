@@ -150,26 +150,12 @@ response 或论文修改。该内部记录仅用于解释旧 producer 如何处�
 - 若要证明模型性能对这些记录稳健，需要使用确定的 corrected/excluded dataset 重新训练；目前没有足够
   证据把只删测试行的结果写成等价补救。
 
-## 作者已确认的范围决定
-
-- coordination records 不作为错误；历史 builder 忽略配位信息被记录为明确的去金属/忽略配位预处理。
-  其中 6 个含 `MIM` 的 peptide 仍因 `MIM` 本身不是可聚合 residue template 而进入问题范围，而不是
-  因为 coordination omission。
-- DBAASP sequence/unusual-residue annotation 内部不一致不属于 reviewer 所问的本地化学转换错误；
-  18 peptide/81 row 全部从 reviewer-facing 错误报告与论文修改中排除。
-- non-exact polymer proxy 不进入 56-peptide/219-row reviewer scope；只在内部完整化学审计中
-  保留其 representation limitation 记录。
-- 355 个 PepLink forward failure 和旧 617-peptide/4,095-row union 不进入 reviewer response。
-- reviewer 回复可报告 0.30% confirmed prevalence；不得
-  扩展为“不会影响训练”或“no effect”。
-
 ## Canonical 产物
 
 - `reviewer_response_scope_summary.json`：机器可读的修订范围；
 - `recalculated_local_error_scope.json` 与 `recalculated_local_error_peptides.csv`：可复现的新计数与
   56 个 reviewer-facing peptide 逐条清单；
 - `revised_training_impact_scope.csv`：类别与 definition-level 计数；
-- `reviewer_response_draft.md`：可直接使用的 reviewer 措辞；
 - `supplementary_data/Supplementary_Data_AA_conversion_errors.xlsx`：56 个受影响 peptide 的英文
   Supplementary Data；
 - `supplementary_data/补充数据_AA转换错误_中文.xlsx`：上述表的中文镜像；

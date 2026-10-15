@@ -97,47 +97,7 @@ R² 的 pooled `SSE/TSS` 分解进一步解释了表面上的稳定性：
 
 **已验证事实：** R²看的是`1-SSE/TSS`；修改标签同时改变分子和分母，两者同向变化构成主要抵消。
 **解释边界：** 这不代表 multiplier 对所有 metric 无影响；MAE 在`4V`下明显增加，而且当前仍是
-frozen-prediction分析。上述 exact 分解与解释已完整保留在本节；2026-08-09 维护审计时移除了没有
-canonical 生成入口、且未被正式文稿消费的一次性 portable HTML/JSON 报告，避免把不可再生的展示
-文件误当作正式分析产物；文件已移出工作区并保存在可恢复归档
-`/data2/tianang/.codex-trash/20260809_synergy_mic_multiplier_diagnostics/`。
-
-## 代码与文件系统维护审计（2026-08-09）
-
-- 原 623 行 audit script 同时承担 CLI、重建、指标汇总和 manifest 写入，维护边界不清。现已将其
-  收缩为118行参数入口，完整工作流进入上述共享 module；没有复制另一套分析实现。
-- 删除了从未被任何入口或测试调用的 `censor_counts` 死代码，并将 multiplier grid、closed output
-  contract、额外 MIC audit columns 与 small-molecule auxiliary columns 的兼容性纳入测试。
-- 使用同一冻结输入完整执行 canonical `--overwrite` 重跑。六个 CSV 与 manifest 共七个输出的
-  SHA-256 均与重构前逐字节一致，因此数值、row order、schema 和 provenance contract 未改变。
-- manifest 的 `generated_on=2026-08-07` 是 canonical artifact 的冻结 provenance date，不是每次
-  deterministic rerun 的 wall-clock 时间；代码已将其命名为 `CANONICAL_ANALYSIS_DATE`，避免误读为
-  动态运行时间并保持已有 artifact hash 不变。
-- 42 MB `row_censor_assignments.csv` 继续保留为 local-only：它是独立复算60行指标和重复记录对齐
-  审计的逐行依据，位于唯一 canonical output root 且已由 `.gitignore` 精确保护，不属于重复副本。
-- 退役的一次性 R² portable report 共约466 KB，已移入上述工作区外可恢复归档；其全部科学结论仍
-  由本 README 的 exact 数值和 canonical CSV 支撑。
-
-## 正式文稿落稿记录（2026-08-08）
-
-正式落稿严格使用 `REVIEWER_RESPONSE_DRAFT.md` 中作者确认的文本与数值：
-
-- `sn-article.tex` 在 Table `DBAASP_MIC` 前说明 `>V` 是需要 multiplier finite assignment 的最大类别
-  （22,158条，相比`>>V`的19条），用于代表性 sensitivity；表后报告 strain/phylum 的受影响分母、
-  `V/2V/4V` 和 exclusion R²、Spearman/MAE范围及 heuristic 结论。
-- `Response to reviewers letter.docx` 中原 future-tense 占位回复被替换为三段完成时回复；新段落沿用
-  原段落的 Normal、两端对齐、Arial 12 pt、红色和 SimSun East Asian 字体设置，其他段落文本和表格
-  单元格未改变。
-- 修改前备份位于正式文稿目录：
-  `sn-article_before_mic_multiplier_sensitivity_20260808.tex` 和
-  `Response to reviewers letter_before_mic_multiplier_sensitivity_20260808.docx`。
-- 修改后正式 TeX/DOCX SHA-256 分别为
-  `c8cc3b688fe81b73607bb30b9569b82fded70132e335fa6a84ba2f6de6d48f21` 和
-  `378e2a90336f31218c307c2831fbaa3c67806c6ad9a2e2e946e332738cd7887d`。TeX 独立编译为35页，
-  无 undefined citation/reference，新增内容位于第10--11页；DOCX独立渲染为32页，新回复位于
-  第24--25页；两者均已目视核验。
-- 正式 `sn-article.pdf` 未覆盖，SHA-256 保持
-  `761b1b6cac0d17a1ade0932df1d6a4a2fa6a044c3729da5d9d1fa351b707d3c2`。
+frozen-prediction分析。上述 exact 分解与解释见本节。
 
 ## 产物与存储边界
 
@@ -150,8 +110,6 @@ canonical 生成入口、且未被正式文稿消费的一次性 portable HTML/J
 | `analysis/metric_deltas.csv` | 相对 paper legacy 与 `2×` 的差值 | compact，可发布 |
 | `analysis/duplicate_prediction_normalization_audit.csv` | 重复 stable-key 技术审计 | compact，可发布 |
 | `analysis/row_censor_assignments.csv` | 172,182 条逐行 lineage/prediction | 约 42 MB，local-only |
-
-本次正式落稿基准与实施文本见 `REVIEWER_RESPONSE_DRAFT.md`。
 
 ## 验证
 

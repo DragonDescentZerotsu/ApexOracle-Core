@@ -2,12 +2,10 @@
 
 本目录的 reviewer-facing canonical 口径已经按完整 structure source lineage 修订。先阅读：
 
-1. `AA_AND_PEPTIDE_LINEAGE_ZH.md`：AA definition 与 whole-peptide structure 的中文血缘；
+1. `AA_AND_PEPTIDE_LINEAGE_ZH.md`：AA definition 与 whole-peptide structure 血缘；
 2. `reviewer_response_scope_summary.json`：机器可读范围；
-3. `reviewer_response_draft.md`：可直接采用的 reviewer 回复；
-4. `revised_training_impact_scope.csv`：确认问题的类别与 definition-level 计数；
-5. `supplementary_data/Supplementary_Data_AA_conversion_errors.xlsx`：期刊用英文补充数据；
-6. `supplementary_data/补充数据_AA转换错误_中文.xlsx`：逐字段中文镜像。
+3. `revised_training_impact_scope.csv`：问题类别与 definition-level 计数；
+4. `supplementary_data/supplementary_data_manifest.json`：英文/中文补充表的范围与校验值。
 
 ## 已验证的 round-trip
 

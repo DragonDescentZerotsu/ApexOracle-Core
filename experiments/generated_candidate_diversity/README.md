@@ -8,14 +8,14 @@ Canonical 入口：
 
 ```bash
 MPLBACKEND=Agg PYTHONPATH=src \
-  /home/tianang/anaconda3/bin/python \
+  python \
   scripts/audit/analyze_generated_candidate_diversity.py
 ```
 
 24 条最终合成 peptides 的 pairwise sequence/structure diversity 入口：
 
 ```bash
-PYTHONPATH=src /home/tianang/anaconda3/bin/python \
+PYTHONPATH=src python \
   scripts/audit/analyze_selected_peptide_diversity.py
 ```
 
@@ -56,7 +56,7 @@ Candidate-level 主分析保留全部 73 行，包括重复候选，并计算全
 
 ### Candidate screening 血缘边界
 
-**已由历史代码验证的事实：** `/data2/tianang/projects/mdlm/judge_mol_mic_with_fig.py`
+**已由历史代码验证的事实：** `/path/to/ApexOracle-MDLM/judge_mol_mic_with_fig.py`
 使用 clean 13-epoch MIC regressor 对 target strain 评分，通过 `if mic > 15: continue` 保留
 predicted MIC <=15 µM 的 outputs；随后要求结构能够解析为 peptide sequence 且不含 unresolved
 `X` residue，并要求结构可由 RDKit/SELFIES 继续处理。predicted MIC 因而是 post-generation
@@ -101,8 +101,6 @@ Generation-level 分析只读消费原始 `generated_mol_SELFIES-new/` 中 `BAA-
 - `canonical_candidates/replacement_audit.csv`：9 个替换行；
 - `canonical_candidates/final_peptide_mapping.csv`：24 条最终合成 peptide 的副本映射；
 - `manifest.json`：全部输入、输出、外部 parser/PepLink 与 SHA-256 血缘。
-- `reviewer_response_draft.md`：只使用上述 canonical 副本和冻结分母的英文回复草稿。
-- `molport_selection_audit.md`：18 条 purchased compounds 的 44,608-entry screen、MolPort
   exact-match、structural-alert、cluster 与 19-to-18 procurement 血缘；明确区分已验证事实、推断和
   尚无证据支持的 delivery-time 说法。
 
@@ -147,60 +145,10 @@ fingerprint 仍由本机冻结的 RDKit 2024.09.6 protocol 产生。
 0.0177 percentage points 内。这说明一百万 pairs 本身已足以估计总体分布，但正式结果采用
 exact all-pairs 以消除 reviewer 对抽样规模的疑问。
 
-## 正式文稿落稿（2026-08-02）
 
-- 正式 TeX 已按作者确认的 plan 修改 Results、Methods 和 Supplementary Information；原
-  `spanning a range of predicted MIC values` 已替换为 `<=15 µM` threshold 加
-  diversity/feasibility prioritization，并加入 peptide/small-molecule intended-target hit rates。
-- 合作者原回复中需要保留的三点已明确进入正文与 `reviewer_response_draft.md`：diversity-aware
-  selection 用于避免近重复 top analogues；Fig. 3a 是 predicted candidate distributions 的
-  *in silico* comparison；prospective MIC measurements 才是 selected candidates 的直接实验评价。
-- 图已复制为正式文稿目录的 `Fig_SI_generated_candidate_diversity.pdf`，与 canonical PDF 的
-  SHA-256 均为 `024d95d9d776b3988100827f4a2c94d866b0a977efe7854eeaccaf7539f2d296`。
-- 修改前 TeX 备份为 `sn-article_before_generated_diversity_selection_20260802.tex`。独立临时编译
-  为 32 页，Supplementary Fig. C3/C4/C5 与 Appendix D 编号已核验；正式 `sn-article.pdf` 未覆盖。
-- 两条 selection comments 使用同一组 manuscript revisions，但保留各自完整回复：Reviewer 4
-  额外回答为什么不只选择预测最强者和 exact hit-rate 分布。正式
-  `Response to reviewers letter.docx` 已合并 diversity 和两条 selection/hit-rate 回复；修改前备份为
-  `Response to reviewers letter_before_generated_diversity_selection_20260802.docx`。DOCX 独立渲染为 30 页，
-  相关页面格式已核验。
-- Supplementary Fig. B2 已替换为全部 24 条 tested peptides 和 18 个 tested small molecules
-  在 20 个 strains 上的完整 MIC heatmaps。正式 `Fig_SI_heatmap_re.pdf` 来自作者提供的
-  Mac v4 PDF，SHA-256 为
-  `5ac3bd00e52958ecb06bc066e29de4752863b0f31d851e18df531954c1ae2693`；旧图备份为
-  `Fig_SI_heatmap_re_before_all_candidates_20260802.pdf`。TeX 改为双栏 `figure*`/`\textwidth`，
-  独立编译为 32 页，B2 位于第 23 页且 C3--C5 编号不变。两条 selection
-  reviewer replies 已增加 complete B2 matrices 的回指；最终 reviewer DOCX SHA-256 为
-  `5da0fc9894c861733917438b07904cb22777f800cceece7185b067b0464473bc`。
+## Figure
 
-## Supplementary Fig. C5 selected-panel 扩展（2026-08-03）
-
-- `scripts/audit/plot_generated_candidate_diversity_figure.py` 将 selected-panel within-target PID
-  与原两组 Tanimoto histograms 组成单行三 panel 图：panel a 为 24 条 synthesized peptides，
-  panels b/c 分别为 73-candidate pool 和 84,226 guided outputs。引用顺序为 24→73→84,226，
-  因此 PID 是新 panel a，原 a/b 顺延为 b/c。
-- Canonical 图为 `generated_candidate_diversity_three_panel.pdf`，SHA-256 为
-  `72c50e1649720233a3a45ba46d57d21df8fa68ffb2660aba886b3a4f491a8ab8`；正式论文目录的
-  `Fig_SI_generated_candidate_diversity.pdf` 与其一致。旧两 panel 正式图备份为
-  `Fig_SI_generated_candidate_diversity_before_selected_pid_20260803.pdf`，SHA-256 为
-  `024d95d9d776b3988100827f4a2c94d866b0a977efe7854eeaccaf7539f2d296`。
-- Panel a 使用完整 0--100\% PID 纵轴；`P. aeruginosa PA5257` 和 `E. coli AR-0349` 放在
-  40\% 以上的空白区，x 轴只保留 Lin./Cyc. 与 pair 数。最右侧 18.2\% median label 在 cyclic
-  group 上方居中，不越过 panel a/b 边界。
-- 正式 TeX Results 新增 87/87 within-group PID `<50%` 及四组 median，Methods 新增
-  selected-peptide sequence-diversity protocol；caption 明确正式 strain 编号、四组 peptide/pair 数
-  和 Lin./Cyc. 定义，0--100\% PID 轴与排除的 comparison scope 分别保留在图和 Methods，不在
-  caption 重复。Reviewer
-  diversity 与两条 selection 回复均加入 C5a 的 87-pair 定量结果，并将整体组织为 selected-panel、
-  candidate-pool 和 generation-output 三个互补层级。正式 response DOCX 修改前备份为
-  `Response to reviewers letter_before_selected_pid_c5_20260803.docx`，更新后 SHA-256 为
-  `5da0fc9894c861733917438b07904cb22777f800cceece7185b067b0464473bc`。TeX 独立编译为
-  32 页，C5 位于第 24 页并与 C4 同页；response DOCX 独立渲染为 30 页；两者相关页面均已
-  目视核验，正式 `sn-article.pdf` 未覆盖。
-- 2026-08-03 按作者要求重组新增 Methods：guided generation/remasking 继续留在
-  `ApexOracle Architecture and Training`；peptide prioritization 与 small-molecule screen 合并到新
-  `Candidate prioritization and virtual screening` subsection；原 `Sequence similarity analysis`
-  扩展为 `Sequence and structural diversity analyses`，先统一定义 alignment/PID，再依次描述
-  lead-to-training、selected-24 sequence 和 73/84,226 structural analyses。协议与数值均未改变；
-  修改前备份为 `sn-article_before_methods_reorganization_20260803.tex`。独立编译仍为 32 页，
-  两个新 subsection 位于第 16--17 页并完成目视核验，正式 `sn-article.pdf` 未覆盖。
+The canonical three-panel figure is `generated_candidate_diversity_three_panel.pdf`.
+Panel a shows within-target sequence identity for the 24 synthesized peptides;
+panels b/c show structural similarity for the 73-candidate pool and 84,226
+guided outputs. See `figure_caption.md` and the figure manifest for the exact scope.

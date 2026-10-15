@@ -7,14 +7,14 @@
 
 | 资产 | 位置 | 状态 |
 | --- | --- | --- |
-| 论文实际 classifier checkpoint | `/data2/tianang/projects/mdlm/cls-guide-pad-no-mask-checkpoints/epoch-epoch=1-step-step=134000-train_loss-train_loss=0.008.ckpt` | v1，epoch 1 / step 134000 |
+| 论文实际 classifier checkpoint | `/path/to/ApexOracle-MDLM/cls-guide-pad-no-mask-checkpoints/epoch-epoch=1-step-step=134000-train_loss-train_loss=0.008.ckpt` | v1，epoch 1 / step 134000 |
 | v1 最终训练数据 | `DataPrepare/MDLM/Data/hf_pep_SM_cls_1024` | 82,795,051 rows |
 | v1 tokenization 前 Hugging Face 数据 | `DataPrepare/MDLM/Data/hf_pep_SM_cls` | 保存了 `mol_ids`、token IDs 与标签，可逐来源审计 |
-| 精确历史 trainer | `node002:/data1/tianang/Projects/mdlm/guaidance_classifier_all_data_pad_no_mask.py` | 2025-05-14；node002 历史目录只读 |
-| 当前 MDLM clean trainer | `/data2/tianang/projects/mdlm/scripts/reproduce/train_peptide_classifier.py --profile v1_noisy_padding_preserved_cls` | 参数化 replacement；不把当前 Git source 冒充 2025-05 exact blob |
+| 精确历史 trainer | `/path/to/historical-mdlm/guaidance_classifier_all_data_pad_no_mask.py` | 2025-05-14；node002 历史目录只读 |
+| 当前 MDLM clean trainer | `/path/to/ApexOracle-MDLM/scripts/reproduce/train_peptide_classifier.py --profile v1_noisy_padding_preserved_cls` | 参数化 replacement；不把当前 Git source 冒充 2025-05 exact blob |
 | 重构前本机同名 trainer | `legacy-code-snapshot-2026-08-09:guaidance_classifier_all_data_pad_no_mask.py` | snapshot main 已改为 v2 数据；只用于恢复 padding/noising 行为，不是上述 checkpoint 的精确 producer |
 
-外部 `/data2/tianang/projects/mdlm` 中的代码必须在 `mdlm` conda 环境运行。当前审计只读消费
+外部 `/path/to/ApexOracle-MDLM` 中的代码必须在 `mdlm` conda 环境运行。当前审计只读消费
 node002 历史目录和外部 guidance 仓库，没有改写原始数据或 checkpoint。
 
 ## 已由最终 CSV、Arrow shards 和 producer 路径验证的 v1 血缘
@@ -59,7 +59,7 @@ node002 历史目录和外部 guidance 仓库，没有改写原始数据或 chec
 
 ## v2 不能反向解释 v1 checkpoint
 
-2025 年 6 月的 v2 使用 `/data2/tianang/projects/mdlm/smiles_to_peptide.py` 将结构解析为 peptide
+2025 年 6 月的 v2 使用 `/path/to/ApexOracle-MDLM/smiles_to_peptide.py` 将结构解析为 peptide
 sequence；解析失败或包含 `X` 时标为 0。该 parser 明确只覆盖线性、无环、无复杂修饰的标准
 氨基酸肽。v2 原始 125,300,511 个结构中的来源级标签为：
 
@@ -153,7 +153,7 @@ PYTHONPATH=src python scripts/reproduce/prepare_peptide_classifier_split.py \
   extract-sequences \
   --output-dir experiments/peptide_classifier/reviewer_retrain \
   --uniprot-sequences DataPrepare/MDLM/Data/unique_peptide_sequences.txt \
-  --smprot-csv /data1/tianang/SMILES_data/SmProt2_All.csv
+  --smprot-csv /path/to/source-data/SmProt2_All.csv
 
 PYTHONPATH=src python scripts/reproduce/prepare_peptide_classifier_split.py \
   cluster-sequences \
@@ -179,8 +179,8 @@ PYTHONPATH=src torchrun --standalone --nproc-per-node=4 \
   scripts/reproduce/run_peptide_classifier_reviewer.py \
   --dataset-dir DataPrepare/MDLM/Data/hf_pep_SM_cls_1024 \
   --split-dir experiments/peptide_classifier/reviewer_retrain \
-  --producer-root /data2/tianang/projects/mdlm \
-  --v1-checkpoint /data2/tianang/projects/mdlm/cls-guide-pad-no-mask-checkpoints/epoch-epoch=1-step-step=134000-train_loss-train_loss=0.008.ckpt \
+  --producer-root /path/to/ApexOracle-MDLM \
+  --v1-checkpoint /path/to/ApexOracle-MDLM/cls-guide-pad-no-mask-checkpoints/epoch-epoch=1-step-step=134000-train_loss-train_loss=0.008.ckpt \
   --output-dir experiments/peptide_classifier/reviewer_retrain/runs/seed_0 \
   --seed 0 --batch-size 225 --epochs 2 --validation-interval-steps 45000
 
@@ -193,22 +193,3 @@ python scripts/reproduce/orchestrate_peptide_classifier_reviewer.py
 evaluation→prediction artifact→molecule bootstrap 全链路通过；2-GPU DDP 的 train、分布式
 validation gather 和 best checkpoint 也已通过。正式 split 与训练结果完成后在本节追加精确
 指标。
-
-## 2026-08-03 正式论文 Methods 落稿
-
-- 作者确认只在 Methods 增加 `Peptide-classifier training and evaluation`，不修改 Results，
-  不新增 Supplementary Table 或 figure。
-- 正式 TeX：
-  `/data2/tianang/projects/ApexOracle_cleaned/docs/ApexOracle_Nat_Biotech/sn-article.tex`。
-- 作者随后确认调整 Methods 顺序：`Peptide-classifier training and evaluation` 与
-  `Remasking-window sensitivity analysis` 作为完整段落移到 `Sampling Strategy` 之后、
-  `Implementation Details` 之前，并进一步将 remasking sensitivity 放在 classifier evaluation
-  之前，使其紧接 sampling definition；两段继续以 `\rev{}` 标记，内容未改写。
-- 段落报告四个 source-label counts、PubChem general-chemistry background/weak-supervision 边界、
-  fixed 98%/1%/1% split、canonical-molecule 与 MMseqs2 cluster grouping、test-set composition，
-  以及两个 replicas 在 `t=0` 和 `t=0.5` 下的 AUROC/AUPRC、positive-class recall 和
-  negative-class specificity。
-- 顺序调整后独立临时目录的 `latexmk` 编译通过，输出 32 页，相关段落位于第 15--16 页附近；正式
-  `sn-article.pdf` 未覆盖。
-- 正式 response letter 尚未同步；当前落稿文字与待办见
-  `experiments/peptide_classifier/MANUSCRIPT_REVISION_PLAN.md`。

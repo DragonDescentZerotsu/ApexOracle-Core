@@ -75,15 +75,14 @@ AUPRC 的随机基线为实际 evaluation set 的 positive prevalence（16.67%/1
 AMR-associated signal 较弱但高于基线，mobile-element-associated signal 更明显。标签来自已有
 annotation 的保守词典，不构成完整 resistome 或 mobile-element catalogue。
 
-## Figure 与正式文稿
+## Figure
 
 Canonical 三面板图、caption、exact plotted data 与 source/output SHA-256 manifest 位于
 `figures/`。Panel a 展示 sequence divergence 与 embedding cosine distance；panels b/c 分别展示
 AUPRC 与 AUROC 的五折 held-out evaluation 和随机基线。
 
-正式 reviewer response、Methods、Results、caption 和新增引用已经按上述结果更新；当前落稿记录见
-`REVIEWER_RESPONSE_AND_MANUSCRIPT_DRAFT.md`。对外表述统一限定为：fragment representation
-preserves encoded sub-species sequence variation and annotation-associated information。
+The supported conclusion is limited to encoded fragment-level sequence variation
+and annotation-associated information; it does not establish downstream MIC use.
 
 ## 弃用诊断的维护边界
 

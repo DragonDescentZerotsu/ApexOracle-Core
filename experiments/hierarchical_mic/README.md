@@ -203,7 +203,7 @@ mode。strain 输出仍是冻结 candidate membership 上的 reconstruction，�
 2025 精确 membership。
 
 正式 reviewer sensitivity 使用固定 membership 的 phylum `3 × 7` replay；compact 汇总位于
-`molecule_disjoint/phylum_analysis/`，解释边界和英文回复草稿见
+`molecule_disjoint/phylum_analysis/`，解释边界见
 `molecule_disjoint/REVIEWER_SENSITIVITY_REPORT.md`。strain candidate 结果只作为内部
 secondary robustness evidence。
 
@@ -237,7 +237,7 @@ exact peptides，Spearman/Pearson 为 `0.4070/0.4130`，其中53.12%为 MIC<=16 
 `0.5814/0.6283/0.1089`；full `0.5814` 与历史论文值 `0.5793` 一致，不能拿 pooled
 `0.4638` 直接和论文 fold mean 比较。
 2,000次 exact-peptide cluster bootstrap 的 unseen R2 95% CI 为 `[0.0687, 0.1191]`。
-完整结果、fold-level 边界和 reviewer 回复草稿见
+完整结果、fold-level 边界见
 `fixed_strain_retrain/REVIEWER_SENSITIVITY_REPORT.md`。
 
 ### Reviewer MIC test-distribution Supplementary Figure
@@ -298,6 +298,6 @@ mean-across-groups R² 在 strain `1×/2×/4×` 下为 `0.5785/0.5813/0.5634`，
 `0.5699`；phylum 对应为 `0.3804/0.3879/0.3748`，删除右删失为 `0.3491`。这支持
 held-out signal 不依赖唯一的 `2×` 选择，但 MAE 会随 point encoding 发生可见变化。
 
-完整协议、parser 的 ASCII `>`/Unicode `≥`/`>>` 历史差异、重复 stable-key 审计和英文落稿记录
+完整协议、parser 的 ASCII `>`/Unicode `≥`/`>>` 历史差异、重复 stable-key 审计
 见 `censor_multiplier_sensitivity/README.md`。本实验不重训，必须表述为已报告指标的
 evaluation-label sensitivity；不能升级为 training robustness 或 censor-aware regression。

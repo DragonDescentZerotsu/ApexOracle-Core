@@ -112,10 +112,8 @@ provenance, license boundary, and the authors' publication decision are recorded
 - compact paper strain-label to runtime-condition mapping:
   [`assets/manifests/paper_strain_mapping.json`](assets/manifests/paper_strain_mapping.json), with schema and rebuild
   instructions in [`docs/PAPER_STRAIN_MAPPING.md`](docs/PAPER_STRAIN_MAPPING.md);
-- compute, environment, and private/public asset boundaries:
-  [`docs/COMPUTE_AND_ASSET_MAP.md`](docs/COMPUTE_AND_ASSET_MAP.md);
-- unified five-module release architecture:
-  [`docs/UNIFIED_APEXORACLE_RELEASE_PLAN.md`](docs/UNIFIED_APEXORACLE_RELEASE_PLAN.md).
+- module architecture, compute requirements and asset manifests:
+  [ApexOracle](https://github.com/DragonDescentZerotsu/ApexOracle).
 
 Paper/reviewer workflows document their required source tables, checkpoints, outputs, and validation commands in
 the corresponding directory under [`experiments/`](experiments/README.md).
@@ -139,10 +137,6 @@ Deleted source remains recoverable from the annotated tags:
 
 - `legacy-code-snapshot-2026-07-17`
 - `core-pre-public-cleanup-2026-08-10`
-
-The file-by-file role and disposition of the former `DataPrepare/` source tree are recorded in
-[`docs/DATAPREPARE_LEGACY_LEDGER.md`](docs/DATAPREPARE_LEGACY_LEDGER.md). Ignored local datasets and embeddings
-were not deleted as part of source cleanup.
 
 ## License
 
