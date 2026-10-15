@@ -14,7 +14,7 @@ python scripts/prepare_data/export_paper_strain_mapping.py \
 ```
 
 该入口只导出 source strain label 到 runtime condition key、species、condition route 和 embedding filename
-的紧凑映射，不复制 MIC label、molecule、embedding tensor 或 private assay row。当前冻结产物包含
+的紧凑映射。当前冻结产物包含
 1,766 个 source labels、1,769 条 condition routes 和 92,322 个 routed MIC records；详细 schema、历史
 substring filter 边界与验证命令见 `docs/PAPER_STRAIN_MAPPING.md`。
 
@@ -39,7 +39,7 @@ text-only 文件名的 `～` 和 `^` 分别表示空格与 `/`。两种模式均
 
 默认 `--existing skip` 不覆盖已存在 tensor；也可显式选择 `error` 或 `overwrite`。每次运行写出
 `strain_text_embedding_manifest.json`，记录 source/normalized-text/output SHA-256、model revision、
-hidden-state index、shape、dtype 与 replacement warnings。数据、文本、tensor 和模型权重不进入 Git。
+hidden-state index、shape、dtype 与 replacement warnings。
 
 验证命令：
 

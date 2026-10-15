@@ -1,8 +1,8 @@
-# Genome-condition reviewer results
+# Genome-condition results
 
 ## 正式结论
 
-本轮用于 reviewer response 和论文修订的证据由两个 representation-level validation 构成：
+本目录包含两个 representation-level validation：
 
 1. homologous-fragment variation：检验近缘同种菌株的同源 11-kb fragments 中，真实序列变异是否
    会在冻结的 Evo-2 fragment vectors 中留下可测差异；
@@ -84,9 +84,7 @@ AUPRC 与 AUROC 的五折 held-out evaluation 和随机基线。
 The supported conclusion is limited to encoded fragment-level sequence variation
 and annotation-associated information; it does not establish downstream MIC use.
 
-## 弃用诊断的维护边界
+## Condition-swap 诊断的解释限制
 
-早期 genome-swap、genome/text factorial swap、162-genome probe pilot 和 strain-wise fragment pilot
-只保留为本地审计历史，不进入 reviewer response、论文、正式三面板图或 GitHub release。Swap
-diagnostics 无法构造已知的 donor-strain MIC 反事实，也没有提供可归因于 genome channel 的有效
+早期 genome-swap 与 genome/text factorial swap diagnostics 无法构造已知的 donor-strain MIC 反事实，也没有提供可归因于 genome channel 的有效
 证据；因此不得用它们声称 swap 降低预测性能或当前 MIC predictor 强依赖正确近缘 genome。

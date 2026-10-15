@@ -21,7 +21,7 @@ circles; the remaining 493 fragments are grey crosses. The panel has no bins or 
 trend line.
 Panels b/c show all five held-out folds, with every genome kept entirely within one fold,
 together with the fold mean ± sample s.d. and the relevant random baseline. The figure does
-not include the abandoned genome-swap diagnostic.
+use fragment-variation and annotation-probe results.
 
 Validation: `PYTHONPATH=src python -m pytest -q tests/test_genome_condition_reviewer.py`
 completed with 13 passed; the full repository completed with 184 passed and 14 existing

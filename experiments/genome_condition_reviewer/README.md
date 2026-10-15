@@ -1,4 +1,4 @@
-# Genome-representation reviewer validation
+# Genome-representation validation
 
 ## 正式范围
 
@@ -11,10 +11,6 @@
 2. **Fragment annotation probes**：把现有 GenBank annotations 保守地映射到 saved-tensor-compatible
    fragment windows，再以固定超参数的 L2 logistic regression 检验 AMR-associated 和
    mobile-element-associated signals 是否可由 frozen 8,192-dimensional vectors 线性恢复。
-
-早期 genome/text condition-swap controls 和 strain-wise fragment pilot 已被作者明确排除在 reviewer
-response 与论文之外。它们的本地取证产物继续保留，但代码、逐 member completion markers 和
-superseded summaries 不进入公共 reviewer capsule，避免与正式证据混淆。
 
 ## 代码结构
 
@@ -114,7 +110,7 @@ PYTHONPATH=src python -m pytest -q tests/test_genome_condition_reviewer.py
 
 完整数值与解释边界见 `RESULTS.md`。
 
-## 输出与发布边界
+## 输出
 
 - `fragment_variation/manifests/summary.json`：nearest-pair preparation contract。
 - `fragment_variation_task_manifest.json`：正式 fragment analysis 命令、owner 与完成条件。
@@ -122,10 +118,4 @@ PYTHONPATH=src python -m pytest -q tests/test_genome_condition_reviewer.py
 - `historical_probe/manifests/manifest.json`：annotation-compatible cohort 与 output hashes。
 - `historical_probe/task_manifest.json`、`historical_probe/analysis/summary.json`：probe protocol、
   completion contract 与正式 metrics。
-- `figures/`：canonical PDF/SVG/PNG、caption、exact plotted-data 和 SHA-256 manifest；公共 release
-  显式纳入三种 canonical figure files 和 compact exact plotted-data，raw prediction/fragment CSV
-  仍受 `.gitignore` 保护。
-
-本地 raw/replay/probe-prediction tables 约 249 MB，均可由上述入口或冻结 assets 重建，不进入 Git。
-本轮公共 capsule 在提交前必须通过 100 MB 单文件检查、凭据扫描、focused/full tests、Black、Ruff、
-JSON parse 和 `git diff --check`。
+- `figures/`：PDF/SVG/PNG、caption、exact plotted-data 和 SHA-256 manifest。

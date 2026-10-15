@@ -1,7 +1,6 @@
-# PeptideCLM tokenizer vendor boundary
+# PeptideCLM tokenizer
 
-这里只保留 ApexOracle 论文比较实验实际需要的 PeptideCLM SMILES SPE tokenizer、vocabulary
-和 merges。训练示例、notebook、clustered dataset 与其他未被调用的 tokenizer 不属于发布运行时。
+本目录提供 ApexOracle 比较实验使用的 PeptideCLM SMILES SPE tokenizer、vocabulary 和 merges。
 
 - 上游：<https://github.com/aaronfeller/PeptideCLM>
 - 模型：`aaronfeller/PeptideCLM-23M-all`

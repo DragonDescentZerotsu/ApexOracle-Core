@@ -1,12 +1,12 @@
 # 预计算 Evo-2 genome embedding 契约
 
-本仓库不负责生成 genome embedding。论文训练、评估和 reviewer scaling 分析直接读取已经
-生成的 `DataPrepare/Data/Genome_embs/*.pt`。这些 tensor 属于版本化数据资产，不进入 Git。
+训练、评估和 scaling 分析读取 `DataPrepare/Data/Genome_embs/*.pt` 中的预计算 genome embeddings。
+Embedding 提取入口由 ApexOracle-Evo2 提供。
 
 ## 已确认的架构决定
 
 - ApexOracle super-repo 已将 clean `ApexOracle-Evo2` 固定为独立 submodule；该模块只提供通用
-  extraction code，不包含模型权重、genome 输入或预计算 embedding。
+  extraction code。
 - Core 只消费版本化 embedding，不复制 Evo-2 extraction 实现，也不因整理清单而重新运行 40B 模型。
 - 当前公开 Evo-2 模块已经通过通用 40B runtime smoke，但原始 567 个 tensor 的 extraction log、精确
   producer commit 和模型权重身份没有完整恢复；不得把当前 module commit 写成这些历史 tensor 的精确
@@ -18,7 +18,7 @@
 - AMP MIC、小分子分类和 synergy 三份论文数据实际匹配 563 个 embedding。
 - 未被这三份数据匹配的 4 个 ID 为 `1041`、`11696`、`BAA-3170`、`BAA-3197`；它们仍保留在
   发布 manifest 中，不能因当前未消费而删除。
-- reviewer scaling CSV 恰好覆盖上述 563 个 ID。全部 tensor dtype 为 `torch.bfloat16`，hidden
+- scaling CSV 恰好覆盖上述 563 个 ID。全部 tensor dtype 为 `torch.bfloat16`，hidden
   dimension 为 8192，第一维随 genome 长度变化。
 - 重构后的只读 loader 使用 `torch.load(..., map_location="cpu", weights_only=True)`；完整重算的
   CSV 和 PNG 与现有文件逐字节一致。PDF 仅因生成 metadata 不同而 SHA 不同。
@@ -39,7 +39,7 @@
 0420058138fd0473f9c3c6d92a0dae0ebe4ffedc1924a14ab6038259f0aa7496
 ```
 
-`paper_genome_list.csv` 是 reviewer-facing 的论文基因组清单，只保留上述 563 个实际被至少一项论文
+`paper_genome_list.csv` 是论文基因组清单，只保留上述 563 个实际被至少一项论文
 MIC、classification 或 synergy 数据使用的 genome。每行记录 paper-era species label、保守来源类型、
 可核验来源标识、当前 filename-matched FASTA 的文件身份、embedding 文件身份，以及三项任务的独立使用
 标记。清单为 171,749 bytes，SHA-256 为：
@@ -69,7 +69,7 @@ python scripts/audit/audit_precomputed_genome_embeddings.py \
   --output results/evo2_precomputed_embedding_manifest.csv
 ```
 
-完整 reviewer scaling 复现仍使用：
+完整 scaling 复现仍使用：
 
 ```bash
 python scripts/plot_evo2_genome_embedding_abs_mean_distribution.py \

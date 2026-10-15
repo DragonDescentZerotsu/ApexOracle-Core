@@ -22,7 +22,7 @@ canonical 代码只读取原始数据，拒绝覆盖输入或已存在输出；�
 - classification runner 现在从 versioned config 显式读取 token table 路径，不再依赖 runner
   内部的隐藏默认值。
 
-## 历史实现的风险与发布边界
+## 历史实现与方法限制
 
 历史 notebook 用 processed 目录的未排序遍历结果做 merge，而且会把 merge 输出写回同一目录；
 重复运行可能把输出自身再次读入。canonical builder 显式列出三个输入和冻结顺序，因此保留当前

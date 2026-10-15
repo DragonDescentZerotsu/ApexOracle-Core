@@ -37,7 +37,7 @@ cluster 按 species 数量排序和 auxiliary strain set 迭代语义。
 
 ## 已由代码、日志和运行验证的事实
 
-- node002 上找回的 phylum-wise MDLM 终版候选 SHA-256 为
+- 已恢复的 phylum-wise MDLM 终版候选 SHA-256 为
   `36ef70bc4a20f2d94294e40b027be7b41c0c8a722c97a09bee856916622789e1`。
   它与 strain/species 终版使用相同的 768-d molecule embedding、8192-d genome
   cross-attention、4096-d text cross-attention、`12288→3072→128→1` 两个 head、
@@ -46,7 +46,7 @@ cluster 按 species 数量排序和 auxiliary strain set 迭代语义。
   `79903/1/92275/46`（长度过滤后 `77371/1/89073/44`），与保存的 MDLM 日志完全一致。
 - phylum `Fungi` 的四类 regression 计数为 `75066/4838/86783/701`（长度过滤后
   `72723/4649/83790/679`），两个 auxiliary 计数为 `10019/39311`；这些数值与
-  node002 终版日志逐项完全一致。
+  历史终版日志逐项完全一致。
 - strain `PYTHONHASHSEED=0` candidate 的 group 0 计数与冻结 manifest 完全一致；历史
   三个独立进程未记录 hash seed，因此仍不声称恢复了 2025 年精确 membership。
 - 公共 runner 保留模块在 `train()` mode 下评估、dropout 参与 held-out selection、
@@ -107,7 +107,7 @@ upstream commit，因此固定 revision 是经 checkpoint 兼容性验证的复�
 身份的绝对证明。
 
 PeptideCLM 需额外保留一项边界：本机较晚的 `fix` driver/checkpoint 为 eval mode、默认 25
-epochs 内始终冻结、单 member；node002 还保留一个 freeze 3 epochs、7 members 的较早 driver，
+epochs 内始终冻结、单 member；历史记录中另有一个 freeze 3 epochs、7 members 的较早 driver，
 但没有找到完整的 7-member checkpoint 网格。canonical profile 采用有可加载 checkpoint 支持的
 本机 fixed 版本，不声称已经恢复论文绘图所用的精确 PeptideCLM ensemble。逐项证据和数据
 SHA-256 见 `strain/fig2c_comparator_migration_audit.json`。
@@ -130,7 +130,7 @@ capsule 内第二份 strain driver 已删除。它们仍可从 annotated tag
 
 - strain-wise 保存结果 `0.4057/0.6889/0.6434`（均值 `0.5793`）仍是高置信度正式结果。
 - species-wise 完整 11-group 论文运行未全部保留；现存终版日志只有 group 6–10。
-- phylum-wise node002 有三个终版 MDLM 日志和 checkpoint，但现存指标与论文汇总仍有差异。
+- phylum-wise 已恢复三个终版 MDLM 日志和 checkpoint，但现存指标与论文汇总仍有差异。
   统一代码证明代码路径和可用日志分区一致，不会把缺失的历史结果升级为“已完整复现”。
 
 ## 验证命令
@@ -144,7 +144,7 @@ python scripts/reproduce/validate_hierarchical_mic_checkpoint.py \
   --device cuda:0
 ```
 
-## Reviewer exact-molecule overlap audit
+## Exact-molecule overlap audit
 
 Canonical CPU/只读入口：
 
@@ -160,7 +160,7 @@ PYTHONPATH=src python scripts/audit/audit_hierarchical_mic_molecule_overlap.py \
 stored-token input SHA-256 统计 train/test exact-molecule overlap。strain 总数是三个 fold 的
 measurement instances，不能解释为跨 fold 去重后的唯一实验记录。
 
-## Reviewer molecule-disjoint checkpoint replay
+## Molecule-disjoint checkpoint replay
 
 先生成不含 optimizer 和未使用 classification head 的推理副本：
 
@@ -202,12 +202,11 @@ train-unseen peptide test rows，并写出 train-peptide-mean baseline。推理�
 mode。strain 输出仍是冻结 candidate membership 上的 reconstruction，不能表述为已恢复的
 2025 精确 membership。
 
-正式 reviewer sensitivity 使用固定 membership 的 phylum `3 × 7` replay；compact 汇总位于
+Phylum sensitivity 使用固定 membership 的 phylum `3 × 7` replay；compact 汇总位于
 `molecule_disjoint/phylum_analysis/`，解释边界见
-`molecule_disjoint/REVIEWER_SENSITIVITY_REPORT.md`。strain candidate 结果只作为内部
-secondary robustness evidence。
+`molecule_disjoint/REVIEWER_SENSITIVITY_REPORT.md`。strain candidate 结果作为次要 robustness evidence。
 
-## Reviewer fixed strain-wise retraining
+## Fixed strain-wise retraining
 
 为消除 archived strain checkpoint 与未知 2025 hash membership 不一致的问题，固定 split
 重训使用冻结的 `PYTHONHASHSEED=0` candidate manifest，但不再动态重建 unordered legacy
@@ -240,7 +239,7 @@ exact peptides，Spearman/Pearson 为 `0.4070/0.4130`，其中53.12%为 MIC<=16 
 完整结果、fold-level 边界见
 `fixed_strain_retrain/REVIEWER_SENSITIVITY_REPORT.md`。
 
-### Reviewer MIC test-distribution Supplementary Figure
+### MIC test-distribution Supplementary Figure
 
 使用已完成的 fixed strain-wise 七成员 ensemble replay，绘制全部86,358条 eligible held-out
 measurements 的 pooled MIC histogram 和三个 test folds 的 ECDF：
@@ -251,9 +250,7 @@ python scripts/audit/plot_hierarchical_mic_test_distribution.py
 
 默认输出到 `mic_distribution/`：PNG/PDF、逐 cohort summary、histogram bins 和输入 SHA-256
 manifest。横轴为 MIC micromolar 的 log2 scale，虚线为16 micromolar。最终版删除总标题和
-source脚注，panel标题居中且使用常规字重，并增加`a/b`标记。其PDF以相同SHA-256复制到正式
-文稿目录的`Fig_SI_MIC_distribution.pdf`，由TeX作为Supplementary Fig. C3引用；脚本仍只写
-`mic_distribution/`，不会自动覆盖文稿资产或论文总PDF。
+source脚注，panel标题居中且使用常规字重，并增加`a/b`标记。
 
 若大 checkpoint 位于非默认目录，可先生成保留源 size/SHA-256 血缘的 inference-only 权重：
 
@@ -273,7 +270,7 @@ PYTHONPATH=src pytest -q tests/test_hierarchical_mic_runner.py \
   tests/test_hierarchical_mic_molecule_overlap.py
 ```
 
-## Reviewer MIC censor-multiplier sensitivity
+## MIC censor-multiplier sensitivity
 
 CPU/只读 canonical 入口：
 
@@ -284,8 +281,8 @@ PYTHONPATH=src python \
 
 该入口从 raw DBAASP concentration 重建 paper-era censor lineage，并用已有 fixed strain-wise 与
 canonical phylum-wise 七成员 ensemble predictions 重算 `>V` 的 `1×/2×/4×`、删除右删失和删除
-全部删失口径。输出位于 `censor_multiplier_sensitivity/analysis/`；42 MB 逐行表 local-only，
-compact counts/metrics/deltas/manifest 可发布。
+全部删失口径。输出位于 `censor_multiplier_sensitivity/analysis/`；逐行表约 42 MB，
+同时输出 counts/metrics/deltas/manifest。
 
 2026-08-09 维护后，canonical CLI 仅负责参数解析；冻结输入重建、prediction 对齐、closed output
 contract 与 manifest 由

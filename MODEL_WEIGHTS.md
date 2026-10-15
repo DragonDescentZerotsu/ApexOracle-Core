@@ -4,7 +4,7 @@
 
 ## 当前约定
 
-- 权重二进制不进入 Git；Git 只保存 manifest、下载说明、校验和与许可信息。
+- manifest 记录权重身份、下载位置、校验和与许可信息。
 - 未来统一的本地根目录为 `${APEXORACLE_WEIGHTS_DIR:-weights}`。
 - `future_storage.relative_path` 是权重迁移后的稳定相对路径。APEX encoder 已迁移并由 manifest
   resolver 加载；其余本地权重仍读取已登记的 `current_path`。
@@ -17,7 +17,7 @@
 
 | Manifest ID | 当前来源 | 已固定身份 | 未来相对路径 | 状态 |
 | --- | --- | --- | --- | --- |
-| `fig2b_dlm_only` | `/path/to/ApexOracle-MDLM/Checkpoints_fangping/best_2.ckpt` | SHA-256 `fbbcc65…75e59` | `molecule_encoders/dlm_only/best_2.ckpt` | 作者已确认用于修订 benchmark；原论文精确身份仍是高置信度推断 |
+| `fig2b_dlm_only` | `/path/to/ApexOracle-MDLM/Checkpoints_fangping/best_2.ckpt` | SHA-256 `fbbcc65…75e59` | `molecule_encoders/dlm_only/best_2.ckpt` | 用于共享五折 benchmark；原论文精确身份仍是高置信度推断 |
 | `fig2b_dlm_mtr_dlm` | `/path/to/ApexOracle-MDLM/Checkpoints_fangping/best.ckpt` | SHA-256 `f8df1fb5…d8ca` | `molecule_encoders/dlm_mtr_dlm/best.ckpt` | 已验证用于修订 benchmark |
 | `fig2b_dlm_mtr_dlm_small_candidate` | `/path/to/historical-pretraining/outputs/openwebtext-train/2025.04.29/165523/checkpoints/best.ckpt` | SHA-256 `3c612c9c…6c9d6` | `molecule_encoders/dlm_mtr_dlm_small/best.ckpt` | 12-layer 容量匹配候选；尚未运行共同数据 benchmark |
 | `fig2b_apex_encoder` | `weights/molecule_encoders/apex/APEX_pretrained_encoder_state_dict_best.ckpt` | SHA-256 `a4b37338…b2b9` | `molecule_encoders/apex/APEX_pretrained_encoder_state_dict_best.ckpt` | 已迁移；通过 manifest ID 加载并严格验证 |
@@ -37,7 +37,7 @@ commit，因此这里只能称为“当前重构的固定复现 revision”，�
 | Manifest ID | 当前来源 | 已固定身份 | 状态 |
 | --- | --- | --- | --- |
 | `synergy_mic_base_epoch_100` | `Checkpoints/.../guidance_regressor_pad_no_mask/noise_guidance_best_R2_all_peptide_epoch_100.pth` | SHA-256 `f24faf67…c3a4` | 三折候选加载的 base；不是已确认的 Methods 13-epoch 权重 |
-| `synergy_three_fold_7ensemble_candidate` | `Checkpoints/.../MDLM_3_fold_ensembles_1_base_model_cls` | 21 个 member 的完整 manifest | 作者接受的论文高置信度复现候选；不是精确原始 checkpoint 声明 |
+| `synergy_three_fold_7ensemble_candidate` | `Checkpoints/.../MDLM_3_fold_ensembles_1_base_model_cls` | 21 个 member 的完整 manifest | 论文高置信度复现候选；不是精确原始 checkpoint 声明 |
 
 当前复现 mean AUROC/AUPRC `0.7598/0.7440` 可作为论文实现的高置信度复现候选；
 与论文 `0.7539/0.7454` 的绝对差为 `0.0059/0.0014`。rank 和 base-epoch 差异继续记录为

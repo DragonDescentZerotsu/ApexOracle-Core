@@ -1,11 +1,11 @@
-# Fig. 1b reviewer 修订：单成员诊断与完整 ensemble 补实验
+# Fig. 1b 统一评估：单成员诊断与完整 ensemble 补实验
 
 更新时间：2026-07-21。primary comparison metric 为 pooled out-of-fold AUPRC；AUROC 同时保留。
 所有 baseline 使用与 ApexOracle fine-tune 完全相同的五个 molecule-ID outer folds，模型选择只看
 outer-train 内部 validation。统计使用同一样本上的分层 paired bootstrap 95% CI、双侧
 prediction-swap randomization test，并在每个 model-mode × metric 的三个菌株内做 Holm 校正。
 
-> 2026-07-20 作者确认：下列单成员 ApexOracle 与单模型 Chemprop 数值仅保留为诊断，不是最终
+> 结果层级：下列单成员 ApexOracle 与单模型 Chemprop 数值仅保留为诊断，不是最终
 > Fig. 1b 结果。最终比较使用 ApexOracle 每折 10 members，三个 Chemprop baseline 也统一
 > 使用 10 个模型；Liu 采用论文汇报的无 RDKit feature 版本。
 
@@ -26,7 +26,7 @@ prediction-swap randomization test，并在每个 model-mode × metric 的三个
 旧论文柱子使用 fold-metric mean 口径，因此与旧值比较或继续该图口径时应使用最后两列，
 不能换成 pooled OOF。A. baumannii AUPRC `0.43436` 四舍五入后恰为旧图 `0.4344`；E. coli
 AUROC 比旧图 `0.962` 低 `0.00316`；RN4220 AUPRC 比旧图 `0.408` 低 `0.00673`。
-paired significance 和 reviewer 主比较使用同一样本上的 pooled OOF predictions；必须等待
+paired significance 和 模型比较使用同一样本上的 pooled OOF predictions；必须等待
 RN4220 剩余三个 10-member Chemprop folds 完成后重算，不能沿用单模型 sensitivity 的 p 值。
 
 canonical 汇总为
@@ -37,7 +37,7 @@ canonical 汇总为
 
 三个 baseline 的 15 个 folds 已于 2026-07-22 全部完成。每个 fold 最终 prediction 都只使用
 固定编号 `model_0`--`model_9`；Stokes 2020 和 Wong 2024 保留各自论文 profile 的 RDKit2D，
-Liu 2023 使用作者确认的 no-RDKit ablation。
+Liu 2023 使用 no-RDKit ablation。
 
 | Target | pooled OOF AUPRC | pooled OOF AUROC | fold AUPRC mean ± s.d. | fold AUROC mean ± s.d. |
 | --- | ---: | ---: | ---: | ---: |
@@ -129,7 +129,7 @@ SHA-256 为 `912de74c72960b99495e4a441e1dcb75b338dd7390625ac47b3468025c676e83`�
 
 - strict zero-shot 并非跨三个 target 普遍优于 baseline；当前仅 E. coli AUROC 显著更高。
 - A. baumannii 的 AUPRC 与 baseline 无可检测差异，但 AUROC 显著较低。
-- RN4220 的 AUPRC 和 AUROC 均显著低于 baseline。因此正文和图注必须撤回笼统的优势表述。
+- RN4220 的 AUPRC 和 AUROC 均显著低于 baseline。因此不能将优势结论推广到三个菌株。
 - E. coli AUPRC 的点估计较高，但 CI 跨 0 且 Holm 校正后不显著，不能写成统计学优势。
 - fine-tune sensitivity 只在 E. coli 的 AUPRC 和 AUROC 上显著优于 baseline；A. baumannii
   和 RN4220 的两个指标均无可检测差异。
@@ -141,7 +141,7 @@ SHA-256 为 `912de74c72960b99495e4a441e1dcb75b338dd7390625ac47b3468025c676e83`�
 AUPRC `0.408`、E. coli AUROC `0.962`、A. baumannii AUPRC/AUROC
 `0.4344/0.8262`。这些值不是当前 pooled OOF 单模型分析的输出。
 
-| Target | 旧图值 | 已恢复的历史 ensemble 证据 | 当前 reviewer sensitivity |
+| Target | 旧图值 | 已恢复的历史 ensemble 证据 | 单成员 sensitivity |
 | --- | ---: | ---: | ---: |
 | *E. coli* BW25113 | AUROC 0.962 | 5/5 folds、每折 10 members 的 fold AUROC 均值 0.96114 | 单成员 pooled OOF AUROC 0.95529 |
 | *A. baumannii* ATCC 17978 | AUPRC 0.4344 | 仅 2/5 folds 完整；两折 10-member ensemble AUPRC 均值 0.45595 | 单成员 pooled OOF AUPRC 0.35294 |

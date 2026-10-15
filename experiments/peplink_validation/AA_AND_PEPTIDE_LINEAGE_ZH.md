@@ -2,7 +2,7 @@
 
 ## 文档目的
 
-本文件记录 reviewer 所问的两条不同血缘：一条是“每个非标准 AA definition 从哪里来”，另一条是
+本文件记录两条结构来源：一条是“每个非标准 AA definition 从哪里来”，另一条是
 “每个完整 peptide 的 frozen SMILES 从哪里来”。只有第二条血缘决定某个 AA/PepLink 问题是否真正
 影响模型消费的结构。不能仅凭 PepLink 当前能否重建某条 annotation，就把 frozen training SMILES
 判为错误。
@@ -48,15 +48,15 @@ OPSIN 或 PepLink 构建。
 
 在 frozen MIC 表之后应用 strain/genome eligibility，长度过滤前的 genome-or-text DBAASP pool 为
 15,664 个 peptide、76,604 条 MIC row；再应用论文 loader 的 `<=512` token 过滤后，实际 pool 为
-15,177 个 peptide、74,103 条 row。作者确认 coordination bond omission 是既定的去金属/忽略配位
+15,177 个 peptide、74,103 条 row。coordination bond omission 属于去金属/忽略配位
 预处理，不再把它计为错误。DBAASP sequence 与 unusual-residue annotation 的内部不一致属于上游
 source-data quality 和历史 producer 的容错问题，不是 ChatGPT-o1/OPSIN 或 PepLink 转换错误，也从
-reviewer-facing 范围中排除。重新逐条去重后的 reviewer-facing 结果为：
+转换错误统计中排除。逐条去重后的结果为：
 
 - **确认的本地转换错误：**56/15,177 peptide（0.369%），219/74,103 row（0.296%，报告为 0.30%）。
 
-若与旧报告保持长度过滤前的相同分母，则为 56/15,664（0.358%）和 219/76,604（0.286%）。正文和
-reviewer response 优先使用实际 `<=512` loader pool 的 0.30% 口径。
+若与旧报告保持长度过滤前的相同分母，则为 56/15,664（0.358%）和 219/76,604（0.286%）。
+实际 `<=512` loader pool 的错误行比例为 0.30%。
 
 三类确认问题之间没有 peptide 重叠：
 
@@ -70,10 +70,10 @@ reviewer response 优先使用实际 `<=512` loader pool 的 0.30% 口径。
 `D-3-OH-ASN`、`IAA-Cys`、`6F-LEU`、`HCha`、`D-Me-Trp`、`BisHomo-Pra`。definition-level
 计数和理由见 `revised_training_impact_scope.csv`。
 
-### 3.1 面向 reviewer 的 56-peptide Supplementary Data
+### 3.1 56-peptide Supplementary Data
 
 2026-07-23 已生成
-`supplementary_data/Supplementary_Data_AA_conversion_errors.xlsx`（英文期刊版）及
+`supplementary_data/Supplementary_Data_AA_conversion_errors.xlsx`（英文版）及
 `supplementary_data/补充数据_AA转换错误_中文.xlsx`（逐字段中文镜像）。56 个 peptide
 各自恰好对应上述 18 个错误 definition 中的一个，因此 affected-peptide sheet 为一肽一行，不存在
 因多个错误 definition 而重复计数。每行包含：
@@ -125,7 +125,7 @@ stereocenter 不作猜测。`Cl-Th2CA` 的正确身份是 N-terminal acyl cap，
   paper/supplier record，当前既不算 confirmed error，也不算 confirmed correct。
 - 第二条 44-residue correction branch 的 `Me-Ser` D/L conflict、`ACT-D-Orn` 与 `iPr-D-Orn`
   substitution-site ambiguity 共涉及 5 个 peptide、19 行，需要原始来源确认。
-- 56 个 reviewer-facing 问题 peptide 的 corrected/excluded successor dataset 尚未生成；原 frozen dataset 不原地覆盖。
+- 56 个确认存在转换错误的 peptide 的 corrected/excluded successor dataset 尚未生成；原 frozen dataset 不原地覆盖。
 - 若要证明模型性能对这些记录稳健，需要使用确定的 corrected/excluded dataset 重新训练；目前没有足够
   证据把只删测试行的结果写成等价补救。
 
@@ -133,7 +133,7 @@ stereocenter 不作猜测。`Cl-Th2CA` 的正确身份是 N-terminal acyl cap，
 
 - `reviewer_response_scope_summary.json`：机器可读的修订范围；
 - `recalculated_local_error_scope.json` 与 `recalculated_local_error_peptides.csv`：可复现的新计数与
-  56 个 reviewer-facing peptide 逐条清单；
+  56 个受影响 peptide 逐条清单；
 - `revised_training_impact_scope.csv`：类别与 definition-level 计数；
 - `supplementary_data/Supplementary_Data_AA_conversion_errors.xlsx`：56 个受影响 peptide 的英文
   Supplementary Data；

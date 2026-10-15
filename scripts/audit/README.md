@@ -1,4 +1,4 @@
-# Reviewer 审计脚本
+# 数据与结果审计脚本
 
 本目录脚本默认只读项目数据，并把输出写入 `experiments/` 或明确指定的 `--output-dir`。需要 import
 `apexoracle` 的入口从仓库根目录以 `PYTHONPATH=src` 运行。
@@ -15,12 +15,12 @@
 `audit_peplink_roundtrip_validation.py` 默认在仓库同级目录寻找 `PepLink`，也可设置
 `PEPLINK_SOURCE=/path/to/PepLink`。正式复现必须使用 PepLink 0.1.2。
 
-## Reviewer 4 unseen-target screening
+## Unseen-target screening
 
-| 脚本 | 作用 | 发布边界 |
+| 脚本 | 作用 | 输入或输出 |
 | --- | --- | --- |
-| `audit_reviewer4_inhouse_species_coverage.py` | 将私有 in-house assay headers 与实际 guidance training exposure 比较 | 私有 workbook 和逐 assay 输出不提交 |
-| `audit_reviewer4_unseen_atcc_pathogens.py` | 用 NCBI current taxonomy 与公开 ATCC catalogue 筛选 unseen species/genus | 公开候选表发布于 `experiments/reviewer4_unseen_targets/` |
+| `audit_reviewer4_inhouse_species_coverage.py` | 将 in-house assay headers 与实际 guidance training exposure 比较 | Assay workbook；物种覆盖统计 |
+| `audit_reviewer4_unseen_atcc_pathogens.py` | 用 NCBI current taxonomy 与公开 ATCC catalogue 筛选 unseen species/genus | 候选表位于 `experiments/reviewer4_unseen_targets/` |
 
 in-house 脚本默认读取同级外部 `mdlm/reproducibility/mic_guidance_migration.json` 中冻结的 snapshot producer
 SHA-256；也可用 `MDLM_GUIDANCE_PRODUCER=/path/to/source.py` 复核一份显式恢复的 legacy source。
@@ -57,8 +57,8 @@ MIC distribution 探索图的正式命令：
 python scripts/audit/plot_hierarchical_mic_test_distribution.py
 ```
 
-默认直接消费 fixed strain-wise 七成员 replay 的逐测量 ensemble 表；不会重建 split、训练模型或
-修改论文图片。PNG/PDF 用于作者审阅，summary/bin CSV 与 manifest 记录精确输入血缘。
+默认读取 fixed strain-wise 七成员 replay 的逐测量 ensemble 表，输出 PNG/PDF、summary/bin CSV
+与输入 manifest。
 
 MIC censor-multiplier sensitivity 的正式命令：
 
@@ -68,8 +68,7 @@ PYTHONPATH=src python \
 ```
 
 默认网格为 `1×/2×/4×`，可重复传 `--right-censor-multiplier` 修改，但必须包含 `2×`；已有输出时
-只有显式 `--overwrite` 才覆盖该入口登记的派生文件。42 MB 逐行 assignment 表保持 local-only，
-compact metrics/counts/manifest 可发布。由于该入口使用 frozen predictions，它只能说明已报告指标的
+只有显式 `--overwrite` 才覆盖该入口登记的派生文件。输出包括约 42 MB 的逐行 assignment 表，以及 metrics/counts/manifest。由于该入口使用 frozen predictions，它只能说明已报告指标的
 evaluation-label sensitivity，不能写成 alternative encoding 下重训稳健性。完整数值、raw parser
 边界见 `experiments/hierarchical_mic/censor_multiplier_sensitivity/`。CLI 已保持为
 薄参数层；共享工作流位于
@@ -78,13 +77,12 @@ evaluation-label sensitivity，不能写成 alternative encoding 下重训稳健
 一致。
 
 Genome-condition 两个正式实验的命令、共享代码层、输出和解释边界见
-`experiments/genome_condition_reviewer/README.md`。已弃用的 genome/text condition controls 只保留
-本地取证资产，不属于公共入口。Probe 使用普通 L2 logistic regression，没有 MLP、降维或超参数
+`experiments/genome_condition_reviewer/README.md`。Probe 使用普通 L2 logistic regression，没有 MLP、降维或超参数
 搜索；标签来自现有 annotation 的保守词典，不等同于完整 ARG/MGE 数据库注释。
 `analyze_genome_fragment_variation.py` 只有在实际计算全局 edit distance 时才加载可选
-`edlib>=1.3.9`；仅 import PAF/manifest helpers 或收集公共测试不要求本机 ignored binary。
+`edlib>=1.3.9`；PAF/manifest helpers 可独立导入。
 
-## ReMDM remasking schedule reviewer figure
+## ReMDM remasking schedule figure
 
 ### Peptide-label structure audit
 
@@ -96,19 +94,18 @@ CUDA_VISIBLE_DEVICES=0 \
 
 `audit_remasking_peptide_classifier_structure.py` 读取冻结的 3,600 raw attempts 和原
 `evaluated_attempts.csv`，用相同历史 v1 checkpoint 复算概率，比较完整 token 与 first `[SEP]`
-后统一 PAD 的输入，并用 runner SMARTS、RDKit general amide 和两个 reviewer-retrained heads
+后统一 PAD 的输入，并用 runner SMARTS、RDKit general amide 和两个 retrained heads
 审计 classifier label。compact JSON 写入
-`experiments/remasking_schedule_reviewer/analysis/peptide_structure_audit/summary.json`；逐 valid
-row CSV 保持本地。该入口不重新生成 molecule、不重算 MIC，也不把 amide count 定义成 peptide
-truth。当前结论和 reviewer-facing 使用边界见
+`experiments/remasking_schedule_reviewer/analysis/peptide_structure_audit/summary.json`，并输出逐 valid row CSV。该入口不重新生成 molecule、不重算 MIC，也不把 amide count 定义成 peptide
+truth。结果与解释限制见
 `experiments/remasking_schedule_reviewer/STRUCTURE_AUDIT.md`。
 
-历史 classifier-only 四面板图暂停用于 reviewer：structure audit 已证明历史 v1
-classifier-positive 不能充当独立 structure identity。该 legacy 图及 violin 变体只用于内部追溯；
-当前正式 reviewer 图是下一节的 structure-qualified 三面板版本，其中 peptide yield 使用联合
+历史 classifier-only 四面板图的解释受以下限制：structure audit 已证明历史 v1
+classifier-positive 不能充当独立 structure identity。该图及 violin 变体采用历史 classifier-only 定义；
+当前三面板图是下一节的 structure-qualified 三面板版本，其中 peptide yield 使用联合
 口径，all-RDKit-valid predicted MIC 则明确作为独立的候选总体指标展示。
 
-### Canonical final reviewer figure
+### Canonical figure
 
 ```bash
 MPLBACKEND=Agg \
@@ -117,7 +114,7 @@ MPLBACKEND=Agg \
 ```
 
 `plot_remasking_structure_qualified_peptides.py` 从冻结的 structure-audit rows 重新解析分子，并按
-当前作者讨论的窄口径绘图：至少一个 RDKit general amide、至少两个
+窄结构判据绘图：至少一个 RDKit general amide、至少两个
 `N–Cα–C(=O)` residue-like motifs、单一组分、无自由基；明确允许 B 和卤素。常见金属候选进入
 单独的 manual-review bucket，不计入主 peptide 数；其他异常元素直接排除。图中另外展示
 first `[SEP]` 后正确 PAD 的历史 v1 classifier positive 作为 supporting subset，而不是独立
@@ -137,7 +134,7 @@ panel subtitle 和底部说明均移到
 独立 `*_caption.md`。`--layout yield-only` 可复现前一版两面板图。输出 PDF/SVG/PNG、
 exact plotted-data CSV 和 SHA-256 manifest 到
 `experiments/remasking_schedule_reviewer/figures/`，两种 layout 使用不同 stem、不互相覆盖。
-默认 `with-context` stem 已于 2026-07-29 被作者确认为最终 reviewer 图；`yield-only` 和历史
+默认三面板图使用 `with-context` stem；`yield-only` 和历史
 四面板图均作为 legacy 原地保留。图稿 final 不改变科学边界：该定义仍是 preliminary narrow
 screen，未经已知 peptide/small-molecule controls 验证前不得称为通用 ground truth。完整
 canonical/legacy 索引与 storage policy 见
@@ -163,11 +160,11 @@ classifier-positive/negative composition。该图是描述性汇总，不重新�
 predicted MIC。默认 bar 版本的 panel a 以三个 seed-level pooled rates 的 sample s.d. 为
 error bar；panel c 只显示冻结的 descriptive effect sizes。六个 matched
 `strain × seed` tasks 的 two-sided exact paired sign-flip test 保留在 plotted-data CSV 和
-manifest 中用于内部审计，不显示在 reviewer-facing figure。violin 版本另读取冻结的本地
+manifest 中用于统计核验，图中展示 descriptive effect sizes。violin 版本另读取冻结的本地
 `analysis/evaluated_attempts.csv`，在 log scale 上显示全部 RDKit-valid finite predicted MIC；
 不会覆盖默认 bar 输出。
 
-## Reviewer 2 peptide classifier split
+## peptide classifier split
 
 | 脚本 | 作用 | 主要输出 |
 | --- | --- | --- |
@@ -192,12 +189,12 @@ MPLBACKEND=Agg PYTHONPATH=src \
 ```
 
 `analyze_generated_candidate_diversity.py` 只读导入外部 guided-generation outputs、历史
-`smiles_to_peptide.py` 和 PepLink 0.1.2。入口首先生成作者确认的 73-row corrected peptide
+`smiles_to_peptide.py` 和 PepLink 0.1.2。入口首先生成 73-row corrected peptide
 candidate 副本：8 个最近前体对应 9 个保存行替换为 final synthesized sequences；随后对全部
 73 行穷举 2,628 个 Morgan/Tanimoto pairs。Generation level pooled `BAA-3170` 与
 `BAA-3197` 的全部 84,226 条 guided outputs，精确计算 canonical structure uniqueness，并以
 固定 seed 抽取 1,000,000 个 non-self pairs 作 preliminary distribution/stability check。正式
-reviewer-facing distribution 使用下一入口的 exact all-pairs counts。输出、精确分母和解释边界见
+主要 distribution 使用下一入口的 exact all-pairs counts。输出、精确分母和解释边界见
 `experiments/generated_candidate_diversity/README.md`。
 
 24 条最终实验 peptides 的 pairwise diversity 使用：
@@ -245,4 +242,4 @@ python scripts/audit/compute_exact_generation_tanimoto.py \
 
 该入口对 precomputed fingerprints 流式穷举全部 3,546,967,425 个无序 pairs，不保存逐 pair
 float 数组。再次运行主入口时，如果 exact histogram/summary 已存在，正式 panel b 自动使用
-all-pairs counts；1,000,000-pair sample 只保留为内部稳定性核验。
+all-pairs counts；1,000,000-pair sample 只保留为抽样稳定性核验。

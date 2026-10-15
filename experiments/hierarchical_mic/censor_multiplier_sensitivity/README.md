@@ -1,6 +1,6 @@
 # MIC censor-multiplier sensitivity
 
-本 capsule 回答 reviewer 对 DBAASP 右删失 MIC 点值编码（`>V -> 2V`）的质疑。分析只读消费
+本分析评估 DBAASP 右删失 MIC 点值编码（`>V -> 2V`）的敏感性。分析只读消费
 已经完成的 strain-wise 和 phylum-wise 七成员 ensemble prediction，不重训模型，也不修改 frozen
 paper training table。
 
@@ -33,7 +33,7 @@ DBAASP concentration 血缘附回 frozen prediction，本入口还允许
   sensitivity grid 中按统一普通右删失口径重编码。
 - 19 条 `>>` 记录的历史 parser 使用 `3×`。由于其语义不等同于普通 `>V`，它们保留在
   `paper_legacy` 基线，但从 `1×/2×/4×` 网格中排除。
-- 五种 reviewer-facing sensitivity 为普通右删失 `1×/2×/4×`、删除全部右删失、删除左右全部
+- 五种 sensitivity 为普通右删失 `1×/2×/4×`、删除全部右删失、删除左右全部
   删失；另保留包含历史 Unicode/`>>` 细节的 `paper_legacy` 精确基线。
 - label 和 R²/MAE/RMSE/Spearman/Pearson 均在论文使用的
   `-log10(MIC_um / 10)` scale 上重算。主汇总是三个 group 的不加权均值和 sample s.d.；pooled
@@ -55,7 +55,7 @@ raw DBAASP selected measurements 共 105,547 条，其中普通右删失 22,158 
 - strain：86,358 条；普通右删失 14,939 条（17.30%），`>>` 18 条，左删失 400 条；
 - phylum：85,824 条；普通右删失 15,264 条（17.79%），`>>` 15 条，左删失 397 条。
 
-下表为 reviewer/论文口径的 mean across three groups：
+下表为 结果汇总口径的 mean across three groups：
 
 | Protocol | Scenario | Measurements | R² | MAE | Spearman |
 | --- | --- | ---: | ---: | ---: | ---: |
@@ -102,13 +102,13 @@ frozen-prediction分析。上述 exact 分解与解释见本节。
 
 | 文件 | 内容 | Git 边界 |
 | --- | --- | --- |
-| `analysis/analysis_manifest.json` | 输入/输出 SHA-256、协议和 claim boundary | compact，可发布 |
-| `analysis/source_censor_rules.csv` | raw DBAASP censor class 分母 | compact，可发布 |
-| `analysis/eligible_censor_counts.csv` | protocol/group 的 censor 分母 | compact，可发布 |
-| `analysis/metrics.csv` | group、pooled、mean-across-groups 全指标 | compact，可发布 |
-| `analysis/metric_deltas.csv` | 相对 paper legacy 与 `2×` 的差值 | compact，可发布 |
-| `analysis/duplicate_prediction_normalization_audit.csv` | 重复 stable-key 技术审计 | compact，可发布 |
-| `analysis/row_censor_assignments.csv` | 172,182 条逐行 lineage/prediction | 约 42 MB，local-only |
+| `analysis/analysis_manifest.json` | 输入/输出 SHA-256、协议和 claim boundary | 紧凑汇总 |
+| `analysis/source_censor_rules.csv` | raw DBAASP censor class 分母 | 紧凑汇总 |
+| `analysis/eligible_censor_counts.csv` | protocol/group 的 censor 分母 | 紧凑汇总 |
+| `analysis/metrics.csv` | group、pooled、mean-across-groups 全指标 | 紧凑汇总 |
+| `analysis/metric_deltas.csv` | 相对 paper legacy 与 `2×` 的差值 | 紧凑汇总 |
+| `analysis/duplicate_prediction_normalization_audit.csv` | 重复 stable-key 技术审计 | 紧凑汇总 |
+| `analysis/row_censor_assignments.csv` | 172,182 条逐行 lineage/prediction | 约 42 MB |
 
 ## 验证
 

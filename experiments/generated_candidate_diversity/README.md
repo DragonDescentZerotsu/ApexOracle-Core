@@ -1,7 +1,6 @@
 # Guided-generation candidate diversity
 
-本目录回答 reviewer 对 generated-candidate diversity、structurally distinct candidates 和
-Tanimoto similarity distribution 的问题。分析只使用最终候选对应的两个 MIC-guided targets
+本目录分析生成候选的多样性、独立分子结构数量和 Tanimoto similarity distribution。分析只使用最终候选对应的两个 MIC-guided targets
 `BAA-3170` 与 `BAA-3197`，不加入 unguided 或 `gamma_peptide=0` control。
 
 Canonical 入口：
@@ -40,15 +39,15 @@ generation target 且同一 topology 的 87 个 pairs。四组的 pair 数为 66
 ### Candidate level
 
 本地 `canonical_candidates/selfies_files/` 是历史
-`generated_mol_SELFIES_w_mic-new/` 的 73-row reviewer 文件布局副本，保留原始
+`generated_mol_SELFIES_w_mic-new/` 的 73-row 分析副本，保留原始
 `strain × target length × source line` 布局。它可由 canonical audit 入口从外部只读输入重建，
-因此作为 provenance intermediate 受 `.gitignore` 保护，不进入 Git。根据作者确认，8 个最近生成
+8 个最近生成
 前体被最终合成序列替换；其中 ApexOracle-14 的前体在两个 target lengths 重复出现，因此实际
 替换 9 行。其余 64 行保持原始生成结构不变。
 
 `canonical_candidates/candidates_73.csv` 同时保存 original/corrected sequence、SELFIES、
 canonical isomeric SMILES、replacement status 和逐文件 SHA-256。所有后续 candidate-level
-reviewer 指标必须消费这份副本，不再直接消费历史目录。24 条最终合成 peptide 均通过
+统计指标必须消费这份副本，不再直接消费历史目录。24 条最终合成 peptide 均通过
 topology-aware exact mapping 在副本中出现；环肽允许 cyclic rotation。
 
 Candidate-level 主分析保留全部 73 行，包括重复候选，并计算全部
@@ -65,8 +64,8 @@ computational prioritization criterion，不是实验 MIC。
 **根据现有资产作出的推断：** `generated_mol_SELFIES_w_mic-new/` 的 73 条 target-strain rows
 是该 screening stage 保存的 peptide candidate pool；其 target、length 布局与原始 84,226 条
 MIC-guided outputs 以及上述历史筛选代码一致。当前没有找到冻结的 producer command/log 或逐条
-predicted-MIC table，因此内部复现记录不能把现有脚本 checkout 声称为这 73 条的 byte-exact
-producer。Reviewer 文稿只陈述已确认的筛选逻辑与分母链，不声称恢复了逐条历史 prediction。
+predicted-MIC table，因此无法确认现有脚本是这 73 条结果的 byte-exact producer；目前可核验的是
+筛选逻辑与分母关系，逐条历史 prediction 尚未恢复。
 
 从 73 条 pool 选择 24 条合成时，按 structural/sequence diversity 与 practical synthesis
 feasibility 进行人工 prioritization，并降低过度疏水或含 aggregation-prone motifs 的候选优先级；
@@ -79,10 +78,10 @@ Generation-level 分析只读消费原始 `generated_mol_SELFIES-new/` 中 `BAA-
 107 条 `BAA-1556` 输出，不属于本次候选对应 targets，已由显式 strain allowlist 排除。
 
 对 84,226 条输出精确计算 canonical isomeric structure 去重数。全体两两组合超过 35 亿，
-正式 Tanimoto distribution 已在 node002 用 64 workers 流式穷举全部
+正式 Tanimoto distribution 已在 使用 64 workers 流式穷举全部
 `84,226 choose 2 = 3,546,967,425` 个无序非自身 pairs；只累计 1,000-bin histogram、矩和阈值
 计数，不保存 13.2 GiB 的逐 pair float32 数组。固定 seed `20260802` 的 1,000,000-pair 初步抽样
-仍保留在 `summary.json` 作为内部稳定性检查，但不再作为 reviewer-facing 主结果。
+仍保留在 `summary.json` 作为抽样稳定性检查，主结果采用全量 pair 计算。
 
 ## 指纹与输出
 
@@ -94,19 +93,13 @@ Generation-level 分析只读消费原始 `generated_mol_SELFIES-new/` 中 `BAA-
 - `generation_all_pairs_tanimoto_histogram.csv`：84,226 条 outputs 的全部 3,546,967,425 pairs，
   以 0.001-wide bins 保存 exact counts；
 - `generation_all_pairs_tanimoto_summary.json`：exact moments、quantile-containing bins、阈值计数、
-  node002 runtime/environment 和 cache/runner SHA-256；
+  运行环境 和 cache/runner SHA-256；
 - `tanimoto_histogram_plotted_data.csv`：图中精确 bin counts/fractions；
 - `generated_candidate_diversity_three_panel.{pdf,svg,png}`：正式 Supplementary Fig. C5，包含
   selected-24 PID、candidate-pool Tanimoto 和 generation-output Tanimoto；
 - `canonical_candidates/replacement_audit.csv`：9 个替换行；
 - `canonical_candidates/final_peptide_mapping.csv`：24 条最终合成 peptide 的副本映射；
 - `manifest.json`：全部输入、输出、外部 parser/PepLink 与 SHA-256 血缘。
-  exact-match、structural-alert、cluster 与 19-to-18 procurement 血缘；明确区分已验证事实、推断和
-  尚无证据支持的 delivery-time 说法。
-
-早期两 panel `guided_generation_tanimoto_distributions.*` 和
-`selected_peptides_24/selected_peptide_pairwise_similarity_*` 继续保留为本地诊断产物，不进入
-Git；它们的 exact CSV、summary、caption/manifest 血缘和生成代码仍保留，功能没有删除。
 
 ## 当前已验证结果
 
@@ -128,22 +121,22 @@ Git；它们的 exact CSV、summary、caption/manifest 血缘和生成代码仍�
 
 这些结果支持“没有观察到明显 exact-structure collapse”；all-pairs distribution 仍不是
 nearest-neighbor distribution，也不能把 84,226 条历史弱结构过滤输出全部称为严格 peptide。
-Reviewer 文稿中，candidate level 可称为 `peptide candidate pool`；generation level 应使用中性的
+candidate level 使用 `peptide candidate pool`；generation level 应使用中性的
 `guided generation outputs`。
 
 ## Exact all-pairs 运行记录
 
 本机生成的 21 MiB fingerprint cache SHA-256 为
-`a2b0a9789670057665ad124cb5c0fd9105c70030a809909c1a0b907074c764bf`。node002 使用 64 workers
+`a2b0a9789670057665ad124cb5c0fd9105c70030a809909c1a0b907074c764bf`。运行使用 64 workers
 在 21.72 秒内完成全部 3.547 billion comparisons；含 cache 加载总计 22.62 秒，实际吞吐约
-163.3 million pairs/s。node002 只执行 precomputed bit-vector Tanimoto，不重新生成 fingerprint；
+163.3 million pairs/s。该计算只执行 precomputed bit-vector Tanimoto，不重新生成 fingerprint；
 fingerprint 仍由本机冻结的 RDKit 2024.09.6 protocol 产生。
 
 初步 1,000,000-pair sample 与 exact 结果一致：mean 差 `-7.66e-5`；sample median 和 q95
 分别落入 exact 0.001-wide quantile bins；`Tanimoto >= 0.5` 的 sample/exact 比例为
 0.8107%/0.8252%，差值 0.0145 percentage points，位于预期 95% binomial half-width
 0.0177 percentage points 内。这说明一百万 pairs 本身已足以估计总体分布，但正式结果采用
-exact all-pairs 以消除 reviewer 对抽样规模的疑问。
+exact all-pairs 避免抽样误差。
 
 
 ## Figure

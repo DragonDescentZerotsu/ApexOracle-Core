@@ -1,4 +1,4 @@
-# Reviewer 2 peptide classifier 数据血缘与评估边界
+# Peptide classifier 数据来源与评估协议
 
 > 最后核验：2026-07-26。本文记录论文 guided generation 实际使用的 v1 peptide classifier，
 > 不把 2025 年 6 月生成的 v2 parser-label 数据反向描述成 2025 年 5 月 checkpoint 的训练标签。
@@ -10,17 +10,16 @@
 | 论文实际 classifier checkpoint | `/path/to/ApexOracle-MDLM/cls-guide-pad-no-mask-checkpoints/epoch-epoch=1-step-step=134000-train_loss-train_loss=0.008.ckpt` | v1，epoch 1 / step 134000 |
 | v1 最终训练数据 | `DataPrepare/MDLM/Data/hf_pep_SM_cls_1024` | 82,795,051 rows |
 | v1 tokenization 前 Hugging Face 数据 | `DataPrepare/MDLM/Data/hf_pep_SM_cls` | 保存了 `mol_ids`、token IDs 与标签，可逐来源审计 |
-| 精确历史 trainer | `/path/to/historical-mdlm/guaidance_classifier_all_data_pad_no_mask.py` | 2025-05-14；node002 历史目录只读 |
-| 当前 MDLM clean trainer | `/path/to/ApexOracle-MDLM/scripts/reproduce/train_peptide_classifier.py --profile v1_noisy_padding_preserved_cls` | 参数化 replacement；不把当前 Git source 冒充 2025-05 exact blob |
+| 精确历史 trainer | `/path/to/historical-mdlm/guaidance_classifier_all_data_pad_no_mask.py` | 2025-05-14 历史训练源码 |
+| 当前 MDLM clean trainer | `/path/to/ApexOracle-MDLM/scripts/reproduce/train_peptide_classifier.py --profile v1_noisy_padding_preserved_cls` | 参数化实现；历史源码身份由 snapshot 记录 |
 | 重构前本机同名 trainer | `legacy-code-snapshot-2026-08-09:guaidance_classifier_all_data_pad_no_mask.py` | snapshot main 已改为 v2 数据；只用于恢复 padding/noising 行为，不是上述 checkpoint 的精确 producer |
 
-外部 `/path/to/ApexOracle-MDLM` 中的代码必须在 `mdlm` conda 环境运行。当前审计只读消费
-node002 历史目录和外部 guidance 仓库，没有改写原始数据或 checkpoint。
+外部 `/path/to/ApexOracle-MDLM` 中的代码必须在 `mdlm` conda 环境运行。审计读取历史源码和 guidance checkpoint。
 
 ## 已由最终 CSV、Arrow shards 和 producer 路径验证的 v1 血缘
 
 1. `DataPrepare/MDLM/MDLM_data.ipynb` 汇集 SmProt2、UniProt 和 UniRef peptide sequence。
-2. node002 的 `DataPrepare/MDLM/uniprot_uniref_to_smiles.py` 将标准氨基酸序列转换为 SMILES。
+2. 历史 `DataPrepare/MDLM/uniprot_uniref_to_smiles.py` 将标准氨基酸序列转换为 SMILES。
 3. `all_smiles.csv` 汇合四种可由 ID 前缀区分的来源：
    `SmProt2_*`、`uni_*`、`Generated_pep_CLM_*` 和 `pubchem_*`。
 4. v1 按来源赋标签：前三种来源为 peptide `1`，PubChem 为 non-peptide `0`。
@@ -53,7 +52,7 @@ node002 历史目录和外部 guidance 仓库，没有改写原始数据或 chec
   18.0 小时生成。现存运行继续到 step 163,000，包含后段减速和停顿的总 wall-clock 约 30.0 小时，
   并未跑完 trainer 配置中的 10 epochs。
 - **根据现有证据作出的高置信度推断：** 数据规模、每卡 batch size 300、91,075 steps/epoch 和
-  同期 trainer 副本共同指向 3-GPU DDP、global batch size 900。node002 当前保留的同名文件在
+  同期 trainer 副本共同指向 3-GPU DDP、global batch size 900。当前保存的同名文件在
   2025-05-14 18:16 后已改为 `devices=1`，因此它能验证架构和数据路径，但不能单独证明最初启动
   进程的 GPU 数；精确 launch command 仍未恢复。
 
@@ -71,7 +70,7 @@ sequence；解析失败或包含 `X` 时标为 0。该 parser 明确只覆盖线
 | PubChem | 87 | 111,378,119 |
 
 因此，v2 更接近“parser 可识别的标准线性 peptide”，但 parser failure 不能自动解释为真实
-non-peptide。除非重新构建标签并重训 checkpoint，Methods 和 reviewer response 必须按 v1
+non-peptide。除非重新构建标签并重训 checkpoint，该 checkpoint 的标签应按 v1
 来源标签描述论文 classifier。
 
 ## 已恢复行为与仍缺失文件的边界
@@ -79,11 +78,11 @@ non-peptide。除非重新构建标签并重训 checkpoint，Methods 和 reviewe
 - **已验证事实：** 四类来源、v1 标签规则、最终逐来源数量、dataset 路径、trainer 路径和
   checkpoint 身份均可由保存的 CSV、Arrow shards、文件时间和 checkpoint payload 交叉验证。
 - **仍未恢复：** 负责把四个来源拼接并写出 `all_smiles_pep_SM_cls.csv` 标签列的临时脚本原文件。
-  本机工作树、`legacy-code-snapshot-2026-07-17`、node002 项目目录和 shell history 均未找到该
+  可用源码与历史记录均未恢复该
   文件；它可能来自未保存的交互式 notebook cell。
 - **表述边界：** 可以说“v1 实际数据装配行为已恢复”，不能说“标签写入脚本源码已恢复”。
 
-## 当前确认的最小 reviewer 评估协议
+## 当前确认的最小 评估协议
 
 - primary：canonical-molecule-disjoint、peptide-sequence-cluster-disjoint 的 clean
   AUROC/AUPRC，并在固定 probability 0.5 阈值报告 peptide recall 与 non-peptide specificity；
@@ -96,13 +95,11 @@ non-peptide。除非重新构建标签并重训 checkpoint，Methods 和 reviewe
   generation 配置 `time_conditioning=True` 会保留该非零 sigma。部署一致的 `t=0.5` 主结果应走
   generation 路径；可在相同 masks 上额外比较一次 zero-sigma 作为配置敏感性检查。
 
-## 2026-07-26 reviewer retrain 冻结协议与入口
+## 2026-07-26 classifier retrain 冻结协议与入口
 
-> **发布边界：** `labels.u1`、`sources.u1`、`split_codes.u1`、`molecule_hashes.u8` 和
-> `real_sequence_roots.u8` 是由下述 split producer 确定性重建的本地 memmap 中间件，总计约
-> 911 MB，不进入 Git。公共仓库只保留 `split_manifest.json`、`split_audit.json`、紧凑结果、
-> 生成脚本和测试；manifest 中的 size/SHA-256 用于核验本地重建结果。这样不能从 Git checkout
-> 直接开始训练，须先执行 split preparation，但可避免把可重建缓存永久写入仓库历史。
+> 训练前先执行 split preparation，确定性生成 `labels.u1`、`sources.u1`、`split_codes.u1`、
+> `molecule_hashes.u8` 和 `real_sequence_roots.u8`，合计约 911 MB。使用 `split_manifest.json`
+> 和 `split_audit.json` 中的 size/SHA-256 核验重建结果。
 
 - 标签仍为上述 v1 四来源标签，不混入 v2 parser-label 数据。
 - 每个 RDKit 可解析结构先经 canonical isomeric SMILES 归一化；同一 canonical molecule 只能
@@ -127,7 +124,7 @@ non-peptide。除非重新构建标签并重训 checkpoint，Methods 和 reviewe
   `time_conditioning=True`；原计划 3 seeds、每 seed 4 GPUs、global batch 900、2 epochs。每 45,000
   steps 与 epoch 结束时按 validation clean AUPRC 选最佳 checkpoint，因此覆盖约 0.5、1.0、1.5
   和 2.0 epochs；epoch 结束时另算一次 `t=0.5` validation robustness。CosineAnnealingLR 仍固定
-  历史 `T_max=10`，不会因 reviewer run 只执行两个 epochs 而把 scheduler 人为压缩到 2 epochs。
+  历史 `T_max=10`，不会因本次 run 只执行两个 epochs 而把 scheduler 人为压缩到 2 epochs。
 - 最终 test 只解封一次：clean 使用 1 次确定性输入；`t=0.5` 使用 10 个 stateless molecule mask
   replicates，先在 row/replicate 内聚合、再按 canonical molecule 聚合。
 - **已通过两台机器独立审计的正式 split：** train 81,137,648、validation 830,022、test

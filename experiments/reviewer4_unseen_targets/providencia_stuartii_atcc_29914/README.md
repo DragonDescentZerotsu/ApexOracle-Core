@@ -1,6 +1,6 @@
 # *Providencia stuartii* ATCC 29914 inventory screening and generation
 
-本目录冻结 Reviewer 4 新购菌株的 exact-target 条件、生成分母和候选筛选血缘。`Providencia` 未进入
+本目录记录 *P. stuartii* ATCC 29914 的 exact-target 条件、生成分母和候选筛选血缘。`Providencia` 未进入
 guidance regressor 的训练 exposure；但它与训练中出现的 *Proteus* 同属 Morganellaceae，因此只能
 表述为 unseen genus/species，不能表述为 unseen family。
 
@@ -34,8 +34,7 @@ apexoracle-embed-strain-texts \
 
 ## Genome 资产与 Evo-2 embedding
 
-作者提供的 exact ATCC Portal FASTA 和 GenBank 已从 Mac 复制到本项目 ignored canonical data path；
-源文件保留在 Mac，项目侧文件已逐字节 SHA-256 核对。安装和复核入口为：
+ATCC Portal FASTA 与 GenBank 通过 SHA-256 核验。安装和复核入口为：
 
 ```bash
 python scripts/reproduce/prepare_reviewer4_providencia_assets.py \
@@ -57,77 +56,15 @@ Evo-2 40B 使用 `blocks.46.mlp.l3`、11-kb windows、10-kb step，并对真实�
 输出 key 由历史 loader 解析为 `29914`；compact 运行与 tensor 验证血缘见
 `genome_embedding_manifest.json`，逐 window provenance 位于 canonical embedding 相邻 manifest。
 
-## 私有 lab peptide inventory screening
+## Peptide inventory screening
 
-私有 workbook 位于
-`DataPrepare/Data/private_inhouse_amp/de_la_Fuente_Lab_Peptides_Inventory_outsourced.xlsx`，SHA-256 为
-`21b37ac03b892b88a6d2da6f5f42e8d68cc1393cab0bc86c4e77f511b4970f24`。筛选保留全部 4,842 个源行、
-原始顺序和重复项，不按 sequence 去重。Inventory preparation 与 strain 无关，因此只在 canonical private
-source 下准备一次；任何后续 strain 直接复用同一 `screen_input.csv`，不再复制 Reviewer-specific adapter：
+使用 ApexOracle-MDLM 的 `scripts/reproduce/peptide_inventory_screen.py` 准备 peptide 表格，
+以 `scripts/reproduce/score_peptide_table_mic.py` 计算 MIC，再用 inventory reporting 入口汇总。
+通过 CLI 显式指定输入文件、列名、strain key 和输出目录；输入顺序与重复记录保持不变。
 
-```bash
-MDLM_ROOT=/path/to/ApexOracle-MDLM
-PYTHONPATH="$MDLM_ROOT/src" conda run -n mdlm python \
-  "$MDLM_ROOT/scripts/reproduce/peptide_inventory_screen.py" prepare \
-  --input DataPrepare/Data/private_inhouse_amp/de_la_Fuente_Lab_Peptides_Inventory_outsourced.xlsx \
-  --sheet 'DLF Peptide List' \
-  --sequence-column Sequence --identifier-column 'Lab Code' \
-  --residue-count-column 'Number of residues' \
-  --n-terminus-column N-terminus --c-terminus-column C-terminus \
-  --cyclic-column 'Cyclic (Position)' \
-  --output-directory DataPrepare/Data/private_inhouse_amp/prepared_sequence_screen
-```
-
-正式模型分数使用 downstream MDLM 的 canonical `score_peptide_table_mic.py`、fixed-epsilon scorer、
-strain key `29914`、历史 batch size 32 和 GPU3。Genome condition 使用只含 `.pt` symlink 的只读 bank，
-是首次运行时对历史 loader 会误读 Evo-2 相邻 JSON manifest 的临时规避；symlink 不改变任何 tensor bytes
-或 key。该通用 loader 已修复为只读取 `.pt`，后续命令直接使用 canonical `Genome_embs`；临时 symlink
-bank 在 formal hash/key parity 后已删除，原 raw manifest 仍记录当时路径。运行后以固定 tokenizer revision
-做精确长度审计并物化 shortlist：
-
-```bash
-PYTHONPATH="$MDLM_ROOT/src" conda run -n mdlm python \
-  "$MDLM_ROOT/scripts/reproduce/score_peptide_table_mic.py" \
-  --runtime-root "$MDLM_ROOT" \
-  --input DataPrepare/Data/private_inhouse_amp/prepared_sequence_screen/screen_input.csv \
-  --strains 29914 --config-dir "$MDLM_ROOT/configs" \
-  --checkpoint Checkpoints/genome_text_learnable_emb/guidance_regressor_non_pad_t1e-3/mic_candidate_scorer_all_peptide_non_pad_t1e-3_epoch13.pth \
-  --genome-embeddings DataPrepare/Data/Genome_embs \
-  --genome-scale 1e14 \
-  --atcc-text-embeddings DataPrepare/Data/Text_Description/ATCC/embeddings \
-  --text-only-embeddings DataPrepare/Data/Text_Description/wo_ATCC/embeddings \
-  --tokenizer-revision 55e83392264cb998f7aa5014847df29868aefeb8 \
-  --device cuda:3 --batch-size 32 --hash-checkpoint \
-  --output-directory experiments/reviewer4_unseen_targets/providencia_stuartii_atcc_29914/analysis/inventory_screen/model_output
-
-PYTHONPATH="$MDLM_ROOT/src" conda run -n mdlm python \
-  "$MDLM_ROOT/scripts/reproduce/peptide_inventory_screen.py" summarize \
-  --inventory DataPrepare/Data/private_inhouse_amp/prepared_sequence_screen/inventory_rows.csv \
-  --predictions experiments/reviewer4_unseen_targets/providencia_stuartii_atcc_29914/analysis/inventory_screen/model_output/peptide_mic_predictions.csv \
-  --model-manifest experiments/reviewer4_unseen_targets/providencia_stuartii_atcc_29914/analysis/inventory_screen/model_output/manifest.json \
-  --strain 29914 --target-label 'Providencia stuartii ATCC 29914' \
-  --stock-column 'Remaining Weight (mg)' --stock-unit mg \
-  --mic-cutoff 15 --max-token-length 1024 \
-  --output-directory experiments/reviewer4_unseen_targets/providencia_stuartii_atcc_29914/analysis/inventory_screen/results
-```
-
-筛选结果已完成：4,842 个源行中 4,817 个得到模型分数，25 个 sequence 无法转换。精确 tokenizer
-审计确认所有 4,817 个有效 rows 均处于 resolved DLM `model.length=1024` 范围，观测最大长度为 789。
-Tokenizer repository 自带的 512 metadata 不是本 scorer 的 position contract；早期按 512 排除 188 rows
-属于过度保守的汇总错误，已修复且没有重跑或改变 raw model predictions。inclusive predicted MIC
-`<=15 µM` 的范围内记录为 2,164 个/1,892 个 unique sequences；其中 exact unmodified 记录 1,922 个，
-进一步要求 remaining weight `>0` 后为 1,772 个/1,681 个 unique sequences。完整结果、各层 shortlist 和
-hash manifest 位于 ignored
-`analysis/inventory_screen/results/`。
-
-上述 prepare/reporting 入口是通用 MDLM contract，不包含 `Providencia`、Reviewer 编号或固定 workbook 列名；
-换 strain 只需让 genome/text embedding filename 解析到新的 strain key，并改变 scorer/reporting 的
-`--strains/--strain`。换 molecule inventory 只需重新执行一次 `prepare` 并通过 CLI 声明列名，不新增代码。
-
-这是 model prioritization，不是湿实验活性结果。库存表有 735 个 canonical sequence rows 声明了末端、
-环化或其他 chemistry，而历史 scorer 只编码氨基酸 sequence；其中达到门槛的 242 行单列为 chemistry
-approximation，不混入 exact-unmodified shortlist。剩余重量为 0、负值或缺失的行保留审计，但不进入
-in-stock shortlist。
+该 scorer 按氨基酸 sequence 编码。声明了末端修饰、环化或其他 chemistry 的记录需要单列为
+chemistry approximation，不能与 exact-unmodified 结果混合。Predicted MIC 用于计算排序，
+不等同于湿实验活性。
 
 ## Generation 与所有 filter 分母保存
 
@@ -170,13 +107,9 @@ legacy amide、finite clean MIC、MIC<=15、PepLink standard peptide 和 strict 
   `text_embedding_manifest.json`。
 - exact ATCC FASTA/GenBank 已安装并互相验证；Evo-2 tensor 已完成，shape `[444,8192]`、bfloat16、
   444/444 rows finite/nonzero，SHA-256 `56ee84b1...35cde`。
-- 私有 lab inventory 的 ATCC 29914 computational MIC screen 已完成；修正后的正式 in-stock
-  exact-unmodified shortlist 为 1,772 rows/1,681 unique sequences。它只能用于候选排序，不能写成实验
-  活性或 prospective validation。
 - 正式 genome embedding 只由 `ApexOracle-Evo2` canonical CLI 生成；早期 target-specific duplicate
   wrapper 已删除，避免 float32/bfloat16 与 manifest 双入口分叉。
-- generation 尚未启动；后续启动 sampler 前仍须重新核验 GPU availability，并保持全部 raw-attempt
-  denominator 与逐层 filter contract。单个 strain 不能支持 broad species/genus efficacy。
+- 本目录记录生成协议与输入资产；单个 strain 的结果不能支持 broad species/genus efficacy。
 
 ## 主数据源
 

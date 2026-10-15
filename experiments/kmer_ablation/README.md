@@ -1,11 +1,11 @@
 # Strain-wise k-mer genome ablation
 
 本目录只维护论文 Fig. 2c 中实际汇报的 **strain-wise** k-mer 消融。2026 年 3 月额外运行的
-phylum-wise 和 species-wise k-mer 实验不属于论文汇报范围，不迁入发布入口。
+对应的结果使用 strain-wise 数据划分。
 
 ## 已由代码、日志和最终绘图验证的事实
 
-- Mac 最终绘图 notebook 中单模型 `DLM MTR+DLM+kmer` 为 R² `0.4507`、Spearman
+- 历史绘图 notebook 中单模型 `DLM MTR+DLM+kmer` 为 R² `0.4507`、Spearman
   `0.6688`、Pearson `0.6793`；同图单模型 Evo-2 为 R² `0.5032`。
 - `/data/fangping/kmer_embeddings/k456_combined` 包含 567 个 windowed tensor，采用
   11,000 nt window、10,000 nt step 和 k=`4,5,6`，维度为 5,376。
@@ -21,12 +21,12 @@ phylum-wise 和 species-wise k-mer 实验不属于论文汇报范围，不迁入
 - 论文图是单模型结果，而 2026 重建脚本明确把 ensemble 数从 1 改成 7，因此 `0.5276`
   不能作为 `0.4507` 的精确复现。
 - 论文所写的“11.6%”对应 `(0.5032 - 0.4507) / 0.4507 = 11.65%`；若把
-  `0.5032` 当分母，下降比例是 10.43%。发布时保留论文原文，但不把两种分母混写。
+  `0.5032` 当分母，下降比例是 10.43%。两种分母对应不同的百分比。
 
 ## 尚未恢复的证据与限制
 
 - 产生论文 `0.4507` 的精确 producer 模式、随机 projection 状态、训练日志和 checkpoint
-  均未在本机或 node002 找到。
+  在现存记录中均未恢复。
 - 2026 reconstruction 在创建 frozen projection 之前没有固定 PyTorch seed，因此即使其他
   参数相同，也不保证重新训练得到相同数值。
 

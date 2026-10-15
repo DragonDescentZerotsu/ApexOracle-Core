@@ -1,4 +1,4 @@
-# ReMDM remasking schedule reviewer 补实验结果
+# ReMDM remasking schedule 敏感性实验结果
 
 > 完成日期：2026-07-29
 > 状态：36/36 generation tasks 和正式 clean-model evaluation 均已完成。
@@ -6,7 +6,7 @@
 > classifier-positive operational label，不是可靠的 structure-based peptide identity。current
 > window 的 213 个 full-token positives 中有 125 个没有 RDKit general amide；修正 first
 > `[SEP]` 后 suffix 后仍有 105/191 没有 general amide。故 `53.9% vs 46.1%` 不能用于回答真实
-> peptide/small-molecule composition，现有 reviewer-facing panel a/c/d 暂停使用；用全部
+> peptide/small-molecule composition，原 classifier-only panel a/c/d 不支持该解释；用全部
 > RDKit-valid outputs 汇总的 predicted-MIC trade-off 也应在 structure-qualified subset 上复核。
 > 完整证据见 `STRUCTURE_AUDIT.md`。
 
@@ -20,7 +20,7 @@
    最明显。
 2. 在 paper setting 下，395 个 RDKit-valid candidates 中，历史 v1 classifier 判定 213 个
    positive 和 182 个 negative，即 `53.9% vs 46.1%`。后续 structure audit 已确认该 operational
-   label **不能直接回答** Reviewer 2 要求的真实 peptide/small-molecule composition。
+   label **不能直接回答** 真实 peptide/small-molecule composition。
 3. 与 `gamma_peptide=0` 的直接对照相比，stage-2 correction 对“classifier-positive 比例”
    的提升很小：all attempts 为 `47.7% vs 47.5%`；在 valid molecules 中反而是
    `53.9% vs 55.8%`。因此不能声称 narrow window 单独大幅“overcame”预训练 domain
@@ -29,7 +29,7 @@
    每 600 attempts 的 valid classifier-positive peptides 从 198 增至 213
    （`33.0% -> 35.5%`），validity 从 `59.2% -> 65.8%`，valid-molecule median predicted
    MIC 从 `56.2 -> 37.9 micromolar`。
-5. 作者确认原始 interval 本来就是通过相近的 empirical window comparison 选择，只是当时没有
+5. 原始 interval 本来就是通过相近的 empirical window comparison 选择，只是当时没有
    完整记录过程和结果。本次五窗口结果提供可复核的 trade-off
    比较，但不能证明理论唯一最优，也不等同于当年已完整归档的同一实验。
 
@@ -37,13 +37,13 @@
 
 - 6 conditions × 2 strains × 3 seeds × 100 raw attempts = 3,600 attempts；
 - 每个 condition 恰好 600 attempts；
-- 本机 12/12 tasks，node002 24/24 tasks；
+- 两台计算节点分别完成 12/12 和 24/24 tasks；
 - 36/36 `completed.json`、144/144 batch files；
 - 3,600 个 `(task_id, batch_index, sample_index)` keys 全部唯一；
 - 跨机同步后，每个 batch 的 size/SHA-256 与生成时 completion marker 完全一致；
 - 3,600/3,600 attempts 得到 v1 clean-input peptide probability；
 - 2,355 个 RDKit-valid molecules 全部得到 finite clean-MIC prediction；
-- 每个 condition 固定 2 个 local tasks 和 4 个 node002 tasks，两个 strain 都跨 host。
+- 每个 condition 固定 两台节点上的 2 个与 4 个 tasks，两个 strain 都跨 host。
 
 五个 window 为：
 
@@ -113,7 +113,7 @@ RDKit-valid yield 从 `59.2%` 增至 `65.8%`（`+6.7` percentage points），因
 peptide guidance 相对关闭 peptide guidance 的一个 empirical advantage：在本次其余参数相同的
 direct control 中，guidance 产生了更多可解析、可继续筛选的候选。但六个 matched
 `strain × seed` task 上的 two-sided exact paired sign-flip test 为 `p=0.1875`，没有达到
-`p<0.05`；正式回复应同时报告 effect size 和这一不确定性，不能写成已证明的普遍显著改善。
+`p<0.05`，因此该 effect size 不构成普遍显著改善的证据。
 
 本报告原表格中“peptide”的 operational definition 是：使用生成时同一个历史 v1 peptide classifier
 checkpoint，在完整生成 token sequence 的 clean input（`t=0`）上计算 sigmoid probability，
@@ -178,7 +178,7 @@ guidance 一致的模型判定，不是独立的结构真值或 biological pepti
 - 不能把 v1 classifier label 当成独立结构真值或 biological peptide identity；
 - 不能把 clean-model predicted MIC 当成 wet-lab MIC；
 - 不能把本次两个 strain、三个 seeds 扩大解释成所有生成任务的普遍规律；
-- 不能用 reviewer 的 90%/10% 直接替代仍未恢复的 DLM 过滤后精确来源比例。
+- DLM 过滤后的精确来源比例尚未恢复，90%/10% 不能作为已核验的比例。
 
 ## 6. 产物与哈希
 
@@ -199,10 +199,7 @@ Canonical code identities：
 | `scripts/reproduce/evaluate_remasking_schedule_reviewer.py` | `e2948018f0692ea9fdeca0ad13f1f6e73e85feffaa2ccc4dc21fddf6b6b6f54d` |
 | `tests/test_remasking_schedule_reviewer.py` | `e2dcb97ceba4004baa51fa37b9acb9e6236e786c6003c788d8491ff635ca9350` |
 
-`evaluated_attempts.csv` 和 raw `runs/` 保持本地、由 `.gitignore` 排除；compact summary、
-provenance、manifest、README 和本报告可进入 reviewer-facing 版本控制。
-
-## 7. Canonical final reviewer figure（2026-07-29）
+## 7. Canonical figure（2026-07-29）
 
 三面板图 stem 为：
 
@@ -222,11 +219,11 @@ s.d.（`6.34` 与 `9.71` $\mu\mathrm{M}$）。两个 yield 比较和简短图例
 
 canonical/legacy 完整索引及不复制二进制别名的 storage policy 见 `figures/README.md`。
 
-## 8. Legacy 可视化（不再用于 reviewer）
+## 8. Legacy 可视化（历史版本）
 
 四面板描述性图位于：
 
-- `figures/remasking_schedule_reviewer.pdf`：历史矢量版本，当前不用于论文或 response letter；
+- `figures/remasking_schedule_reviewer.pdf`：历史矢量版本，使用 classifier-only 定义；
 - `figures/remasking_schedule_reviewer.svg`：可编辑矢量版本；
 - `figures/remasking_schedule_reviewer.png`：快速审阅版本；
 - `figures/remasking_schedule_reviewer_data.csv`：图中全部 exact plotted values；
@@ -245,11 +242,11 @@ canonical/legacy 完整索引及不复制二进制别名的 storage policy 见 `
 4. current window 下 pooled 和两个 strain 的 classifier-positive/negative composition。
 
 默认 bar 版本中，panel a 的 error bars 为三个 seed-level pooled rates 的 sample s.d.，每个
-seed 恰好汇总两个 strain、200 attempts；白点显示三个 seed 值。内部 plotted-data
+seed 恰好汇总两个 strain、200 attempts；白点显示三个 seed 值。plotted-data
 CSV/manifest 保留六个 matched `strain × seed` tasks 的 two-sided exact paired sign-flip
 p-values：
 classifier-positive `p=1.000`、RDKit-valid `p=0.1875`、valid peptide yield `p=0.59375`，
-但 reviewer-facing figure 不显示 p-value 或 significance stars。没有为五个 window
+图中 不显示 p-value 或 significance stars。没有为五个 window
 comparisons 添加 significance stars；只有三个 seeds 时做多重 pairwise significance testing
 不足以支持可靠强结论。该图只报告样本量及 descriptive effect，不作 significance claim。
 

@@ -30,7 +30,7 @@ python scripts/reproduce/run_antibiotic_classification.py \
 - batch size 为 70，默认 25 epochs、10 ensembles、Adam `1e-5`、CosineAnnealingLR、`freeze_epochs=3000`。
 - strict zero-shot 的三个目标 checkpoint 网格完整，共 `3 × 10 = 30` 个文件，并有三个完整结束的日志。
 - fine-tune 的完整目标为 `3 × 10 × 5 = 150` 个 checkpoint。最初本机只发现 77 个，跨机器恢复
-  后为 104 个；reviewer 修订阶段补齐其余 46 个后，最终 `150/150` 网格和 15 个 fold 的
+  后为 104 个；统一评估阶段补齐其余 46 个后，最终 `150/150` 网格和 15 个 fold 的
   10-member prediction 均完整。
 - molecule-only 的 `3 × 10 × 5 = 150` checkpoint 网格和 15 个日志均完整，但它是 molecule-only 对照。
 - strict zero-shot 日志最终 ensemble 指标为：`#004` 0.9360/0.5890，`17978` 0.7262/0.3243，RN4220 0.7679/0.1655（AUROC/AUPRC）。
@@ -68,9 +68,9 @@ python scripts/audit/audit_antibiotic_classification_checkpoints.py \
 - strict checkpoint 的历史训练时 dropout prediction 仍不可逐 bit 恢复；当前 30 个 checkpoint
   已完成的是统一 `eval()` 契约下的确定性推理。
 
-## Reviewer 修订：三菌株统一 AUPRC 与显著性（已完成）
+## 统一评估：三菌株统一 AUPRC 与显著性（已完成）
 
-Reviewer 要求 Fig. 1b 对三个菌株一致报告 AUPRC，并为“优于 baseline”的表述提供统计检验。
+Fig. 1b 在三个菌株上统一报告 AUPRC，并使用配对统计比较各模型与 baseline。
 本阶段新增两个彼此分离的入口：
 
 - `scripts/reproduce/run_fig1b_chemprop_baselines.py`：按三个原论文的 Chemprop/RDKit

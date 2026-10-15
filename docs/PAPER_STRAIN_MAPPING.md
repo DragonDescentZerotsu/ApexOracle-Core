@@ -2,8 +2,7 @@
 
 `assets/manifests/paper_strain_mapping.json` is the compact public bridge
 between strain labels in the paper-era MIC table and the condition keys loaded
-by ApexOracle Core. It contains no MIC values, molecule structures, embedding
-tensors, or private assay rows.
+by ApexOracle Core.
 
 ## Contents
 
@@ -27,7 +26,7 @@ match `prepare_hierarchical_mic_data` before token-length filtering.
 
 ## Rebuild
 
-The source data remain external to Git. Rebuild from the paper data directory:
+Rebuild from the paper data directory:
 
 ```bash
 python scripts/prepare_data/export_paper_strain_mapping.py \

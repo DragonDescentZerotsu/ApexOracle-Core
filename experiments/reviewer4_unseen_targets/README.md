@@ -1,8 +1,6 @@
-# Reviewer 4 unseen-species / unseen-genus ATCC 靶点初筛
+# unseen-species / unseen-genus ATCC 靶点初筛
 
-Reviewer 4 认为 strain-selective 的临床论证不成立，并要求改用「对模型从未训练过的 species 或
-genus 展示 broad efficacy」作为有意义的 benchmark。本目录记录为满足该要求所做的**可购买靶点
-初筛**：哪些临床相关病原体既完全不在 guidance regressor 的训练暴露中，又能在 ATCC 买到，
+本目录基于训练集暴露范围、菌株可获得性和基因组资源，筛选未见 species/genus 的实验候选：哪些临床相关病原体既完全不在 guidance regressor 的训练暴露中，又能在 ATCC 买到，
 并且已经有 ATCC Genome Portal assembly 可以喂给外部 Evo-2 producer。
 
 审计入口：`scripts/audit/audit_reviewer4_unseen_atcc_pathogens.py`（只读，不训练、不下载权重）。
@@ -58,16 +56,15 @@ genus 展示 broad efficacy」作为有意义的 benchmark。本目录记录为�
 
 ## 根据现有证据作出的推断
 
-- 「未见 genus」不等于「未见 family」，这一列必须在回复中主动披露。*Providencia* 与
-  *Morganella* 同属 Morganellaceae，而 *Proteus* 三个 species 在训练集中；审稿人很可能据此
-  质疑新颖性。family 完全未见的候选只有 *Pantoea*、*Erysipelothrix*、*Brevundimonas*、
+- 「未见 genus」不等于「未见 family」。*Providencia* 与
+  *Morganella* 同属 Morganellaceae，而 *Proteus* 三个 species 在训练集中。family 完全未见的候选只有 *Pantoea*、*Erysipelothrix*、*Brevundimonas*、
   *Leptospira* 和 *Treponema*。
 - Morganellaceae 候选存在真实的生物学风险：*Providencia*、*Morganella* 与 *Proteus* 一样，
-  通过 lipid A 的 L-Ara4N 修饰对 polymyxin 类天然耐药。这既让「未满足的临床需求」叙事更强，
-  也让 AMP 实际起效的概率更低。这一点是从已知耐药机制推断的，不是本仓库数据证明的。
+  通过 lipid A 的 L-Ara4N 修饰对 polymyxin 类天然耐药。这可能影响 AMP 的活性，
+  需要通过实验评估。这一点是从已知耐药机制推断的，不是本仓库数据证明的。
 - 目录索引中 `atcc_products` 与 `atcc_orderable_with_genome` 的差值主要来自尚未测序的老 isolate，
   不代表这些菌株不可购买。
-- 本次未把「临床合理性」量化。syndrome 标注是策展性的，用于让作者和 microbiology 团队排序，
+- 本次未把「临床合理性」量化。syndrome 标注是策展性的，用于候选分类，
   不能作为选靶依据本身。
 
 ## 验证限制

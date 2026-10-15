@@ -15,7 +15,7 @@ it does not duplicate those implementations.
 - strain-wise synergy cross-validation;
 - Fig. 2b molecular-representation benchmarks and sequence-similarity evaluation;
 - reusable precomputed molecule, genome, and strain-text feature contracts;
-- reviewer-facing reproducibility and plotting workflows with frozen manifests.
+- reproducibility and plotting workflows with frozen manifests.
 
 Large datasets, model weights, embeddings, raw generations, caches, and experiment outputs are intentionally not
 stored in Git.
@@ -115,18 +115,18 @@ provenance, license boundary, and the authors' publication decision are recorded
 - module architecture, compute requirements and asset manifests:
   [ApexOracle](https://github.com/DragonDescentZerotsu/ApexOracle).
 
-Paper/reviewer workflows document their required source tables, checkpoints, outputs, and validation commands in
+Experimental workflows document their required source tables, checkpoints, outputs, and validation commands in
 the corresponding directory under [`experiments/`](experiments/README.md).
 
 ## Testing
 
-The project tests synthetic contracts without private assets and conditionally exercises installed paper assets:
+The test suite covers synthetic contracts and conditionally exercises installed experimental assets:
 
 ```bash
 PYTHONPATH=src python -m pytest -q
 ```
 
-Tests that require ignored source tables, large outputs, checkpoints, or locally installed compiled tools are
+Tests that require source tables, large outputs, checkpoints, or locally installed compiled tools are
 skipped when those assets are absent. A clean source clone must still complete all remaining tests, package builds,
 imports, and CLI help checks.
 

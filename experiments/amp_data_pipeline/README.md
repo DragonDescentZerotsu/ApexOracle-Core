@@ -1,7 +1,7 @@
 # AMP data pipeline 与 PepLink 外部依赖
 
 本目录记录 ApexOracle 对独立 PepLink 工具的依赖边界及论文 peptide structure 数据血缘。
-PepLink 不会复制到 ApexOracle 仓库，也不作为 Git submodule。ApexOracle 通过可选依赖安装：
+通过可选依赖安装 PepLink：
 
 ```bash
 pip install -e '.[peplink]'
@@ -12,10 +12,9 @@ pip install -e '.[peplink]'
 其 commit 为 `cec2a02427766e4ba95806924801af31bdcc9939`。上游仓库：
 <https://github.com/DragonDescentZerotsu/PepLink>。
 
-## 为什么不用 Git submodule
+## 依赖与接口
 
-PepLink 已经具备独立的 PyPI 发布、MIT license、公开 API、版本 tag 和测试。Git submodule
-只会把 source checkout 生命周期耦合到 ApexOracle，不能改善普通用户的安装体验。当前采用：
+PepLink 通过 PyPI 安装，使用 MIT license。ApexOracle 的依赖与接口如下：
 
 - `pyproject.toml` optional dependency 固定 `PepLink==0.1.2`；
 - `src/apexoracle/data/peplink_adapter.py` 只调用 `from_dbaasp_record` 和
@@ -26,7 +25,6 @@ PepLink 已经具备独立的 PyPI 发布、MIT license、公开 API、版本 ta
 
 ## 已由代码和真实数据验证的事实
 
-- PepLink 工作树 clean，本地 `main`、`origin/main` 和 tag `v0.1.1` 均指向上述 commit。
 - 使用 Synergy 的同一份 DBAASP JSON 运行独立仓库测试：`22 passed`。
 - PepLink 内置 amino-acid mapping 与论文数据使用的
   `all_aa_smiles_new_handcrafted.csv` SHA-256 完全一致：

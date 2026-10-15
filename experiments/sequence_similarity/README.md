@@ -8,7 +8,7 @@ python scripts/reproduce/run_sequence_similarity.py all
 ```
 
 该命令依次重建训练 peptide cache、计算 linear 和 exhaustive cyclic alignments、提取 top
-hits 并验证输出不变量。大型 CSV 写入被 Git 忽略的
+hits 并验证输出不变量。逐行 CSV 输出到
 `results/sequence_similarity/paper_leads/`；Git 只保存本目录中的小型审计材料。
 
 也可以分阶段运行 `prepare`、`compute`、`summarize` 和 `validate`。例如只重算指定 lead：

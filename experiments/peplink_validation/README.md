@@ -1,6 +1,6 @@
 # PepLink round-trip、AA 化学核验与 peptide 血缘
 
-本目录的 reviewer-facing canonical 口径已经按完整 structure source lineage 修订。先阅读：
+本目录按完整 structure source lineage 核验 peptide conversion。相关说明和结果如下：
 
 1. `AA_AND_PEPTIDE_LINEAGE_ZH.md`：AA definition 与 whole-peptide structure 血缘；
 2. `reviewer_response_scope_summary.json`：机器可读范围；
@@ -17,7 +17,7 @@
   测试为 23 passed。
 
 0.1.1 的 1,210 个 Histidine reverse mismatch 来自后来新增 reverse parser 的 tautomer template
-不一致，不影响论文的 forward data generation；reviewer 回复只汇报修复后的 0.1.2 正式结果。
+不一致，不影响论文的 forward data generation；当前结果使用修复后的 0.1.2。
 
 ## source-aware 训练影响口径
 
@@ -31,14 +31,13 @@ PubChem whole-peptide 支路按 DBAASP 已给定 CID 直接查询，不经过 Ch
 因此 PepLink 当前无法从 annotation 重建并不意味着 frozen training structure 错误。
 
 经过论文实际 strain/genome eligibility 且应用 `<=512` token loader filter 后，DBAASP pool 为
-15,177 peptide / 74,103 row。coordination omission 按作者决定作为去金属预处理而不计错；DBAASP
-sequence/unusual-residue annotation 内部不一致属于上游源数据质量问题，也不计入 reviewer 所问的
-ChatGPT-o1/OPSIN/PepLink 转换错误。重新去重后：
+15,177 peptide / 74,103 row。coordination omission 作为去金属预处理而不计错；DBAASP
+sequence/unusual-residue annotation 内部不一致属于上游源数据质量问题，也不计入 ChatGPT-o1/OPSIN/PepLink 转换错误。重新去重后：
 
-- reviewer-facing 确认错误：56 peptide / 219 row（row prevalence 0.296%，报告为 0.30%）。
+- 确认转换错误：56 peptide / 219 row（row prevalence 0.296%，报告为 0.30%）。
 
 该 union 不包含 PubChem whole-peptide 记录、不包含仅因当前 PepLink API unsupported 的记录，也不
-包含 non-exact polymer proxy。三类 reviewer-facing 确认错误之间没有 peptide 重叠。
+包含 non-exact polymer proxy。三类确认转换错误之间没有 peptide 重叠。
 
 2026-07-23 已将这 56 个 peptide 与 18 个确认错误 definition 一一映射。Supplementary Data
 每个 peptide 一行，记录错误 residue code/位置、实际 loader MIC row 数、historical erroneous
@@ -82,7 +81,7 @@ evaluation-only sensitivity 原意是不重训，只从 ID-aligned held-out pred
 - `flagged_peptide_exclusions.csv`：把主 169 branch 的所有人工 flag 合并得到的早期 conservative
   集合；不等于确认训练错误。
 - `peplink_validation_sensitivity_exclusions.csv`：曾把上述 flag 与 PepLink forward failure 合并的
-  探索性列表；已退役，不得用于 reviewer 回复或当前 0.30% 口径。
+  探索性列表；已退役，不适用于当前 0.30% 统计口径。
 - `roundtrip_summary.json` 与根目录 `roundtrip_records.csv`：0.1.1 历史运行；正式引用
   `peplink_0.1.2/`。
 
@@ -101,6 +100,6 @@ PYTHONPATH=src python scripts/audit/recalculate_reviewer_peptide_scope.py
 PYTHONPATH=src python scripts/audit/build_peplink_supplementary_data.py
 ```
 
-第二个入口仍复现 169-row 化学审计；reviewer-facing 的 source-aware 训练影响口径以
+第二个入口仍复现 169-row 化学审计；source-aware 训练影响口径以
 `reviewer_response_scope_summary.json`、`recalculated_local_error_scope.json` 和
 `recalculated_local_error_peptides.csv` 为准。

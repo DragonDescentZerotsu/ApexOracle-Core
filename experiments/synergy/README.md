@@ -77,8 +77,7 @@ PYTHONHASHSEED=0 python scripts/reproduce/run_synergy_cv.py \
 的 `0.8054/0.9011` 只验证执行路径，不是论文结果。`fold_0/ensemble_0` 真实 checkpoint 的
 genome+text 与 text-only forward 也均和 inline legacy 公式逐值完全一致。全部 22 个大型
 binary（1 个 base + 21 个 member）的 SHA-256 位于 `checkpoint_file_manifest.csv`。root legacy
-driver 已在作者接受该候选后从发布工作树删除，可由 `legacy-code-snapshot-2026-07-17` 恢复；
-发布入口只保留 canonical runner。
+driver 可由 `legacy-code-snapshot-2026-07-17` 恢复；复现入口为上述 canonical runner。
 
 ### 现存 checkpoint 只读 replay
 
@@ -106,10 +105,3 @@ token-filtered evaluation rows 的三折 AUROC/AUPRC 为 `0.668989/0.615860`、
 紧凑审计见 `checkpoint_replay_audit.json`；约 0.5 MB 的逐样本表继续留在 Git 外，等待由统一
 Zenodo paper-data version series 发布。该一致性强力支持 seed-0 候选，但旧日志没有逐样本预测，
 所以仍不称为已证明的 2025 exact membership。
-
-## Paper-only 范围
-
-本目录只保留复现论文已汇报结果所需的代码，不包含
-few-shot、all-data guidance、prospective regression 或 BAA-3170 screening；这些论文后实验的
-源码已从当前工作树删除，但原始数据、checkpoint 和结果文件未被修改。删除清单、SHA-256 与
-Git 恢复位置见 `reproducibility/synergy_paper_only_cleanup_2026-07-19.json`。
